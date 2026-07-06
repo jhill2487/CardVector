@@ -13,8 +13,9 @@ from typing import Iterable
 
 
 SCRIPT_VERSION = "CardVector OS Inventory Label Generator v1"
-QR_PREFIX = "CVLOC:"
-DEFAULT_CAPACITY = "100"
+QR_PREFIX = "cardvector://"
+DEFAULT_CAPACITY = "400"
+DEFAULT_LOCATION_CAPACITY = "40"
 SAMPLE_CSV_NAME = "sample_etb_locations.csv"
 
 
@@ -24,10 +25,13 @@ class LocationLabel:
     label: str = ""
     capacity: str = ""
     category: str = ""
+    qr_payload: str = ""
 
     @property
     def qr_value(self) -> str:
-        return f"{QR_PREFIX}{self.location_id}"
+        if self.qr_payload:
+            return self.qr_payload
+        return f"cardvector://location/{self.location_id}"
 
 
 def resolve_project_root() -> Path:
@@ -96,20 +100,41 @@ def read_etb_capacity_registry(root: Path) -> list[LocationLabel]:
     if not path.exists():
         return []
     data = json.loads(path.read_text(encoding="utf-8-sig"))
-    default_capacity = clean_text(data.get("default_capacity")) or DEFAULT_CAPACITY
+    default_capacity = clean_text(data.get("default_etb_capacity") or data.get("default_capacity")) or DEFAULT_CAPACITY
+    default_location_capacity = clean_text(data.get("default_location_capacity")) or DEFAULT_LOCATION_CAPACITY
     rows: list[LocationLabel] = []
     for item in data.get("locations", []):
-        location_id = normalize_location(item.get("location_code"))
-        if not location_id:
+        etb_id = normalize_location(item.get("etb_id") or item.get("location_code"))
+        if not etb_id:
             continue
         rows.append(
             LocationLabel(
-                location_id=location_id,
-                label=clean_text(item.get("status")),
-                capacity=clean_text(item.get("estimated_capacity")) or default_capacity,
+                location_id=etb_id,
+                label="ETB",
+                capacity=clean_text(item.get("total_capacity") or item.get("estimated_capacity")) or default_capacity,
                 category="ETB Storage",
+                qr_payload=clean_text(item.get("qr_payload")) or f"cardvector://etb/{etb_id}",
             )
         )
+        child_locations = item.get("locations") or [
+            {"location_code": code, "capacity": default_location_capacity}
+            for code in "ABCDEFGHIJ"
+        ]
+        for child in child_locations:
+            location_code = normalize_location(child.get("location_code"))
+            if not location_code:
+                continue
+            location_id = normalize_location(child.get("location_id")) or f"{etb_id}-{location_code}"
+            payload = clean_text(child.get("qr_payload")) or f"cardvector://location/{etb_id}/{location_code}"
+            rows.append(
+                LocationLabel(
+                    location_id=location_id,
+                    label=f"{etb_id} Location {location_code}",
+                    capacity=clean_text(child.get("capacity")) or default_location_capacity,
+                    category="ETB Location",
+                    qr_payload=payload,
+                )
+            )
     return rows
 
 
@@ -155,6 +180,7 @@ def merge_locations(*groups: Iterable[LocationLabel]) -> list[LocationLabel]:
                     label=row.label,
                     capacity=row.capacity,
                     category=row.category,
+                    qr_payload=row.qr_payload,
                 )
                 continue
             # Prefer richer category/label data from the batch registry while
@@ -165,6 +191,8 @@ def merge_locations(*groups: Iterable[LocationLabel]) -> list[LocationLabel]:
                 existing.category = row.category
             if row.capacity and not existing.capacity:
                 existing.capacity = row.capacity
+            if row.qr_payload:
+                existing.qr_payload = row.qr_payload
     return sorted(merged.values(), key=lambda item: item.location_id)
 
 
@@ -178,6 +206,15 @@ def load_locations(root: Path, csv_path: Path | None = None) -> list[LocationLab
     if sample.exists():
         return read_fallback_csv(sample)
     return []
+
+
+def load_locations_for_etb(root: Path, etb_id: str) -> list[LocationLabel]:
+    normalized = normalize_location(etb_id)
+    labels = load_locations(root)
+    return [
+        row for row in labels
+        if row.location_id == normalized or row.location_id.startswith(f"{normalized}-")
+    ]
 
 
 def make_qr_image(qr_value: str):
@@ -273,9 +310,9 @@ def write_sample_csv(path: Path) -> Path:
     if path.exists():
         return path
     rows = [
-        {"location_id": "ETB-02-A", "label": "Pokemon Singles", "capacity": "100", "category": "Pokemon"},
-        {"location_id": "ETB-04-A", "label": "Magic Singles", "capacity": "100", "category": "Magic / MTG"},
-        {"location_id": "ETB-05-B", "label": "One Piece Singles", "capacity": "100", "category": "One Piece"},
+        {"location_id": "ETB-002-A", "label": "Pokemon Singles", "capacity": "40", "category": "Pokemon"},
+        {"location_id": "ETB-004-A", "label": "Magic Singles", "capacity": "40", "category": "Magic / MTG"},
+        {"location_id": "ETB-005-B", "label": "One Piece Singles", "capacity": "40", "category": "One Piece"},
     ]
     with path.open("w", encoding="utf-8-sig", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=["location_id", "label", "capacity", "category"])
@@ -314,7 +351,7 @@ def main(argv: list[str] | None = None) -> int:
     print(f"Project root: {root}")
     print(f"Labels generated: {len(labels)}")
     print(f"PDF: {pdf_path}")
-    print(f"QR format: {QR_PREFIX}<location_id>")
+    print("QR format: cardvector://etb/<etb_id> and cardvector://location/<etb_id>/<location_code>")
     return 0
 
 

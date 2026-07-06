@@ -318,6 +318,8 @@ from Putnam_Seller_Tools.location_registry import (
 )
 from capture_studio import CAPTURE_ROOT, OBS_CONFIG_PATH, CaptureStudioError, CaptureStudioService, load_obs_config, save_obs_config
 from inventory_locations import (
+    DEFAULT_ETB_CAPACITY,
+    DEFAULT_ETB_LOCATION_CAPACITY,
     ETB_LOCATION_REGISTRY,
     LOCATION_STATUSES,
     create_etb_location,
@@ -1323,13 +1325,13 @@ def ensure_label_dependencies():
         )
 
 
-def generate_inventory_label_pdf(label_type="ETB Labels"):
+def generate_inventory_label_pdf(label_type="ETB Labels", etb_code=""):
     if label_type != "ETB Labels":
         raise ValueError(f"{label_type} templates are planned for a future Label Center release.")
     ensure_label_dependencies()
     generator = load_inventory_label_generator()
     try:
-        labels = generator.load_locations(ROOT)
+        labels = generator.load_locations_for_etb(ROOT, etb_code) if etb_code else generator.load_locations(ROOT)
     except SystemExit as exc:
         raise RuntimeError(str(exc) or "Could not load inventory locations.") from exc
     if not labels:
@@ -1339,7 +1341,8 @@ def generate_inventory_label_pdf(label_type="ETB Labels"):
             "Platform/Putnam_OS/System/tools/sample_etb_locations.csv"
         )
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    output_path = LABEL_EXPORT_ROOT / f"cardvector_etb_qr_labels_{timestamp}.pdf"
+    label_scope = f"_{etb_code}" if etb_code else ""
+    output_path = LABEL_EXPORT_ROOT / f"cardvector_etb_qr_labels{label_scope}_{timestamp}.pdf"
     try:
         pdf_path = generator.write_pdf(labels, output_path)
     except SystemExit as exc:
@@ -1436,6 +1439,13 @@ def etb_parent_from_batch(value):
     if not match:
         return ""
     return f"ETB-{int(match.group(1)):03d}"
+
+
+def etb_location_from_batch(value):
+    match = re.search(r"\bETB-(\d+)-([A-J])\b", str(value or "").upper())
+    if not match:
+        return "", ""
+    return f"ETB-{int(match.group(1)):03d}", match.group(2)
 
 
 def completed_session_etb_rollups():
@@ -4717,6 +4727,24 @@ class PutnamOS(BaseTk):
                 self.capture_retry_button.pack(side="left", padx=10)
         return connected
 
+    def maybe_prompt_capture_location_complete(self, result):
+        if not self.capture_session or getattr(result, "side", "") != "back":
+            return
+        completed = capture_cards_completed(self.capture_session)
+        if completed <= 0 or completed % DEFAULT_ETB_LOCATION_CAPACITY != 0:
+            return
+        if int(self.capture_session.get("last_location_completion_prompt_count") or 0) == completed:
+            return
+        etb_code, location_code = etb_location_from_batch(self.capture_session.get("batch_location", ""))
+        if not etb_code or not location_code:
+            return
+        message = f"Location {location_code} complete. Place this batch into {etb_code} Location {location_code}."
+        self.capture_session["last_location_completion_prompt_count"] = completed
+        self.capture_service._save_session(self.capture_session)
+        append_activity(message)
+        self.status.set(message)
+        messagebox.showinfo("Capture Batch Complete", message)
+
     def auto_check_obs_connection(self):
         try:
             status = self.capture_service.obs_status()
@@ -4947,6 +4975,7 @@ class PutnamOS(BaseTk):
             self.auto_log(label)
             append_activity(f"Auto captured {result.path.name} with CardVector Capture Studio")
             self.schedule_capture_thumbnail_refresh()
+            self.maybe_prompt_capture_location_complete(result)
             if side == "front":
                 self.auto_status("Waiting for Back")
             else:
@@ -4988,6 +5017,7 @@ class PutnamOS(BaseTk):
             append_activity(f"Captured {result.path.name} with CardVector Capture Studio")
             self.status.set(f"Captured {result.path.name}")
             self.schedule_capture_thumbnail_refresh()
+            self.maybe_prompt_capture_location_complete(result)
         except CaptureStudioError as exc:
             self.update_capture_obs_indicator(str(exc))
             self.status.set("Capture failed; OBS is not ready.")
@@ -5007,6 +5037,7 @@ class PutnamOS(BaseTk):
             append_activity(f"Captured {result.path.name} with CardVector Capture Studio")
             self.status.set(f"Captured {result.path.name}")
             self.schedule_capture_thumbnail_refresh()
+            self.maybe_prompt_capture_location_complete(result)
         except CaptureStudioError as exc:
             self.status.set("Capture failed; see OBS screenshot error.")
             messagebox.showwarning("Capture Studio", str(exc))
@@ -5205,26 +5236,28 @@ class PutnamOS(BaseTk):
             wraplength=980,
         ).pack(anchor="w", padx=18, pady=(0, 8))
 
-        columns = ("location_code", "status", "assigned", "remaining", "capacity", "batches")
+        columns = ("etb_id", "status", "stored", "remaining", "capacity", "locations", "batches")
         table_frame = tk.Frame(registry, bg=BRAND["panel"])
         table_frame.pack(fill="x", padx=18, pady=(0, 8))
         self.etb_location_tree = ttk.Treeview(table_frame, columns=columns, show="headings", height=5)
         self.style_treeview(self.etb_location_tree)
         headings = {
-            "location_code": "Location Code",
+            "etb_id": "ETB ID",
             "status": "Status",
-            "assigned": "Estimated Assigned",
-            "remaining": "Estimated Remaining",
-            "capacity": "Capacity",
+            "stored": "Stored",
+            "remaining": "Remaining",
+            "capacity": "Total Capacity",
+            "locations": "Locations A-J",
             "batches": "Batches Assigned",
         }
         widths = {
-            "location_code": 160,
+            "etb_id": 110,
             "status": 120,
-            "assigned": 150,
-            "remaining": 160,
-            "capacity": 100,
-            "batches": 280,
+            "stored": 80,
+            "remaining": 90,
+            "capacity": 110,
+            "locations": 460,
+            "batches": 220,
         }
         for column in columns:
             self.sortable_heading(self.etb_location_tree, column, headings[column], False, show_arrow=False)
@@ -5304,12 +5337,19 @@ class PutnamOS(BaseTk):
         known = {row["location_code"] for row in rows}
         for code, item in rollups.items():
             if code not in known:
+                assigned = int(item.get("assigned", item.get("cards", 0)) or 0)
+                remaining = max(0, DEFAULT_ETB_CAPACITY - assigned)
                 rows.append({
                     "location_code": code,
-                    "status": "Available",
-                    "estimated_capacity": 100,
-                    "estimated_assigned_count": 0,
-                    "estimated_remaining_capacity": 100,
+                    "etb_id": code,
+                    "status": "Full" if remaining == 0 else "Active" if assigned else "Empty",
+                    "total_capacity": DEFAULT_ETB_CAPACITY,
+                    "stored_count": assigned,
+                    "remaining_space": remaining,
+                    "estimated_capacity": DEFAULT_ETB_CAPACITY,
+                    "estimated_assigned_count": assigned,
+                    "estimated_remaining_capacity": remaining,
+                    "location_summary": f"A-J: {DEFAULT_ETB_LOCATION_CAPACITY} cards each",
                     "created_at": "",
                     "updated_at": "",
                 })
@@ -5317,14 +5357,17 @@ class PutnamOS(BaseTk):
         selected_item = None
         for row in rows:
             rollup = rollups.get(row["location_code"], {})
-            assigned = int(row["estimated_assigned_count"] or 0) + int(rollup.get("assigned", 0) or 0)
-            capacity = int(row["estimated_capacity"] or 100)
+            assigned = int(row.get("stored_count", row["estimated_assigned_count"]) or 0)
+            if rollup:
+                assigned = max(assigned, int(rollup.get("assigned", rollup.get("cards", 0)) or 0))
+            capacity = int(row.get("total_capacity", row["estimated_capacity"]) or DEFAULT_ETB_CAPACITY)
             values = (
-                row["location_code"],
+                row.get("etb_id") or row["location_code"],
                 row["status"],
                 assigned,
                 max(0, capacity - assigned),
                 capacity,
+                row.get("location_summary", ""),
                 ", ".join(rollup.get("batches", [])),
             )
             item = self.tree_insert(self.etb_location_tree, "", "end", values=values)
@@ -5336,16 +5379,20 @@ class PutnamOS(BaseTk):
         next_code = next_etb_code()
         self.etb_registry_summary_var.set(
             f"Registry: {ETB_LOCATION_REGISTRY}\n"
-            f"Locations: {len(rows)}  |  Next ETB: {next_code}  |  Default capacity: 100 cards\n"
-            "Counts include completed work sessions rolled up by ETB batch location."
+            f"ETBs: {len(rows)}  |  Next ETB: {next_code}  |  ETB capacity: {DEFAULT_ETB_CAPACITY} cards  |  Location capacity: {DEFAULT_ETB_LOCATION_CAPACITY} cards\n"
+            "Each ETB has locations A-J. Counts include completed work sessions rolled up by ETB batch location."
         )
 
     def inventory_create_next_etb(self):
         try:
             location = create_etb_location()
             code = location["location_code"]
+            label_result = generate_inventory_label_pdf("ETB Labels", etb_code=code)
             self.inventory_refresh_etb_locations(select_code=code)
-            self.status.set(f"Created ETB location {code}.")
+            if hasattr(self, "label_center_status_var"):
+                self.label_center_status_var.set(f"Generated {label_result['count']} label(s) for {code}.\nPDF: {label_result['pdf']}")
+            append_label_generation_log(f"SUCCESS | ETB Labels | {code} | {label_result['count']} labels | {label_result['pdf']}")
+            self.status.set(f"Created {code} with locations A-J and generated labels.")
         except Exception as exc:
             messagebox.showerror("ETB Location Registry", str(exc))
 

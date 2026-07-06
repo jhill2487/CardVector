@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "updated_at": "2026-07-03T15:29:00",
-  "default_capacity": 100,
+  "updated_at": "2026-07-06T15:38:19",
+  "default_capacity": 400,
   "locations": [
     {
       "location_code": "ETB-001",
@@ -50,6 +50,132 @@
       "estimated_assigned_count": 0,
       "created_at": "2026-07-03T15:29:00",
       "updated_at": "2026-07-03T15:29:00"
+    },
+    {
+      "location_code": "ETB-007",
+      "etb_id": "ETB-007",
+      "status": "Empty",
+      "total_capacity": 400,
+      "stored_count": 0,
+      "remaining_space": 400,
+      "qr_payload": "cardvector://etb/ETB-007",
+      "created_at": "2026-07-06T15:38:19",
+      "updated_at": "2026-07-06T15:38:19",
+      "locations": [
+        {
+          "location_code": "A",
+          "location_id": "ETB-007-A",
+          "qr_payload": "cardvector://location/ETB-007/A",
+          "capacity": 40,
+          "stored_count": 0,
+          "remaining_capacity": 40,
+          "status": "Empty",
+          "created_at": "2026-07-06T15:38:19",
+          "updated_at": "2026-07-06T15:38:19"
+        },
+        {
+          "location_code": "B",
+          "location_id": "ETB-007-B",
+          "qr_payload": "cardvector://location/ETB-007/B",
+          "capacity": 40,
+          "stored_count": 0,
+          "remaining_capacity": 40,
+          "status": "Empty",
+          "created_at": "2026-07-06T15:38:19",
+          "updated_at": "2026-07-06T15:38:19"
+        },
+        {
+          "location_code": "C",
+          "location_id": "ETB-007-C",
+          "qr_payload": "cardvector://location/ETB-007/C",
+          "capacity": 40,
+          "stored_count": 0,
+          "remaining_capacity": 40,
+          "status": "Empty",
+          "created_at": "2026-07-06T15:38:19",
+          "updated_at": "2026-07-06T15:38:19"
+        },
+        {
+          "location_code": "D",
+          "location_id": "ETB-007-D",
+          "qr_payload": "cardvector://location/ETB-007/D",
+          "capacity": 40,
+          "stored_count": 0,
+          "remaining_capacity": 40,
+          "status": "Empty",
+          "created_at": "2026-07-06T15:38:19",
+          "updated_at": "2026-07-06T15:38:19"
+        },
+        {
+          "location_code": "E",
+          "location_id": "ETB-007-E",
+          "qr_payload": "cardvector://location/ETB-007/E",
+          "capacity": 40,
+          "stored_count": 0,
+          "remaining_capacity": 40,
+          "status": "Empty",
+          "created_at": "2026-07-06T15:38:19",
+          "updated_at": "2026-07-06T15:38:19"
+        },
+        {
+          "location_code": "F",
+          "location_id": "ETB-007-F",
+          "qr_payload": "cardvector://location/ETB-007/F",
+          "capacity": 40,
+          "stored_count": 0,
+          "remaining_capacity": 40,
+          "status": "Empty",
+          "created_at": "2026-07-06T15:38:19",
+          "updated_at": "2026-07-06T15:38:19"
+        },
+        {
+          "location_code": "G",
+          "location_id": "ETB-007-G",
+          "qr_payload": "cardvector://location/ETB-007/G",
+          "capacity": 40,
+          "stored_count": 0,
+          "remaining_capacity": 40,
+          "status": "Empty",
+          "created_at": "2026-07-06T15:38:19",
+          "updated_at": "2026-07-06T15:38:19"
+        },
+        {
+          "location_code": "H",
+          "location_id": "ETB-007-H",
+          "qr_payload": "cardvector://location/ETB-007/H",
+          "capacity": 40,
+          "stored_count": 0,
+          "remaining_capacity": 40,
+          "status": "Empty",
+          "created_at": "2026-07-06T15:38:19",
+          "updated_at": "2026-07-06T15:38:19"
+        },
+        {
+          "location_code": "I",
+          "location_id": "ETB-007-I",
+          "qr_payload": "cardvector://location/ETB-007/I",
+          "capacity": 40,
+          "stored_count": 0,
+          "remaining_capacity": 40,
+          "status": "Empty",
+          "created_at": "2026-07-06T15:38:19",
+          "updated_at": "2026-07-06T15:38:19"
+        },
+        {
+          "location_code": "J",
+          "location_id": "ETB-007-J",
+          "qr_payload": "cardvector://location/ETB-007/J",
+          "capacity": 40,
+          "stored_count": 0,
+          "remaining_capacity": 40,
+          "status": "Empty",
+          "created_at": "2026-07-06T15:38:19",
+          "updated_at": "2026-07-06T15:38:19"
+        }
+      ],
+      "estimated_capacity": 400,
+      "estimated_assigned_count": 0,
+      "estimated_remaining_capacity": 400
     }
   ],
   "history": [
@@ -100,6 +226,26 @@
       "location_code": "ETB-006",
       "action": "created",
       "status": "Available"
+    },
+    {
+      "timestamp": "2026-07-06T15:38:19",
+      "location_code": "ETB-007",
+      "action": "created",
+      "status": "Empty",
+      "locations_created": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H",
+        "I",
+        "J"
+      ]
     }
-  ]
+  ],
+  "default_etb_capacity": 400,
+  "default_location_capacity": 40
 }
