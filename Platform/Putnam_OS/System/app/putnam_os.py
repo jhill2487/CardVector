@@ -1112,17 +1112,18 @@ def capture_pair_rows(folder=None, limit=24):
         if number > 0 and image:
             item = pairs.setdefault(number, {"pair_number": number, "front": None, "back": None, "timestamp": ""})
             item[side] = image
-    images = []
-    for pattern in ("*.jpg", "*.jpeg"):
-        images.extend([p for p in session_folder.glob(pattern) if p.is_file()])
-    for image in images:
-        match = re.match(r"^(\d{6})_(front|back)\.jpe?g$", image.name, re.IGNORECASE)
-        if not match:
-            continue
-        number = int(match.group(1))
-        side = match.group(2).lower()
-        item = pairs.setdefault(number, {"pair_number": number, "front": None, "back": None, "timestamp": ""})
-        item[side] = image
+    if not session_records:
+        images = []
+        for pattern in ("*.jpg", "*.jpeg"):
+            images.extend([p for p in session_folder.glob(pattern) if p.is_file()])
+        for image in images:
+            match = re.match(r"^(\d{6})_(front|back)\.jpe?g$", image.name, re.IGNORECASE)
+            if not match:
+                continue
+            number = int(match.group(1))
+            side = match.group(2).lower()
+            item = pairs.setdefault(number, {"pair_number": number, "front": None, "back": None, "timestamp": ""})
+            item[side] = image
     rows = []
     for number, item in pairs.items():
         paths = [p for p in [item.get("front"), item.get("back")] if p]
@@ -3187,6 +3188,11 @@ class PutnamOS(BaseTk):
         self.capture_service = CaptureStudioService()
         self.capture_session = None
         self.capture_thumbnail_refs = []
+        self.capture_thumbnail_cache = {}
+        self.capture_pair_tile_cache = {}
+        self.capture_preview_row_keys = []
+        self.capture_empty_tile = None
+        self.capture_rail_canvas = None
         self.capture_obs_connected = False
         self.auto_capture_settings = load_auto_capture_settings()
         self.auto_capture_running = False
@@ -4134,6 +4140,7 @@ class PutnamOS(BaseTk):
         self.action_button(rail_buttons, "Open Session Folder", self.open_latest_capture_session_folder).pack(anchor="w")
         rail_canvas = tk.Canvas(rail, bg=BRAND["panel"], highlightthickness=0)
         rail_scroll = ttk.Scrollbar(rail, orient="vertical", command=rail_canvas.yview)
+        self.capture_rail_canvas = rail_canvas
         self.capture_rail_inner = tk.Frame(rail_canvas, bg=BRAND["panel"])
         rail_id = rail_canvas.create_window((0, 0), window=self.capture_rail_inner, anchor="nw")
         rail_canvas.configure(yscrollcommand=rail_scroll.set)
@@ -4147,12 +4154,12 @@ class PutnamOS(BaseTk):
         rail_canvas.bind("<Configure>", lambda e: rail_canvas.itemconfigure(rail_id, width=e.width))
         rail_canvas.pack(side="left", fill="both", expand=True, padx=(14, 0), pady=(0, 12))
         rail_scroll.pack(side="right", fill="y", pady=(0, 12))
-        self.refresh_capture_status()
+        self.refresh_capture_status(force_preview=True)
         self.check_obs_status_ui(silent=True)
         if self.capture_mode_choice_var.get() == "Auto" and not self.auto_capture_running:
             self.after(300, self.start_auto_capture_ui)
 
-    def refresh_capture_status(self):
+    def refresh_capture_status(self, force_preview=False):
         session = self.capture_session
         folder = (resolve_capture_path(session.get("folder", "")) if session else None) or CAPTURE_ROOT
         session_name = folder.name if session else "No active session"
@@ -4168,37 +4175,120 @@ class PutnamOS(BaseTk):
         ]:
             if hasattr(self, var_name):
                 getattr(self, var_name).set(value)
-        self.refresh_capture_preview_rail()
+        self.refresh_capture_preview_rail(force=force_preview)
 
-    def schedule_capture_thumbnail_refresh(self):
-        self.refresh_capture_status()
-        for delay in (150, 600):
-            self.after(delay, self.refresh_capture_status)
+    def schedule_capture_thumbnail_refresh(self, force=False):
+        self.refresh_capture_status(force_preview=force)
 
-    def refresh_capture_preview_rail(self):
+    def capture_image_signature(self, path):
+        image_path = resolve_capture_path(path) if path else None
+        if not image_path:
+            return ("", 0)
+        try:
+            return (str(image_path), image_path.stat().st_mtime if image_path.exists() else 0)
+        except OSError:
+            return (str(image_path), 0)
+
+    def capture_pair_row_signature(self, row):
+        return (
+            row.get("pair_number"),
+            row.get("status"),
+            row.get("timestamp"),
+            bool(row.get("latest")),
+            self.capture_image_signature(row.get("front")),
+            self.capture_image_signature(row.get("back")),
+        )
+
+    def clear_capture_preview_cache(self):
+        for cached in self.capture_pair_tile_cache.values():
+            tile = cached.get("tile")
+            if tile and tile.winfo_exists():
+                tile.destroy()
+        self.capture_pair_tile_cache = {}
+        self.capture_thumbnail_cache = {}
+        self.capture_thumbnail_refs = []
+        self.capture_preview_row_keys = []
+        if self.capture_empty_tile and self.capture_empty_tile.winfo_exists():
+            self.capture_empty_tile.destroy()
+        self.capture_empty_tile = None
+
+    def refresh_capture_preview_rail(self, force=False):
         if not hasattr(self, "capture_rail_inner"):
             return
-        for child in self.capture_rail_inner.winfo_children():
-            child.destroy()
-        self.capture_thumbnail_refs = []
+        if force:
+            self.clear_capture_preview_cache()
+        yview = None
+        if self.capture_rail_canvas and self.capture_rail_canvas.winfo_exists():
+            try:
+                yview = self.capture_rail_canvas.yview()[0]
+            except Exception:
+                yview = None
         folder = (resolve_capture_path(self.capture_session.get("folder", "")) if self.capture_session else None) or latest_capture_session()
         rows = capture_pair_rows(folder, limit=30)
         if not rows:
-            tk.Label(
+            self.clear_capture_preview_cache()
+            self.capture_empty_tile = tk.Label(
                 self.capture_rail_inner,
                 text="No captures yet.",
                 bg=BRAND["panel"],
                 fg=BRAND["muted"],
                 font=self.ui_font("body"),
                 justify="left",
-            ).pack(anchor="w", padx=4, pady=8)
+            )
+            self.capture_empty_tile.pack(anchor="w", padx=4, pady=8)
             return
+        if self.capture_empty_tile and self.capture_empty_tile.winfo_exists():
+            self.capture_empty_tile.destroy()
+        self.capture_empty_tile = None
+        desired_keys = []
+        changed = force
+        changed_keys = []
         for row in rows:
-            self.capture_pair_tile(self.capture_rail_inner, row)
+            key = row["pair_number"]
+            desired_keys.append(key)
+            signature = self.capture_pair_row_signature(row)
+            cached = self.capture_pair_tile_cache.get(key)
+            tile = cached.get("tile") if cached else None
+            if cached and cached.get("signature") == signature and tile and tile.winfo_exists():
+                continue
+            if tile and tile.winfo_exists():
+                tile.destroy()
+            tile = self.capture_pair_tile(self.capture_rail_inner, row)
+            self.capture_pair_tile_cache[key] = {"tile": tile, "signature": signature}
+            changed = True
+            changed_keys.append(key)
+        for key in list(self.capture_pair_tile_cache):
+            if key not in desired_keys:
+                tile = self.capture_pair_tile_cache[key].get("tile")
+                if tile and tile.winfo_exists():
+                    tile.destroy()
+                del self.capture_pair_tile_cache[key]
+                changed = True
+        if desired_keys != self.capture_preview_row_keys:
+            for key in desired_keys:
+                tile = self.capture_pair_tile_cache[key]["tile"]
+                tile.pack_forget()
+                tile.pack(fill="x", padx=(0, 8), pady=(0, 10), ipady=8)
+            self.capture_preview_row_keys = desired_keys
+        elif changed:
+            for key in changed_keys:
+                tile = self.capture_pair_tile_cache[key]["tile"]
+                next_tile = None
+                key_index = desired_keys.index(key)
+                for next_key in desired_keys[key_index + 1:]:
+                    candidate = self.capture_pair_tile_cache[next_key]["tile"]
+                    if candidate.winfo_manager():
+                        next_tile = candidate
+                        break
+                if next_tile:
+                    tile.pack(fill="x", padx=(0, 8), pady=(0, 10), ipady=8, before=next_tile)
+                else:
+                    tile.pack(fill="x", padx=(0, 8), pady=(0, 10), ipady=8)
+        if yview is not None and self.capture_rail_canvas and self.capture_rail_canvas.winfo_exists():
+            self.capture_rail_canvas.after_idle(lambda pos=yview: self.capture_rail_canvas.yview_moveto(pos))
 
     def capture_pair_tile(self, parent, row):
         tile = tk.Frame(parent, bg=BRAND["panel2"], highlightbackground=BRAND["border"], highlightthickness=1)
-        tile.pack(fill="x", padx=(0, 8), pady=(0, 10), ipady=8)
         header = tk.Frame(tile, bg=BRAND["panel2"])
         header.pack(fill="x", padx=10, pady=(8, 5))
         status_color = BRAND["success"] if row["status"] == "Complete" else BRAND["warning"]
@@ -4247,6 +4337,7 @@ class PutnamOS(BaseTk):
             wraplength=250,
             justify="left",
         ).pack(anchor="w", padx=10, pady=(0, 7))
+        return tile
 
     def capture_thumbnail(self, parent, path, label):
         frame = tk.Frame(parent, bg=BRAND["panel2"])
@@ -4256,9 +4347,16 @@ class PutnamOS(BaseTk):
             try:
                 from PIL import ImageTk
 
-                photo = ImageTk.PhotoImage(build_capture_thumbnail_image(image_path))
+                cache_key = self.capture_image_signature(image_path)
+                photo = self.capture_thumbnail_cache.get(cache_key)
+                if photo is None:
+                    # Reuse unchanged thumbnails so prior captures are not reopened
+                    # and rerendered after each new card image is saved.
+                    photo = ImageTk.PhotoImage(build_capture_thumbnail_image(image_path))
+                    self.capture_thumbnail_cache[cache_key] = photo
                 self.capture_thumbnail_refs.append(photo)
                 thumb = tk.Label(frame, image=photo, bg=BRAND["panel2"], cursor="hand2")
+                thumb.image = photo
                 thumb.pack()
                 thumb.bind("<Button-1>", lambda _e, p=image_path: self.open_capture_preview(p))
             except Exception:
@@ -4560,7 +4658,7 @@ class PutnamOS(BaseTk):
             folder = Path(self.capture_session["folder"])
             append_activity(f"Started CardVector Capture Studio session: {folder.name}")
             self.status.set(f"Capture session started: {folder}")
-            self.schedule_capture_thumbnail_refresh()
+            self.schedule_capture_thumbnail_refresh(force=True)
         except Exception as exc:
             messagebox.showerror("Capture Studio", str(exc))
 
@@ -4618,7 +4716,7 @@ class PutnamOS(BaseTk):
                 self.status.set(f"Last capture moved to retakes: {moved.name}")
             else:
                 self.status.set("No capture to retake.")
-            self.schedule_capture_thumbnail_refresh()
+            self.schedule_capture_thumbnail_refresh(force=True)
         except Exception as exc:
             messagebox.showerror("Capture Studio", str(exc))
 
@@ -4631,7 +4729,7 @@ class PutnamOS(BaseTk):
             self.capture_service.finish_session(self.capture_session)
             append_activity(f"Finished CardVector Capture Studio session: {folder.name}")
             self.status.set(f"Capture session finished: {folder}")
-            self.schedule_capture_thumbnail_refresh()
+            self.schedule_capture_thumbnail_refresh(force=True)
         except Exception as exc:
             messagebox.showerror("Capture Studio", str(exc))
 
