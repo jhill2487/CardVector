@@ -1057,6 +1057,44 @@ def load_capture_session_file(folder):
         return {}
 
 
+def resolve_capture_record_image(record, session_folder):
+    metadata_value = record.get("path") or ""
+    filename = str(record.get("filename", "") or "").strip()
+    metadata_path = resolve_capture_path(metadata_value, session_folder)
+    try:
+        if metadata_path and metadata_path.exists():
+            return metadata_path, "", False
+    except OSError:
+        pass
+    if filename:
+        filename_path = resolve_capture_path(filename, session_folder)
+        try:
+            if filename_path and filename_path.exists():
+                diagnostic = metadata_value if metadata_value else ""
+                return filename_path, str(diagnostic), False
+        except OSError:
+            pass
+    unresolved = metadata_value or filename
+    return None, str(unresolved), True
+
+
+def log_capture_thumbnail_path_fallbacks(session_folder, fallbacks):
+    if not fallbacks:
+        return
+    try:
+        examples = ", ".join(str(value) for value in fallbacks[:3])
+        log_key = (str(session_folder), examples, len(fallbacks))
+        seen = getattr(log_capture_thumbnail_path_fallbacks, "_seen", set())
+        if log_key in seen:
+            return
+        seen.add(log_key)
+        log_capture_thumbnail_path_fallbacks._seen = seen
+        extra = f" (+{len(fallbacks) - 3} more)" if len(fallbacks) > 3 else ""
+        append_activity(f"Capture thumbnail path fallback used for {Path(session_folder).name}: {examples}{extra}")
+    except Exception:
+        pass
+
+
 def capture_session_summary(limit=8):
     folder = latest_capture_session()
     if not folder:
@@ -1097,7 +1135,11 @@ def capture_pair_rows(folder=None, limit=24):
     session_records = session_data.get("records", [])
     if not isinstance(session_records, list):
         session_records = []
+    fallback_paths = []
+    unresolved_paths = []
     for record in session_records:
+        if not isinstance(record, dict):
+            continue
         side = str(record.get("side", "")).lower()
         if side not in {"front", "back"}:
             continue
@@ -1108,11 +1150,16 @@ def capture_pair_rows(folder=None, limit=24):
         if number <= 0:
             match = re.match(r"^(\d{6})_(front|back)\.jpe?g$", str(record.get("filename", "")), re.IGNORECASE)
             number = int(match.group(1)) if match else 0
-        image = resolve_capture_path(record.get("path") or record.get("filename"), session_folder)
+        image, fallback, unresolved = resolve_capture_record_image(record, session_folder)
+        if fallback:
+            fallback_paths.append(fallback)
+        if unresolved:
+            unresolved_paths.append(fallback or record.get("filename") or record.get("path") or "<blank>")
         if number > 0 and image:
             item = pairs.setdefault(number, {"pair_number": number, "front": None, "back": None, "timestamp": ""})
             item[side] = image
-    if not session_records:
+    needs_scan = not session_records or bool(unresolved_paths)
+    if needs_scan:
         images = []
         for pattern in ("*.jpg", "*.jpeg"):
             images.extend([p for p in session_folder.glob(pattern) if p.is_file()])
@@ -1123,7 +1170,14 @@ def capture_pair_rows(folder=None, limit=24):
             number = int(match.group(1))
             side = match.group(2).lower()
             item = pairs.setdefault(number, {"pair_number": number, "front": None, "back": None, "timestamp": ""})
-            item[side] = image
+            current = item.get(side)
+            try:
+                current_exists = bool(current and current.exists())
+            except OSError:
+                current_exists = False
+            if not current_exists:
+                item[side] = image
+    log_capture_thumbnail_path_fallbacks(session_folder, fallback_paths)
     rows = []
     for number, item in pairs.items():
         paths = [p for p in [item.get("front"), item.get("back")] if p]
