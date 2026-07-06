@@ -151,3 +151,6 @@ temporary_reports/
 # Machine-specific local configuration copies
 *-DESKTOP-*.json
 *-LAPTOP-*.json
+
+# Shelved / archived legacy projects
+/Archive/Shelved_Projects/
