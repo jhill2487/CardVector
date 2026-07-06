@@ -1,0 +1,47 @@
+Putnam OS - Business Intelligence & Action Queue v0.1
+Timestamp: 2026-06-29T11:05:03
+
+Files used:
+- C:\Users\JaredHill\OneDrive\PutnamCollectibles\Platform\Putnam_OS\Putnam_Seller_Tools\seller_audit\reports\putnam_seller_audit_summary.txt
+- C:\Users\JaredHill\OneDrive\PutnamCollectibles\Platform\Putnam_OS\Putnam_Seller_Tools\seller_audit\reports\missing_or_invalid_user_sku.csv
+- C:\Users\JaredHill\OneDrive\PutnamCollectibles\Platform\Putnam_OS\Putnam_Seller_Tools\seller_audit\reports\free_shipping_listings.csv
+- C:\Users\JaredHill\OneDrive\PutnamCollectibles\Platform\Putnam_OS\Putnam_Seller_Tools\seller_audit\reports\title_audit.csv
+- C:\Users\JaredHill\OneDrive\PutnamCollectibles\Platform\Putnam_OS\Putnam_Seller_Tools\seller_audit\reports\duplicate_titles.csv
+- C:\Users\JaredHill\OneDrive\PutnamCollectibles\Platform\Putnam_OS\Putnam_Seller_Tools\seller_audit\reports\pricing_audit.csv
+- C:\Users\JaredHill\OneDrive\PutnamCollectibles\Data\Logs\export_history.csv
+- C:\Users\JaredHill\OneDrive\PutnamCollectibles\Platform\Putnam_OS\Completed Jobs\Pricing_Analysis_20260629_090719\ebay_upload_ready.csv
+
+Metrics found:
+- active_listings: 687
+- missing_user_sku_count: 185
+- free_shipping_suspected_count: 0
+- title_issue_count: 1
+- pricing_issue_count: 316
+- invalid_user_sku_count: 502
+- listings_at_0_99: 220
+- listings_under_1_49: 316
+- duplicate_title_rows: 135
+- latest_export_rows: 27
+- listing_export_batches: 4
+- listing_export_rows: 51
+
+Metrics missing:
+- Aging/stale inventory report was not found.
+- Average order value was not available from current reports.
+- No dedicated orders/sales export was found.
+- Offer eligibility data was not found.
+- Order count was not available from current reports.
+- Sold item/card count was not available from current reports.
+
+Key observations:
+- User SKU / warehouse location cleanup is currently the largest operational blocker.
+- Low-price listings should be reviewed against cart-sweetener and profit-per-envelope strategy.
+- Duplicate titles may indicate duplicate listings or title-quality drift.
+- Shipping policy columns were not available in seller audit data.
+
+Available columns when expected columns were not found:
+- None
+
+Recommended focus:
+- Assign User SKU to listings missing warehouse location
+

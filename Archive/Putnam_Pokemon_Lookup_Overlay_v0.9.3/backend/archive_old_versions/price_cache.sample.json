@@ -1,0 +1,21 @@
+{
+  "demo_card_id": "sv3pt5-199",
+  "cards": {
+    "sv3pt5-199": {
+      "name": "Charizard ex",
+      "set": "Scarlet & Violet 151",
+      "number": "199/165",
+      "language": "English",
+      "variant": "Special Illustration Rare",
+      "raw_conditions": {
+        "near_mint": { "label": "NM", "market": 125.0, "low": 118.0, "high": 132.0 },
+        "lightly_played": { "label": "LP", "market": 101.0, "low": 92.0, "high": 108.0 },
+        "moderately_played": { "label": "MP", "market": 76.0, "low": 68.0, "high": 84.0 },
+        "heavily_played": { "label": "HP", "market": 49.0, "low": 42.0, "high": 55.0 },
+        "damaged": { "label": "DMG", "market": 29.0, "low": 24.0, "high": 35.0 }
+      },
+      "source": "sample",
+      "last_updated": "2026-06-09T00:00:00-04:00"
+    }
+  }
+}

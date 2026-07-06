@@ -1,0 +1,26 @@
+==========================================================================================
+CARDVECTOR PRODUCTION PATH REPORT V2
+==========================================================================================
+
+Launcher Found:
+  Platform\Putnam_OS\Run CardVector OS Production.vbs
+
+Python References Inside Launcher:
+  - Platform\Putnam_OS\System\app\putnam_os.py
+
+Resolved Production Entry Point:
+  Platform\Putnam_OS\System\app\putnam_os.py
+
+Proposed Production Root To Freeze:
+  Platform\Putnam_OS\System\app
+
+Production Import Tree:
+------------------------------------------------------------------------------------------
+- Platform\Putnam_OS\System\app\putnam_os.py
+    - Platform\Putnam_OS\System\app\capture_studio.py
+        - Platform\Putnam_OS\System\app\obs_connection_manager.py
+    - Platform\Putnam_OS\System\app\inventory_locations.py
+    - Platform\Putnam_OS\System\app\orders_fulfillment.py
+
+Result:
+  ✅ No archive paths detected in resolved production import tree.

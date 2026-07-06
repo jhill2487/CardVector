@@ -1,0 +1,101 @@
+# Putnam Collectibles - Project Status
+
+Last Updated:
+2026-06-28
+
+---
+
+## Current Version
+
+Putnam OS: v1.2
+Scanner: v7.x
+Overlay: v0.9.x
+
+---
+
+## Current Focus
+
+Listing Optimizer
+
+Status:
+🟡 In Progress
+
+Completed
+
+✓ Batch Prompt
+✓ Shipping Validation
+✓ Pricing Engine
+
+Remaining
+
+□ Analytics
+□ Export Metrics
+□ Dashboard
+
+---
+
+## Scanner
+
+Status
+
+Stable
+
+Current Accuracy
+
+OCR:
+Good
+
+Visual Match:
+Excellent
+
+Next Work
+
+Improve Trainer recognition.
+
+---
+
+## Overlay
+
+Status
+
+Stable
+
+Next Work
+
+Inline variant pricing.
+
+---
+
+## Known Issues
+
+- None
+
+---
+
+## Technical Debt
+
+- Review duplicate utility functions.
+- Consolidate config loading.
+- Improve test coverage.
+
+---
+
+## Next Recommended Task
+
+Inventory Analytics
+
+Reason
+
+Need real data to optimize pricing and inventory turnover.
+
+---
+
+## Recently Completed
+
+2026-06-28
+
+Added
+
+- Listing Optimizer
+- Project Manual
+- Development Standards

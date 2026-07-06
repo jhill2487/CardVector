@@ -1,0 +1,13 @@
+{
+  "name": "ebay_active_listings",
+  "source_type": "ebay_active_listings",
+  "mapping": {
+    "item_id": "Item number",
+    "title": "Title",
+    "sku": "Custom label (SKU)",
+    "current_price": "Current price",
+    "quantity": "Available quantity",
+    "condition": "Condition",
+    "shipping": "Shipping policy"
+  }
+}

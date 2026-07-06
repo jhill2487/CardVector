@@ -1,0 +1,116 @@
+Putnam Seller Tools v1.1.1 - SKU Repair Planner Change Summary
+
+We updated the Putnam Seller Tools SKU Repair Planner to support a simpler
+chaotic-storage inventory model.
+
+Core business rule:
+
+User SKU / Custom Label = physical storage location.
+
+It is not a unique card identifier.
+
+The SKU should answer:
+
+Where is this card stored?
+
+The eBay item ID and title should answer:
+
+Which listing/card is this?
+
+What changed:
+
+1. Added game/category-specific repair planning with the --game option.
+
+2. Added support for category location assignments:
+
+Magic / MTG -> ETB-04-A
+One Piece -> ETB-05-A
+
+3. Changed proposed SKU behavior.
+
+Old behavior:
+
+ETB-04-A-0001
+ETB-04-A-0002
+ETB-04-A-0003
+
+New behavior:
+
+ETB-04-A
+
+Multiple listings can intentionally share the same ETB location because the
+SKU is a physical location, not a unique per-card ID.
+
+4. Duplicate cards/listings are allowed to share a location SKU.
+
+Duplicate titles or duplicate card names are not a reason to invent unique SKU
+suffixes. Two identical cards may be in the same location or different
+locations depending on where they are physically stored.
+
+5. CS-* values are preserved.
+
+Any existing CS-* value or other likely card-specific/non-location identifier is
+kept out of the bulk revise CSV and marked for manual review. The tool does not
+overwrite these values automatically.
+
+6. Added --exclude-item-id.
+
+This lets a known variation listing be excluded from the eBay bulk revise CSV
+while still keeping it visible in the repair plan.
+
+7. Updated output behavior for game/category runs.
+
+When --game is used without a custom output folder, reports are written to
+separate filtered folders.
+
+Examples:
+
+reports/sku_repair_magic/
+reports/sku_repair_one_piece/
+
+8. Updated README documentation with the new workflow.
+
+Commands:
+
+Magic repair plan:
+
+python Putnam_Seller_Tools\seller_audit\putnam_sku_repair_planner_v1_1.py --game Magic --location-prefix ETB-04-A
+
+One Piece repair plan:
+
+python Putnam_Seller_Tools\seller_audit\putnam_sku_repair_planner_v1_1.py --game "One Piece" --location-prefix ETB-05-A
+
+Known variation listing exclusion example:
+
+python Putnam_Seller_Tools\seller_audit\putnam_sku_repair_planner_v1_1.py --game Magic --location-prefix ETB-04-A --exclude-item-id 147375711076
+
+Generated outputs:
+
+sku_repair_plan.csv
+sku_repair_summary.txt
+ebay_bulk_revise_sku_repair.csv
+
+Smoke test results:
+
+Magic -> ETB-04-A
+Rows in plan: 119
+Safe repairs: 5
+Manual review: 114
+Bulk revise rows: 5
+
+Most Magic rows had CS-* values, so they were preserved for manual review and
+excluded from the bulk revise CSV.
+
+One Piece -> ETB-05-A
+Rows in plan: 5
+Safe repairs: 5
+Manual review: 0
+Bulk revise rows: 5
+
+Important operating principle:
+
+SKU answers: Where is this card stored?
+eBay item ID/title answers: Which listing/card is this?
+
+This moves Putnam inventory toward a simple chaotic-storage model while keeping
+the workflow safe for eBay bulk revision.

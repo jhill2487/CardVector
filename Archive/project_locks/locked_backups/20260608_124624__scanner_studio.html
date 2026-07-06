@@ -1,0 +1,120 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Putnam Scanner Studio</title><style>
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#111;color:#eee}header{padding:10px 14px;background:#1f2937;border-bottom:1px solid #374151}main{display:grid;grid-template-columns:1fr 380px;height:calc(100vh - 46px)}#stageWrap{position:relative;overflow:hidden;background:#222}canvas{width:100%;height:100%;display:block;cursor:crosshair}.side{overflow:auto;padding:12px;background:#151515;border-left:1px solid #333}.card{background:#202020;border:1px solid #333;border-radius:8px;padding:10px;margin-bottom:10px}button{margin:3px;padding:8px 10px;border:1px solid #555;background:#2d3748;color:#fff;border-radius:6px;cursor:pointer}button:hover{background:#3b4a61}.hint{color:#aaa;font-size:12px}.ok{color:#77dd77}.bad{color:#ff7777}.warn{color:#ffd166}pre{white-space:pre-wrap;word-break:break-word;background:#0b0b0b;padding:8px;border-radius:6px;max-height:360px;overflow:auto}a{color:#9ecbff}.drop{border:2px dashed #666;border-radius:8px;padding:12px;text-align:center;background:#181818}.drop.drag{border-color:#7dd3fc;background:#10212a}.debugImg{max-width:100%;border:2px solid #444;margin-top:5px;background:#000}.small{font-size:12px;color:#bbb}</style></head><body>
+<header><b>Putnam Scanner Studio</b> <span class="hint">Load/drop image → adjust green border → Run Scanner saves label and scans</span></header>
+<main><div id="stageWrap"><canvas id="canvas"></canvas></div><aside class="side">
+<div id="drop" class="card drop"><b>Drop card photo here</b><br><span class="hint">or choose file below</span><br><input id="fileInput" type="file" accept="image/*"></div>
+<div class="card"><button id="reset">Reset View</button><button id="fit">Fit View</button><button id="save">Save Border Label</button><button id="scan">Run Scanner</button><p class="hint">Drag green corner points. Mouse wheel zoom. Hold Space + drag to pan. Run Scanner sends current border with the image.</p></div>
+<div class="card"><b>Status</b><div id="status">Load an image.</div></div>
+<div class="card"><b>Debug Images</b><div><b>Warped Card</b><br><img id="warpedCardImg" class="debugImg"></div><div><b>Name Crop</b><br><img id="nameCropImg" class="debugImg"></div><div><b>Number Crop</b><br><img id="numberCropImg" class="debugImg"></div><div><b>Set Code Crop</b><br><img id="setcodeCropImg" class="debugImg"></div></div>
+<div class="card"><b>Result</b>
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin:8px 0;">
+<button id="copySummary" type="button">Copy Summary</button>
+<button id="copyRaw" type="button">Copy Raw JSON</button>
+</div>
+<pre id="result">{}</pre></div>
+<div class="card"><b>Debug Links</b><div id="links"></div></div>
+</aside></main>
+<script>
+const canvas=document.getElementById('canvas'), ctx=canvas.getContext('2d'), wrap=document.getElementById('stageWrap');
+let img=null,fileObj=null,filename='',pts=[],scale=1,panX=0,panY=0,dragIdx=-1,dragPan=false,lastX=0,lastY=0,space=false;
+function setStatus(t,c=''){let el=document.getElementById('status');el.textContent=t;el.className=c}
+function resize(){canvas.width=wrap.clientWidth;canvas.height=wrap.clientHeight;draw()} window.addEventListener('resize',resize);resize();
+function defaultPts(){if(!img)return;let mX=img.width*.08,mY=img.height*.08;pts=[{x:mX,y:mY},{x:img.width-mX,y:mY},{x:img.width-mX,y:img.height-mY},{x:mX,y:img.height-mY}]}
+function fitView(){if(!img)return;scale=Math.min(canvas.width/img.width,canvas.height/img.height)*.95;panX=(canvas.width-img.width*scale)/2;panY=(canvas.height-img.height*scale)/2;draw()}
+function screen(p){return{x:p.x*scale+panX,y:p.y*scale+panY}} function imagePt(x,y){return{x:(x-panX)/scale,y:(y-panY)/scale}}
+function draw(){ctx.clearRect(0,0,canvas.width,canvas.height);ctx.fillStyle='#222';ctx.fillRect(0,0,canvas.width,canvas.height);if(!img)return;ctx.drawImage(img,panX,panY,img.width*scale,img.height*scale);if(pts.length===4){ctx.strokeStyle='#00ff66';ctx.lineWidth=3;ctx.beginPath();pts.forEach((p,i)=>{let s=screen(p); if(i===0)ctx.moveTo(s.x,s.y); else ctx.lineTo(s.x,s.y)});ctx.closePath();ctx.stroke();pts.forEach((p,i)=>{let s=screen(p);ctx.fillStyle='#00ff66';ctx.beginPath();ctx.arc(s.x,s.y,9,0,Math.PI*2);ctx.fill();ctx.fillStyle='#000';ctx.font='12px Arial';ctx.fillText(String(i+1),s.x-4,s.y+4)})}}
+function loadFile(f){fileObj=f;filename=f.name;let url=URL.createObjectURL(f);let im=new Image();im.onload=()=>{img=im;defaultPts();fitView();setStatus('Image loaded. Adjust border, then Run Scanner.','ok')};im.src=url}
+fileInput.onchange=e=>{if(e.target.files[0])loadFile(e.target.files[0])};
+const drop=document.getElementById('drop');['dragenter','dragover'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add('drag')}));['dragleave','drop'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove('drag')}));drop.addEventListener('drop',e=>{let f=e.dataTransfer.files[0];if(f)loadFile(f)});
+canvas.onmousedown=e=>{lastX=e.clientX;lastY=e.clientY;if(space){dragPan=true;return}let best=-1,bd=9999;pts.forEach((p,i)=>{let s=screen(p),d=Math.hypot(s.x-e.offsetX,s.y-e.offsetY);if(d<bd){bd=d;best=i}});if(bd<24)dragIdx=best};
+canvas.onmousemove=e=>{if(dragIdx>=0){let p=imagePt(e.offsetX,e.offsetY);pts[dragIdx]={x:Math.max(0,Math.min(img.width,p.x)),y:Math.max(0,Math.min(img.height,p.y))};draw()}else if(dragPan){panX+=e.clientX-lastX;panY+=e.clientY-lastY;lastX=e.clientX;lastY=e.clientY;draw()}};
+window.onmouseup=()=>{dragIdx=-1;dragPan=false};
+canvas.onwheel=e=>{if(!img)return;e.preventDefault();let before=imagePt(e.offsetX,e.offsetY);let factor=e.deltaY<0?1.1:.9;scale*=factor;panX=e.offsetX-before.x*scale;panY=e.offsetY-before.y*scale;draw()};
+window.onkeydown=e=>{if(e.code==='Space')space=true};window.onkeyup=e=>{if(e.code==='Space')space=false};
+function labelPayload(){return{filename:filename,trainer_version:'scanner_studio_label_scan',timestamp:new Date().toISOString(),image_size:{width:img.width,height:img.height},regions:{card:pts,name:[],number:[],setcode:[]}}}
+function form(includeLabel=true){let fd=new FormData();fd.append('image',fileObj,filename);fd.append('filename',filename);if(includeLabel)fd.append('label_json',JSON.stringify(labelPayload()));return fd}
+function showDebugImages(j){let d=j.debug||{}; if(d.warped_card_url) warpedCardImg.src=d.warped_card_url+'?t='+Date.now(); if(d.name_crop_url) nameCropImg.src=d.name_crop_url+'?t='+Date.now(); if(d.number_crop_url) numberCropImg.src=d.number_crop_url+'?t='+Date.now(); if(d.setcode_crop_url) setcodeCropImg.src=d.setcode_crop_url+'?t='+Date.now()}
+function links(j){let el=document.getElementById('links');el.innerHTML='';let d=j.debug||{};for(let [k,u] of Object.entries(d)){if(String(u).startsWith('/')){let a=document.createElement('a');a.href=u;a.target='_blank';a.textContent=k;el.appendChild(a);el.appendChild(document.createElement('br'))}}}
+async function runScan(){if(!fileObj||!img){setStatus('Load image first','bad');return}setStatus('Saving border label and scanning...','warn');let r=await fetch('/api/scan',{method:'POST',body:form(true)});let j=await r.json();result.textContent=JSON.stringify(j,null,2);links(j);showDebugImages(j);setStatus(j.status||'done',j.match&&j.match.status==='Auto Match'?'ok':'warn')}
+async function saveLabel(){if(!img){setStatus('Load image first','bad');return}let r=await fetch('/api/save_label',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(labelPayload())});let j=await r.json();result.textContent=JSON.stringify(j,null,2);setStatus('Border label saved','ok')}
+reset.onclick=()=>{defaultPts();draw()};fit.onclick=fitView;save.onclick=saveLabel;scan.onclick=runScan;
+</script>
+<script>
+window.lastScanResult = window.lastScanResult || null;
+
+function studioResultValue(v) {
+  return (v === undefined || v === null || v === "") ? "" : String(v);
+}
+
+function buildStudioSummary(j) {
+  j = j || window.lastScanResult || {};
+  const match = j.match || {};
+  const ocr = j.ocr || {};
+  const lines = [];
+
+  lines.push("Status: " + studioResultValue(match.status || j.status || "Unknown"));
+
+  if (match.card_name || match.set_name || match.card_number) {
+    lines.push("Card: " + studioResultValue(match.card_name));
+    lines.push("Set: " + studioResultValue(match.set_name));
+    lines.push("Number: " + studioResultValue(match.card_number));
+    lines.push("Confidence: " + studioResultValue(match.confidence));
+    if (match.reason) lines.push("Reason: " + match.reason);
+  } else {
+    lines.push("Card: Needs Review");
+    if (match.reason) lines.push("Reason: " + match.reason);
+  }
+
+  lines.push("OCR Name: " + studioResultValue(ocr.name));
+  lines.push("OCR Number: " + studioResultValue(ocr.number));
+  lines.push("OCR Set Code: " + studioResultValue(ocr.setcode));
+
+  if (j.geometry_status) lines.push("Geometry: " + j.geometry_status);
+
+  const candidates = j.candidates || [];
+  if (candidates.length) {
+    lines.push("");
+    lines.push("Top Candidates:");
+    candidates.slice(0, 5).forEach((c, i) => {
+      lines.push(
+        (i + 1) + ". " +
+        studioResultValue(c.card_name) + " | " +
+        studioResultValue(c.set_name) + " | " +
+        studioResultValue(c.card_number) +
+        (c.score !== undefined ? " | score " + c.score : "")
+      );
+    });
+  }
+
+  return lines.join("\n");
+}
+
+async function copyStudioText(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+    const st = document.getElementById("status");
+    if (st) st.textContent = "Copied to clipboard.";
+  } catch (err) {
+    const fallback = document.createElement("textarea");
+    fallback.value = text;
+    document.body.appendChild(fallback);
+    fallback.select();
+    document.execCommand("copy");
+    document.body.removeChild(fallback);
+    const st = document.getElementById("status");
+    if (st) st.textContent = "Copied to clipboard.";
+  }
+}
+
+document.addEventListener("click", function(e) {
+  if (e.target && e.target.id === "copySummary") {
+    copyStudioText(buildStudioSummary(window.lastScanResult));
+  }
+  if (e.target && e.target.id === "copyRaw") {
+    const raw = document.getElementById("result");
+    copyStudioText(raw ? raw.textContent : JSON.stringify(window.lastScanResult || {}, null, 2));
+  }
+});
+</script>
+
+</body></html>

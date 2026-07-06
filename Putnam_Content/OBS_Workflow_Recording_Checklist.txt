@@ -1,0 +1,14 @@
+Putnam Workflow Recording Checklist
+
+1. Open OBS.
+2. Select or create scene: Workflow Analysis.
+3. Add Display Capture: Full Desktop.
+4. Fit desktop capture to screen.
+5. Add Brio camera as picture-in-picture if useful.
+6. Confirm lavalier mic meter moves.
+7. Recording format: MKV, 1080p, 30 FPS.
+8. Start Recording.
+9. Work normally. Do not stop for mistakes.
+10. Stop recording when session is done.
+
+Goal: Capture the real listing workflow for process improvement and content creation.

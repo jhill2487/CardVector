@@ -1,0 +1,32 @@
+{
+  "active": true,
+  "session_id": "20260629_162226",
+  "folder": "C:\\Users\\user\\OneDrive\\PutnamCollectibles\\Work_Sessions\\Work_Session_20260629_162226",
+  "started_at": "2026-06-29T16:22:26",
+  "ended_at": "",
+  "goal": "List new inventory",
+  "planned_cards": "50",
+  "game": "Pokemon",
+  "batch_location": "ETB-02-A",
+  "completed_cards": "",
+  "capture_method": "iPhone camera",
+  "recording_path": "",
+  "pricing_jobs": [
+    {
+      "job_path": "C:\\Users\\JaredHill\\OneDrive\\PutnamCollectibles\\Platform\\Putnam_OS\\Completed Jobs\\Pricing_Analysis_20260630_083110",
+      "rows": 20,
+      "opportunities": 1,
+      "timestamp": "2026-06-30T08:31:32"
+    },
+    {
+      "job_path": "C:\\Users\\JaredHill\\OneDrive\\PutnamCollectibles\\Platform\\Putnam_OS\\Completed Jobs\\Pricing_Analysis_20260630_122522",
+      "rows": 22,
+      "opportunities": 0,
+      "timestamp": "2026-06-30T12:25:50"
+    }
+  ],
+  "notes": [],
+  "acquisition_id": "ACQ-20260703_010121",
+  "acquisition_name": "CharCHarShop",
+  "purchase_price_snapshot": "7.53"
+}

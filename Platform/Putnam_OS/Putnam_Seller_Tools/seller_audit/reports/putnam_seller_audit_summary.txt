@@ -1,0 +1,42 @@
+Putnam Seller Audit v1.1
+Timestamp: 2026-06-28T14:06:06
+Input file path: C:\Users\user\OneDrive\PutnamCollectibles\eBay Store Items\eBay-all-active-listings-report-2026-06-28-13310797942.csv
+Total active listings: 687
+
+Free shipping suspected: 0
+Buyer-paid / non-free count if detectable: not detectable
+Missing User SKU count: 185
+Invalid User SKU count: 502
+
+Location Management:
+Core rule: User SKU = Batch Location
+Location registry: C:\Users\user\OneDrive\PutnamCollectibles\Putnam_OS\System\config\location_registry.json
+Valid batch-location listings: 0
+Missing batch-location listings: 185
+Invalid batch-location listings: 502
+Unique detected batch locations: 0
+
+Current registry suggestions:
+- Magic / MTG: current ETB-04-A, next suggested ETB-04-B
+- One Piece: current ETB-05-A, next suggested ETB-05-B
+- Pokemon: current ETB-01-A, next suggested ETB-01-B
+
+Titles over 80 characters: 0
+Duplicate title rows: 135
+Listings under $0.99: 0
+Listings at $0.99: 220
+Listings under $1.49: 316
+High price manual review count: 0
+
+Top 10 detected shipping policies:
+- Not detectable from available columns.
+
+Notes:
+- No shipping-related columns found. Available columns: Item number, Title, Variation details, Custom label (SKU), Available quantity, Format, Currency, Start price, Auction Buy It Now price, Reserve price, Current price, Sold quantity, Watchers, Bids, Start date, End date, eBay category 1 name, eBay category 1 number, eBay category 2 name, eBay category 2 number, Condition, CD:Professional Grader - (ID: 27501), CD:Grade - (ID: 27502), CDA:Certification Number - (ID: 27503), CD:Card Condition - (ID: 40001), eBay Product ID(ePID), Listing site, P:UPC, P:EAN, P:ISBN
+
+Recommended next actions:
+- Export a fuller eBay active listings report if needed columns are absent.
+- Backfill User SKU / Custom Label values using ETB-##-Letter location labels.
+- Clean title issues before the next bulk revision.
+- Review duplicate titles for duplicate listings or title-quality drift.
+- Review low-price listings against the current cart-sweetener strategy.

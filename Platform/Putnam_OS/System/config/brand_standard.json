@@ -1,0 +1,22 @@
+﻿{
+  "version": "3.2.1",
+  "standard": "Putnam Collectibles Brand System",
+  "principles": [
+    "Use the Putnam Collectibles eBay/Whatnot brand as the source of truth.",
+    "Professional beats flashy.",
+    "Business actions should be visually prioritized over internal tools.",
+    "Preserve existing workflows unless a requested feature requires change."
+  ],
+  "colors": {
+    "background": "#070B12",
+    "sidebar": "#05070C",
+    "panel": "#0F1B2D",
+    "panel_secondary": "#13233A",
+    "electric_blue": "#1D9BFF",
+    "blue_hover": "#0A66C2",
+    "metallic_gold": "#D6A84F",
+    "gold_highlight": "#F1C76A",
+    "text_primary": "#F8FAFC",
+    "text_secondary": "#AAB6C5"
+  }
+}

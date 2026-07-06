@@ -1,0 +1,33 @@
+{
+  "manifest_version": 3,
+  "name": "Putnam Pokemon Lookup Overlay v0.6.3c",
+  "version": "0.6.3c",
+  "description": "Adds a quick Pokemon card lookup and live market price overlay to Whatnot live pages.",
+  "permissions": [
+    "activeTab",
+    "storage"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "overlay.js"
+      ],
+      "css": [
+        "overlay.css"
+      ]
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Pokemon Lookup"
+  },
+  "background": {
+    "service_worker": "background.js"
+  }
+}

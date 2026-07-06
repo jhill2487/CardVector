@@ -1,0 +1,878 @@
+putnam_card_id,catalog_set,card_name,printed_number,product_id,product_name,status,score,catalog_norm,product_norm
+pkm-black-bolt-12-86-9300c8062a,Black Bolt,Victini,12/86,,,NO_CANDIDATE,
+pkm-black-bolt-74-86-d05430c183,Black Bolt,Audino,74/86,642525,Audino - 074/086,LINKED,1.00,audino,audino
+pkm-black-bolt-74-86-d05430c183,Black Bolt,Audino,74/86,642693,Audino - 074/086 (Master Ball Pattern),SKIP_NAME_MISMATCH,0.17,audino,audino 074 086 master ball pattern
+pkm-black-bolt-74-86-d05430c183,Black Bolt,Audino,74/86,642766,Audino - 074/086 (Poke Ball Pattern),SKIP_NAME_MISMATCH,0.17,audino,audino 074 086 poke ball pattern
+pkm-black-bolt-60-86-63c961aaed,Black Bolt,Antique Cover Fossil,60/86,642514,Escavalier,SKIP_NAME_MISMATCH,0.00,antique cover fossil,escavalier
+pkm-black-bolt-60-86-63c961aaed,Black Bolt,Antique Cover Fossil,60/86,642683,Escavalier (Master Ball Pattern),SKIP_NAME_MISMATCH,0.00,antique cover fossil,escavalier master ball pattern
+pkm-black-bolt-60-86-63c961aaed,Black Bolt,Antique Cover Fossil,60/86,642756,Escavalier (Poke Ball Pattern),SKIP_NAME_MISMATCH,0.00,antique cover fossil,escavalier poke ball pattern
+pkm-black-bolt-87-86-91c551aad9,Black Bolt,Snivy,87/86,642536,Snivy - 087/086,LINKED,1.00,snivy,snivy
+pkm-black-bolt-88-86-836791b48b,Black Bolt,Servine,88/86,642537,Servine - 088/086,LINKED,1.00,servine,servine
+pkm-black-bolt-89-86-2ebdf3bc31,Black Bolt,Pansage,89/86,642538,Pansage - 089/086,LINKED,1.00,pansage,pansage
+pkm-black-bolt-90-86-90651d76f4,Black Bolt,Simisage,90/86,642539,Simisage - 090/086,LINKED,1.00,simisage,simisage
+pkm-black-bolt-91-86-11328a6f0f,Black Bolt,Petilil,91/86,642540,Petilil - 091/086,LINKED,1.00,petilil,petilil
+pkm-black-bolt-92-86-801e1e6828,Black Bolt,Lilligant,92/86,642541,Lilligant - 092/086,LINKED,1.00,lilligant,lilligant
+pkm-black-bolt-93-86-db61a7fe44,Black Bolt,Maractus,93/86,642542,Maractus - 093/086,LINKED,1.00,maractus,maractus
+pkm-black-bolt-94-86-5edcff439e,Black Bolt,Karrablast,94/86,642543,Karrablast - 094/086,LINKED,1.00,karrablast,karrablast
+pkm-black-bolt-95-86-922af18af5,Black Bolt,Foongus,95/86,642544,Foongus - 095/086,LINKED,1.00,foongus,foongus
+pkm-black-bolt-96-86-0595853ffa,Black Bolt,Amoonguss,96/86,642545,Amoonguss - 096/086,LINKED,1.00,amoonguss,amoonguss
+pkm-black-bolt-97-86-cb7008ac33,Black Bolt,Darumaka,97/86,642547,Darumaka - 097/086,LINKED,1.00,darumaka,darumaka
+pkm-black-bolt-98-86-94f53af50b,Black Bolt,Darmanitan,98/86,642548,Darmanitan - 098/086,LINKED,1.00,darmanitan,darmanitan
+pkm-black-bolt-99-86-214d0077a8,Black Bolt,Larvesta,99/86,642552,Larvesta - 099/086,LINKED,1.00,larvesta,larvesta
+pkm-black-bolt-100-86-f1c929dc27,Black Bolt,Volcarona,100/86,642553,Volcarona - 100/086,LINKED,1.00,volcarona,volcarona
+pkm-black-bolt-101-86-21699e7c7c,Black Bolt,Panpour,101/86,642554,Panpour - 101/086,LINKED,1.00,panpour,panpour
+pkm-black-bolt-102-86-1f39846edd,Black Bolt,Simipour,102/86,642555,Simipour - 102/086,LINKED,1.00,simipour,simipour
+pkm-black-bolt-103-86-d8962bc7ca,Black Bolt,Tympole,103/86,642556,Tympole - 103/086,LINKED,1.00,tympole,tympole
+pkm-black-bolt-104-86-2b1b63834b,Black Bolt,Palpitoad,104/86,642557,Palpitoad - 104/086,LINKED,1.00,palpitoad,palpitoad
+pkm-black-bolt-105-86-50c7d850e9,Black Bolt,Seismitoad,105/86,642558,Seismitoad - 105/086,LINKED,1.00,seismitoad,seismitoad
+pkm-black-bolt-106-86-183b21e350,Black Bolt,Tirtouga,106/86,642559,Tirtouga - 106/086,LINKED,1.00,tirtouga,tirtouga
+pkm-black-bolt-107-86-bea58e595d,Black Bolt,Carracosta,107/86,642560,Carracosta - 107/086,LINKED,1.00,carracosta,carracosta
+pkm-black-bolt-108-86-399eec34a8,Black Bolt,Alomomola,108/86,642561,Alomomola - 108/086,LINKED,1.00,alomomola,alomomola
+pkm-black-bolt-109-86-fb84b5c5e0,Black Bolt,Cubchoo,109/86,642562,Cubchoo - 109/086,LINKED,1.00,cubchoo,cubchoo
+pkm-black-bolt-110-86-348405e931,Black Bolt,Beartic,110/86,642563,Beartic - 110/086,LINKED,1.00,beartic,beartic
+pkm-black-bolt-111-86-6cfd1642ec,Black Bolt,Cryogonal,111/86,642564,Cryogonal - 111/086,LINKED,1.00,cryogonal,cryogonal
+pkm-black-bolt-112-86-1a8ada261e,Black Bolt,Emolga,112/86,642565,Emolga - 112/086,LINKED,1.00,emolga,emolga
+pkm-black-bolt-113-86-87c582fadf,Black Bolt,Tynamo,113/86,642566,Tynamo - 113/086,LINKED,1.00,tynamo,tynamo
+pkm-black-bolt-114-86-862d77c04e,Black Bolt,Eelektrik,114/86,642567,Eelektrik - 114/086,LINKED,1.00,eelektrik,eelektrik
+pkm-black-bolt-115-86-1688d7f90a,Black Bolt,Eelektross,115/86,642568,Eelektross - 115/086,LINKED,1.00,eelektross,eelektross
+pkm-black-bolt-116-86-c3f3286e8f,Black Bolt,Munna,116/86,642570,Munna - 116/086,LINKED,1.00,munna,munna
+pkm-black-bolt-117-86-e84ccfaa22,Black Bolt,Musharna,117/86,642571,Musharna - 117/086,LINKED,1.00,musharna,musharna
+pkm-black-bolt-118-86-ed70d48638,Black Bolt,Solosis,118/86,642572,Solosis - 118/086,LINKED,1.00,solosis,solosis
+pkm-black-bolt-119-86-dcfb3eb27c,Black Bolt,Duosion,119/86,642573,Duosion - 119/086,LINKED,1.00,duosion,duosion
+pkm-black-bolt-120-86-eb7920eb2a,Black Bolt,Elgyem,120/86,642575,Elgyem - 120/086,LINKED,1.00,elgyem,elgyem
+pkm-black-bolt-121-86-5d01096f3c,Black Bolt,Beheeyem,121/86,642576,Beheeyem - 121/086,LINKED,1.00,beheeyem,beheeyem
+pkm-black-bolt-122-86-7ff3e66480,Black Bolt,Golett,122/86,642577,Golett - 122/086,LINKED,1.00,golett,golett
+pkm-black-bolt-123-86-68233616c7,Black Bolt,Golurk,123/86,642578,Golurk - 123/086,LINKED,1.00,golurk,golurk
+pkm-black-bolt-124-86-8e954f14dc,Black Bolt,Drilbur,124/86,642579,Drilbur - 124/086,LINKED,1.00,drilbur,drilbur
+pkm-black-bolt-125-86-207795d4f7,Black Bolt,Timburr,125/86,642580,Timburr - 125/086,LINKED,1.00,timburr,timburr
+pkm-black-bolt-126-86-a285e2cbeb,Black Bolt,Gurdurr,126/86,642581,Gurdurr - 126/086,LINKED,1.00,gurdurr,gurdurr
+pkm-black-bolt-127-86-9ee242b186,Black Bolt,Conkeldurr,127/86,642582,Conkeldurr - 127/086,LINKED,1.00,conkeldurr,conkeldurr
+pkm-black-bolt-128-86-c12cb144e2,Black Bolt,Throh,128/86,642583,Throh - 128/086,LINKED,1.00,throh,throh
+pkm-black-bolt-129-86-d65fbfcb35,Black Bolt,Dwebble,129/86,642584,Dwebble - 129/086,LINKED,1.00,dwebble,dwebble
+pkm-black-bolt-130-86-3277bf778f,Black Bolt,Crustle,130/86,642585,Crustle - 130/086,LINKED,1.00,crustle,crustle
+pkm-black-bolt-131-86-bea43ff83c,Black Bolt,Landorus,131/86,642586,Landorus - 131/086,LINKED,1.00,landorus,landorus
+pkm-black-bolt-132-86-4d427670b0,Black Bolt,Venipede,132/86,642587,Venipede - 132/086,LINKED,1.00,venipede,venipede
+pkm-black-bolt-133-86-ce20bec990,Black Bolt,Whirlipede,133/86,642588,Whirlipede - 133/086,LINKED,1.00,whirlipede,whirlipede
+pkm-black-bolt-134-86-dbd62b88d6,Black Bolt,Scolipede,134/86,642589,Scolipede - 134/086,LINKED,1.00,scolipede,scolipede
+pkm-black-bolt-135-86-4d6a631d43,Black Bolt,Sandile,135/86,642590,Sandile - 135/086,LINKED,1.00,sandile,sandile
+pkm-black-bolt-136-86-25be6f80d0,Black Bolt,Krokorok,136/86,642591,Krokorok - 136/086,LINKED,1.00,krokorok,krokorok
+pkm-black-bolt-137-86-8f1cad3e50,Black Bolt,Krookodile,137/86,642592,Krookodile - 137/086,LINKED,1.00,krookodile,krookodile
+pkm-black-bolt-138-86-eb8af3f230,Black Bolt,Escavalier,138/86,642595,Escavalier - 138/086,LINKED,1.00,escavalier,escavalier
+pkm-black-bolt-139-86-e4e08f8517,Black Bolt,Klink,139/86,642261,Klink - 139/086,LINKED,1.00,klink,klink
+pkm-black-bolt-140-86-fee5d2ba7b,Black Bolt,Klang,140/86,642262,Klang - 140/086,LINKED,1.00,klang,klang
+pkm-black-bolt-141-86-76217c7bb7,Black Bolt,Klinklang,141/86,642263,Klinklang - 141/086,LINKED,1.00,klinklang,klinklang
+pkm-black-bolt-142-86-a234727a34,Black Bolt,Pawniard,142/86,642596,Pawniard - 142/086,LINKED,1.00,pawniard,pawniard
+pkm-black-bolt-143-86-67ce06c3a3,Black Bolt,Bisharp,143/86,642597,Bisharp - 143/086,LINKED,1.00,bisharp,bisharp
+pkm-black-bolt-144-86-dcb51f2ca3,Black Bolt,Cobalion,144/86,642598,Cobalion - 144/086,LINKED,1.00,cobalion,cobalion
+pkm-black-bolt-145-86-9457dabaf0,Black Bolt,Axew,145/86,642599,Axew - 145/086,LINKED,1.00,axew,axew
+pkm-black-bolt-146-86-a9c418a470,Black Bolt,Fraxure,146/86,642600,Fraxure - 146/086,LINKED,1.00,fraxure,fraxure
+pkm-black-bolt-147-86-214fe7c439,Black Bolt,Haxorus,147/86,642601,Haxorus - 147/086,LINKED,1.00,haxorus,haxorus
+pkm-black-bolt-148-86-59256a2ce0,Black Bolt,Pidove,148/86,642602,Pidove - 148/086,LINKED,1.00,pidove,pidove
+pkm-black-bolt-149-86-d65affa84a,Black Bolt,Tranquill,149/86,642603,Tranquill - 149/086,LINKED,1.00,tranquill,tranquill
+pkm-black-bolt-150-86-843a4f3d00,Black Bolt,Unfezant,150/86,642604,Unfezant - 150/086,LINKED,1.00,unfezant,unfezant
+pkm-black-bolt-151-86-2a9fe214d5,Black Bolt,Audino,151/86,642605,Audino - 151/086,LINKED,1.00,audino,audino
+pkm-black-bolt-152-86-66f4328714,Black Bolt,Minccino,152/86,642606,Minccino - 152/086,LINKED,1.00,minccino,minccino
+pkm-black-bolt-153-86-a390210d8a,Black Bolt,Cinccino,153/86,642607,Cinccino - 153/086,LINKED,1.00,cinccino,cinccino
+pkm-black-bolt-154-86-23dd654614,Black Bolt,Rufflet,154/86,642271,Rufflet - 154/086,LINKED,1.00,rufflet,rufflet
+pkm-black-bolt-155-86-e319a62ab5,Black Bolt,Braviary,155/86,642272,Braviary - 155/086,LINKED,1.00,braviary,braviary
+pkm-black-bolt-156-86-36370d0ebe,Black Bolt,Serperior ex,156/86,642608,Serperior ex - 156/086,LINKED,1.00,serperior ex,serperior ex
+pkm-black-bolt-157-86-dc0feca0c3,Black Bolt,Kyurem ex,157/86,642609,Kyurem ex - 157/086,LINKED,1.00,kyurem ex,kyurem ex
+pkm-black-bolt-158-86-c6cd26de1d,Black Bolt,Zekrom ex,158/86,642610,Zekrom ex - 158/086,LINKED,1.00,zekrom ex,zekrom ex
+pkm-black-bolt-159-86-3d7cca1b99,Black Bolt,Meloetta ex,159/86,642611,Meloetta ex - 159/086,LINKED,1.00,meloetta ex,meloetta ex
+pkm-black-bolt-160-86-b3a3f46f68,Black Bolt,Excadrill ex,160/86,642612,Excadrill ex - 160/086,LINKED,1.00,excadrill ex,excadrill ex
+pkm-black-bolt-161-86-6b4a7dfa13,Black Bolt,Genesect ex,161/86,642613,Genesect ex - 161/086,LINKED,1.00,genesect ex,genesect ex
+pkm-black-bolt-162-86-7bdb5c44b6,Black Bolt,Fennel,162/86,642615,Fennel - 162/086,LINKED,1.00,fennel,fennel
+pkm-black-bolt-163-86-91b05ca19d,Black Bolt,N's Plan,163/86,642614,N's Plan - 163/086,LINKED,1.00,n s plan,n s plan
+pkm-black-bolt-164-86-3ddc902589,Black Bolt,Serperior ex,164/86,642616,Serperior ex - 164/086,LINKED,1.00,serperior ex,serperior ex
+pkm-black-bolt-165-86-d3e9e7fa76,Black Bolt,Kyurem ex,165/86,642617,Kyurem ex - 165/086,LINKED,1.00,kyurem ex,kyurem ex
+pkm-black-bolt-166-86-3483672d86,Black Bolt,Zekrom ex,166/86,642618,Zekrom ex - 166/086,LINKED,1.00,zekrom ex,zekrom ex
+pkm-black-bolt-167-86-c7bdcbba1e,Black Bolt,Meloetta ex,167/86,642619,Meloetta ex - 167/086,LINKED,1.00,meloetta ex,meloetta ex
+pkm-black-bolt-168-86-712f9abfdd,Black Bolt,Excadrill ex,168/86,642620,Excadrill ex - 168/086,LINKED,1.00,excadrill ex,excadrill ex
+pkm-black-bolt-169-86-75abbcf100,Black Bolt,Genesect ex,169/86,642621,Genesect ex - 169/086,LINKED,1.00,genesect ex,genesect ex
+pkm-black-bolt-170-86-e922fd214e,Black Bolt,N's Plan,170/86,642622,N's Plan - 170/086,LINKED,1.00,n s plan,n s plan
+pkm-black-bolt-171-86-f57d1feb4b,Black Bolt,Victini,171/86,,,NO_CANDIDATE,
+pkm-black-bolt-172-86-da537d9ada,Black Bolt,Zekrom ex,172/86,642623,Zekrom ex - 172/086,LINKED,1.00,zekrom ex,zekrom ex
+pkm-mega-evolution-1-132-140d386e46,Mega Evolution,Bulbasaur,1/132,,,NO_CANDIDATE,
+pkm-mega-evolution-2-132-c66ea75a48,Mega Evolution,Ivysaur,2/132,,,NO_CANDIDATE,
+pkm-mega-evolution-3-132-5ab90bff74,Mega Evolution,Mega Venusaur ex,3/132,,,NO_CANDIDATE,
+pkm-mega-evolution-5-132-9b48f72de2,Mega Evolution,Exeggutor,5/132,,,NO_CANDIDATE,
+pkm-mega-evolution-11-132-cccc4ebdb4,Mega Evolution,Shuckle,11/132,,,NO_CANDIDATE,
+pkm-mega-evolution-17-132-72e8e24d50,Mega Evolution,Ninjask,17/132,,,NO_CANDIDATE,
+pkm-mega-evolution-19-132-49dc80226f,Mega Evolution,Vulpix,19/132,,,NO_CANDIDATE,
+pkm-mega-evolution-22-132-5844d38f40,Mega Evolution,Mega Camerupt ex,22/132,,,NO_CANDIDATE,
+pkm-mega-evolution-23-132-9fbc522cea,Mega Evolution,Litleo,23/132,,,NO_CANDIDATE,
+pkm-mega-evolution-32-132-caa4dcb216,Mega Evolution,Mantine,32/132,,,NO_CANDIDATE,
+pkm-mega-evolution-35-132-fbf538aa70,Mega Evolution,Snover,35/132,,,NO_CANDIDATE,
+pkm-mega-evolution-36-132-34cedebfdc,Mega Evolution,Mega Abomasnow ex,36/132,,,NO_CANDIDATE,
+pkm-mega-evolution-38-132-ff5be3d449,Mega Evolution,Clawitzer,38/132,,,NO_CANDIDATE,
+pkm-mega-evolution-41-132-52c3cf0a1b,Mega Evolution,Inteleon,41/132,,,NO_CANDIDATE,
+pkm-mega-evolution-50-132-51bc6af62b,Mega Evolution,Mega Manectric ex,50/132,,,NO_CANDIDATE,
+pkm-mega-evolution-52-132-e36283c8e6,Mega Evolution,Helioptile,52/132,,,NO_CANDIDATE,
+pkm-mega-evolution-60-132-fc89afe228,Mega Evolution,Mega Gardevoir ex,60/132,,,NO_CANDIDATE,
+pkm-mega-evolution-61-132-919e522e14,Mega Evolution,Shedinja,61/132,,,NO_CANDIDATE,
+pkm-mega-evolution-66-132-09e10a420c,Mega Evolution,Houndstone,66/132,,,NO_CANDIDATE,
+pkm-mega-evolution-77-132-0d48ce8117,Mega Evolution,Mega Lucario ex,77/132,,,NO_CANDIDATE,
+pkm-mega-evolution-80-132-22378f4b2f,Mega Evolution,Marshadow,80/132,,,NO_CANDIDATE,
+pkm-mega-evolution-84-132-2bfba3dab5,Mega Evolution,Garganacl,84/132,,,NO_CANDIDATE,
+pkm-mega-evolution-86-132-2db2000764,Mega Evolution,Mega Absol ex,86/132,,,NO_CANDIDATE,
+pkm-mega-evolution-87-132-68f30754da,Mega Evolution,Spiritomb,87/132,,,NO_CANDIDATE,
+pkm-mega-evolution-91-132-55249db204,Mega Evolution,Shroodle,91/132,,,NO_CANDIDATE,
+pkm-mega-evolution-93-132-c5b8bdfb25,Mega Evolution,Steelix,93/132,,,NO_CANDIDATE,
+pkm-mega-evolution-94-132-8b49798816,Mega Evolution,Mega Mawile ex,94/132,,,NO_CANDIDATE,
+pkm-mega-evolution-96-132-b6ff87556b,Mega Evolution,Tinkatink,96/132,,,NO_CANDIDATE,
+pkm-mega-evolution-97-132-f6f4f11a67,Mega Evolution,Tinkatuff,97/132,,,NO_CANDIDATE,
+pkm-mega-evolution-98-132-2fe1ac7163,Mega Evolution,Tinkaton,98/132,,,NO_CANDIDATE,
+pkm-mega-evolution-100-132-688f9ae763,Mega Evolution,Mega Latias ex,100/132,,,NO_CANDIDATE,
+pkm-mega-evolution-102-132-ce31daafc1,Mega Evolution,Spearow,102/132,,,NO_CANDIDATE,
+pkm-mega-evolution-104-132-8ae8415c93,Mega Evolution,Mega Kangaskhan ex,104/132,,,NO_CANDIDATE,
+pkm-mega-evolution-105-132-4b3f2d874c,Mega Evolution,Delibird,105/132,,,NO_CANDIDATE,
+pkm-mega-evolution-110-132-96224f2455,Mega Evolution,Gumshoos,110/132,,,NO_CANDIDATE,
+pkm-mega-evolution-111-132-958151fc4f,Mega Evolution,Stufful,111/132,,,NO_CANDIDATE,
+pkm-mega-evolution-113-132-68af5486af,Mega Evolution,Acerola's Mischief,113/132,,,NO_CANDIDATE,
+pkm-mega-evolution-114-132-257cf5eb02,Mega Evolution,Boss's Orders,114/132,,,NO_CANDIDATE,
+pkm-mega-evolution-116-132-4a6d510d36,Mega Evolution,Fighting Gong,116/132,,,NO_CANDIDATE,
+pkm-mega-evolution-119-132-bfb1051c43,Mega Evolution,Lillie's Determination,119/132,,,NO_CANDIDATE,
+pkm-mega-evolution-120-132-05114a0055,Mega Evolution,Lt. Surge's Bargain,120/132,,,NO_CANDIDATE,
+pkm-mega-evolution-121-132-5475004f1e,Mega Evolution,Mega Signal,121/132,,,NO_CANDIDATE,
+pkm-mega-evolution-122-132-e878c3473b,Mega Evolution,Mystery Garden,122/132,,,NO_CANDIDATE,
+pkm-mega-evolution-124-132-6e71ae1377,Mega Evolution,Premium Power Pro,124/132,,,NO_CANDIDATE,
+pkm-mega-evolution-125-132-51334bee75,Mega Evolution,Rare Candy,125/132,,,NO_CANDIDATE,
+pkm-mega-evolution-132-132-ab60ebed5a,Mega Evolution,Wally's Compassion,132/132,,,NO_CANDIDATE,
+pkm-mega-evolution-133-132-c9fec099a8,Mega Evolution,Bulbasaur,133/132,,,NO_CANDIDATE,
+pkm-mega-evolution-134-132-7cfcadb393,Mega Evolution,Ivysaur,134/132,,,NO_CANDIDATE,
+pkm-mega-evolution-135-132-b462ee4578,Mega Evolution,Exeggutor,135/132,,,NO_CANDIDATE,
+pkm-mega-evolution-136-132-fd80cdc6bb,Mega Evolution,Shuckle,136/132,,,NO_CANDIDATE,
+pkm-mega-evolution-137-132-0215551c86,Mega Evolution,Ninjask,137/132,,,NO_CANDIDATE,
+pkm-mega-evolution-138-132-ee3b6c813d,Mega Evolution,Vulpix,138/132,,,NO_CANDIDATE,
+pkm-mega-evolution-139-132-a27b626dd3,Mega Evolution,Litleo,139/132,,,NO_CANDIDATE,
+pkm-mega-evolution-140-132-5faef4b10b,Mega Evolution,Snover,140/132,,,NO_CANDIDATE,
+pkm-mega-evolution-141-132-29bce301a5,Mega Evolution,Clawitzer,141/132,,,NO_CANDIDATE,
+pkm-mega-evolution-142-132-af05eba296,Mega Evolution,Inteleon,142/132,,,NO_CANDIDATE,
+pkm-mega-evolution-143-132-8352979d2e,Mega Evolution,Helioptile,143/132,,,NO_CANDIDATE,
+pkm-mega-evolution-144-132-487ac9fc0a,Mega Evolution,Shedinja,144/132,,,NO_CANDIDATE,
+pkm-mega-evolution-145-132-0737f90baf,Mega Evolution,Houndstone,145/132,,,NO_CANDIDATE,
+pkm-mega-evolution-146-132-4c26bf5318,Mega Evolution,Marshadow,146/132,,,NO_CANDIDATE,
+pkm-mega-evolution-147-132-66be988eed,Mega Evolution,Garganacl,147/132,,,NO_CANDIDATE,
+pkm-mega-evolution-148-132-3e7d7469a2,Mega Evolution,Spiritomb,148/132,,,NO_CANDIDATE,
+pkm-mega-evolution-149-132-092b338694,Mega Evolution,Shroodle,149/132,,,NO_CANDIDATE,
+pkm-mega-evolution-150-132-296362a39c,Mega Evolution,Steelix,150/132,,,NO_CANDIDATE,
+pkm-mega-evolution-151-132-dd0cea5038,Mega Evolution,Spearow,151/132,,,NO_CANDIDATE,
+pkm-mega-evolution-152-132-ed828bf65c,Mega Evolution,Delibird,152/132,,,NO_CANDIDATE,
+pkm-mega-evolution-153-132-d67294744c,Mega Evolution,Gumshoos,153/132,,,NO_CANDIDATE,
+pkm-mega-evolution-154-132-848c7db413,Mega Evolution,Stufful,154/132,,,NO_CANDIDATE,
+pkm-mega-evolution-155-132-ac3036bcc1,Mega Evolution,Mega Venusaur ex,155/132,,,NO_CANDIDATE,
+pkm-mega-evolution-156-132-72d089e292,Mega Evolution,Mega Camerupt ex,156/132,,,NO_CANDIDATE,
+pkm-mega-evolution-157-132-7a2eecf50b,Mega Evolution,Mega Abomasnow ex,157/132,,,NO_CANDIDATE,
+pkm-mega-evolution-158-132-099b00a060,Mega Evolution,Mega Manectric ex,158/132,,,NO_CANDIDATE,
+pkm-mega-evolution-159-132-c7d5753841,Mega Evolution,Mega Gardevoir ex,159/132,,,NO_CANDIDATE,
+pkm-mega-evolution-160-132-f3a451a9e2,Mega Evolution,Mega Lucario ex,160/132,,,NO_CANDIDATE,
+pkm-mega-evolution-161-132-398d2c01ec,Mega Evolution,Mega Absol ex,161/132,,,NO_CANDIDATE,
+pkm-mega-evolution-162-132-23df4fd1f0,Mega Evolution,Mega Mawile ex,162/132,,,NO_CANDIDATE,
+pkm-mega-evolution-163-132-58e3b323c7,Mega Evolution,Mega Latias ex,163/132,,,NO_CANDIDATE,
+pkm-mega-evolution-164-132-257c366929,Mega Evolution,Mega Kangaskhan ex,164/132,,,NO_CANDIDATE,
+pkm-mega-evolution-165-132-9305e39c09,Mega Evolution,Acerola's Mischief,165/132,,,NO_CANDIDATE,
+pkm-mega-evolution-168-132-e7b385d3eb,Mega Evolution,Fighting Gong,168/132,,,NO_CANDIDATE,
+pkm-mega-evolution-169-132-e49dd7eabb,Mega Evolution,Lillie's Determination,169/132,,,NO_CANDIDATE,
+pkm-mega-evolution-170-132-a2722c23e9,Mega Evolution,Lt. Surge's Bargain,170/132,,,NO_CANDIDATE,
+pkm-mega-evolution-171-132-9e886d0fe6,Mega Evolution,Mega Signal,171/132,,,NO_CANDIDATE,
+pkm-mega-evolution-172-132-b05be7d3d8,Mega Evolution,Mystery Garden,172/132,,,NO_CANDIDATE,
+pkm-mega-evolution-174-132-e76fa1e808,Mega Evolution,Premium Power Pro,174/132,,,NO_CANDIDATE,
+pkm-mega-evolution-175-132-66437467f9,Mega Evolution,Rare Candy,175/132,,,NO_CANDIDATE,
+pkm-mega-evolution-176-132-71471edf99,Mega Evolution,Wally's Compassion,176/132,,,NO_CANDIDATE,
+pkm-mega-evolution-177-132-0288d0486f,Mega Evolution,Mega Venusaur ex,177/132,,,NO_CANDIDATE,
+pkm-mega-evolution-178-132-f2f1a49eb9,Mega Evolution,Mega Gardevoir ex,178/132,,,NO_CANDIDATE,
+pkm-mega-evolution-179-132-1eb01ea584,Mega Evolution,Mega Lucario ex,179/132,,,NO_CANDIDATE,
+pkm-mega-evolution-180-132-e82f27b786,Mega Evolution,Mega Absol ex,180/132,,,NO_CANDIDATE,
+pkm-mega-evolution-181-132-505a516148,Mega Evolution,Mega Latias ex,181/132,,,NO_CANDIDATE,
+pkm-mega-evolution-182-132-b7c4c7ca49,Mega Evolution,Mega Kangaskhan ex,182/132,,,NO_CANDIDATE,
+pkm-mega-evolution-183-132-2836d9b5c3,Mega Evolution,Acerola's Mischief,183/132,,,NO_CANDIDATE,
+pkm-mega-evolution-184-132-4140df3bf0,Mega Evolution,Lillie's Determination,184/132,,,NO_CANDIDATE,
+pkm-mega-evolution-185-132-6e9284b0cd,Mega Evolution,Lt. Surge's Bargain,185/132,,,NO_CANDIDATE,
+pkm-mega-evolution-186-132-1c5db97073,Mega Evolution,Wally's Compassion,186/132,,,NO_CANDIDATE,
+pkm-mega-evolution-187-132-0e0ecf0d59,Mega Evolution,Mega Gardevoir ex,187/132,,,NO_CANDIDATE,
+pkm-mega-evolution-188-132-3f978ac488,Mega Evolution,Mega Lucario ex,188/132,,,NO_CANDIDATE,
+pkm-paldea-evolved-5-193-7562265b7f,Paldea Evolved,Forretress ex,5/193,497416,Forretress ex - 005/193,LINKED,1.00,forretress ex,forretress ex
+pkm-paldea-evolved-6-193-96258f2ee0,Paldea Evolved,Heracross,6/193,497417,Heracross - 006/193,LINKED,1.00,heracross,heracross
+pkm-paldea-evolved-7-193-ff1d207cae,Paldea Evolved,Tropius,7/193,497418,Tropius - 007/193,LINKED,1.00,tropius,tropius
+pkm-paldea-evolved-12-193-d9bb29eaf4,Paldea Evolved,Sprigatito,12/193,497423,Sprigatito - 012/193,LINKED,1.00,sprigatito,sprigatito
+pkm-paldea-evolved-13-193-6cacc82b8c,Paldea Evolved,Sprigatito,13/193,497424,Sprigatito - 013/193,LINKED,1.00,sprigatito,sprigatito
+pkm-paldea-evolved-14-193-1e01c37395,Paldea Evolved,Floragato,14/193,497425,Floragato - 014/193,LINKED,1.00,floragato,floragato
+pkm-paldea-evolved-15-193-e18647a5c5,Paldea Evolved,Meowscarada ex,15/193,497426,Meowscarada ex - 015/193,LINKED,1.00,meowscarada ex,meowscarada ex
+pkm-paldea-evolved-16-193-7dfd022a0d,Paldea Evolved,Tarountula,16/193,497427,Tarountula - 016/193,LINKED,1.00,tarountula,tarountula
+pkm-paldea-evolved-17-193-2aaf5c4add,Paldea Evolved,Tarountula,17/193,497428,Tarountula - 017/193,LINKED,1.00,tarountula,tarountula
+pkm-paldea-evolved-19-193-9fa41cda27,Paldea Evolved,Nymble,19/193,497430,Nymble - 019/193,LINKED,1.00,nymble,nymble
+pkm-paldea-evolved-20-193-2111b8b5a0,Paldea Evolved,Nymble,20/193,497431,Nymble - 020/193,LINKED,1.00,nymble,nymble
+pkm-paldea-evolved-22-193-21a1c1ff55,Paldea Evolved,Bramblin,22/193,497433,Bramblin - 022/193,LINKED,1.00,bramblin,bramblin
+pkm-paldea-evolved-23-193-dcf135eaf4,Paldea Evolved,Bramblin,23/193,497434,Bramblin - 023/193,LINKED,1.00,bramblin,bramblin
+pkm-paldea-evolved-25-193-7b3f96a495,Paldea Evolved,Rellor,25/193,497436,Rellor - 025/193,LINKED,1.00,rellor,rellor
+pkm-paldea-evolved-26-193-0364f47326,Paldea Evolved,Rellor,26/193,497437,Rellor - 026/193,LINKED,1.00,rellor,rellor
+pkm-paldea-evolved-27-193-61d7d8bc54,Paldea Evolved,Wo-Chien ex,27/193,497438,Wo-Chien ex - 027/193,LINKED,1.00,wo chien ex,wo chien ex
+pkm-paldea-evolved-28-193-980edbe210,Paldea Evolved,Paldean Tauros,28/193,497439,Paldean Tauros - 028/193,LINKED,1.00,paldean tauros,paldean tauros
+pkm-paldea-evolved-29-193-d9f93fc266,Paldea Evolved,Fletchinder,29/193,497440,Fletchinder - 029/193,LINKED,1.00,fletchinder,fletchinder
+pkm-paldea-evolved-32-193-476608b387,Paldea Evolved,Pyroar,32/193,497443,Pyroar - 032/193,LINKED,1.00,pyroar,pyroar
+pkm-paldea-evolved-34-193-6d3a5deec3,Paldea Evolved,Fuecoco,34/193,497445,Fuecoco - 034/193,LINKED,1.00,fuecoco,fuecoco
+pkm-paldea-evolved-35-193-94a2b452bb,Paldea Evolved,Fuecoco,35/193,497446,Fuecoco - 035/193,LINKED,1.00,fuecoco,fuecoco
+pkm-paldea-evolved-36-193-2f50643b71,Paldea Evolved,Crocalor,36/193,497447,Crocalor - 036/193,LINKED,1.00,crocalor,crocalor
+pkm-paldea-evolved-37-193-77d6f52007,Paldea Evolved,Skeledirge ex,37/193,497448,Skeledirge ex - 037/193,LINKED,1.00,skeledirge ex,skeledirge ex
+pkm-paldea-evolved-38-193-2d3c056e0d,Paldea Evolved,Charcadet,38/193,497449,Charcadet - 038/193,LINKED,1.00,charcadet,charcadet
+pkm-paldea-evolved-39-193-53b9cfd6c0,Paldea Evolved,Charcadet,39/193,497450,Charcadet - 039/193,LINKED,1.00,charcadet,charcadet
+pkm-paldea-evolved-40-193-6ac80e2543,Paldea Evolved,Chi-Yu ex,40/193,497451,Chi-Yu ex - 040/193,LINKED,1.00,chi yu ex,chi yu ex
+pkm-paldea-evolved-41-193-8cef2a4cb2,Paldea Evolved,Paldean Tauros,41/193,497452,Paldean Tauros - 041/193,LINKED,1.00,paldean tauros,paldean tauros
+pkm-paldea-evolved-42-193-7eeb04b7de,Paldea Evolved,Magikarp,42/193,497453,Magikarp - 042/193,LINKED,1.00,magikarp,magikarp
+pkm-paldea-evolved-44-193-86790e39dc,Paldea Evolved,Marill,44/193,497455,Marill - 044/193,LINKED,1.00,marill,marill
+pkm-paldea-evolved-48-193-7d4f1a27ee,Paldea Evolved,Eiscue,48/193,497459,Eiscue - 048/193,LINKED,1.00,eiscue,eiscue
+pkm-paldea-evolved-49-193-63d33c309a,Paldea Evolved,Quaxly,49/193,497460,Quaxly - 049/193,LINKED,1.00,quaxly,quaxly
+pkm-paldea-evolved-50-193-c7a56ea431,Paldea Evolved,Quaxly,50/193,497461,Quaxly - 050/193,LINKED,1.00,quaxly,quaxly
+pkm-paldea-evolved-51-193-c102f1b055,Paldea Evolved,Quaxwell,51/193,497462,Quaxwell - 051/193,LINKED,1.00,quaxwell,quaxwell
+pkm-paldea-evolved-52-193-0e3ae309d4,Paldea Evolved,Quaquaval ex,52/193,497463,Quaquaval ex - 052/193,LINKED,1.00,quaquaval ex,quaquaval ex
+pkm-paldea-evolved-53-193-715c08af14,Paldea Evolved,Cetoddle,53/193,497464,Cetoddle - 053/193,LINKED,1.00,cetoddle,cetoddle
+pkm-paldea-evolved-54-193-9934c66642,Paldea Evolved,Cetoddle,54/193,497465,Cetoddle - 054/193,LINKED,1.00,cetoddle,cetoddle
+pkm-paldea-evolved-55-193-da78bef0b9,Paldea Evolved,Cetitan,55/193,497466,Cetitan - 055/193,LINKED,1.00,cetitan,cetitan
+pkm-paldea-evolved-56-193-c2b9066cc8,Paldea Evolved,Veluza,56/193,497467,Veluza - 056/193,LINKED,1.00,veluza,veluza
+pkm-paldea-evolved-57-193-0ee9e4fc74,Paldea Evolved,Frigibax,57/193,497468,Frigibax - 057/193,LINKED,1.00,frigibax,frigibax
+pkm-paldea-evolved-58-193-fabd7095ad,Paldea Evolved,Frigibax,58/193,497469,Frigibax - 058/193,LINKED,1.00,frigibax,frigibax
+pkm-paldea-evolved-59-193-4747e12f53,Paldea Evolved,Arctibax,59/193,497470,Arctibax - 059/193,LINKED,1.00,arctibax,arctibax
+pkm-paldea-evolved-60-193-f0d4b2106f,Paldea Evolved,Baxcalibur,60/193,497471,Baxcalibur - 060/193,LINKED,1.00,baxcalibur,baxcalibur
+pkm-paldea-evolved-61-193-658138ede6,Paldea Evolved,Chien-Pao ex,61/193,497472,Chien-Pao ex - 061/193,LINKED,1.00,chien pao ex,chien pao ex
+pkm-paldea-evolved-64-193-22afffce09,Paldea Evolved,Raichu,64/193,497475,Raichu - 064/193,LINKED,1.00,raichu,raichu
+pkm-paldea-evolved-68-193-3127590921,Paldea Evolved,Shinx,68/193,497479,Shinx - 068/193,LINKED,1.00,shinx,shinx
+pkm-paldea-evolved-69-193-32f6e007b5,Paldea Evolved,Shinx,69/193,497480,Shinx - 069/193,LINKED,1.00,shinx,shinx
+pkm-paldea-evolved-72-193-7bd7deafc4,Paldea Evolved,Pincurchin,72/193,497483,Pincurchin - 072/193,LINKED,1.00,pincurchin,pincurchin
+pkm-paldea-evolved-73-193-c9c6a9b2be,Paldea Evolved,Pincurchin,73/193,497484,Pincurchin - 073/193,LINKED,1.00,pincurchin,pincurchin
+pkm-paldea-evolved-77-193-16b8a20b28,Paldea Evolved,Tadbulb,77/193,497488,Tadbulb - 077/193,LINKED,1.00,tadbulb,tadbulb
+pkm-paldea-evolved-78-193-e039b9dd62,Paldea Evolved,Tadbulb,78/193,497489,Tadbulb - 078/193,LINKED,1.00,tadbulb,tadbulb
+pkm-paldea-evolved-79-193-39223fbbd1,Paldea Evolved,Bellibolt ex,79/193,497490,Bellibolt ex - 079/193,LINKED,1.00,bellibolt ex,bellibolt ex
+pkm-paldea-evolved-80-193-d201db0850,Paldea Evolved,Wattrel,80/193,497491,Wattrel - 080/193,LINKED,1.00,wattrel,wattrel
+pkm-paldea-evolved-81-193-a87924ac07,Paldea Evolved,Wattrel,81/193,497492,Wattrel - 081/193,LINKED,1.00,wattrel,wattrel
+pkm-paldea-evolved-86-193-e8caf9e8d1,Paldea Evolved,Slowking ex,86/193,497500,Slowking ex - 086/193,LINKED,1.00,slowking ex,slowking ex
+pkm-paldea-evolved-88-193-b1e88f712d,Paldea Evolved,Mismagius,88/193,497502,Mismagius - 088/193,LINKED,1.00,mismagius,mismagius
+pkm-paldea-evolved-91-193-6d60b700c8,Paldea Evolved,Gothorita,91/193,497506,Gothorita - 091/193,LINKED,1.00,gothorita,gothorita
+pkm-paldea-evolved-93-193-2a0de600db,Paldea Evolved,Dedenne ex,93/193,497508,Dedenne ex - 093/193,LINKED,1.00,dedenne ex,dedenne ex
+pkm-paldea-evolved-95-193-9b3b985db8,Paldea Evolved,Sandygast,95/193,497510,Sandygast - 095/193,LINKED,1.00,sandygast,sandygast
+pkm-paldea-evolved-99-193-e89122b0f2,Paldea Evolved,Rabsca,99/193,497514,Rabsca - 099/193,LINKED,1.00,rabsca,rabsca
+pkm-paldea-evolved-100-193-1f9a6a6999,Paldea Evolved,Tinkatink,100/193,,,NO_CANDIDATE,
+pkm-paldea-evolved-101-193-130fa41829,Paldea Evolved,Tinkatink,101/193,,,NO_CANDIDATE,
+pkm-paldea-evolved-102-193-7049ece9a6,Paldea Evolved,Tinkatink,102/193,,,NO_CANDIDATE,
+pkm-paldea-evolved-103-193-2f48f2c6dc,Paldea Evolved,Tinkatuff,103/193,,,NO_CANDIDATE,
+pkm-paldea-evolved-104-193-01a8ae6b1c,Paldea Evolved,Tinkatuff,104/193,,,NO_CANDIDATE,
+pkm-paldea-evolved-105-193-f29411eeab,Paldea Evolved,Tinkaton,105/193,,,NO_CANDIDATE,
+pkm-paldea-evolved-108-193-17504a0e68,Paldea Evolved,Paldean Tauros,108/193,497523,Paldean Tauros - 108/193,LINKED,1.00,paldean tauros,paldean tauros
+pkm-paldea-evolved-120-193-ca1968c1c9,Paldea Evolved,Nacli,120/193,497535,Nacli - 120/193,LINKED,1.00,nacli,nacli
+pkm-paldea-evolved-121-193-1183badf1b,Paldea Evolved,Nacli,121/193,497536,Nacli - 121/193,LINKED,1.00,nacli,nacli
+pkm-paldea-evolved-124-193-e215fade39,Paldea Evolved,Glimmet,124/193,497539,Glimmet - 124/193,LINKED,1.00,glimmet,glimmet
+pkm-paldea-evolved-125-193-a651a27f25,Paldea Evolved,Glimmet,125/193,497540,Glimmet - 125/193,LINKED,1.00,glimmet,glimmet
+pkm-paldea-evolved-127-193-1b7f51da75,Paldea Evolved,Ting-Lu ex,127/193,,,NO_CANDIDATE,
+pkm-paldea-evolved-128-193-6f2cc94a49,Paldea Evolved,Paldean Wooper,128/193,497581,Paldean Wooper - 128/193,LINKED,1.00,paldean wooper,paldean wooper
+pkm-paldea-evolved-129-193-986caa47ca,Paldea Evolved,Paldean Wooper,129/193,497586,Paldean Wooper - 129/193,LINKED,1.00,paldean wooper,paldean wooper
+pkm-paldea-evolved-135-193-9a90d59fdc,Paldea Evolved,Tyranitar,135/193,497596,Tyranitar - 135/193,LINKED,1.00,tyranitar,tyranitar
+pkm-paldea-evolved-141-193-a403280c9d,Paldea Evolved,Maschiff,141/193,497648,Maschiff - 141/193,LINKED,1.00,maschiff,maschiff
+pkm-paldea-evolved-142-193-f65ae308b7,Paldea Evolved,Maschiff,142/193,497650,Maschiff - 142/193,LINKED,1.00,maschiff,maschiff
+pkm-paldea-evolved-144-193-bed541ae8c,Paldea Evolved,Shroodle,144/193,497659,Shroodle - 144/193,LINKED,1.00,shroodle,shroodle
+pkm-paldea-evolved-145-193-9604c30b05,Paldea Evolved,Shroodle,145/193,497660,Shroodle - 145/193,LINKED,1.00,shroodle,shroodle
+pkm-paldea-evolved-166-193-668cd4c318,Paldea Evolved,Tandemaus,166/193,497585,Tandemaus - 166/193,LINKED,1.00,tandemaus,tandemaus
+pkm-paldea-evolved-167-193-09fce5860a,Paldea Evolved,Tandemaus,167/193,497587,Tandemaus - 167/193,LINKED,1.00,tandemaus,tandemaus
+pkm-paldea-evolved-172-193-8a878edc2f,Paldea Evolved,Boss's Orders (Ghetsis),172/193,497544,Boss's Orders - 172/193,SKIP_NAME_MISMATCH,0.75,boss s orders ghetsis,boss s orders
+pkm-paldea-evolved-179-193-ae5bc64815,Paldea Evolved,Dendra,179/193,497551,Dendra - 179/193,LINKED,1.00,dendra,dendra
+pkm-paldea-evolved-180-193-0a7c4b3528,Paldea Evolved,Falkner,180/193,497552,Falkner - 180/193,LINKED,1.00,falkner,falkner
+pkm-paldea-evolved-181-193-ca2e0c0422,Paldea Evolved,Fighting Au Lait,181/193,,,NO_CANDIDATE,
+pkm-paldea-evolved-184-193-099e20baea,Paldea Evolved,Grusha,184/193,497556,Grusha - 184/193,LINKED,1.00,grusha,grusha
+pkm-paldea-evolved-185-193-3733bca1e8,Paldea Evolved,Iono,185/193,497557,Iono - 185/193,LINKED,1.00,iono,iono
+pkm-paldea-evolved-188-193-6d2fbeecf8,Paldea Evolved,Super Rod,188/193,497560,Super Rod - 188/193,LINKED,1.00,super rod,super rod
+pkm-paldea-evolved-189-193-0dbd2a1aa9,Paldea Evolved,Superior Energy Retrieval,189/193,497562,Superior Energy Retrieval - 189/193,LINKED,1.00,superior energy retrieval,superior energy retrieval
+pkm-paldea-evolved-194-193-956b6ed320,Paldea Evolved,Heracross,194/193,497597,Heracross - 194/193,LINKED,1.00,heracross,heracross
+pkm-paldea-evolved-195-193-9a341ba6bb,Paldea Evolved,Tropius,195/193,497598,Tropius - 195/193,LINKED,1.00,tropius,tropius
+pkm-paldea-evolved-196-193-b8d27f05ff,Paldea Evolved,Sprigatito,196/193,497599,Sprigatito - 196/193,LINKED,1.00,sprigatito,sprigatito
+pkm-paldea-evolved-197-193-85fe01bb81,Paldea Evolved,Floragato,197/193,497600,Floragato - 197/193,LINKED,1.00,floragato,floragato
+pkm-paldea-evolved-198-193-8048b9ad82,Paldea Evolved,Bramblin,198/193,497601,Bramblin - 198/193,LINKED,1.00,bramblin,bramblin
+pkm-paldea-evolved-199-193-db82f33195,Paldea Evolved,Fletchinder,199/193,497602,Fletchinder - 199/193,LINKED,1.00,fletchinder,fletchinder
+pkm-paldea-evolved-200-193-a74bf1fdff,Paldea Evolved,Pyroar,200/193,497603,Pyroar - 200/193,LINKED,1.00,pyroar,pyroar
+pkm-paldea-evolved-201-193-692856f684,Paldea Evolved,Fuecoco,201/193,497604,Fuecoco - 201/193,LINKED,1.00,fuecoco,fuecoco
+pkm-paldea-evolved-202-193-20e3d9b2ca,Paldea Evolved,Crocalor,202/193,497605,Crocalor - 202/193,LINKED,1.00,crocalor,crocalor
+pkm-paldea-evolved-203-193-bb64a51dcf,Paldea Evolved,Magikarp,203/193,497606,Magikarp - 203/193,LINKED,1.00,magikarp,magikarp
+pkm-paldea-evolved-204-193-380281f2ce,Paldea Evolved,Marill,204/193,497607,Marill - 204/193,LINKED,1.00,marill,marill
+pkm-paldea-evolved-205-193-1e04ba7a65,Paldea Evolved,Eiscue,205/193,497608,Eiscue - 205/193,LINKED,1.00,eiscue,eiscue
+pkm-paldea-evolved-206-193-0f3f89803d,Paldea Evolved,Quaxly,206/193,497609,Quaxly - 206/193,LINKED,1.00,quaxly,quaxly
+pkm-paldea-evolved-207-193-6427b39710,Paldea Evolved,Quaxwell,207/193,497610,Quaxwell - 207/193,LINKED,1.00,quaxwell,quaxwell
+pkm-paldea-evolved-208-193-633c079844,Paldea Evolved,Frigibax,208/193,497611,Frigibax - 208/193,LINKED,1.00,frigibax,frigibax
+pkm-paldea-evolved-209-193-0f5d8e0087,Paldea Evolved,Arctibax,209/193,497612,Arctibax - 209/193,LINKED,1.00,arctibax,arctibax
+pkm-paldea-evolved-210-193-a0686da846,Paldea Evolved,Baxcalibur,210/193,497613,Baxcalibur - 210/193,LINKED,1.00,baxcalibur,baxcalibur
+pkm-paldea-evolved-211-193-f64d31a8b5,Paldea Evolved,Raichu,211/193,497614,Raichu - 211/193,LINKED,1.00,raichu,raichu
+pkm-paldea-evolved-212-193-8e16660086,Paldea Evolved,Mismagius,212/193,497615,Mismagius - 212/193,LINKED,1.00,mismagius,mismagius
+pkm-paldea-evolved-213-193-bcd11861c4,Paldea Evolved,Gothorita,213/193,497616,Gothorita - 213/193,LINKED,1.00,gothorita,gothorita
+pkm-paldea-evolved-214-193-d411e0f1cf,Paldea Evolved,Sandygast,214/193,497617,Sandygast - 214/193,LINKED,1.00,sandygast,sandygast
+pkm-paldea-evolved-215-193-780e4862fd,Paldea Evolved,Rabsca,215/193,497618,Rabsca - 215/193,LINKED,1.00,rabsca,rabsca
+pkm-paldea-evolved-216-193-2171d8352c,Paldea Evolved,Tinkatink,216/193,,,NO_CANDIDATE,
+pkm-paldea-evolved-217-193-6f472ee546,Paldea Evolved,Tinkatuff,217/193,,,NO_CANDIDATE,
+pkm-paldea-evolved-218-193-c952e49c24,Paldea Evolved,Paldean Tauros,218/193,497621,Paldean Tauros - 218/193,LINKED,1.00,paldean tauros,paldean tauros
+pkm-paldea-evolved-219-193-0982a727b6,Paldea Evolved,Sudowoodo,219/193,497622,Sudowoodo - 219/193,LINKED,1.00,sudowoodo,sudowoodo
+pkm-paldea-evolved-220-193-ab78a2c20d,Paldea Evolved,Nacli,220/193,497623,Nacli - 220/193,LINKED,1.00,nacli,nacli
+pkm-paldea-evolved-221-193-fc19591e75,Paldea Evolved,Paldean Wooper,221/193,497624,Paldean Wooper - 221/193,LINKED,1.00,paldean wooper,paldean wooper
+pkm-paldea-evolved-222-193-44fbe92034,Paldea Evolved,Tyranitar,222/193,497625,Tyranitar - 222/193,LINKED,1.00,tyranitar,tyranitar
+pkm-paldea-evolved-223-193-20a11e9517,Paldea Evolved,Grafaiai,223/193,497626,Grafaiai - 223/193,LINKED,1.00,grafaiai,grafaiai
+pkm-paldea-evolved-224-193-94b042d9e6,Paldea Evolved,Orthworm,224/193,497627,Orthworm - 224/193,LINKED,1.00,orthworm,orthworm
+pkm-paldea-evolved-225-193-44bfdf3536,Paldea Evolved,Rookidee,225/193,497628,Rookidee - 225/193,LINKED,1.00,rookidee,rookidee
+pkm-paldea-evolved-226-193-70d7df556e,Paldea Evolved,Maushold,226/193,497629,Maushold - 226/193,LINKED,1.00,maushold,maushold
+pkm-paldea-evolved-227-193-e155c5bef5,Paldea Evolved,Flamigo,227/193,497630,Flamigo - 227/193,LINKED,1.00,flamigo,flamigo
+pkm-paldea-evolved-228-193-3176a71542,Paldea Evolved,Farigiraf,228/193,497631,Farigiraf - 228/193,LINKED,1.00,farigiraf,farigiraf
+pkm-paldea-evolved-229-193-1336d3cffa,Paldea Evolved,Dudunsparce,229/193,497633,Dudunsparce - 229/193,LINKED,1.00,dudunsparce,dudunsparce
+pkm-paldea-evolved-230-193-8f9be3502c,Paldea Evolved,Forretress ex,230/193,497634,Forretress ex - 230/193,LINKED,1.00,forretress ex,forretress ex
+pkm-paldea-evolved-231-193-c8a5b7aca0,Paldea Evolved,Meowscarada ex,231/193,497636,Meowscarada ex - 231/193,LINKED,1.00,meowscarada ex,meowscarada ex
+pkm-paldea-evolved-232-193-ee5d8badbd,Paldea Evolved,Wo-Chien ex,232/193,497637,Wo-Chien ex - 232/193,LINKED,1.00,wo chien ex,wo chien ex
+pkm-paldea-evolved-233-193-1110969085,Paldea Evolved,Skeledirge ex,233/193,497639,Skeledirge ex - 233/193,LINKED,1.00,skeledirge ex,skeledirge ex
+pkm-paldea-evolved-234-193-52f997bbd5,Paldea Evolved,Chi-Yu ex,234/193,497640,Chi-Yu ex - 234/193,LINKED,1.00,chi yu ex,chi yu ex
+pkm-paldea-evolved-235-193-25316b9f14,Paldea Evolved,Quaquaval ex,235/193,497641,Quaquaval ex - 235/193,LINKED,1.00,quaquaval ex,quaquaval ex
+pkm-paldea-evolved-236-193-ed915a61dc,Paldea Evolved,Chien-Pao ex,236/193,497642,Chien-Pao ex - 236/193,LINKED,1.00,chien pao ex,chien pao ex
+pkm-paldea-evolved-237-193-c4a99f45b1,Paldea Evolved,Bellibolt ex,237/193,497644,Bellibolt ex - 237/193,LINKED,1.00,bellibolt ex,bellibolt ex
+pkm-paldea-evolved-238-193-543470fe04,Paldea Evolved,Slowking ex,238/193,497646,Slowking ex - 238/193,LINKED,1.00,slowking ex,slowking ex
+pkm-paldea-evolved-239-193-fb617d52b3,Paldea Evolved,Dedenne ex,239/193,497647,Dedenne ex - 239/193,LINKED,1.00,dedenne ex,dedenne ex
+pkm-paldea-evolved-240-193-648f3d8d0e,Paldea Evolved,Tinkaton ex,240/193,,,NO_CANDIDATE,
+pkm-paldea-evolved-241-193-608db1360a,Paldea Evolved,Lycanroc ex,241/193,497651,Lycanroc ex - 241/193,LINKED,1.00,lycanroc ex,lycanroc ex
+pkm-paldea-evolved-242-193-f0be48700d,Paldea Evolved,Annihilape ex,242/193,497652,Annihilape ex - 242/193,LINKED,1.00,annihilape ex,annihilape ex
+pkm-paldea-evolved-243-193-e6a3fd9afd,Paldea Evolved,Ting-Lu ex,243/193,,,NO_CANDIDATE,
+pkm-paldea-evolved-244-193-49b69f7926,Paldea Evolved,Paldean Clodsire ex,244/193,497654,Paldean Clodsire ex - 244/193,LINKED,1.00,paldean clodsire ex,paldean clodsire ex
+pkm-paldea-evolved-245-193-b132f512ed,Paldea Evolved,Copperajah ex,245/193,497655,Copperajah ex - 245/193,LINKED,1.00,copperajah ex,copperajah ex
+pkm-paldea-evolved-246-193-b1acd881d8,Paldea Evolved,Noivern ex,246/193,497657,Noivern ex - 246/193,LINKED,1.00,noivern ex,noivern ex
+pkm-paldea-evolved-247-193-3d3f10a471,Paldea Evolved,Squawkabilly ex,247/193,497658,Squawkabilly ex - 247/193,LINKED,1.00,squawkabilly ex,squawkabilly ex
+pkm-paldea-evolved-248-193-e200f905f3,Paldea Evolved,Boss's Orders (Ghetsis),248/193,497663,Boss's Orders - 248/193,SKIP_NAME_MISMATCH,0.75,boss s orders ghetsis,boss s orders
+pkm-paldea-evolved-249-193-306c91cfd0,Paldea Evolved,Clavell,249/193,497664,Clavell - 249/193,LINKED,1.00,clavell,clavell
+pkm-paldea-evolved-250-193-912fd537b0,Paldea Evolved,Dendra,250/193,497665,Dendra - 250/193,LINKED,1.00,dendra,dendra
+pkm-paldea-evolved-251-193-df77349fe1,Paldea Evolved,Falkner,251/193,497666,Falkner - 251/193,LINKED,1.00,falkner,falkner
+pkm-paldea-evolved-252-193-994b99f24b,Paldea Evolved,Giacomo,252/193,497667,Giacomo - 252/193,LINKED,1.00,giacomo,giacomo
+pkm-paldea-evolved-253-193-add4adc3aa,Paldea Evolved,Grusha,253/193,497668,Grusha - 253/193,LINKED,1.00,grusha,grusha
+pkm-paldea-evolved-254-193-7b2ffb97f1,Paldea Evolved,Iono,254/193,497669,Iono - 254/193,LINKED,1.00,iono,iono
+pkm-paldea-evolved-255-193-28c30e2ab9,Paldea Evolved,Saguaro,255/193,497670,Saguaro - 255/193,LINKED,1.00,saguaro,saguaro
+pkm-paldea-evolved-256-193-249715caec,Paldea Evolved,Meowscarada ex,256/193,497675,Meowscarada ex - 256/193,LINKED,1.00,meowscarada ex,meowscarada ex
+pkm-paldea-evolved-257-193-95fa71e667,Paldea Evolved,Wo-Chien ex,257/193,497676,Wo-Chien ex - 257/193,LINKED,1.00,wo chien ex,wo chien ex
+pkm-paldea-evolved-258-193-b9e94e8c66,Paldea Evolved,Skeledirge ex,258/193,497677,Skeledirge ex - 258/193,LINKED,1.00,skeledirge ex,skeledirge ex
+pkm-paldea-evolved-259-193-776b245fe4,Paldea Evolved,Chi-Yu ex,259/193,497678,Chi-Yu ex - 259/193,LINKED,1.00,chi yu ex,chi yu ex
+pkm-paldea-evolved-260-193-3b86bff045,Paldea Evolved,Quaquaval ex,260/193,497679,Quaquaval ex - 260/193,LINKED,1.00,quaquaval ex,quaquaval ex
+pkm-paldea-evolved-261-193-097da59e66,Paldea Evolved,Chien-Pao ex,261/193,497680,Chien-Pao ex - 261/193,LINKED,1.00,chien pao ex,chien pao ex
+pkm-paldea-evolved-262-193-796e89a5f9,Paldea Evolved,Tinkaton ex,262/193,,,NO_CANDIDATE,
+pkm-paldea-evolved-263-193-b726cd9213,Paldea Evolved,Ting-Lu ex,263/193,,,NO_CANDIDATE,
+pkm-paldea-evolved-264-193-70ed83c304,Paldea Evolved,Squawkabilly ex,264/193,497684,Squawkabilly ex - 264/193,LINKED,1.00,squawkabilly ex,squawkabilly ex
+pkm-paldea-evolved-265-193-66ae3302f3,Paldea Evolved,Boss's Orders (Ghetsis),265/193,497685,Boss's Orders - 265/193,SKIP_NAME_MISMATCH,0.75,boss s orders ghetsis,boss s orders
+pkm-paldea-evolved-266-193-00a1aa8184,Paldea Evolved,Dendra,266/193,497686,Dendra - 266/193,LINKED,1.00,dendra,dendra
+pkm-paldea-evolved-267-193-50fd0a4c75,Paldea Evolved,Giacomo,267/193,497687,Giacomo - 267/193,LINKED,1.00,giacomo,giacomo
+pkm-paldea-evolved-268-193-fb0873f6e7,Paldea Evolved,Grusha,268/193,497688,Grusha - 268/193,LINKED,1.00,grusha,grusha
+pkm-paldea-evolved-269-193-dabb970319,Paldea Evolved,Iono,269/193,497689,Iono - 269/193,LINKED,1.00,iono,iono
+pkm-paldea-evolved-270-193-ec5c378bab,Paldea Evolved,Saguaro,270/193,497691,Saguaro - 270/193,LINKED,1.00,saguaro,saguaro
+pkm-paldea-evolved-271-193-e32e82f331,Paldea Evolved,Meowscarada ex,271/193,497692,Meowscarada ex - 271/193,LINKED,1.00,meowscarada ex,meowscarada ex
+pkm-paldea-evolved-272-193-7d9d826d44,Paldea Evolved,Skeledirge ex,272/193,497693,Skeledirge ex - 272/193,LINKED,1.00,skeledirge ex,skeledirge ex
+pkm-paldea-evolved-273-193-12ee841b79,Paldea Evolved,Quaquaval ex,273/193,497694,Quaquaval ex - 273/193,LINKED,1.00,quaquaval ex,quaquaval ex
+pkm-paldea-evolved-274-193-8b83b7b3c0,Paldea Evolved,Chien-Pao ex,274/193,497695,Chien-Pao ex - 274/193,LINKED,1.00,chien pao ex,chien pao ex
+pkm-paldea-evolved-275-193-324231cd77,Paldea Evolved,Ting-Lu ex,275/193,,,NO_CANDIDATE,
+pkm-paldea-evolved-276-193-67c49077b2,Paldea Evolved,Super Rod,276/193,497697,Super Rod - 276/193,LINKED,1.00,super rod,super rod
+pkm-paldea-evolved-277-193-4234f6a8a1,Paldea Evolved,Superior Energy Retrieval,277/193,497699,Superior Energy Retrieval - 277/193,LINKED,1.00,superior energy retrieval,superior energy retrieval
+pkm-paldea-evolved-278-193-903384244b,Paldea Evolved,Basic Grass Energy,278/193,497700,Basic Grass Energy - 278/193,LINKED,1.00,basic grass energy,basic grass energy
+pkm-paldea-evolved-279-193-29cfce35d1,Paldea Evolved,Basic Water Energy,279/193,497701,Basic Water Energy - 279/193,LINKED,1.00,basic water energy,basic water energy
+pkm-paradox-rift-3-182-e10c801cd8,Paradox Rift,Froslass ex,3/182,523587,Froslass ex - 003/182,LINKED,1.00,froslass ex,froslass ex
+pkm-paradox-rift-7-182-aac9be4aad,Paradox Rift,Crustle,7/182,523606,Crustle - 007/182,LINKED,1.00,crustle,crustle
+pkm-paradox-rift-11-182-7739e52056,Paradox Rift,Dottler,11/182,523610,Dottler - 011/182,LINKED,1.00,dottler,dottler
+pkm-paradox-rift-13-182-e573ecf875,Paradox Rift,Nymble,13/182,523612,Nymble - 013/182,LINKED,1.00,nymble,nymble
+pkm-paradox-rift-14-182-672a22bf70,Paradox Rift,Nymble,14/182,523614,Nymble - 014/182,LINKED,1.00,nymble,nymble
+pkm-paradox-rift-15-182-a74614bbf1,Paradox Rift,Toedscool,15/182,523615,Toedscool - 015/182,LINKED,1.00,toedscool,toedscool
+pkm-paradox-rift-16-182-60d210b4d8,Paradox Rift,Toedscool,16/182,523616,Toedscool - 016/182,LINKED,1.00,toedscool,toedscool
+pkm-paradox-rift-17-182-ee373fe69a,Paradox Rift,Toedscruel,17/182,523617,Toedscruel - 017/182,LINKED,1.00,toedscruel,toedscruel
+pkm-paradox-rift-19-182-ef5deecdb3,Paradox Rift,Magby,19/182,523619,Magby - 019/182,LINKED,1.00,magby,magby
+pkm-paradox-rift-25-182-a98f9d3b76,Paradox Rift,Charcadet,25/182,523633,Charcadet - 025/182,LINKED,1.00,charcadet,charcadet
+pkm-paradox-rift-26-182-4be2478d47,Paradox Rift,Charcadet,26/182,523634,Charcadet - 026/182,LINKED,1.00,charcadet,charcadet
+pkm-paradox-rift-28-182-e46e158a33,Paradox Rift,Iron Moth,28/182,523637,Iron Moth - 028/182,LINKED,1.00,iron moth,iron moth
+pkm-paradox-rift-37-182-1e1629cc7d,Paradox Rift,Snorunt,37/182,523646,Snorunt - 037/182,LINKED,1.00,snorunt,snorunt
+pkm-paradox-rift-38-182-b4367f1059,Paradox Rift,Garchomp ex,38/182,523647,Garchomp ex - 038/182,LINKED,1.00,garchomp ex,garchomp ex
+pkm-paradox-rift-39-182-5010baf812,Paradox Rift,Mantyke,39/182,523648,Mantyke - 039/182,LINKED,1.00,mantyke,mantyke
+pkm-paradox-rift-44-182-d28726b0e0,Paradox Rift,Vanillish,44/182,523653,Vanillish - 044/182,LINKED,1.00,vanillish,vanillish
+pkm-paradox-rift-46-182-9cde86140f,Paradox Rift,Tsareena ex,46/182,523655,Tsareena ex - 046/182,LINKED,1.00,tsareena ex,tsareena ex
+pkm-paradox-rift-47-182-4750886897,Paradox Rift,Wimpod,47/182,523656,Wimpod - 047/182,LINKED,1.00,wimpod,wimpod
+pkm-paradox-rift-48-182-7b3714135c,Paradox Rift,Wimpod,48/182,523657,Wimpod - 048/182,LINKED,1.00,wimpod,wimpod
+pkm-paradox-rift-50-182-fdfd24ca66,Paradox Rift,Golisopod ex,50/182,523660,Golisopod ex - 050/182,LINKED,1.00,golisopod ex,golisopod ex
+pkm-paradox-rift-51-182-ec93483270,Paradox Rift,Wiglett,51/182,523661,Wiglett - 051/182,LINKED,1.00,wiglett,wiglett
+pkm-paradox-rift-52-182-15d423a7cd,Paradox Rift,Wiglett,52/182,523662,Wiglett - 052/182,LINKED,1.00,wiglett,wiglett
+pkm-paradox-rift-54-182-19d0d3b1c4,Paradox Rift,Veluza,54/182,523664,Veluza - 054/182,LINKED,1.00,veluza,veluza
+pkm-paradox-rift-56-182-334f634018,Paradox Rift,Iron Bundle,56/182,,,NO_CANDIDATE,
+pkm-paradox-rift-60-182-259f2b49fb,Paradox Rift,Plusle,60/182,523673,Plusle - 060/182,LINKED,1.00,plusle,plusle
+pkm-paradox-rift-61-182-613ef6f9ba,Paradox Rift,Minun,61/182,523674,Minun - 061/182,LINKED,1.00,minun,minun
+pkm-paradox-rift-62-182-571120bbcf,Paradox Rift,Blitzle,62/182,523675,Blitzle - 062/182,LINKED,1.00,blitzle,blitzle
+pkm-paradox-rift-64-182-38062ccab4,Paradox Rift,Joltik,64/182,523698,Joltik - 064/182,LINKED,1.00,joltik,joltik
+pkm-paradox-rift-68-182-e92a0e7bb6,Paradox Rift,Tapu Koko ex,68/182,523703,Tapu Koko ex - 068/182,LINKED,1.00,tapu koko ex,tapu koko ex
+pkm-paradox-rift-70-182-56e23a8c5d,Paradox Rift,Iron Hands ex,70/182,523706,Iron Hands ex - 070/182,LINKED,1.00,iron hands ex,iron hands ex
+pkm-paradox-rift-79-182-8bf5d0fe05,Paradox Rift,Flittle,79/182,523745,Flittle - 079/182,LINKED,1.00,flittle,flittle
+pkm-paradox-rift-80-182-db1c0a94fb,Paradox Rift,Flittle,80/182,523746,Flittle - 080/182,LINKED,1.00,flittle,flittle
+pkm-paradox-rift-81-182-6cfb864e73,Paradox Rift,Espathra,81/182,523747,Espathra - 081/182,LINKED,1.00,espathra,espathra
+pkm-paradox-rift-82-182-37b084d895,Paradox Rift,Tinkatink,82/182,,,NO_CANDIDATE,
+pkm-paradox-rift-83-182-4493a8447e,Paradox Rift,Tinkatink,83/182,,,NO_CANDIDATE,
+pkm-paradox-rift-84-182-00ca002a13,Paradox Rift,Tinkatuff,84/182,,,NO_CANDIDATE,
+pkm-paradox-rift-85-182-ed58f6038a,Paradox Rift,Tinkaton,85/182,,,NO_CANDIDATE,
+pkm-paradox-rift-87-182-8be058e1ac,Paradox Rift,Gimmighoul,87/182,523753,Gimmighoul - 087/182,LINKED,1.00,gimmighoul,gimmighoul
+pkm-paradox-rift-88-182-ffbbfa9ce5,Paradox Rift,Gimmighoul,88/182,523754,Gimmighoul - 088/182,LINKED,1.00,gimmighoul,gimmighoul
+pkm-paradox-rift-89-182-ad6a2f78bc,Paradox Rift,Iron Valiant ex,89/182,523756,Iron Valiant ex - 089/182,LINKED,1.00,iron valiant ex,iron valiant ex
+pkm-paradox-rift-93-182-847c674b53,Paradox Rift,Groudon,93/182,523762,Groudon - 093/182,LINKED,1.00,groudon,groudon
+pkm-paradox-rift-97-182-f0c505a9b7,Paradox Rift,Mienshao,97/182,523767,Mienshao - 097/182,LINKED,1.00,mienshao,mienshao
+pkm-paradox-rift-99-182-93669c59f1,Paradox Rift,Minior,99/182,523769,Minior - 099/182,LINKED,1.00,minior,minior
+pkm-paradox-rift-101-182-790d10c9f0,Paradox Rift,Nacli,101/182,523771,Nacli - 101/182,LINKED,1.00,nacli,nacli
+pkm-paradox-rift-102-182-a1d6bf1314,Paradox Rift,Nacli,102/182,523772,Nacli - 102/182,LINKED,1.00,nacli,nacli
+pkm-paradox-rift-104-182-fa9b3bb62e,Paradox Rift,Garganacl,104/182,523774,Garganacl - 104/182,LINKED,1.00,garganacl,garganacl
+pkm-paradox-rift-107-182-dd6dc340b5,Paradox Rift,Slither Wing,107/182,523779,Slither Wing - 107/182,LINKED,1.00,slither wing,slither wing
+pkm-paradox-rift-108-182-aa28fe6275,Paradox Rift,Sandy Shocks ex,108/182,523780,Sandy Shocks ex - 108/182,LINKED,1.00,sandy shocks ex,sandy shocks ex
+pkm-paradox-rift-109-182-f195f863de,Paradox Rift,Ting-Lu,109/182,,,NO_CANDIDATE,
+pkm-paradox-rift-117-182-4c7f1e3e15,Paradox Rift,Garbodor,117/182,523791,Garbodor - 117/182,LINKED,1.00,garbodor,garbodor
+pkm-paradox-rift-118-182-5d00eb1366,Paradox Rift,Yveltal,118/182,523793,Yveltal - 118/182,LINKED,1.00,yveltal,yveltal
+pkm-paradox-rift-121-182-e029625471,Paradox Rift,Morpeko,121/182,523796,Morpeko - 121/182,LINKED,1.00,morpeko,morpeko
+pkm-paradox-rift-123-182-155726e493,Paradox Rift,Brute Bonnet,123/182,523799,Brute Bonnet - 123/182,LINKED,1.00,brute bonnet,brute bonnet
+pkm-paradox-rift-125-182-195f53fed0,Paradox Rift,Steelix,125/182,523801,Steelix - 125/182,LINKED,1.00,steelix,steelix
+pkm-paradox-rift-128-182-fa196b9f48,Paradox Rift,Ferrothorn,128/182,523805,Ferrothorn - 128/182,LINKED,1.00,ferrothorn,ferrothorn
+pkm-paradox-rift-130-182-f10a965820,Paradox Rift,Honedge,130/182,523807,Honedge - 130/182,LINKED,1.00,honedge,honedge
+pkm-paradox-rift-131-182-bcc70f8a17,Paradox Rift,Honedge,131/182,523808,Honedge - 131/182,LINKED,1.00,honedge,honedge
+pkm-paradox-rift-132-182-ba908680a7,Paradox Rift,Doublade,132/182,523809,Doublade - 132/182,LINKED,1.00,doublade,doublade
+pkm-paradox-rift-133-182-92ea96f51a,Paradox Rift,Doublade,133/182,523810,Doublade - 133/182,LINKED,1.00,doublade,doublade
+pkm-paradox-rift-134-182-c796e15089,Paradox Rift,Aegislash,134/182,523813,Aegislash - 134/182,LINKED,1.00,aegislash,aegislash
+pkm-paradox-rift-139-182-c7b5ec83d3,Paradox Rift,Gholdengo ex,139/182,523818,Gholdengo ex - 139/182,LINKED,1.00,gholdengo ex,gholdengo ex
+pkm-paradox-rift-145-182-01fef8b094,Paradox Rift,Aipom,145/182,523826,Aipom - 145/182,LINKED,1.00,aipom,aipom
+pkm-paradox-rift-152-182-4104181b8f,Paradox Rift,Swablu,152/182,523833,Swablu - 152/182,LINKED,1.00,swablu,swablu
+pkm-paradox-rift-153-182-0262d08045,Paradox Rift,Tandemaus,153/182,523834,Tandemaus - 153/182,LINKED,1.00,tandemaus,tandemaus
+pkm-paradox-rift-154-182-3a2de20ce7,Paradox Rift,Tandemaus,154/182,523835,Tandemaus - 154/182,LINKED,1.00,tandemaus,tandemaus
+pkm-paradox-rift-157-182-fc4791209c,Paradox Rift,Cyclizar,157/182,523838,Cyclizar - 157/182,LINKED,1.00,cyclizar,cyclizar
+pkm-paradox-rift-158-182-169ad9ed2e,Paradox Rift,Iron Jugulis,158/182,523839,Iron Jugulis - 158/182,LINKED,1.00,iron jugulis,iron jugulis
+pkm-paradox-rift-159-182-d26cdecdb8,Paradox Rift,Ancient Booster Energy Capsule,159/182,,,NO_CANDIDATE,
+pkm-paradox-rift-164-182-5fe2ca488a,Paradox Rift,Future Booster Energy Capsule,164/182,,,NO_CANDIDATE,
+pkm-paradox-rift-183-182-2301f70ebd,Paradox Rift,Crustle,183/182,523864,Crustle - 183/182,LINKED,1.00,crustle,crustle
+pkm-paradox-rift-184-182-5abeb02b9c,Paradox Rift,Dottler,184/182,523865,Dottler - 184/182,LINKED,1.00,dottler,dottler
+pkm-paradox-rift-185-182-d0b4996291,Paradox Rift,Toedscruel,185/182,523866,Toedscruel - 185/182,LINKED,1.00,toedscruel,toedscruel
+pkm-paradox-rift-186-182-02b035df34,Paradox Rift,Magby,186/182,523867,Magby - 186/182,LINKED,1.00,magby,magby
+pkm-paradox-rift-187-182-6ee809c033,Paradox Rift,Iron Moth,187/182,523868,Iron Moth - 187/182,LINKED,1.00,iron moth,iron moth
+pkm-paradox-rift-188-182-fd60db6b08,Paradox Rift,Snorunt,188/182,523869,Snorunt - 188/182,LINKED,1.00,snorunt,snorunt
+pkm-paradox-rift-189-182-246b586bcd,Paradox Rift,Mantyke,189/182,523870,Mantyke - 189/182,LINKED,1.00,mantyke,mantyke
+pkm-paradox-rift-190-182-12e608f1e1,Paradox Rift,Vanillish,190/182,523871,Vanillish - 190/182,LINKED,1.00,vanillish,vanillish
+pkm-paradox-rift-191-182-7f994036f3,Paradox Rift,Wimpod,191/182,523872,Wimpod - 191/182,LINKED,1.00,wimpod,wimpod
+pkm-paradox-rift-192-182-8b5a2d12c4,Paradox Rift,Veluza,192/182,523873,Veluza - 192/182,LINKED,1.00,veluza,veluza
+pkm-paradox-rift-193-182-cf326e6428,Paradox Rift,Plusle,193/182,523874,Plusle - 193/182,LINKED,1.00,plusle,plusle
+pkm-paradox-rift-194-182-aa9cfdc172,Paradox Rift,Minun,194/182,523875,Minun - 194/182,LINKED,1.00,minun,minun
+pkm-paradox-rift-195-182-078dada31b,Paradox Rift,Blitzle,195/182,523876,Blitzle - 195/182,LINKED,1.00,blitzle,blitzle
+pkm-paradox-rift-196-182-3e5f48119d,Paradox Rift,Joltik,196/182,523877,Joltik - 196/182,LINKED,1.00,joltik,joltik
+pkm-paradox-rift-197-182-3cd86cf272,Paradox Rift,Espathra,197/182,523878,Espathra - 197/182,LINKED,1.00,espathra,espathra
+pkm-paradox-rift-198-182-9a3e31afea,Paradox Rift,Gimmighoul,198/182,523879,Gimmighoul - 198/182,LINKED,1.00,gimmighoul,gimmighoul
+pkm-paradox-rift-199-182-9fb72e4edf,Paradox Rift,Groudon,199/182,523880,Groudon - 199/182,LINKED,1.00,groudon,groudon
+pkm-paradox-rift-200-182-9456a693ff,Paradox Rift,Mienshao,200/182,523881,Mienshao - 200/182,LINKED,1.00,mienshao,mienshao
+pkm-paradox-rift-201-182-f8472cb552,Paradox Rift,Minior,201/182,523882,Minior - 201/182,LINKED,1.00,minior,minior
+pkm-paradox-rift-202-182-5dbb584b59,Paradox Rift,Garganacl,202/182,523883,Garganacl - 202/182,LINKED,1.00,garganacl,garganacl
+pkm-paradox-rift-203-182-85bd041eb6,Paradox Rift,Slither Wing,203/182,523884,Slither Wing - 203/182,LINKED,1.00,slither wing,slither wing
+pkm-paradox-rift-204-182-16d1206be7,Paradox Rift,Garbodor,204/182,523885,Garbodor - 204/182,LINKED,1.00,garbodor,garbodor
+pkm-paradox-rift-205-182-7099c9f512,Paradox Rift,Yveltal,205/182,523886,Yveltal - 205/182,LINKED,1.00,yveltal,yveltal
+pkm-paradox-rift-206-182-cfd528fb80,Paradox Rift,Morpeko,206/182,523887,Morpeko - 206/182,LINKED,1.00,morpeko,morpeko
+pkm-paradox-rift-207-182-19ce3cd0e3,Paradox Rift,Brute Bonnet,207/182,523888,Brute Bonnet - 207/182,LINKED,1.00,brute bonnet,brute bonnet
+pkm-paradox-rift-208-182-f158254196,Paradox Rift,Steelix,208/182,523889,Steelix - 208/182,LINKED,1.00,steelix,steelix
+pkm-paradox-rift-209-182-c06c040721,Paradox Rift,Ferrothorn,209/182,523890,Ferrothorn - 209/182,LINKED,1.00,ferrothorn,ferrothorn
+pkm-paradox-rift-210-182-a67e7d1209,Paradox Rift,Aegislash,210/182,523891,Aegislash - 210/182,LINKED,1.00,aegislash,aegislash
+pkm-paradox-rift-211-182-c2fa550c67,Paradox Rift,Aipom,211/182,523892,Aipom - 211/182,LINKED,1.00,aipom,aipom
+pkm-paradox-rift-212-182-efe367ea36,Paradox Rift,Loudred,212/182,523893,Loudred - 212/182,LINKED,1.00,loudred,loudred
+pkm-paradox-rift-213-182-16d0312e59,Paradox Rift,Swablu,213/182,523894,Swablu - 213/182,LINKED,1.00,swablu,swablu
+pkm-paradox-rift-214-182-deed34313e,Paradox Rift,Porygon-Z,214/182,523895,Porygon-Z - 214/182,LINKED,1.00,porygon z,porygon z
+pkm-paradox-rift-215-182-f819a4929d,Paradox Rift,Cyclizar,215/182,523896,Cyclizar - 215/182,LINKED,1.00,cyclizar,cyclizar
+pkm-paradox-rift-216-182-28d70af20d,Paradox Rift,Iron Jugulis,216/182,523897,Iron Jugulis - 216/182,LINKED,1.00,iron jugulis,iron jugulis
+pkm-paradox-rift-217-182-07dc2b14b4,Paradox Rift,Froslass ex,217/182,523898,Froslass ex - 217/182,LINKED,1.00,froslass ex,froslass ex
+pkm-paradox-rift-218-182-763e5e0045,Paradox Rift,Armarouge ex,218/182,523899,Armarouge ex - 218/182,LINKED,1.00,armarouge ex,armarouge ex
+pkm-paradox-rift-219-182-e2fed22461,Paradox Rift,Garchomp ex,219/182,523900,Garchomp ex - 219/182,LINKED,1.00,garchomp ex,garchomp ex
+pkm-paradox-rift-220-182-be76e61027,Paradox Rift,Tsareena ex,220/182,523901,Tsareena ex - 220/182,LINKED,1.00,tsareena ex,tsareena ex
+pkm-paradox-rift-221-182-5c1b05fee6,Paradox Rift,Golisopod ex,221/182,523902,Golisopod ex - 221/182,LINKED,1.00,golisopod ex,golisopod ex
+pkm-paradox-rift-222-182-5f8671ec2a,Paradox Rift,Tapu Koko ex,222/182,523903,Tapu Koko ex - 222/182,LINKED,1.00,tapu koko ex,tapu koko ex
+pkm-paradox-rift-223-182-0741f5b845,Paradox Rift,Iron Hands ex,223/182,523904,Iron Hands ex - 223/182,LINKED,1.00,iron hands ex,iron hands ex
+pkm-paradox-rift-224-182-28d61d3872,Paradox Rift,Cofagrigus ex,224/182,523905,Cofagrigus ex - 224/182,LINKED,1.00,cofagrigus ex,cofagrigus ex
+pkm-paradox-rift-225-182-69e5187c82,Paradox Rift,Iron Valiant ex,225/182,523906,Iron Valiant ex - 225/182,LINKED,1.00,iron valiant ex,iron valiant ex
+pkm-paradox-rift-226-182-3d1bc65bce,Paradox Rift,Hoopa ex,226/182,523907,Hoopa ex - 226/182,LINKED,1.00,hoopa ex,hoopa ex
+pkm-paradox-rift-227-182-11bb5fe1e9,Paradox Rift,Toxtricity ex,227/182,523908,Toxtricity ex - 227/182,LINKED,1.00,toxtricity ex,toxtricity ex
+pkm-paradox-rift-228-182-8d8ec0f580,Paradox Rift,Sandy Shocks ex,228/182,523909,Sandy Shocks ex - 228/182,LINKED,1.00,sandy shocks ex,sandy shocks ex
+pkm-paradox-rift-229-182-893ad770f8,Paradox Rift,Roaring Moon ex,229/182,523910,Roaring Moon ex - 229/182,LINKED,1.00,roaring moon ex,roaring moon ex
+pkm-paradox-rift-230-182-11c24f852b,Paradox Rift,Aegislash ex,230/182,523911,Aegislash ex - 230/182,LINKED,1.00,aegislash ex,aegislash ex
+pkm-paradox-rift-231-182-762afef26d,Paradox Rift,Gholdengo ex,231/182,523912,Gholdengo ex - 231/182,LINKED,1.00,gholdengo ex,gholdengo ex
+pkm-paradox-rift-232-182-3ccfd7c300,Paradox Rift,Altaria ex,232/182,523913,Altaria ex - 232/182,LINKED,1.00,altaria ex,altaria ex
+pkm-paradox-rift-233-182-67ac27195e,Paradox Rift,Maushold ex,233/182,523914,Maushold ex - 233/182,LINKED,1.00,maushold ex,maushold ex
+pkm-paradox-rift-234-182-44ca5c521c,Paradox Rift,Bombirdier ex,234/182,523915,Bombirdier ex - 234/182,LINKED,1.00,bombirdier ex,bombirdier ex
+pkm-paradox-rift-235-182-be5a1dcc8c,Paradox Rift,Larry,235/182,523916,Larry - 235/182,LINKED,1.00,larry,larry
+pkm-paradox-rift-236-182-09add27168,Paradox Rift,Mela,236/182,523917,Mela - 236/182,LINKED,1.00,mela,mela
+pkm-paradox-rift-237-182-9f89007aae,Paradox Rift,Norman,237/182,523918,Norman - 237/182,LINKED,1.00,norman,norman
+pkm-paradox-rift-238-182-576d783f63,Paradox Rift,Parasol Lady,238/182,523919,Parasol Lady - 238/182,LINKED,1.00,parasol lady,parasol lady
+pkm-paradox-rift-239-182-1484b943af,Paradox Rift,Professor Sada's Vitality,239/182,523920,Professor Sada's Vitality - 239/182,LINKED,1.00,professor sada s vitality,professor sada s vitality
+pkm-paradox-rift-240-182-e9d6685aab,Paradox Rift,Professor Turo's Scenario,240/182,523921,Professor Turo's Scenario - 240/182,LINKED,1.00,professor turo s scenario,professor turo s scenario
+pkm-paradox-rift-241-182-f9c6c53b5e,Paradox Rift,Rika,241/182,523922,Rika - 241/182,LINKED,1.00,rika,rika
+pkm-paradox-rift-242-182-cd74bf85a9,Paradox Rift,Roark,242/182,523923,Roark - 242/182,LINKED,1.00,roark,roark
+pkm-paradox-rift-243-182-a87ae1a682,Paradox Rift,Shauntal,243/182,523924,Shauntal - 243/182,LINKED,1.00,shauntal,shauntal
+pkm-paradox-rift-244-182-d5a4c6804a,Paradox Rift,Tulip,244/182,523925,Tulip - 244/182,LINKED,1.00,tulip,tulip
+pkm-paradox-rift-245-182-fdcd910c06,Paradox Rift,Garchomp ex,245/182,523926,Garchomp ex - 245/182,LINKED,1.00,garchomp ex,garchomp ex
+pkm-paradox-rift-246-182-d858fa81a7,Paradox Rift,Golisopod ex,246/182,523927,Golisopod ex - 246/182,LINKED,1.00,golisopod ex,golisopod ex
+pkm-paradox-rift-247-182-41d8e90890,Paradox Rift,Tapu Koko ex,247/182,523928,Tapu Koko ex - 247/182,LINKED,1.00,tapu koko ex,tapu koko ex
+pkm-paradox-rift-248-182-a9025c6b10,Paradox Rift,Iron Hands ex,248/182,523929,Iron Hands ex - 248/182,LINKED,1.00,iron hands ex,iron hands ex
+pkm-paradox-rift-249-182-360e2832bf,Paradox Rift,Iron Valiant ex,249/182,523930,Iron Valiant ex - 249/182,LINKED,1.00,iron valiant ex,iron valiant ex
+pkm-paradox-rift-250-182-4f385c5341,Paradox Rift,Sandy Shocks ex,250/182,523931,Sandy Shocks ex - 250/182,LINKED,1.00,sandy shocks ex,sandy shocks ex
+pkm-paradox-rift-251-182-760acc6211,Paradox Rift,Roaring Moon ex,251/182,523932,Roaring Moon ex - 251/182,LINKED,1.00,roaring moon ex,roaring moon ex
+pkm-paradox-rift-252-182-2d001226bb,Paradox Rift,Gholdengo ex,252/182,523933,Gholdengo ex - 252/182,LINKED,1.00,gholdengo ex,gholdengo ex
+pkm-paradox-rift-253-182-6b28363913,Paradox Rift,Altaria ex,253/182,523934,Altaria ex - 253/182,LINKED,1.00,altaria ex,altaria ex
+pkm-paradox-rift-254-182-914e51fe60,Paradox Rift,Mela,254/182,523935,Mela - 254/182,LINKED,1.00,mela,mela
+pkm-paradox-rift-255-182-4e0f1f1ce1,Paradox Rift,Parasol Lady,255/182,523936,Parasol Lady - 255/182,LINKED,1.00,parasol lady,parasol lady
+pkm-paradox-rift-256-182-6dc2ce19e0,Paradox Rift,Professor Sada's Vitality,256/182,523937,Professor Sada's Vitality - 256/182,LINKED,1.00,professor sada s vitality,professor sada s vitality
+pkm-paradox-rift-257-182-3140045de2,Paradox Rift,Professor Turo's Scenario,257/182,523938,Professor Turo's Scenario - 257/182,LINKED,1.00,professor turo s scenario,professor turo s scenario
+pkm-paradox-rift-258-182-17092f6d2e,Paradox Rift,Rika,258/182,523939,Rika - 258/182,LINKED,1.00,rika,rika
+pkm-paradox-rift-259-182-41cb7515f6,Paradox Rift,Tulip,259/182,523940,Tulip - 259/182,LINKED,1.00,tulip,tulip
+pkm-paradox-rift-260-182-30e6ac13bb,Paradox Rift,Garchomp ex,260/182,523941,Garchomp ex - 260/182,LINKED,1.00,garchomp ex,garchomp ex
+pkm-paradox-rift-261-182-9dfd332c47,Paradox Rift,Iron Valiant ex,261/182,523942,Iron Valiant ex - 261/182,LINKED,1.00,iron valiant ex,iron valiant ex
+pkm-paradox-rift-262-182-6f69cdb318,Paradox Rift,Roaring Moon ex,262/182,523943,Roaring Moon ex - 262/182,LINKED,1.00,roaring moon ex,roaring moon ex
+pkm-paradox-rift-263-182-fecbba435e,Paradox Rift,Beach Court,263/182,523944,Beach Court - 263/182,LINKED,1.00,beach court,beach court
+pkm-paradox-rift-264-182-6836039a64,Paradox Rift,Counter Catcher,264/182,523945,Counter Catcher - 264/182,LINKED,1.00,counter catcher,counter catcher
+pkm-paradox-rift-265-182-83d6cb8c1e,Paradox Rift,Luxurious Cape,265/182,523946,Luxurious Cape - 265/182,LINKED,1.00,luxurious cape,luxurious cape
+pkm-paradox-rift-266-182-be8ad930c9,Paradox Rift,Reversal Energy,266/182,523947,Reversal Energy - 266/182,LINKED,1.00,reversal energy,reversal energy
+pkm-scarlet-and-violet-5-198-42fbbbf19f,Scarlet and Violet,Cacnea,5/198,487834,Cacnea - 005/198,LINKED,1.00,cacnea,cacnea
+pkm-scarlet-and-violet-6-198-1c7266744e,Scarlet and Violet,Cacturne,6/198,487836,Cacturne - 006/198,LINKED,1.00,cacturne,cacturne
+pkm-scarlet-and-violet-15-198-73b1947d0e,Scarlet and Violet,Meowscarada,15/198,487848,Meowscarada - 015/198,LINKED,1.00,meowscarada,meowscarada
+pkm-scarlet-and-violet-16-198-ae1f9dd418,Scarlet and Violet,Tarountula,16/198,487851,Tarountula - 016/198,LINKED,1.00,tarountula,tarountula
+pkm-scarlet-and-violet-17-198-facb05962a,Scarlet and Violet,Tarountula,17/198,487854,Tarountula - 017/198,LINKED,1.00,tarountula,tarountula
+pkm-scarlet-and-violet-18-198-28bfe3525b,Scarlet and Violet,Tarountula,18/198,487855,Tarountula - 018/198,LINKED,1.00,tarountula,tarountula
+pkm-scarlet-and-violet-19-198-ee2a9ed24d,Scarlet and Violet,Spidops ex,19/198,487856,Spidops ex - 019/198,LINKED,1.00,spidops ex,spidops ex
+pkm-scarlet-and-violet-20-198-a337aef13b,Scarlet and Violet,Smoliv,20/198,487857,Smoliv - 020/198,LINKED,1.00,smoliv,smoliv
+pkm-scarlet-and-violet-21-198-387fd1175d,Scarlet and Violet,Smoliv,21/198,487858,Smoliv - 021/198,LINKED,1.00,smoliv,smoliv
+pkm-scarlet-and-violet-22-198-6df3b60226,Scarlet and Violet,Dolliv,22/198,487859,Dolliv - 022/198,LINKED,1.00,dolliv,dolliv
+pkm-scarlet-and-violet-24-198-436f716ce4,Scarlet and Violet,Toedscool,24/198,487861,Toedscool - 024/198,LINKED,1.00,toedscool,toedscool
+pkm-scarlet-and-violet-25-198-d1f981583e,Scarlet and Violet,Toedscool,25/198,487862,Toedscool - 025/198,LINKED,1.00,toedscool,toedscool
+pkm-scarlet-and-violet-27-198-9082b359b7,Scarlet and Violet,Capsakid,27/198,487866,Capsakid - 027/198,LINKED,1.00,capsakid,capsakid
+pkm-scarlet-and-violet-28-198-a33ecca66b,Scarlet and Violet,Capsakid,28/198,487867,Capsakid - 028/198,LINKED,1.00,capsakid,capsakid
+pkm-scarlet-and-violet-29-198-6b435bc678,Scarlet and Violet,Scovillain,29/198,487868,Scovillain - 029/198,LINKED,1.00,scovillain,scovillain
+pkm-scarlet-and-violet-30-198-97875dc4ab,Scarlet and Violet,Growlithe,30/198,487869,Growlithe - 030/198,LINKED,1.00,growlithe,growlithe
+pkm-scarlet-and-violet-31-198-c887a825e0,Scarlet and Violet,Growlithe,31/198,487870,Growlithe - 031/198,LINKED,1.00,growlithe,growlithe
+pkm-scarlet-and-violet-32-198-5f8329fdb5,Scarlet and Violet,Arcanine ex,32/198,487872,Arcanine ex - 032/198,LINKED,1.00,arcanine ex,arcanine ex
+pkm-scarlet-and-violet-33-198-94c0d449c2,Scarlet and Violet,Houndour,33/198,487873,Houndour - 033/198,LINKED,1.00,houndour,houndour
+pkm-scarlet-and-violet-34-198-25d6629e99,Scarlet and Violet,Houndoom,34/198,487874,Houndoom - 034/198,LINKED,1.00,houndoom,houndoom
+pkm-scarlet-and-violet-39-198-b76a5c34c1,Scarlet and Violet,Charcadet,39/198,487881,Charcadet - 039/198,LINKED,1.00,charcadet,charcadet
+pkm-scarlet-and-violet-40-198-ddcbf9907a,Scarlet and Violet,Charcadet,40/198,487882,Charcadet - 040/198,LINKED,1.00,charcadet,charcadet
+pkm-scarlet-and-violet-41-198-184d8d83f3,Scarlet and Violet,Armarouge,41/198,487883,Armarouge - 041/198,LINKED,1.00,armarouge,armarouge
+pkm-scarlet-and-violet-42-198-e1628e1f2c,Scarlet and Violet,Slowpoke,42/198,487885,Slowpoke - 042/198,LINKED,1.00,slowpoke,slowpoke
+pkm-scarlet-and-violet-45-198-d425a8a669,Scarlet and Violet,Gyarados ex,45/198,487889,Gyarados ex - 045/198,LINKED,1.00,gyarados ex,gyarados ex
+pkm-scarlet-and-violet-49-198-e789214336,Scarlet and Violet,Clauncher,49/198,487895,Clauncher - 049/198,LINKED,1.00,clauncher,clauncher
+pkm-scarlet-and-violet-55-198-eb8e3c6a73,Scarlet and Violet,Wiglett,55/198,487903,Wiglett - 055/198,LINKED,1.00,wiglett,wiglett
+pkm-scarlet-and-violet-56-198-4bf6c234f5,Scarlet and Violet,Wiglett,56/198,487905,Wiglett - 056/198,LINKED,1.00,wiglett,wiglett
+pkm-scarlet-and-violet-58-198-76d1a69023,Scarlet and Violet,Cetoddle,58/198,487908,Cetoddle - 058/198,LINKED,1.00,cetoddle,cetoddle
+pkm-scarlet-and-violet-59-198-2f1bba16d6,Scarlet and Violet,Cetoddle,59/198,487910,Cetoddle - 059/198,LINKED,1.00,cetoddle,cetoddle
+pkm-scarlet-and-violet-61-198-58f52b8b02,Scarlet and Violet,Dondozo,61/198,487913,Dondozo - 061/198,LINKED,1.00,dondozo,dondozo
+pkm-scarlet-and-violet-65-198-74af81cd6f,Scarlet and Violet,Magnezone ex,65/198,486612,Magnezone ex - 065/198,LINKED,1.00,magnezone ex,magnezone ex
+pkm-scarlet-and-violet-68-198-eba1d188a2,Scarlet and Violet,Pachirisu,68/198,487922,Pachirisu - 068/198,LINKED,1.00,pachirisu,pachirisu
+pkm-scarlet-and-violet-69-198-2f8584eeac,Scarlet and Violet,Rotom,69/198,487923,Rotom - 069/198,LINKED,1.00,rotom,rotom
+pkm-scarlet-and-violet-70-198-b8422da5f6,Scarlet and Violet,Rotom,70/198,487924,Rotom - 070/198,LINKED,1.00,rotom,rotom
+pkm-scarlet-and-violet-73-198-362c9585b6,Scarlet and Violet,Pawmi,73/198,487927,Pawmi - 073/198,LINKED,1.00,pawmi,pawmi
+pkm-scarlet-and-violet-74-198-71bf3ed4bb,Scarlet and Violet,Pawmi,74/198,487929,Pawmi - 074/198,LINKED,1.00,pawmi,pawmi
+pkm-scarlet-and-violet-76-198-aafe274454,Scarlet and Violet,Pawmot,76/198,487931,Pawmot - 076/198,LINKED,1.00,pawmot,pawmot
+pkm-scarlet-and-violet-77-198-276b5f5736,Scarlet and Violet,Wattrel,77/198,487932,Wattrel - 077/198,LINKED,1.00,wattrel,wattrel
+pkm-scarlet-and-violet-78-198-16e91a4227,Scarlet and Violet,Wattrel,78/198,487933,Wattrel - 078/198,LINKED,1.00,wattrel,wattrel
+pkm-scarlet-and-violet-81-198-9189adaa18,Scarlet and Violet,Miraidon ex,81/198,475420,Miraidon ex - 081/198,LINKED,1.00,miraidon ex,miraidon ex
+pkm-scarlet-and-violet-82-198-143d238b2a,Scarlet and Violet,Drowzee,82/198,487944,Drowzee - 082/198,LINKED,1.00,drowzee,drowzee
+pkm-scarlet-and-violet-84-198-7fde06a065,Scarlet and Violet,Ralts,84/198,487948,Ralts - 084/198,LINKED,1.00,ralts,ralts
+pkm-scarlet-and-violet-85-198-dbddab9b66,Scarlet and Violet,Kirlia,85/198,487949,Kirlia - 085/198,LINKED,1.00,kirlia,kirlia
+pkm-scarlet-and-violet-86-198-b043864e5b,Scarlet and Violet,Gardevoir ex,86/198,487951,Gardevoir ex - 086/198,LINKED,1.00,gardevoir ex,gardevoir ex
+pkm-scarlet-and-violet-88-198-80d941a4e8,Scarlet and Violet,Banette ex,88/198,487954,Banette ex - 088/198,LINKED,1.00,banette ex,banette ex
+pkm-scarlet-and-violet-91-198-63aaa7cf6e,Scarlet and Violet,Flabébé,91/198,487958,Flabebe,SKIP_NAME_MISMATCH,0.00,flab b,flabebe
+pkm-scarlet-and-violet-94-198-8177b6ab18,Scarlet and Violet,Dedenne,94/198,487961,Dedenne - 094/198,LINKED,1.00,dedenne,dedenne
+pkm-scarlet-and-violet-95-198-4b293542ca,Scarlet and Violet,Dedenne,95/198,487054,Dedenne - 095/198,LINKED,1.00,dedenne,dedenne
+pkm-scarlet-and-violet-97-198-952f29535f,Scarlet and Violet,Fidough,97/198,487968,Fidough - 097/198,LINKED,1.00,fidough,fidough
+pkm-scarlet-and-violet-98-198-6c371a0359,Scarlet and Violet,Fidough,98/198,487969,Fidough - 098/198,LINKED,1.00,fidough,fidough
+pkm-scarlet-and-violet-100-198-5a69d21d42,Scarlet and Violet,Flittle,100/198,487973,Flittle - 100/198,LINKED,1.00,flittle,flittle
+pkm-scarlet-and-violet-101-198-8a182e30f7,Scarlet and Violet,Flittle,101/198,487975,Flittle - 101/198,LINKED,1.00,flittle,flittle
+pkm-scarlet-and-violet-102-198-b6734fe138,Scarlet and Violet,Flittle,102/198,487976,Flittle - 102/198,LINKED,1.00,flittle,flittle
+pkm-scarlet-and-violet-104-198-d9f6439643,Scarlet and Violet,Greavard,104/198,487980,Greavard - 104/198,LINKED,1.00,greavard,greavard
+pkm-scarlet-and-violet-105-198-032dd9b6b8,Scarlet and Violet,Greavard,105/198,487981,Greavard - 105/198,LINKED,1.00,greavard,greavard
+pkm-scarlet-and-violet-110-198-b811a19eee,Scarlet and Violet,Meditite,110/198,487999,Meditite - 110/198,LINKED,1.00,meditite,meditite
+pkm-scarlet-and-violet-111-198-b61c3f049a,Scarlet and Violet,Medicham,111/198,488000,Medicham - 111/198,LINKED,1.00,medicham,medicham
+pkm-scarlet-and-violet-112-198-a134b5c1a0,Scarlet and Violet,Riolu,112/198,488001,Riolu - 112/198,LINKED,1.00,riolu,riolu
+pkm-scarlet-and-violet-113-198-8d888e7748,Scarlet and Violet,Riolu,113/198,488002,Riolu - 113/198,LINKED,1.00,riolu,riolu
+pkm-scarlet-and-violet-114-198-a0a03be706,Scarlet and Violet,Lucario,114/198,488003,Lucario - 114/198,LINKED,1.00,lucario,lucario
+pkm-scarlet-and-violet-115-198-306923e4c7,Scarlet and Violet,Sandile,115/198,488004,Sandile - 115/198,LINKED,1.00,sandile,sandile
+pkm-scarlet-and-violet-122-198-a6f5921315,Scarlet and Violet,Klawf,122/198,488011,Klawf - 122/198,LINKED,1.00,klawf,klawf
+pkm-scarlet-and-violet-123-198-1b26d58c08,Scarlet and Violet,Great Tusk ex,123/198,488012,Great Tusk ex - 123/198,LINKED,1.00,great tusk ex,great tusk ex
+pkm-scarlet-and-violet-125-198-743d3e3d1c,Scarlet and Violet,Koraidon ex,125/198,475421,Koraidon ex - 125/198,LINKED,1.00,koraidon ex,koraidon ex
+pkm-scarlet-and-violet-131-198-b52961db5e,Scarlet and Violet,Toxicroak ex,131/198,488019,Toxicroak ex - 131/198,LINKED,1.00,toxicroak ex,toxicroak ex
+pkm-scarlet-and-violet-134-198-e2f8035f81,Scarlet and Violet,Kingambit,134/198,488024,Kingambit - 134/198,LINKED,1.00,kingambit,kingambit
+pkm-scarlet-and-violet-135-198-e83c4ae942,Scarlet and Violet,Maschiff,135/198,488025,Maschiff - 135/198,LINKED,1.00,maschiff,maschiff
+pkm-scarlet-and-violet-136-198-068e5ea3aa,Scarlet and Violet,Maschiff,136/198,485867,Maschiff - 136/198,LINKED,1.00,maschiff,maschiff
+pkm-scarlet-and-violet-137-198-7d25f38226,Scarlet and Violet,Mabosstiff,137/198,485871,Mabosstiff - 137/198,LINKED,1.00,mabosstiff,mabosstiff
+pkm-scarlet-and-violet-138-198-0d400d522a,Scarlet and Violet,Bombirdier,138/198,488026,Bombirdier - 138/198,LINKED,1.00,bombirdier,bombirdier
+pkm-scarlet-and-violet-140-198-316c1de814,Scarlet and Violet,Varoom,140/198,488028,Varoom - 140/198,LINKED,1.00,varoom,varoom
+pkm-scarlet-and-violet-141-198-11aa8a1eff,Scarlet and Violet,Varoom,141/198,488029,Varoom - 141/198,LINKED,1.00,varoom,varoom
+pkm-scarlet-and-violet-143-198-af2d2453c8,Scarlet and Violet,Iron Treads ex,143/198,485106,Iron Treads ex - 143/198,LINKED,1.00,iron treads ex,iron treads ex
+pkm-scarlet-and-violet-146-198-69b51bab86,Scarlet and Violet,Zangoose,146/198,488035,Zangoose - 146/198,LINKED,1.00,zangoose,zangoose
+pkm-scarlet-and-violet-147-198-308920303b,Scarlet and Violet,Zangoose,147/198,488036,Zangoose - 147/198,LINKED,1.00,zangoose,zangoose
+pkm-scarlet-and-violet-148-198-201f26ad03,Scarlet and Violet,Starly,148/198,488037,Starly - 148/198,LINKED,1.00,starly,starly
+pkm-scarlet-and-violet-151-198-9a35e5c1aa,Scarlet and Violet,Skwovet,151/198,488041,Skwovet - 151/198,LINKED,1.00,skwovet,skwovet
+pkm-scarlet-and-violet-154-198-adaf888a85,Scarlet and Violet,Lechonk,154/198,488048,Lechonk - 154/198,LINKED,1.00,lechonk,lechonk
+pkm-scarlet-and-violet-155-198-3713e3e41e,Scarlet and Violet,Lechonk,155/198,485108,Lechonk - 155/198,LINKED,1.00,lechonk,lechonk
+pkm-scarlet-and-violet-156-198-c6eb7b7428,Scarlet and Violet,Lechonk,156/198,488050,Lechonk - 156/198,LINKED,1.00,lechonk,lechonk
+pkm-scarlet-and-violet-158-198-12ebaa8614,Scarlet and Violet,Oinkologne ex,158/198,488053,Oinkologne ex - 158/198,LINKED,1.00,oinkologne ex,oinkologne ex
+pkm-scarlet-and-violet-159-198-3ebc8306f3,Scarlet and Violet,Tandemaus,159/198,488054,Tandemaus - 159/198,LINKED,1.00,tandemaus,tandemaus
+pkm-scarlet-and-violet-160-198-32f3c88d7f,Scarlet and Violet,Tandemaus,160/198,488056,Tandemaus - 160/198,LINKED,1.00,tandemaus,tandemaus
+pkm-scarlet-and-violet-163-198-69a2e51641,Scarlet and Violet,Cyclizar,163/198,488059,Cyclizar - 163/198,LINKED,1.00,cyclizar,cyclizar
+pkm-scarlet-and-violet-164-198-81c768177b,Scarlet and Violet,Cyclizar,164/198,487059,Cyclizar - 164/198,LINKED,1.00,cyclizar,cyclizar
+pkm-scarlet-and-violet-166-198-22d62e97b8,Scarlet and Violet,Arven,166/198,488071,Arven - 166/198,LINKED,1.00,arven,arven
+pkm-scarlet-and-violet-175-198-665376e07b,Scarlet and Violet,Jacq,175/198,488080,Jacq - 175/198,LINKED,1.00,jacq,jacq
+pkm-scarlet-and-violet-177-198-ffb53170d7,Scarlet and Violet,Katy,177/198,488082,Katy - 177/198,LINKED,1.00,katy,katy
+pkm-scarlet-and-violet-178-198-e3e4c041a9,Scarlet and Violet,Mesagoza,178/198,488083,Mesagoza - 178/198,LINKED,1.00,mesagoza,mesagoza
+pkm-scarlet-and-violet-179-198-d727ddcd87,Scarlet and Violet,Miriam,179/198,488085,Miriam - 179/198,LINKED,1.00,miriam,miriam
+pkm-scarlet-and-violet-181-198-bb27190751,Scarlet and Violet,Nest Ball,181/198,488087,Nest Ball - 181/198,LINKED,1.00,nest ball,nest ball
+pkm-scarlet-and-violet-183-198-b60e79b49b,Scarlet and Violet,Penny,183/198,488089,Penny - 183/198,LINKED,1.00,penny,penny
+pkm-scarlet-and-violet-189-198-86dc549134,Scarlet and Violet,Professor's Research (Professor Sada),189/198,475423,Professor's Research - 189/198,SKIP_NAME_MISMATCH,0.75,professor s research professor sada,professor s research
+pkm-scarlet-and-violet-190-198-fa20efb79a,Scarlet and Violet,Professor's Research (Professor Turo),190/198,475424,Professor's Research - 190/198,SKIP_NAME_MISMATCH,0.75,professor s research professor turo,professor s research
+pkm-scarlet-and-violet-191-198-38b70e1111,Scarlet and Violet,Rare Candy,191/198,488098,Rare Candy - 191/198,LINKED,1.00,rare candy,rare candy
+pkm-scarlet-and-violet-195-198-5a2cfe0da4,Scarlet and Violet,Team Star Grunt,195/198,488104,Team Star Grunt - 195/198,LINKED,1.00,team star grunt,team star grunt
+pkm-scarlet-and-violet-199-198-c74b5e66da,Scarlet and Violet,Tarountula,199/198,490293,Tarountula - 199/198,LINKED,1.00,tarountula,tarountula
+pkm-scarlet-and-violet-200-198-fd0b9541b5,Scarlet and Violet,Dolliv,200/198,486622,Dolliv - 200/198,LINKED,1.00,dolliv,dolliv
+pkm-scarlet-and-violet-201-198-b619c609ff,Scarlet and Violet,Toedscool,201/198,490049,Toedscool - 201/198,LINKED,1.00,toedscool,toedscool
+pkm-scarlet-and-violet-202-198-27fc3c9518,Scarlet and Violet,Scovillain,202/198,490062,Scovillain - 202/198,LINKED,1.00,scovillain,scovillain
+pkm-scarlet-and-violet-203-198-f4f353fe07,Scarlet and Violet,Armarouge,203/198,490063,Armarouge - 203/198,LINKED,1.00,armarouge,armarouge
+pkm-scarlet-and-violet-204-198-c727f52a5c,Scarlet and Violet,Slowpoke,204/198,490064,Slowpoke - 204/198,LINKED,1.00,slowpoke,slowpoke
+pkm-scarlet-and-violet-205-198-0ee8f6c2ce,Scarlet and Violet,Clauncher,205/198,490066,Clauncher - 205/198,LINKED,1.00,clauncher,clauncher
+pkm-scarlet-and-violet-206-198-ef8718d151,Scarlet and Violet,Wiglett,206/198,490067,Wiglett - 206/198,LINKED,1.00,wiglett,wiglett
+pkm-scarlet-and-violet-207-198-2b2ec6ce46,Scarlet and Violet,Dondozo,207/198,487060,Dondozo - 207/198,LINKED,1.00,dondozo,dondozo
+pkm-scarlet-and-violet-208-198-59379d2ba7,Scarlet and Violet,Pachirisu,208/198,490068,Pachirisu - 208/198,LINKED,1.00,pachirisu,pachirisu
+pkm-scarlet-and-violet-209-198-b9568dbc0b,Scarlet and Violet,Pawmot,209/198,490069,Pawmot - 209/198,LINKED,1.00,pawmot,pawmot
+pkm-scarlet-and-violet-210-198-60fc3f51a6,Scarlet and Violet,Drowzee,210/198,490070,Drowzee - 210/198,LINKED,1.00,drowzee,drowzee
+pkm-scarlet-and-violet-211-198-40f131d172,Scarlet and Violet,Ralts,211/198,490071,Ralts - 211/198,LINKED,1.00,ralts,ralts
+pkm-scarlet-and-violet-212-198-05eae73331,Scarlet and Violet,Kirlia,212/198,490072,Kirlia - 212/198,LINKED,1.00,kirlia,kirlia
+pkm-scarlet-and-violet-213-198-efeccd942f,Scarlet and Violet,Fidough,213/198,487086,Fidough - 213/198,LINKED,1.00,fidough,fidough
+pkm-scarlet-and-violet-214-198-fc160550e0,Scarlet and Violet,Greavard,214/198,490073,Greavard - 214/198,LINKED,1.00,greavard,greavard
+pkm-scarlet-and-violet-215-198-6651d29d1a,Scarlet and Violet,Riolu,215/198,490074,Riolu - 215/198,LINKED,1.00,riolu,riolu
+pkm-scarlet-and-violet-216-198-811a0c38a0,Scarlet and Violet,Sandile,216/198,489631,Sandile - 216/198,LINKED,1.00,sandile,sandile
+pkm-scarlet-and-violet-217-198-fbcf8b0396,Scarlet and Violet,Klawf,217/198,490075,Klawf - 217/198,LINKED,1.00,klawf,klawf
+pkm-scarlet-and-violet-218-198-f238a4ccdc,Scarlet and Violet,Mabosstiff,218/198,490076,Mabosstiff - 218/198,LINKED,1.00,mabosstiff,mabosstiff
+pkm-scarlet-and-violet-219-198-86d1e5e7b4,Scarlet and Violet,Bombirdier,219/198,490077,Bombirdier - 219/198,LINKED,1.00,bombirdier,bombirdier
+pkm-scarlet-and-violet-220-198-1605d4f5ff,Scarlet and Violet,Kingambit,220/198,490078,Kingambit - 220/198,LINKED,1.00,kingambit,kingambit
+pkm-scarlet-and-violet-221-198-f5ebf1b748,Scarlet and Violet,Starly,221/198,490079,Starly - 221/198,LINKED,1.00,starly,starly
+pkm-scarlet-and-violet-222-198-4d986b8479,Scarlet and Violet,Skwovet,222/198,490080,Skwovet - 222/198,LINKED,1.00,skwovet,skwovet
+pkm-scarlet-and-violet-223-198-9fd5b29683,Scarlet and Violet,Spidops ex,223/198,490081,Spidops ex - 223/198,LINKED,1.00,spidops ex,spidops ex
+pkm-scarlet-and-violet-224-198-6536329b31,Scarlet and Violet,Arcanine ex,224/198,490082,Arcanine ex - 224/198,LINKED,1.00,arcanine ex,arcanine ex
+pkm-scarlet-and-violet-225-198-9de896c90b,Scarlet and Violet,Gyarados ex,225/198,490083,Gyarados ex - 225/198,LINKED,1.00,gyarados ex,gyarados ex
+pkm-scarlet-and-violet-226-198-74659a9bc9,Scarlet and Violet,Magnezone ex,226/198,490084,Magnezone ex - 226/198,LINKED,1.00,magnezone ex,magnezone ex
+pkm-scarlet-and-violet-227-198-b91c6979ed,Scarlet and Violet,Miraidon ex,227/198,490085,Miraidon ex - 227/198,LINKED,1.00,miraidon ex,miraidon ex
+pkm-scarlet-and-violet-228-198-d86a995353,Scarlet and Violet,Gardevoir ex,228/198,490086,Gardevoir ex - 228/198,LINKED,1.00,gardevoir ex,gardevoir ex
+pkm-scarlet-and-violet-229-198-59c6c8302f,Scarlet and Violet,Banette ex,229/198,490087,Banette ex - 229/198,LINKED,1.00,banette ex,banette ex
+pkm-scarlet-and-violet-230-198-17415bf4d4,Scarlet and Violet,Great Tusk ex,230/198,490088,Great Tusk ex - 230/198,LINKED,1.00,great tusk ex,great tusk ex
+pkm-scarlet-and-violet-231-198-ddc87144e1,Scarlet and Violet,Koraidon ex,231/198,490089,Koraidon ex - 231/198,LINKED,1.00,koraidon ex,koraidon ex
+pkm-scarlet-and-violet-232-198-bfe307cf5a,Scarlet and Violet,Toxicroak ex,232/198,490090,Toxicroak ex - 232/198,LINKED,1.00,toxicroak ex,toxicroak ex
+pkm-scarlet-and-violet-233-198-d8f925b8c7,Scarlet and Violet,Iron Treads ex,233/198,490091,Iron Treads ex - 233/198,LINKED,1.00,iron treads ex,iron treads ex
+pkm-scarlet-and-violet-234-198-edc40a5bf9,Scarlet and Violet,Oinkologne ex,234/198,490092,Oinkologne ex - 234/198,LINKED,1.00,oinkologne ex,oinkologne ex
+pkm-scarlet-and-violet-235-198-d33dc53fdd,Scarlet and Violet,Arven,235/198,490093,Arven - 235/198,LINKED,1.00,arven,arven
+pkm-scarlet-and-violet-236-198-907e74f0fa,Scarlet and Violet,Jacq,236/198,490094,Jacq - 236/198,LINKED,1.00,jacq,jacq
+pkm-scarlet-and-violet-237-198-5f4cf0faa4,Scarlet and Violet,Katy,237/198,490095,Katy - 237/198,LINKED,1.00,katy,katy
+pkm-scarlet-and-violet-238-198-dd0821f304,Scarlet and Violet,Miriam,238/198,490096,Miriam - 238/198,LINKED,1.00,miriam,miriam
+pkm-scarlet-and-violet-239-198-e7f08911c8,Scarlet and Violet,Penny,239/198,490097,Penny - 239/198,LINKED,1.00,penny,penny
+pkm-scarlet-and-violet-240-198-06a2819fb3,Scarlet and Violet,Professor's Research (Professor Sada),240/198,490098,Professor's Research - 240/198,SKIP_NAME_MISMATCH,0.75,professor s research professor sada,professor s research
+pkm-scarlet-and-violet-241-198-f77a6971d2,Scarlet and Violet,Professor's Research (Professor Turo),241/198,490099,Professor's Research - 241/198,SKIP_NAME_MISMATCH,0.75,professor s research professor turo,professor s research
+pkm-scarlet-and-violet-242-198-2690188b66,Scarlet and Violet,Team Star Grunt,242/198,487149,Team Star Grunt - 242/198,LINKED,1.00,team star grunt,team star grunt
+pkm-scarlet-and-violet-243-198-8e6c207bdb,Scarlet and Violet,Spidops ex,243/198,487147,Spidops ex - 243/198,LINKED,1.00,spidops ex,spidops ex
+pkm-scarlet-and-violet-244-198-6b90209930,Scarlet and Violet,Miraidon ex,244/198,485259,Miraidon ex - 244/198,LINKED,1.00,miraidon ex,miraidon ex
+pkm-scarlet-and-violet-245-198-a74bd01414,Scarlet and Violet,Gardevoir ex,245/198,486623,Gardevoir ex - 245/198,LINKED,1.00,gardevoir ex,gardevoir ex
+pkm-scarlet-and-violet-246-198-18f7d9d821,Scarlet and Violet,Great Tusk ex,246/198,490290,Great Tusk ex - 246/198,LINKED,1.00,great tusk ex,great tusk ex
+pkm-scarlet-and-violet-247-198-8efa4a954c,Scarlet and Violet,Koraidon ex,247/198,490044,Koraidon ex - 247/198,LINKED,1.00,koraidon ex,koraidon ex
+pkm-scarlet-and-violet-248-198-d1a86a0b57,Scarlet and Violet,Iron Treads ex,248/198,490291,Iron Treads ex - 248/198,LINKED,1.00,iron treads ex,iron treads ex
+pkm-scarlet-and-violet-249-198-33830f3e59,Scarlet and Violet,Arven,249/198,490292,Arven - 249/198,LINKED,1.00,arven,arven
+pkm-scarlet-and-violet-250-198-bb62b52adc,Scarlet and Violet,Jacq,250/198,490289,Jacq - 250/198,LINKED,1.00,jacq,jacq
+pkm-scarlet-and-violet-251-198-a56f4ff989,Scarlet and Violet,Miriam,251/198,487061,Miriam - 251/198,LINKED,1.00,miriam,miriam
+pkm-scarlet-and-violet-252-198-f1b4045a53,Scarlet and Violet,Penny,252/198,490041,Penny - 252/198,LINKED,1.00,penny,penny
+pkm-scarlet-and-violet-253-198-258c94ca04,Scarlet and Violet,Miraidon ex,253/198,490043,Miraidon ex - 253/198,LINKED,1.00,miraidon ex,miraidon ex
+pkm-scarlet-and-violet-254-198-27a0d403f6,Scarlet and Violet,Koraidon ex,254/198,490045,Koraidon ex - 254/198,LINKED,1.00,koraidon ex,koraidon ex
+pkm-scarlet-and-violet-255-198-68c513ff41,Scarlet and Violet,Nest Ball,255/198,490297,Nest Ball - 255/198,LINKED,1.00,nest ball,nest ball
+pkm-scarlet-and-violet-256-198-b9b176e991,Scarlet and Violet,Rare Candy,256/198,490296,Rare Candy - 256/198,LINKED,1.00,rare candy,rare candy
+pkm-scarlet-and-violet-257-198-80431fe727,Scarlet and Violet,Basic Lightning Energy,257/198,490295,Basic Lightning Energy - 257/198,LINKED,1.00,basic lightning energy,basic lightning energy
+pkm-scarlet-and-violet-258-198-c2bf170114,Scarlet and Violet,Basic Fighting Energy,258/198,,,NO_CANDIDATE,
+pkm-shrouded-fable-6-64-3bd462be3f,Shrouded Fable,Tapu Bulu,6/64,560316,Tapu Bulu - 006/064,LINKED,1.00,tapu bulu,tapu bulu
+pkm-shrouded-fable-8-64-ea8ba529a8,Shrouded Fable,Houndoom,8/64,562159,Basic Metal Energy (Reverse Holofoil),SKIP_NAME_MISMATCH,0.00,houndoom,basic metal energy reverse
+pkm-shrouded-fable-8-64-ea8ba529a8,Shrouded Fable,Houndoom,8/64,560318,Houndoom - 008/064,LINKED,1.00,houndoom,houndoom
+pkm-shrouded-fable-10-64-a0a71f4263,Shrouded Fable,Horsea,10/64,560320,Horsea - 010/064,LINKED,1.00,horsea,horsea
+pkm-shrouded-fable-12-64-89bb83dd54,Shrouded Fable,Kingdra ex,12/64,560322,Kingdra ex - 012/064,LINKED,1.00,kingdra ex,kingdra ex
+pkm-shrouded-fable-15-64-ff44363765,Shrouded Fable,Revavroom ex,15/64,560325,Revavroom ex - 015/064,LINKED,1.00,revavroom ex,revavroom ex
+pkm-shrouded-fable-18-64-ff73f249f3,Shrouded Fable,Duskull,18/64,560328,Duskull - 018/064,LINKED,1.00,duskull,duskull
+pkm-shrouded-fable-19-64-64896587db,Shrouded Fable,Dusclops,19/64,560329,Dusclops - 019/064,LINKED,1.00,dusclops,dusclops
+pkm-shrouded-fable-20-64-3a4e9408fb,Shrouded Fable,Dusknoir,20/64,560330,Dusknoir - 020/064,LINKED,1.00,dusknoir,dusknoir
+pkm-shrouded-fable-21-64-f58e5e5968,Shrouded Fable,Cresselia,21/64,560331,Cresselia - 021/064,LINKED,1.00,cresselia,cresselia
+pkm-shrouded-fable-31-64-def82b98af,Shrouded Fable,Zorua,31/64,560341,Zorua - 031/064,LINKED,1.00,zorua,zorua
+pkm-shrouded-fable-36-64-f5b0badc08,Shrouded Fable,Okidogi ex,36/64,560346,Okidogi ex - 036/064,LINKED,1.00,okidogi ex,okidogi ex
+pkm-shrouded-fable-37-64-a9f1b0b2d9,Shrouded Fable,Munkidori ex,37/64,560347,Munkidori ex - 037/064,LINKED,1.00,munkidori ex,munkidori ex
+pkm-shrouded-fable-38-64-c7b483aca1,Shrouded Fable,Fezandipiti ex,38/64,560348,Fezandipiti ex - 038/064,LINKED,1.00,fezandipiti ex,fezandipiti ex
+pkm-shrouded-fable-39-64-1284e8a25d,Shrouded Fable,Pecharunt ex,39/64,560349,Pecharunt ex - 039/064,LINKED,1.00,pecharunt ex,pecharunt ex
+pkm-shrouded-fable-41-64-7857e0a216,Shrouded Fable,Cufant,41/64,560351,Cufant - 041/064,LINKED,1.00,cufant,cufant
+pkm-shrouded-fable-45-64-e81e1000ba,Shrouded Fable,Fraxure,45/64,560355,Fraxure - 045/064,LINKED,1.00,fraxure,fraxure
+pkm-shrouded-fable-49-64-8899324feb,Shrouded Fable,Persian,49/64,560360,Persian - 049/064,LINKED,1.00,persian,persian
+pkm-shrouded-fable-53-64-690a0aa78f,Shrouded Fable,Bewear,53/64,560364,Bewear - 053/064,LINKED,1.00,bewear,bewear
+pkm-shrouded-fable-56-64-a85c478fc0,Shrouded Fable,Cassiopeia,56/64,560367,Cassiopeia - 056/064,LINKED,1.00,cassiopeia,cassiopeia
+pkm-shrouded-fable-57-64-d64fcac626,Shrouded Fable,Colress's Tenacity,57/64,560368,Colress's Tenacity - 057/064,LINKED,1.00,colress s tenacity,colress s tenacity
+pkm-shrouded-fable-59-64-a69f1353e8,Shrouded Fable,Janine's Secret Art,59/64,560370,Janine's Secret Art - 059/064,LINKED,1.00,janine s art,janine s art
+pkm-shrouded-fable-63-64-af2117f6e4,Shrouded Fable,Powerglass,63/64,560374,Powerglass - 063/064,LINKED,1.00,powerglass,powerglass
+pkm-shrouded-fable-64-64-613fda1387,Shrouded Fable,Xerosic's Machinations,64/64,560375,Xerosic's Machinations - 064/064,LINKED,1.00,xerosic s machinations,xerosic s machinations
+pkm-shrouded-fable-65-64-ed090dd7bf,Shrouded Fable,Tapu Bulu,65/64,560376,Tapu Bulu - 065/064,LINKED,1.00,tapu bulu,tapu bulu
+pkm-shrouded-fable-66-64-26429e736b,Shrouded Fable,Houndoom,66/64,560377,Houndoom - 066/064,LINKED,1.00,houndoom,houndoom
+pkm-shrouded-fable-67-64-b9ae146705,Shrouded Fable,Horsea,67/64,560378,Horsea - 067/064,LINKED,1.00,horsea,horsea
+pkm-shrouded-fable-68-64-e7ffa04e47,Shrouded Fable,Duskull,68/64,560379,Duskull - 068/064,LINKED,1.00,duskull,duskull
+pkm-shrouded-fable-69-64-dc606d3c1c,Shrouded Fable,Dusclops,69/64,560380,Dusclops - 069/064,LINKED,1.00,dusclops,dusclops
+pkm-shrouded-fable-70-64-666d3bc75d,Shrouded Fable,Dusknoir,70/64,560381,Dusknoir - 070/064,LINKED,1.00,dusknoir,dusknoir
+pkm-shrouded-fable-71-64-4c39b1e8cd,Shrouded Fable,Cresselia,71/64,560382,Cresselia - 071/064,LINKED,1.00,cresselia,cresselia
+pkm-shrouded-fable-75-64-b9993c9651,Shrouded Fable,Zorua,75/64,560386,Zorua - 075/064,LINKED,1.00,zorua,zorua
+pkm-shrouded-fable-76-64-742dfd9939,Shrouded Fable,Cufant,76/64,560387,Cufant - 076/064,LINKED,1.00,cufant,cufant
+pkm-shrouded-fable-77-64-b63c906bdd,Shrouded Fable,Fraxure,77/64,560388,Fraxure - 077/064,LINKED,1.00,fraxure,fraxure
+pkm-shrouded-fable-78-64-ca5540659c,Shrouded Fable,Persian,78/64,560389,Persian - 078/064,LINKED,1.00,persian,persian
+pkm-shrouded-fable-79-64-f2c3edc509,Shrouded Fable,Bewear,79/64,560390,Bewear - 079/064,LINKED,1.00,bewear,bewear
+pkm-shrouded-fable-80-64-dce119946e,Shrouded Fable,Kingdra ex,80/64,560391,Kingdra ex - 080/064,LINKED,1.00,kingdra ex,kingdra ex
+pkm-shrouded-fable-81-64-5c2300bd6b,Shrouded Fable,Revavroom ex,81/64,560392,Revavroom ex - 081/064,LINKED,1.00,revavroom ex,revavroom ex
+pkm-shrouded-fable-82-64-45491dcfb8,Shrouded Fable,Okidogi ex,82/64,560393,Okidogi ex - 082/064,LINKED,1.00,okidogi ex,okidogi ex
+pkm-shrouded-fable-83-64-2173138060,Shrouded Fable,Munkidori ex,83/64,560394,Munkidori ex - 083/064,LINKED,1.00,munkidori ex,munkidori ex
+pkm-shrouded-fable-84-64-0bf0cf7462,Shrouded Fable,Fezandipiti ex,84/64,560395,Fezandipiti ex - 084/064,LINKED,1.00,fezandipiti ex,fezandipiti ex
+pkm-shrouded-fable-85-64-3761e4d89b,Shrouded Fable,Pecharunt ex,85/64,560396,Pecharunt ex - 085/064,LINKED,1.00,pecharunt ex,pecharunt ex
+pkm-shrouded-fable-86-64-1d517a7635,Shrouded Fable,Cassiopeia,86/64,560397,Cassiopeia - 086/064,LINKED,1.00,cassiopeia,cassiopeia
+pkm-shrouded-fable-87-64-c1e4ef277e,Shrouded Fable,Colress's Tenacity,87/64,560398,Colress's Tenacity - 087/064,LINKED,1.00,colress s tenacity,colress s tenacity
+pkm-shrouded-fable-88-64-e8dbdc0e80,Shrouded Fable,Janine's Secret Art,88/64,560399,Janine's Secret Art - 088/064,LINKED,1.00,janine s art,janine s art
+pkm-shrouded-fable-89-64-b88fe71815,Shrouded Fable,Xerosic's Machinations,89/64,560400,Xerosic's Machinations - 089/064,LINKED,1.00,xerosic s machinations,xerosic s machinations
+pkm-shrouded-fable-90-64-3b19a73df3,Shrouded Fable,Okidogi ex,90/64,560401,Okidogi ex - 090/064,LINKED,1.00,okidogi ex,okidogi ex
+pkm-shrouded-fable-91-64-b1a4cb468d,Shrouded Fable,Munkidori ex,91/64,560402,Munkidori ex - 091/064,LINKED,1.00,munkidori ex,munkidori ex
+pkm-shrouded-fable-92-64-344437445d,Shrouded Fable,Fezandipiti ex,92/64,560403,Fezandipiti ex - 092/064,LINKED,1.00,fezandipiti ex,fezandipiti ex
+pkm-shrouded-fable-93-64-321df08e5f,Shrouded Fable,Pecharunt ex,93/64,560404,Pecharunt ex - 093/064,LINKED,1.00,pecharunt ex,pecharunt ex
+pkm-shrouded-fable-94-64-a67bfe8637,Shrouded Fable,Cassiopeia,94/64,560405,Cassiopeia - 094/064,LINKED,1.00,cassiopeia,cassiopeia
+pkm-shrouded-fable-95-64-6966ba91a7,Shrouded Fable,Pecharunt ex,95/64,560406,Pecharunt ex - 095/064,LINKED,1.00,pecharunt ex,pecharunt ex
+pkm-shrouded-fable-97-64-64df821293,Shrouded Fable,Powerglass,97/64,560408,Powerglass - 097/064,LINKED,1.00,powerglass,powerglass
+pkm-white-flare-87-86-49df5f91cd,White Flare,Sewaddle,87/86,642202,Sewaddle - 087/086,LINKED,1.00,sewaddle,sewaddle
+pkm-white-flare-88-86-206d7de3be,White Flare,Swadloon,88/86,642203,Swadloon - 088/086,LINKED,1.00,swadloon,swadloon
+pkm-white-flare-89-86-dc7831025a,White Flare,Leavanny,89/86,642204,Leavanny - 089/086,LINKED,1.00,leavanny,leavanny
+pkm-white-flare-90-86-98b1cb82a3,White Flare,Cottonee,90/86,642205,Cottonee - 090/086,LINKED,1.00,cottonee,cottonee
+pkm-white-flare-91-86-db33f456a8,White Flare,Deerling,91/86,642206,Deerling - 091/086,LINKED,1.00,deerling,deerling
+pkm-white-flare-92-86-01ce2c69dc,White Flare,Sawsbuck,92/86,642207,Sawsbuck - 092/086,LINKED,1.00,sawsbuck,sawsbuck
+pkm-white-flare-93-86-95196243c9,White Flare,Shelmet,93/86,642208,Shelmet - 093/086,LINKED,1.00,shelmet,shelmet
+pkm-white-flare-94-86-7e2f181af5,White Flare,Accelgor,94/86,642209,Accelgor - 094/086,LINKED,1.00,accelgor,accelgor
+pkm-white-flare-95-86-ed0dd243c3,White Flare,Virizion,95/86,642210,Virizion - 095/086,LINKED,1.00,virizion,virizion
+pkm-white-flare-96-86-3345ca25b5,White Flare,Tepig,96/86,642211,Tepig - 096/086,LINKED,1.00,tepig,tepig
+pkm-white-flare-97-86-9636bd28b1,White Flare,Pignite,97/86,642212,Pignite - 097/086,LINKED,1.00,pignite,pignite
+pkm-white-flare-98-86-887e4103af,White Flare,Emboar,98/86,642213,Emboar - 098/086,LINKED,1.00,emboar,emboar
+pkm-white-flare-99-86-f6f7f80fd2,White Flare,Pansear,99/86,642214,Pansear - 099/086,LINKED,1.00,pansear,pansear
+pkm-white-flare-100-86-10498bd8a8,White Flare,Simisear,100/86,642215,Simisear - 100/086,LINKED,1.00,simisear,simisear
+pkm-white-flare-101-86-bb2089987c,White Flare,Litwick,101/86,642549,Litwick - 101/086,LINKED,1.00,litwick,litwick
+pkm-white-flare-102-86-cf6a0e988c,White Flare,Lampent,102/86,642550,Lampent - 102/086,LINKED,1.00,lampent,lampent
+pkm-white-flare-103-86-6ce3bedfe0,White Flare,Chandelure,103/86,642551,Chandelure - 103/086,LINKED,1.00,chandelure,chandelure
+pkm-white-flare-104-86-f47c3dc0f5,White Flare,Heatmor,104/86,642216,Heatmor - 104/086,LINKED,1.00,heatmor,heatmor
+pkm-white-flare-105-86-eb62e0f558,White Flare,Oshawott,105/86,642217,Oshawott - 105/086,LINKED,1.00,oshawott,oshawott
+pkm-white-flare-106-86-37ecee8d12,White Flare,Dewott,106/86,642218,Dewott - 106/086,LINKED,1.00,dewott,dewott
+pkm-white-flare-107-86-2d2f508152,White Flare,Samurott,107/86,642219,Samurott - 107/086,LINKED,1.00,samurott,samurott
+pkm-white-flare-108-86-d8d9a70aa9,White Flare,Basculin,108/86,642220,Basculin - 108/086,LINKED,1.00,basculin,basculin
+pkm-white-flare-109-86-bade0d2525,White Flare,Ducklett,109/86,642221,Ducklett - 109/086,LINKED,1.00,ducklett,ducklett
+pkm-white-flare-110-86-01b12dfd60,White Flare,Swanna,110/86,642222,Swanna - 110/086,LINKED,1.00,swanna,swanna
+pkm-white-flare-111-86-1ec4a412fa,White Flare,Vanillite,111/86,642223,Vanillite - 111/086,LINKED,1.00,vanillite,vanillite
+pkm-white-flare-112-86-8894a96b6e,White Flare,Vanillish,112/86,642224,Vanillish - 112/086,LINKED,1.00,vanillish,vanillish
+pkm-white-flare-113-86-b00c465ddd,White Flare,Vanilluxe,113/86,642225,Vanilluxe - 113/086,LINKED,1.00,vanilluxe,vanilluxe
+pkm-white-flare-114-86-26bdea1010,White Flare,Blitzle,114/86,642226,Blitzle - 114/086,LINKED,1.00,blitzle,blitzle
+pkm-white-flare-115-86-993698ab41,White Flare,Zebstrika,115/86,642227,Zebstrika - 115/086,LINKED,1.00,zebstrika,zebstrika
+pkm-white-flare-116-86-96ee8a4863,White Flare,Joltik,116/86,642228,Joltik - 116/086,LINKED,1.00,joltik,joltik
+pkm-white-flare-117-86-6c37fe402f,White Flare,Galvantula,117/86,642229,Galvantula - 117/086,LINKED,1.00,galvantula,galvantula
+pkm-white-flare-118-86-e72d279ae4,White Flare,Stunfisk,118/86,642230,Stunfisk - 118/086,LINKED,1.00,stunfisk,stunfisk
+pkm-white-flare-119-86-8271a310d7,White Flare,Woobat,119/86,642231,Woobat - 119/086,LINKED,1.00,woobat,woobat
+pkm-white-flare-120-86-023c169836,White Flare,Swoobat,120/86,642232,Swoobat - 120/086,LINKED,1.00,swoobat,swoobat
+pkm-white-flare-121-86-b3cccda7b4,White Flare,Sigilyph,121/86,642233,Sigilyph - 121/086,LINKED,1.00,sigilyph,sigilyph
+pkm-white-flare-122-86-1cb089a952,White Flare,Yamask,122/86,642234,Yamask - 122/086,LINKED,1.00,yamask,yamask
+pkm-white-flare-123-86-843c78deed,White Flare,Cofagrigus,123/86,642235,Cofagrigus - 123/086,LINKED,1.00,cofagrigus,cofagrigus
+pkm-white-flare-124-86-aaef639a5f,White Flare,Gothita,124/86,642236,Gothita - 124/086,LINKED,1.00,gothita,gothita
+pkm-white-flare-125-86-18d77264b5,White Flare,Gothorita,125/86,642237,Gothorita - 125/086,LINKED,1.00,gothorita,gothorita
+pkm-white-flare-126-86-11ab0f0511,White Flare,Frillish,126/86,642239,Frillish - 126/086,LINKED,1.00,frillish,frillish
+pkm-white-flare-127-86-3ab01bb488,White Flare,Roggenrola,127/86,642240,Roggenrola - 127/086,LINKED,1.00,roggenrola,roggenrola
+pkm-white-flare-128-86-d92de834eb,White Flare,Boldore,128/86,642241,Boldore - 128/086,LINKED,1.00,boldore,boldore
+pkm-white-flare-129-86-f88881df46,White Flare,Gigalith,129/86,642242,Gigalith - 129/086,LINKED,1.00,gigalith,gigalith
+pkm-white-flare-130-86-3a3a07d8e1,White Flare,Sawk,130/86,642243,Sawk - 130/086,LINKED,1.00,sawk,sawk
+pkm-white-flare-131-86-5a5a48baf6,White Flare,Archen,131/86,642244,Archen - 131/086,LINKED,1.00,archen,archen
+pkm-white-flare-132-86-407bf169e8,White Flare,Archeops,132/86,642245,Archeops - 132/086,LINKED,1.00,archeops,archeops
+pkm-white-flare-133-86-2507b65490,White Flare,Mienfoo,133/86,642246,Mienfoo - 133/086,LINKED,1.00,mienfoo,mienfoo
+pkm-white-flare-134-86-5c9b5c8601,White Flare,Mienshao,134/86,642247,Mienshao - 134/086,LINKED,1.00,mienshao,mienshao
+pkm-white-flare-135-86-e7eb3e4551,White Flare,Terrakion,135/86,642248,Terrakion - 135/086,LINKED,1.00,terrakion,terrakion
+pkm-white-flare-136-86-0a194645ad,White Flare,Purrloin,136/86,642249,Purrloin - 136/086,LINKED,1.00,purrloin,purrloin
+pkm-white-flare-137-86-1ba43e66cf,White Flare,Liepard,137/86,642250,Liepard - 137/086,LINKED,1.00,liepard,liepard
+pkm-white-flare-138-86-0dcb95aad5,White Flare,Scraggy,138/86,642251,Scraggy - 138/086,LINKED,1.00,scraggy,scraggy
+pkm-white-flare-139-86-29b29204ab,White Flare,Scrafty,139/86,642252,Scrafty - 139/086,LINKED,1.00,scrafty,scrafty
+pkm-white-flare-140-86-dc994ff696,White Flare,Trubbish,140/86,642253,Trubbish - 140/086,LINKED,1.00,trubbish,trubbish
+pkm-white-flare-141-86-88794e8fa7,White Flare,Garbodor,141/86,642254,Garbodor - 141/086,LINKED,1.00,garbodor,garbodor
+pkm-white-flare-142-86-b7b7010854,White Flare,Zorua,142/86,642255,Zorua - 142/086,LINKED,1.00,zorua,zorua
+pkm-white-flare-143-86-64d443a974,White Flare,Zoroark,143/86,642256,Zoroark - 143/086,LINKED,1.00,zoroark,zoroark
+pkm-white-flare-144-86-2cc037d7fe,White Flare,Vullaby,144/86,642593,Vullaby - 144/086,LINKED,1.00,vullaby,vullaby
+pkm-white-flare-145-86-7df88eea3e,White Flare,Mandibuzz,145/86,642594,Mandibuzz - 145/086,LINKED,1.00,mandibuzz,mandibuzz
+pkm-white-flare-146-86-0fd6f7dc02,White Flare,Deino,146/86,642257,Deino - 146/086,LINKED,1.00,deino,deino
+pkm-white-flare-147-86-355330999a,White Flare,Zweilous,147/86,642258,Zweilous - 147/086,LINKED,1.00,zweilous,zweilous
+pkm-white-flare-148-86-64d23b2fb7,White Flare,Ferroseed,148/86,642259,Ferroseed - 148/086,LINKED,1.00,ferroseed,ferroseed
+pkm-white-flare-149-86-ee5c692d68,White Flare,Ferrothorn,149/86,642260,Ferrothorn - 149/086,LINKED,1.00,ferrothorn,ferrothorn
+pkm-white-flare-150-86-f47e242edb,White Flare,Durant,150/86,642264,Durant - 150/086,LINKED,1.00,durant,durant
+pkm-white-flare-151-86-091fe31fda,White Flare,Druddigon,151/86,642265,Druddigon - 151/086,LINKED,1.00,druddigon,druddigon
+pkm-white-flare-152-86-75e541ee37,White Flare,Patrat,152/86,642266,Patrat - 152/086,LINKED,1.00,patrat,patrat
+pkm-white-flare-153-86-4cc7feec28,White Flare,Watchog,153/86,642267,Watchog - 153/086,LINKED,1.00,watchog,watchog
+pkm-white-flare-154-86-f734a5c412,White Flare,Lillipup,154/86,642268,Lillipup - 154/086,LINKED,1.00,lillipup,lillipup
+pkm-white-flare-155-86-a9de42b424,White Flare,Herdier,155/86,642269,Herdier - 155/086,LINKED,1.00,herdier,herdier
+pkm-white-flare-156-86-bc248cabea,White Flare,Stoutland,156/86,642270,Stoutland - 156/086,LINKED,1.00,stoutland,stoutland
+pkm-white-flare-157-86-8354e0759b,White Flare,Whimsicott ex,157/86,642274,Whimsicott ex - 157/086,LINKED,1.00,whimsicott ex,whimsicott ex
+pkm-white-flare-158-86-c27450684d,White Flare,Reshiram ex,158/86,642275,Reshiram ex - 158/086,LINKED,1.00,reshiram ex,reshiram ex
+pkm-white-flare-159-86-7cf58aa33f,White Flare,Keldeo ex,159/86,642276,Keldeo ex - 159/086,LINKED,1.00,keldeo ex,keldeo ex
+pkm-white-flare-160-86-9dbaf19546,White Flare,Jellicent ex,160/86,642277,Jellicent ex - 160/086,LINKED,1.00,jellicent ex,jellicent ex
+pkm-white-flare-161-86-3f23a3979b,White Flare,Hydreigon ex,161/86,642278,Hydreigon ex - 161/086,LINKED,1.00,hydreigon ex,hydreigon ex
+pkm-white-flare-162-86-ef65716f80,White Flare,Bouffalant ex,162/86,642279,Bouffalant ex - 162/086,LINKED,1.00,bouffalant ex,bouffalant ex
+pkm-white-flare-163-86-27631fb457,White Flare,Harlequin,163/86,642280,Harlequin - 163/086,LINKED,1.00,harlequin,harlequin
+pkm-white-flare-164-86-83709e601e,White Flare,Hilda,164/86,642281,Hilda - 164/086,LINKED,1.00,hilda,hilda
+pkm-white-flare-165-86-ed46e05d13,White Flare,Whimsicott ex,165/86,642282,Whimsicott ex - 165/086,LINKED,1.00,whimsicott ex,whimsicott ex
+pkm-white-flare-166-86-d024862bd4,White Flare,Reshiram ex,166/86,642283,Reshiram ex - 166/086,LINKED,1.00,reshiram ex,reshiram ex
+pkm-white-flare-167-86-6e6e976483,White Flare,Keldeo ex,167/86,642284,Keldeo ex - 167/086,LINKED,1.00,keldeo ex,keldeo ex
+pkm-white-flare-168-86-d9b6efbab6,White Flare,Jellicent ex,168/86,642285,Jellicent ex - 168/086,LINKED,1.00,jellicent ex,jellicent ex
+pkm-white-flare-169-86-dbeba9d953,White Flare,Hydreigon ex,169/86,642286,Hydreigon ex - 169/086,LINKED,1.00,hydreigon ex,hydreigon ex
+pkm-white-flare-170-86-3835788534,White Flare,Bouffalant ex,170/86,642287,Bouffalant ex - 170/086,LINKED,1.00,bouffalant ex,bouffalant ex
+pkm-white-flare-171-86-3d924302d1,White Flare,Hilda,171/86,642288,Hilda - 171/086,LINKED,1.00,hilda,hilda
+pkm-white-flare-172-86-739d845a95,White Flare,Victini,172/86,,,NO_CANDIDATE,
+pkm-white-flare-173-86-08ccc1f7af,White Flare,Reshiram ex,173/86,642289,Reshiram ex - 173/086,LINKED,1.00,reshiram ex,reshiram ex
+pkm-chaos-rising-029-086-369c1e7a6f,Chaos Rising,Ampharos,029/086,,,NO_CANDIDATE,
+pkm-chaos-rising-090-086-08ceac3077,Chaos Rising,Ampharos,090/086,,,NO_CANDIDATE,
+pkm-chaos-rising-076-086-a6b0264b73,Chaos Rising,AZ's Tranquility,076/086,,,NO_CANDIDATE,
+pkm-chaos-rising-106-086-658fc3f478,Chaos Rising,AZ's Tranquility,106/086,,,NO_CANDIDATE,
+pkm-chaos-rising-120-086-01c4788784,Chaos Rising,AZ's Tranquility,120/086,,,NO_CANDIDATE,
+pkm-chaos-rising-003-086-c96199e170,Chaos Rising,Beedrill ex,003/086,,,NO_CANDIDATE,
+pkm-chaos-rising-098-086-59c5f85e25,Chaos Rising,Beedrill ex,098/086,,,NO_CANDIDATE,
+pkm-chaos-rising-005-086-5ef1d91236,Chaos Rising,Chespin,005/086,,,NO_CANDIDATE,
+pkm-chaos-rising-087-086-a74bd6be0b,Chaos Rising,Chespin,087/086,,,NO_CANDIDATE,
+pkm-chaos-rising-073-086-415ab1bd08,Chaos Rising,Cinccino ex,073/086,,,NO_CANDIDATE,
+pkm-chaos-rising-105-086-d6849d220e,Chaos Rising,Cinccino ex,105/086,,,NO_CANDIDATE,
+pkm-chaos-rising-119-086-c9dc58ad4b,Chaos Rising,Cinccino ex,119/086,,,NO_CANDIDATE,
+pkm-chaos-rising-047-086-28a6de7b90,Chaos Rising,Claydol,047/086,,,NO_CANDIDATE,
+pkm-chaos-rising-092-086-96038926a7,Chaos Rising,Claydol,092/086,,,NO_CANDIDATE,
+pkm-chaos-rising-064-086-e9136aa9f6,Chaos Rising,Cobalion ex,064/086,,,NO_CANDIDATE,
+pkm-chaos-rising-103-086-be7247c17c,Chaos Rising,Cobalion ex,103/086,,,NO_CANDIDATE,
+pkm-chaos-rising-051-086-8c09e18977,Chaos Rising,Crobat,051/086,,,NO_CANDIDATE,
+pkm-chaos-rising-093-086-b605e875cd,Chaos Rising,Crobat,093/086,,,NO_CANDIDATE,
+pkm-chaos-rising-031-086-4d219b3e25,Chaos Rising,Deoxys,031/086,,,NO_CANDIDATE,
+pkm-chaos-rising-032-086-6bc719c329,Chaos Rising,Deoxys,032/086,,,NO_CANDIDATE,
+pkm-chaos-rising-033-086-000ef0b403,Chaos Rising,Deoxys,033/086,,,NO_CANDIDATE,
+pkm-chaos-rising-034-086-7f866786cb,Chaos Rising,Deoxys,034/086,,,NO_CANDIDATE,
+pkm-chaos-rising-077-086-ab0d56b8e4,Chaos Rising,Emma,077/086,,,NO_CANDIDATE,
+pkm-chaos-rising-107-086-84c2f2b665,Chaos Rising,Emma,107/086,,,NO_CANDIDATE,
+pkm-chaos-rising-020-086-72b4e6abdb,Chaos Rising,Froakie,020/086,,,NO_CANDIDATE,
+pkm-chaos-rising-088-086-964ab4ecea,Chaos Rising,Froakie,088/086,,,NO_CANDIDATE,
+pkm-chaos-rising-021-086-ec9525fa59,Chaos Rising,Frogadier,021/086,,,NO_CANDIDATE,
+pkm-chaos-rising-089-086-bb176ed5d0,Chaos Rising,Frogadier,089/086,,,NO_CANDIDATE,
+pkm-chaos-rising-041-086-b5a2c310c2,Chaos Rising,Gourgeist ex,041/086,,,NO_CANDIDATE,
+pkm-chaos-rising-102-086-c46655411b,Chaos Rising,Gourgeist ex,102/086,,,NO_CANDIDATE,
+pkm-chaos-rising-065-086-031c3512df,Chaos Rising,Mega Dragalge ex,065/086,,,NO_CANDIDATE,
+pkm-chaos-rising-104-086-77cddb145d,Chaos Rising,Mega Dragalge ex,104/086,,,NO_CANDIDATE,
+pkm-chaos-rising-118-086-b6dd945d8f,Chaos Rising,Mega Dragalge ex,118/086,,,NO_CANDIDATE,
+pkm-chaos-rising-035-086-18c0c089c3,Chaos Rising,Mega Floette ex,035/086,,,NO_CANDIDATE,
+pkm-chaos-rising-101-086-c7ca3723b7,Chaos Rising,Mega Floette ex,101/086,,,NO_CANDIDATE,
+pkm-chaos-rising-117-086-b8c816994c,Chaos Rising,Mega Floette ex,117/086,,,NO_CANDIDATE,
+pkm-chaos-rising-022-086-af3b7ccd78,Chaos Rising,Mega Greninja ex,022/086,,,NO_CANDIDATE,
+pkm-chaos-rising-100-086-7af0534568,Chaos Rising,Mega Greninja ex,100/086,,,NO_CANDIDATE,
+pkm-chaos-rising-116-086-338a944360,Chaos Rising,Mega Greninja ex,116/086,,,NO_CANDIDATE,
+pkm-chaos-rising-122-086-818860b2c8,Chaos Rising,Mega Greninja ex,122/086,,,NO_CANDIDATE,
+pkm-chaos-rising-015-086-38b4bb750b,Chaos Rising,Mega Pyroar ex,015/086,,,NO_CANDIDATE,
+pkm-chaos-rising-099-086-d9b69fa42f,Chaos Rising,Mega Pyroar ex,099/086,,,NO_CANDIDATE,
+pkm-chaos-rising-060-086-b671a2cadc,Chaos Rising,Metang,060/086,,,NO_CANDIDATE,
+pkm-chaos-rising-094-086-01bfbff163,Chaos Rising,Metang,094/086,,,NO_CANDIDATE,
+pkm-chaos-rising-079-086-55adb811d1,Chaos Rising,Philippe,079/086,,,NO_CANDIDATE,
+pkm-chaos-rising-110-086-c588dab2b5,Chaos Rising,Philippe,110/086,,,NO_CANDIDATE,
+pkm-chaos-rising-080-086-de2066a249,Chaos Rising,Prism Tower,080/086,,,NO_CANDIDATE,
+pkm-chaos-rising-111-086-14a879f6c7,Chaos Rising,Prism Tower,111/086,,,NO_CANDIDATE,
+pkm-chaos-rising-081-086-7d4e89a458,Chaos Rising,Roxie's Performance,081/086,,,NO_CANDIDATE,
+pkm-chaos-rising-112-086-8426ef9934,Chaos Rising,Roxie's Performance,112/086,,,NO_CANDIDATE,
+pkm-chaos-rising-121-086-60b8ff3e66,Chaos Rising,Roxie's Performance,121/086,,,NO_CANDIDATE,
+pkm-chaos-rising-067-086-e9879e873d,Chaos Rising,Sliggoo,067/086,,,NO_CANDIDATE,
+pkm-chaos-rising-095-086-46749392b5,Chaos Rising,Sliggoo,095/086,,,NO_CANDIDATE,
+pkm-chaos-rising-082-086-7fe7aacc31,Chaos Rising,Special Red Card,082/086,,,NO_CANDIDATE,
+pkm-chaos-rising-113-086-55a82ec258,Chaos Rising,Special Red Card,113/086,,,NO_CANDIDATE,
+pkm-chaos-rising-069-086-f0f82ac029,Chaos Rising,Tauros,069/086,,,NO_CANDIDATE,
+pkm-chaos-rising-096-086-d74ce68917,Chaos Rising,Tauros,096/086,,,NO_CANDIDATE,
+pkm-chaos-rising-071-086-aa827df0da,Chaos Rising,Watchog,071/086,,,NO_CANDIDATE,
+pkm-chaos-rising-097-086-8d5f9e0f3a,Chaos Rising,Watchog,097/086,,,NO_CANDIDATE,
+pkm-chaos-rising-042-086-ed90be756f,Chaos Rising,Xerneas,042/086,,,NO_CANDIDATE,
+pkm-chaos-rising-091-086-2b533bface,Chaos Rising,Xerneas,091/086,,,NO_CANDIDATE,

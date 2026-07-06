@@ -1,0 +1,102 @@
+{
+  "version": 1,
+  "updated_at": "2026-06-30T12:25:35",
+  "rule": "User SKU = Batch Location",
+  "games": {
+    "magic": {
+      "display_name": "Magic / MTG",
+      "current_location": "ETB-04-A",
+      "used_locations": [
+        "ETB-04-A"
+      ]
+    },
+    "one_piece": {
+      "display_name": "One Piece",
+      "current_location": "ETB-05-B",
+      "used_locations": [
+        "ETB-05-A",
+        "ETB-05-B"
+      ]
+    },
+    "pokemon": {
+      "display_name": "Pokemon",
+      "current_location": "ETB-02-A",
+      "used_locations": [
+        "ETB-01-A",
+        "ETB-02-A",
+        "ETB-02-B"
+      ]
+    }
+  },
+  "history": [
+    {
+      "timestamp": "2026-06-28T14:01:09",
+      "game": "magic",
+      "location": "ETB-04-A",
+      "source": "initial_registry_seed",
+      "status": "assigned",
+      "note": "Category location established during SKU repair planning."
+    },
+    {
+      "timestamp": "2026-06-28T14:01:09",
+      "game": "one_piece",
+      "location": "ETB-05-A",
+      "source": "initial_registry_seed",
+      "status": "assigned",
+      "note": "Category location established during SKU repair planning."
+    },
+    {
+      "timestamp": "2026-06-28T14:28:09",
+      "game": "pokemon",
+      "location": "ETB-01-A",
+      "source": "ebay_export",
+      "status": "exported",
+      "note": "Listing Optimizer export wrote User SKU / Custom Label as batch location.",
+      "total_listings": 8
+    },
+    {
+      "timestamp": "2026-06-28T23:46:56",
+      "game": "pokemon",
+      "location": "ETB-01-A",
+      "source": "ebay_export",
+      "status": "exported",
+      "note": "Listing Optimizer export wrote User SKU / Custom Label as batch location.",
+      "total_listings": 8
+    },
+    {
+      "timestamp": "2026-06-29T09:07:35",
+      "game": "one_piece",
+      "location": "ETB-05-B",
+      "source": "ebay_export",
+      "status": "exported",
+      "note": "Listing Optimizer export wrote User SKU / Custom Label as batch location.",
+      "total_listings": 27
+    },
+    {
+      "timestamp": "2026-06-29T16:22:26",
+      "game": "pokemon",
+      "location": "ETB-02-A",
+      "source": "intake_batch_creation",
+      "status": "planned",
+      "note": "Batch location assigned during Putnam OS work-session intake."
+    },
+    {
+      "timestamp": "2026-06-30T08:31:18",
+      "game": "pokemon",
+      "location": "ETB-02-B",
+      "source": "ebay_export",
+      "status": "exported",
+      "note": "Listing Optimizer export wrote User SKU / Custom Label as batch location.",
+      "total_listings": 20
+    },
+    {
+      "timestamp": "2026-06-30T12:25:35",
+      "game": "pokemon",
+      "location": "ETB-02-A",
+      "source": "ebay_export",
+      "status": "exported",
+      "note": "Listing Optimizer export wrote User SKU / Custom Label as batch location.",
+      "total_listings": 22
+    }
+  ]
+}

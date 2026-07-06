@@ -1,0 +1,1129 @@
+====================================================================================================
+CARDVECTOR WORKSPACE AUDIT REPORT
+Generated: 2026-07-02 08:12:31
+Workspace Root: C:\Users\JaredHill\OneDrive\PutnamCollectibles
+====================================================================================================
+
+WORKSPACE SUMMARY
+----------------------------------------------------------------------------------------------------
+Total files scanned: 24612
+Top-level folders found: 12
+
+TOP-LEVEL FOLDERS
+----------------------------------------------------------------------------------------------------
+- [root]: 4 files
+- Archive: 23328 files
+- Business: 81 files
+- Capture: 196 files
+- Data: 101 files
+- Docs: 24 files
+- Platform: 713 files
+- Putnam_Content: 8 files
+- Putnam_OS: 4 files
+- Putnam_Platform: 1 files
+- Putnam_Seller_Tools: 8 files
+- Tools: 120 files
+- Work_Sessions: 24 files
+
+FILE TYPES
+----------------------------------------------------------------------------------------------------
+- .jpg: 21926
+- .json: 1129
+- .py: 471
+- .csv: 244
+- .txt: 165
+- .md: 147
+- .jpeg: 145
+- .js: 59
+- .pak: 58
+- .bat: 40
+- .css: 40
+- [no extension]: 26
+- .html: 24
+- .sqlite: 21
+- .vbs: 19
+- .dll: 15
+- .mkv: 15
+- .png: 13
+- .bak: 11
+- .log: 8
+- .ps1: 6
+- .pdf: 4
+- .bmp: 3
+- .exe: 3
+- .zip: 3
+- .bak_v0_6_3_blank_kaggle_guard: 2
+- .bak_v0_6_3_catalog_status_guard: 2
+- .bak_v0_6_3_repair_visual_index: 2
+- .bak_v0_6_3b_20260611_101127: 2
+- .bin: 2
+- .cmd: 2
+- .sql: 2
+- .asar: 1
+- .dat: 1
+- .llc: 1
+
+LAUNCHERS / RUN FILES
+----------------------------------------------------------------------------------------------------
+- Archive\Putnam_OS_PreV2_20260626_112630\Bulk_Price_Reviser\run_bulk_price_reviser.bat | modified 2026-06-26 10:42 | 189 B
+- Archive\Putnam_OS_PreV2_20260626_112630\Bulk_Price_Reviser\update.ps1 | modified 2026-06-26 10:42 | 107 B
+- Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\legacy_viewer\open_viewer.bat | modified 2026-06-09 15:12 | 711 B
+- Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\native_host_legacy\install_native_host.ps1 | modified 2026-06-09 13:36 | 883 B
+- Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\native_host_legacy\run_native_host.bat | modified 2026-06-09 13:36 | 400 B
+- Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\start_watcher_backend.bat | modified 2026-06-09 15:12 | 673 B
+- Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\tools\import_tcgplayer_prices.bat | modified 2026-06-09 14:48 | 626 B
+- Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\tools\init_price_cache.bat | modified 2026-06-09 14:43 | 448 B
+- Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\tools\refresh_catalog_status.bat | modified 2026-06-09 14:03 | 451 B
+- Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\tools\refresh_tcgdex_prices.bat | modified 2026-06-09 14:58 | 622 B
+- Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\tools\sync_tcgplayer_links.bat | modified 2026-06-09 14:49 | 487 B
+- Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\fix_data_sources_portability.bat | modified 2026-06-11 08:46 | 148 B
+- Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\open_chrome_extensions.bat | modified 2026-06-11 08:46 | 43 B
+- Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\open_lookup_viewer.bat | modified 2026-06-11 08:46 | 57 B
+- Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\restart_lookup_backend.bat | modified 2026-06-11 08:53 | 635 B
+- Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\run_portability_audit.bat | modified 2026-06-11 08:46 | 141 B
+- Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\start_lookup_backend.bat | modified 2026-06-11 08:46 | 225 B
+- Archive\Shelved_Projects\Pokemon_Live_Price_Lookup\archive_old_versions\restart_lookup_backend_before_p0_4_1_20260611_085341.bat | modified 2026-06-11 08:53 | 461 B
+- Archive\Shelved_Projects\Pokemon_Live_Price_Lookup\backend\legacy_viewer\open_viewer.bat | modified 2026-06-09 15:12 | 711 B
+- Archive\Shelved_Projects\Pokemon_Live_Price_Lookup\backend\native_host_legacy\install_native_host.ps1 | modified 2026-06-09 13:36 | 883 B
+- Archive\Shelved_Projects\Pokemon_Live_Price_Lookup\backend\native_host_legacy\run_native_host.bat | modified 2026-06-09 13:36 | 400 B
+- Archive\Shelved_Projects\Pokemon_Live_Price_Lookup\backend\start_watcher_backend.bat | modified 2026-06-09 15:12 | 673 B
+- Archive\Shelved_Projects\Pokemon_Live_Price_Lookup\backend\tools\import_tcgplayer_prices.bat | modified 2026-06-09 14:48 | 626 B
+- Archive\Shelved_Projects\Pokemon_Live_Price_Lookup\backend\tools\init_price_cache.bat | modified 2026-06-09 14:43 | 448 B
+- Archive\Shelved_Projects\Pokemon_Live_Price_Lookup\backend\tools\refresh_catalog_status.bat | modified 2026-06-09 14:03 | 451 B
+- Archive\Shelved_Projects\Pokemon_Live_Price_Lookup\backend\tools\refresh_tcgdex_prices.bat | modified 2026-06-09 14:58 | 622 B
+- Archive\Shelved_Projects\Pokemon_Live_Price_Lookup\backend\tools\sync_tcgplayer_links.bat | modified 2026-06-09 14:49 | 487 B
+- Archive\Shelved_Projects\Pokemon_Live_Price_Lookup\fix_data_sources_portability.bat | modified 2026-06-11 08:46 | 148 B
+- Archive\Shelved_Projects\Pokemon_Live_Price_Lookup\open_chrome_extensions.bat | modified 2026-06-11 08:46 | 43 B
+- Archive\Shelved_Projects\Pokemon_Live_Price_Lookup\open_lookup_viewer.bat | modified 2026-06-11 08:46 | 57 B
+- Archive\Shelved_Projects\Pokemon_Live_Price_Lookup\restart_lookup_backend.bat | modified 2026-06-11 08:53 | 635 B
+- Archive\Shelved_Projects\Pokemon_Live_Price_Lookup\run_portability_audit.bat | modified 2026-06-11 08:46 | 141 B
+- Archive\Shelved_Projects\Pokemon_Live_Price_Lookup\start_lookup_backend.bat | modified 2026-06-11 08:46 | 225 B
+- Business\Inventory\Pricing_Revisions\Run Bulk Price Engine.bat | modified 2026-06-26 11:14 | 203 B
+- Business\Inventory\Pricing_Revisions\Run Market Validation Prototype.bat | modified 2026-06-26 15:09 | 205 B
+- Platform\Marketplace_Intelligence\Run Marketplace Intelligence.bat | modified 2026-07-01 00:29 | 72 B
+- Platform\Putnam_OS\Run CardVector OS Production.vbs | modified 2026-07-01 23:57 | 1.2 KB
+- Platform\Putnam_OS\Run Putnam OS Production.vbs | modified 2026-07-01 23:57 | 1.2 KB
+- Platform\Putnam_OS\Run Putnam OS.bat | modified 2026-06-29 08:13 | 316 B
+- Platform\Putnam_OS\System_Archive\cardvector_platform_v1_1_0_release_checkpoint_20260701_170441\Platform__Putnam_OS__Run CardVector OS Production.vbs | modified 2026-07-01 17:03 | 1.2 KB
+- Platform\Putnam_OS\System_Archive\cardvector_platform_v1_1_0_release_checkpoint_20260701_170441\Platform__Putnam_OS__Run Putnam OS Production.vbs | modified 2026-07-01 17:03 | 1.2 KB
+- Platform\Putnam_OS\System_Archive\cardvector_platform_v1_1_1_pre_patch_20260701_173618\Platform__Putnam_OS__Run CardVector OS Production.vbs | modified 2026-07-01 17:03 | 1.2 KB
+- Platform\Putnam_OS\System_Archive\cardvector_platform_v1_1_1_pre_patch_20260701_173618\Platform__Putnam_OS__Run Putnam OS Production.vbs | modified 2026-07-01 17:03 | 1.2 KB
+- Platform\Putnam_OS\System_Archive\cardvector_platform_v1_1_1_release_checkpoint_20260701_174034\Platform__Putnam_OS__Run CardVector OS Production.vbs | modified 2026-07-01 17:38 | 1.2 KB
+- Platform\Putnam_OS\System_Archive\cardvector_platform_v1_1_1_release_checkpoint_20260701_174034\Platform__Putnam_OS__Run Putnam OS Production.vbs | modified 2026-07-01 17:38 | 1.2 KB
+- Platform\Putnam_OS\System_Archive\cardvector_platform_v1_2_0_pre_patch_20260701_174822\Platform__Putnam_OS__Run CardVector OS Production.vbs | modified 2026-07-01 17:38 | 1.2 KB
+- Platform\Putnam_OS\System_Archive\cardvector_platform_v1_2_0_pre_patch_20260701_174822\Platform__Putnam_OS__Run Putnam OS Production.vbs | modified 2026-07-01 17:38 | 1.2 KB
+- Platform\Putnam_OS\System_Archive\cardvector_platform_v1_2_0_release_checkpoint_20260701_175418\Platform__Putnam_OS__Run CardVector OS Production.vbs | modified 2026-07-01 17:51 | 1.2 KB
+- Platform\Putnam_OS\System_Archive\cardvector_platform_v1_2_0_release_checkpoint_20260701_175418\Platform__Putnam_OS__Run Putnam OS Production.vbs | modified 2026-07-01 17:51 | 1.2 KB
+- Platform\Putnam_OS\System_Archive\cardvector_platform_v1_2_1_shared_obs_manager_20260701_222041\Platform__Putnam_OS__Run__CardVector__OS__Production.vbs | modified 2026-07-01 22:19 | 1.2 KB
+- Platform\Putnam_OS\System_Archive\cardvector_platform_v1_2_1_shared_obs_manager_20260701_222041\Platform__Putnam_OS__Run__Putnam__OS__Production.vbs | modified 2026-07-01 22:19 | 1.2 KB
+- Platform\Putnam_OS\System_Archive\cardvector_ui_foundation_v1_2_2_20260701_235827\Platform__Putnam_OS__Run__CardVector__OS__Production.vbs | modified 2026-07-01 23:57 | 1.2 KB
+- Platform\Putnam_OS\System_Archive\cardvector_ui_foundation_v1_2_2_20260701_235827\Platform__Putnam_OS__Run__Putnam__OS__Production.vbs | modified 2026-07-01 23:57 | 1.2 KB
+- Platform\Putnam_OS\System_Archive\cardvector_v1_0_20260701_105108\Platform_Putnam_OS_Run Putnam OS Production.vbs | modified 2026-06-30 14:32 | 1.2 KB
+- Platform\Putnam_OS\System_Archive\Duplicate_Launchers_20260626_110146\run_putnam_os.bat | modified 2026-06-26 09:48 | 151 B
+- Platform\Putnam_OS\System_Archive\Patch_3_3_0_Platform_Session_Manager_20260627_004944\Run Putnam OS.bat.bak | modified 2026-06-26 22:47 | 553 B
+- Platform\Putnam_OS\System_Archive\patch_prep_20260626_223837\Run Putnam OS.bat.bak | modified 2026-06-26 22:33 | 307 B
+- Platform\Putnam_OS\System_Archive\Patches\3.2.1_20260626_224737\Run Putnam OS.bat | modified 2026-06-26 22:38 | 1.2 KB
+- Platform\Putnam_OS\System_Archive\v3_6_0_20260630_130128\Platform_Putnam_OS_Run Putnam OS Production.vbs | modified 2026-06-30 08:46 | 317 B
+- Platform\Putnam_OS\System_Archive\v4_0_0_20260630_143007\Platform_Putnam_OS_Run Putnam OS Production.vbs | modified 2026-06-30 13:15 | 1.2 KB
+- Platform\Putnam_Platform\capture\backup_obs_scene_agnostic_launcher_20260628_081738\Run_Putnam_Capture.bat | modified 2026-06-27 14:15 | 739 B
+- Platform\Putnam_Platform\tools\Audit_And_Clean_Root.ps1 | modified 2026-06-27 16:43 | 6.5 KB
+- Platform\Putnam_Platform\tools\Backup_Putnam_OS.ps1 | modified 2026-06-27 00:49 | 593 B
+- Platform\Putnam_Platform\tools\Run_OBS_AutoCrop.bat | modified 2026-06-28 10:24 | 591 B
+- Platform\Putnam_Platform\tools\Run_Putnam_Capture.bat | modified 2026-06-29 21:30 | 690 B
+- Platform\Putnam_Platform\tools\Run_Putnam_Capture_capture_v1_backup_20260629_212812.bat | modified 2026-06-28 08:17 | 681 B
+- Platform\Putnam_Platform\tools\Split_Putnam_Work_Session.ps1 | modified 2026-06-27 00:49 | 1.2 KB
+
+DEPENDENCY FILES
+----------------------------------------------------------------------------------------------------
+- Archive\requirements.txt | modified 2026-06-08 10:29 | 46 B
+- Platform\Marketplace_Intelligence\requirements.txt | modified 2026-07-01 00:31 | 151 B
+
+LIKELY MODULE FILES
+----------------------------------------------------------------------------------------------------
+
+[Capture]
+  - Archive\border_trainer_v0_6.html
+    hits: image, photo
+  - Archive\border_training_labels\IMG_6893.json
+    hits: image
+  - Archive\border_training_labels\IMG_6905.json
+    hits: image
+  - Archive\border_training_labels\IMG_7304.json
+    hits: image
+  - Archive\border_training_labels\IMG_7467.json
+    hits: image
+  - Archive\border_training_labels\IMG_7502.json
+    hits: image
+  - Archive\border_training_labels\IMG_7505.json
+    hits: image
+  - Archive\border_training_labels\IMG_7506.json
+    hits: image
+  - Archive\border_training_labels\IMG_7507.json
+    hits: image
+  - Archive\border_training_labels\IMG_7616.json
+    hits: image
+  - Archive\border_training_labels\KAGGLE_FLAREON_TG01_TEST.json
+    hits: image
+  - Archive\border_training_labels\KAGGLE_GG_TEST.json
+    hits: image
+  - Archive\border_training_labels\KAGGLE_SOLROCK_GG15_TEST.json
+    hits: image
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0001_en_US-SWSH10-TG001-abomasnow.json
+    hits: image
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0002_en_US-SWSH10-TG002-flapple.json
+    hits: image
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0003_en_US-SWSH10-TG003-kingdra.json
+    hits: image
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0004_en_US-SWSH10-TG004-frosmoth.json
+    hits: image
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0005_en_US-SWSH10-TG005-gardevoir.json
+    hits: image
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0006_en_US-SWSH10-TG006-wyrdeer.json
+    hits: image
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0007_en_US-SWSH10-TG007-falinks.json
+    hits: image
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0008_en_US-SWSH10-TG008-kleavor.json
+    hits: image
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0009_en_US-SWSH10-TG009-mightyena.json
+    hits: image
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0010_en_US-SWSH10-TG010-galarian_obstagoon.json
+    hits: image
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0011_en_US-SWSH10-TG011-bronzong.json
+    hits: image
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0012_en_US-SWSH10-TG012-hoothoot.json
+    hits: image
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0013_en_US-SWSH10-TG013-starmie_v.json
+    hits: image
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0014_en_US-SWSH10-TG014-ice_rider_calyrex_v.json
+    hits: image
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0015_en_US-SWSH10-TG015-ice_rider_calyrex_vmax.json
+    hits: image
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0016_en_US-SWSH10-TG016-galarian_articuno_v.json
+    hits: image
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0017_en_US-SWSH10-TG017-shadow_rider_calyrex_v.json
+    hits: image
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0018_en_US-SWSH10-TG018-shadow_rider_calyrex_vmax.json
+    hits: image
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0019_en_US-SWSH10-TG019-galarian_zapdos_v.json
+    hits: image
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0020_en_US-SWSH10-TG020-galarian_moltres_v.json
+    hits: image
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0021_en_US-SWSH10-TG021-zacian_v.json
+    hits: image
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0022_en_US-SWSH10-TG022-zamazenta_v.json
+    hits: image
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0023_en_US-SWSH10-TG023-garchomp_v.json
+    hits: image
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0024_en_US-SWSH10-TG024-allister.json
+    hits: image
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0025_en_US-SWSH10-TG025-bea.json
+    hits: image
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0026_en_US-SWSH10-TG026-melony.json
+    hits: image
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0027_en_US-SWSH10-TG027-milo.json
+    hits: image
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0028_en_US-SWSH10-TG028-piers.json
+    hits: image
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0029_en_US-SWSH10-TG029-ice_rider_calyrex_vmax.json
+    hits: image
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0030_en_US-SWSH10-TG030-shadow_rider_calyrex_vmax.json
+    hits: image
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0031_en_US-SWSH9-TG001-flareon.json
+    hits: image
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0032_en_US-SWSH9-TG002-vaporeon.json
+    hits: image
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0033_en_US-SWSH9-TG003-octillery.json
+    hits: image
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0034_en_US-SWSH9-TG004-jolteon.json
+    hits: image
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0035_en_US-SWSH9-TG005-zekrom.json
+    hits: image
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0036_en_US-SWSH9-TG006-dusknoir.json
+    hits: image
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0037_en_US-SWSH9-TG007-dedenne.json
+    hits: image
+  ... plus 832 more
+
+[OBS]
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0010_en_US-SWSH10-TG010-galarian_obstagoon.json
+    hits: obs
+  - Archive\border_training_labels\KAGGLE_TG_FAST_0010_en_US-SWSH10-TG010-galarian_obstagoon.json
+    hits: obs
+  - Archive\card_intake_app_v2_1_2_resurrected.py
+    hits: obs
+  - Archive\Putnam_OS_legacy_20260626_123254\app\core\pricing_engine.py
+    hits: obs
+  - Archive\Putnam_OS_legacy_20260626_123254\app\putnam_os.py
+    hits: obs
+  - Archive\Putnam_OS_PreV2_20260626_112630\logs\root_cleanup_20260626_110146.txt
+    hits: obs
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\card_catalog.py
+    hits: obs
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\tools\install_v0_6_4c_smart_query_parser.py
+    hits: obs
+  - Archive\putnam_scanner_v2_2_0_region_ocr.py
+    hits: obs
+  - Archive\region_ocr_matcher_v0_2.py
+    hits: obs
+  - Archive\Release_Checkpoints\Putnam_OS_v3.5.0_Baseline_Workflow_Testing_20260629_232033\CHANGELOG.md
+    hits: obs
+  - Archive\Release_Checkpoints\Putnam_OS_v3.5.0_Baseline_Workflow_Testing_20260629_232033\Docs\PROJECT_STATUS.md
+    hits: obs
+  - Archive\Release_Checkpoints\Putnam_OS_v3.5.0_Baseline_Workflow_Testing_20260629_232033\System_app\capture_studio.py
+    hits: obs, scene, screenshot, websocket
+  - Archive\Release_Checkpoints\Putnam_OS_v3.5.0_Baseline_Workflow_Testing_20260629_232033\System_app\putnam_os.py
+    hits: obs, scene, websocket
+  - Archive\Shelved_Projects\Pokemon_Live_Price_Lookup\archive_old_versions\card_catalog_before_v0_6_4c2_20260611_105313.py
+    hits: obs
+  - Archive\Shelved_Projects\Pokemon_Live_Price_Lookup\archive_old_versions\card_catalog_before_v0_6_4c3_20260611_110236.py
+    hits: obs
+  - Archive\Shelved_Projects\Pokemon_Live_Price_Lookup\archive_old_versions\card_catalog_before_v0_6_4d_20260611_110949.py
+    hits: obs
+  - Archive\Shelved_Projects\Pokemon_Live_Price_Lookup\archive_old_versions\card_catalog_before_v0_6_6_20260611_155836.py
+    hits: obs
+  - Archive\Shelved_Projects\Pokemon_Live_Price_Lookup\archive_old_versions\card_catalog_before_v0_6_8_20260612_083141.py
+    hits: obs
+  - Archive\Shelved_Projects\Pokemon_Live_Price_Lookup\archive_old_versions\card_catalog_before_v0_6_9c_20260612_093411.py
+    hits: obs
+  - Archive\Shelved_Projects\Pokemon_Live_Price_Lookup\archive_old_versions\card_catalog_before_v0_7_5_20260612_115051.py
+    hits: obs
+  - Archive\Shelved_Projects\Pokemon_Live_Price_Lookup\archive_old_versions\card_catalog_before_visual_index_config_fix_20260612_103727.py
+    hits: obs
+  - Archive\Shelved_Projects\Pokemon_Live_Price_Lookup\archive_old_versions\Pokemon_Live_Price_Lookup_extension_latest.zip.base64.txt
+    hits: obs
+  - Archive\Shelved_Projects\Pokemon_Live_Price_Lookup\backend\card_catalog.py
+    hits: obs
+  - Archive\Shelved_Projects\Pokemon_Live_Price_Lookup\tools\install_v0_6_4c_smart_query_parser.py
+    hits: obs
+  - Archive\studio_results\IMG_6905_20260608_125852\ocr_debug\IMG_6905_number_attempts.json
+    hits: obs
+  - Archive\studio_results\KAGGLE_SOLROCK_GG15_TEST_20260608_133409\solrock_gg15_result.json
+    hits: obs
+  - Archive\studio_results\KAGGLE_TG_BATCH_20260608_140033\KAGGLE_TG_BATCH_0010_en_US-SWSH10-TG010-galarian_obstagoon\ocr_debug\KAGGLE_TG_BATCH_0010_en_US-SWSH10-TG010-galarian_obstagoon_name_attempts.json
+    hits: obs
+  - Archive\studio_results\KAGGLE_TG_BATCH_20260608_140033\KAGGLE_TG_BATCH_0010_en_US-SWSH10-TG010-galarian_obstagoon\ocr_debug\KAGGLE_TG_BATCH_0010_en_US-SWSH10-TG010-galarian_obstagoon_number_attempts.json
+    hits: obs
+  - Archive\studio_results\KAGGLE_TG_BATCH_20260608_140033\KAGGLE_TG_BATCH_0010_en_US-SWSH10-TG010-galarian_obstagoon\ocr_debug\KAGGLE_TG_BATCH_0010_en_US-SWSH10-TG010-galarian_obstagoon_setcode_attempts.json
+    hits: obs
+  - Archive\studio_results\KAGGLE_TG_BATCH_20260608_140033\KAGGLE_TG_BATCH_0010_en_US-SWSH10-TG010-galarian_obstagoon\result.json
+    hits: obs
+  - Archive\studio_results\KAGGLE_TG_FAST_BATCH_20260608_144814\KAGGLE_TG_FAST_0010_en_US-SWSH10-TG010-galarian_obstagoon\ocr_debug\KAGGLE_TG_FAST_0010_en_US-SWSH10-TG010-galarian_obstagoon_name_attempts.json
+    hits: obs
+  - Archive\studio_results\KAGGLE_TG_FAST_BATCH_20260608_144814\KAGGLE_TG_FAST_0010_en_US-SWSH10-TG010-galarian_obstagoon\ocr_debug\KAGGLE_TG_FAST_0010_en_US-SWSH10-TG010-galarian_obstagoon_number_attempts.json
+    hits: obs
+  - Archive\studio_results\KAGGLE_TG_FAST_BATCH_20260608_144814\KAGGLE_TG_FAST_0010_en_US-SWSH10-TG010-galarian_obstagoon\ocr_debug\KAGGLE_TG_FAST_0010_en_US-SWSH10-TG010-galarian_obstagoon_setcode_attempts.json
+    hits: obs
+  - Archive\studio_results\KAGGLE_TG_FAST_BATCH_20260608_144814\KAGGLE_TG_FAST_0010_en_US-SWSH10-TG010-galarian_obstagoon\result.json
+    hits: obs
+  - Archive\studio_results\KAGGLE_TG_FAST_BATCH_20260608_145551\KAGGLE_TG_FAST_0010_en_US-SWSH10-TG010-galarian_obstagoon\ocr_debug\KAGGLE_TG_FAST_0010_en_US-SWSH10-TG010-galarian_obstagoon_name_attempts.json
+    hits: obs
+  - Archive\studio_results\KAGGLE_TG_FAST_BATCH_20260608_145551\KAGGLE_TG_FAST_0010_en_US-SWSH10-TG010-galarian_obstagoon\ocr_debug\KAGGLE_TG_FAST_0010_en_US-SWSH10-TG010-galarian_obstagoon_number_attempts.json
+    hits: obs
+  - Archive\studio_results\KAGGLE_TG_FAST_BATCH_20260608_145551\KAGGLE_TG_FAST_0010_en_US-SWSH10-TG010-galarian_obstagoon\ocr_debug\KAGGLE_TG_FAST_0010_en_US-SWSH10-TG010-galarian_obstagoon_setcode_attempts.json
+    hits: obs
+  - Archive\studio_results\KAGGLE_TG_FAST_BATCH_20260608_145551\KAGGLE_TG_FAST_0010_en_US-SWSH10-TG010-galarian_obstagoon\result.json
+    hits: obs
+  - Archive\studio_results\KAGGLE_TG_FAST_BATCH_20260608_150455\KAGGLE_TG_FAST_0010_en_US-SWSH10-TG010-galarian_obstagoon\ocr_debug\KAGGLE_TG_FAST_0010_en_US-SWSH10-TG010-galarian_obstagoon_name_attempts.json
+    hits: obs
+  - Archive\studio_results\KAGGLE_TG_FAST_BATCH_20260608_150455\KAGGLE_TG_FAST_0010_en_US-SWSH10-TG010-galarian_obstagoon\ocr_debug\KAGGLE_TG_FAST_0010_en_US-SWSH10-TG010-galarian_obstagoon_number_attempts.json
+    hits: obs
+  - Archive\studio_results\KAGGLE_TG_FAST_BATCH_20260608_150455\KAGGLE_TG_FAST_0010_en_US-SWSH10-TG010-galarian_obstagoon\ocr_debug\KAGGLE_TG_FAST_0010_en_US-SWSH10-TG010-galarian_obstagoon_setcode_attempts.json
+    hits: obs
+  - Archive\studio_results\KAGGLE_TG_FAST_BATCH_20260608_150455\KAGGLE_TG_FAST_0010_en_US-SWSH10-TG010-galarian_obstagoon\result.json
+    hits: obs
+  - Archive\template_region_matcher_bulk_v0_3.py
+    hits: obs
+  - Business\Inventory\Pricing_Revisions\Completed Jobs\Market_Intelligence_Prototype_20260626_150310\market_intelligence_summary_20260626_150310.txt
+    hits: obs
+  - Business\Inventory\Pricing_Revisions\Completed Jobs\New_Listing_Price_Audit_20260626_123924\report_new_listing_audit_20260626_123924.txt
+    hits: obs
+  - Business\Inventory\Pricing_Revisions\Completed Jobs\New_Listing_Price_Audit_20260626_150303\report_new_listing_audit_20260626_150303.txt
+    hits: obs
+  - Business\Inventory\Pricing_Revisions\Completed Jobs\New_Listing_Price_Audit_20260626_150308\report_new_listing_audit_20260626_150308.txt
+    hits: obs
+  - Capture\06.30.26\capture_session.json
+    hits: obs, websocket
+  - Capture\06.30.26.1\capture_session.json
+    hits: obs, websocket
+  ... plus 277 more
+
+[Label Center]
+  - Archive\border_trainer_v0_6.html
+    hits: label
+  - Archive\border_training_labels\IMG_6893.json
+    hits: label
+  - Archive\border_training_labels\IMG_6905.json
+    hits: label
+  - Archive\border_training_labels\IMG_7304.json
+    hits: label
+  - Archive\border_training_labels\IMG_7467.json
+    hits: label
+  - Archive\border_training_labels\IMG_7502.json
+    hits: label
+  - Archive\border_training_labels\IMG_7505.json
+    hits: label
+  - Archive\border_training_labels\IMG_7506.json
+    hits: label
+  - Archive\border_training_labels\IMG_7507.json
+    hits: label
+  - Archive\border_training_labels\IMG_7616.json
+    hits: label
+  - Archive\border_training_labels\KAGGLE_FLAREON_TG01_TEST.json
+    hits: label
+  - Archive\border_training_labels\KAGGLE_GG_TEST.json
+    hits: label
+  - Archive\border_training_labels\KAGGLE_SOLROCK_GG15_TEST.json
+    hits: label
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0001_en_US-SWSH10-TG001-abomasnow.json
+    hits: label
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0002_en_US-SWSH10-TG002-flapple.json
+    hits: label
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0003_en_US-SWSH10-TG003-kingdra.json
+    hits: label
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0004_en_US-SWSH10-TG004-frosmoth.json
+    hits: label
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0005_en_US-SWSH10-TG005-gardevoir.json
+    hits: label
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0006_en_US-SWSH10-TG006-wyrdeer.json
+    hits: label
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0007_en_US-SWSH10-TG007-falinks.json
+    hits: label
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0008_en_US-SWSH10-TG008-kleavor.json
+    hits: label
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0009_en_US-SWSH10-TG009-mightyena.json
+    hits: label
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0010_en_US-SWSH10-TG010-galarian_obstagoon.json
+    hits: label
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0011_en_US-SWSH10-TG011-bronzong.json
+    hits: label
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0012_en_US-SWSH10-TG012-hoothoot.json
+    hits: label
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0013_en_US-SWSH10-TG013-starmie_v.json
+    hits: label
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0014_en_US-SWSH10-TG014-ice_rider_calyrex_v.json
+    hits: label
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0015_en_US-SWSH10-TG015-ice_rider_calyrex_vmax.json
+    hits: label
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0016_en_US-SWSH10-TG016-galarian_articuno_v.json
+    hits: label
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0017_en_US-SWSH10-TG017-shadow_rider_calyrex_v.json
+    hits: label
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0018_en_US-SWSH10-TG018-shadow_rider_calyrex_vmax.json
+    hits: label
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0019_en_US-SWSH10-TG019-galarian_zapdos_v.json
+    hits: label
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0020_en_US-SWSH10-TG020-galarian_moltres_v.json
+    hits: label
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0021_en_US-SWSH10-TG021-zacian_v.json
+    hits: label
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0022_en_US-SWSH10-TG022-zamazenta_v.json
+    hits: label
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0023_en_US-SWSH10-TG023-garchomp_v.json
+    hits: label
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0024_en_US-SWSH10-TG024-allister.json
+    hits: label
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0025_en_US-SWSH10-TG025-bea.json
+    hits: label
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0026_en_US-SWSH10-TG026-melony.json
+    hits: label
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0027_en_US-SWSH10-TG027-milo.json
+    hits: label
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0028_en_US-SWSH10-TG028-piers.json
+    hits: label
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0029_en_US-SWSH10-TG029-ice_rider_calyrex_vmax.json
+    hits: label
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0030_en_US-SWSH10-TG030-shadow_rider_calyrex_vmax.json
+    hits: label
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0031_en_US-SWSH9-TG001-flareon.json
+    hits: label
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0032_en_US-SWSH9-TG002-vaporeon.json
+    hits: label
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0033_en_US-SWSH9-TG003-octillery.json
+    hits: label
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0034_en_US-SWSH9-TG004-jolteon.json
+    hits: label
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0035_en_US-SWSH9-TG005-zekrom.json
+    hits: label
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0036_en_US-SWSH9-TG006-dusknoir.json
+    hits: label
+  - Archive\border_training_labels\KAGGLE_TG_BATCH_0037_en_US-SWSH9-TG007-dedenne.json
+    hits: label
+  ... plus 1319 more
+
+[Inventory]
+  - Archive\card_intake_app_v2_1_2_resurrected.py
+    hits: inventory
+  - Archive\Putnam_OS_legacy_20260626_123254\app\core\pricing_engine.py
+    hits: inventory, quantity, sku
+  - Archive\Putnam_OS_legacy_20260626_123254\app\putnam_os.py
+    hits: inventory, quantity
+  - Archive\Putnam_OS_PreV2_20260626_112630\app\putnam_os_v1.py
+    hits: inventory, quantity, sku
+  - Archive\Putnam_OS_PreV2_20260626_112630\Bulk_Price_Reviser\app\main.py
+    hits: quantity, sku
+  - Archive\Putnam_OS_PreV2_20260626_112630\Bulk_Price_Reviser\config\pricing_ladder.json
+    hits: inventory
+  - Archive\Putnam_OS_PreV2_20260626_112630\Bulk_Price_Reviser\docs\README.md
+    hits: inventory
+  - Archive\Putnam_OS_PreV2_20260626_112630\config\pricing_ladder.json
+    hits: inventory
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\archive_old_versions\live_tcgplayer_prices_before_2a1_patch_20260610_140048.py
+    hits: quantity
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\live_tcgplayer_prices.py
+    hits: quantity
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\tools\install_live_tcgplayer_price_patch.py
+    hits: quantity
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\tools\install_live_tcgplayer_price_patch_2a1.py
+    hits: quantity
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\tools\tcgplayer_live_listings_probe.py
+    hits: quantity
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\price_cache\web_fetch_diagnostics\tcgplayer_live_listings_42402_20260610_134933.json
+    hits: inventory, quantity
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\price_cache\web_fetch_diagnostics\tcgplayer_probe_42402_20260610_133657.html
+    hits: quantity
+  - Archive\README_V2_1_2_RESURRECTED_DB_CSV.txt
+    hits: inventory
+  - Archive\Release_Checkpoints\Putnam_OS_v3.5.0_Baseline_Workflow_Testing_20260629_232033\CHANGELOG.md
+    hits: inventory, sku
+  - Archive\Release_Checkpoints\Putnam_OS_v3.5.0_Baseline_Workflow_Testing_20260629_232033\Docs\CHANGELOG.md
+    hits: inventory
+  - Archive\Release_Checkpoints\Putnam_OS_v3.5.0_Baseline_Workflow_Testing_20260629_232033\Docs\PROJECT_STATUS.md
+    hits: inventory, sku
+  - Archive\Release_Checkpoints\Putnam_OS_v3.5.0_Baseline_Workflow_Testing_20260629_232033\System_app\inventory_locations.py
+    hits: inventory
+  - Archive\Release_Checkpoints\Putnam_OS_v3.5.0_Baseline_Workflow_Testing_20260629_232033\System_app\orders_fulfillment.py
+    hits: inventory, quantity, sku
+  - Archive\Release_Checkpoints\Putnam_OS_v3.5.0_Baseline_Workflow_Testing_20260629_232033\System_app\putnam_os.py
+    hits: inventory, quantity, sku
+  - Archive\run_kaggle_gg_scanner_test.py
+    hits: inventory
+  - Archive\Shelved_Projects\Pokemon_Live_Price_Lookup\archive_old_versions\live_tcgplayer_prices_before_patch_2c_9_20260610_225119.py
+    hits: quantity
+  - Archive\Shelved_Projects\Pokemon_Live_Price_Lookup\archive_old_versions\live_tcgplayer_prices_before_patch_2c_9_20260610_225437.py
+    hits: quantity
+  - Archive\Shelved_Projects\Pokemon_Live_Price_Lookup\backend\archive_old_versions\live_tcgplayer_prices_before_2a1_patch_20260610_140048.py
+    hits: quantity
+  - Archive\Shelved_Projects\Pokemon_Live_Price_Lookup\backend\live_tcgplayer_prices.py
+    hits: quantity
+  - Archive\Shelved_Projects\Pokemon_Live_Price_Lookup\backend\tools\install_live_tcgplayer_price_patch.py
+    hits: quantity
+  - Archive\Shelved_Projects\Pokemon_Live_Price_Lookup\backend\tools\install_live_tcgplayer_price_patch_2a1.py
+    hits: quantity
+  - Archive\Shelved_Projects\Pokemon_Live_Price_Lookup\backend\tools\tcgplayer_live_listings_probe.py
+    hits: quantity
+  - Archive\Shelved_Projects\Pokemon_Live_Price_Lookup\price_cache\web_fetch_diagnostics\tcgplayer_live_listings_42402_20260610_134933.json
+    hits: inventory, quantity
+  - Archive\Shelved_Projects\Pokemon_Live_Price_Lookup\price_cache\web_fetch_diagnostics\tcgplayer_probe_42402_20260610_133657.html
+    hits: quantity
+  - Business\Inventory\Pricing_Revisions\Completed Jobs\Market_Intelligence_Prototype_20260626_150310\market_intelligence_summary_20260626_150310.txt
+    hits: inventory
+  - Business\Inventory\Pricing_Revisions\Completed Jobs\New_Listing_Price_Audit_20260626_123924\report_new_listing_audit_20260626_123924.txt
+    hits: inventory
+  - Business\Inventory\Pricing_Revisions\Completed Jobs\New_Listing_Price_Audit_20260626_150303\report_new_listing_audit_20260626_150303.txt
+    hits: inventory
+  - Business\Inventory\Pricing_Revisions\Completed Jobs\New_Listing_Price_Audit_20260626_150308\report_new_listing_audit_20260626_150308.txt
+    hits: inventory
+  - Business\Inventory\Pricing_Revisions\Run Bulk Price Engine.bat
+    hits: inventory
+  - Business\Inventory\Pricing_Revisions\Run Market Validation Prototype.bat
+    hits: inventory
+  - cardvector_workspace_auditor.py
+    hits: inventory, quantity, sku, stock
+  - Data\Exports\Inventory_Location_Labels\ETB-001.html
+    hits: inventory
+  - Data\Exports\Inventory_Location_Labels\ETB-002.html
+    hits: inventory
+  - Data\Exports\Inventory_Location_Labels\index.html
+    hits: inventory
+  - Data\Exports\Pick_Lists\example_pick_slip.html
+    hits: sku
+  - Data\Logs\inventory_audit_sessions\20260629_114619.json
+    hits: inventory, quantity, sku
+  - Data\Logs\inventory_audit_sessions\20260629_154655.json
+    hits: inventory, quantity, sku
+  - Data\Logs\inventory_audit_sessions\20260629_155503.json
+    hits: inventory, quantity, sku
+  - Data\Logs\inventory_audit_sessions\20260629_155551.json
+    hits: inventory, quantity, sku
+  - Data\Logs\label_generation_log.txt
+    hits: inventory
+  - Docs\AGENTS.md
+    hits: inventory, sku
+  - Docs\CARDVECTOR_PLATFORM_V1_1_0_MIGRATION_SUMMARY.md
+    hits: inventory
+  ... plus 233 more
+
+[Pricing]
+  - Archive\Putnam_OS_legacy_20260626_123254\app\core\pricing_engine.py
+    hits: ebay, price, pricing
+  - Archive\Putnam_OS_legacy_20260626_123254\app\putnam_os.py
+    hits: ebay, price, pricing
+  - Archive\Putnam_OS_PreV2_20260626_112630\app\putnam_os_v1.py
+    hits: ebay, price, pricing
+  - Archive\Putnam_OS_PreV2_20260626_112630\Bulk_Price_Reviser\app\main.py
+    hits: ebay, price, pricing
+  - Archive\Putnam_OS_PreV2_20260626_112630\Bulk_Price_Reviser\config\pricing_ladder.json
+    hits: price, pricing
+  - Archive\Putnam_OS_PreV2_20260626_112630\Bulk_Price_Reviser\docs\CHANGELOG.md
+    hits: ebay, price
+  - Archive\Putnam_OS_PreV2_20260626_112630\Bulk_Price_Reviser\docs\README.md
+    hits: ebay, price, pricing
+  - Archive\Putnam_OS_PreV2_20260626_112630\Bulk_Price_Reviser\docs\VERSION.txt
+    hits: price
+  - Archive\Putnam_OS_PreV2_20260626_112630\Bulk_Price_Reviser\run_bulk_price_reviser.bat
+    hits: price
+  - Archive\Putnam_OS_PreV2_20260626_112630\Bulk_Price_Reviser\update.ps1
+    hits: price
+  - Archive\Putnam_OS_PreV2_20260626_112630\config\pricing_ladder.json
+    hits: price, pricing
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\archive_old_versions\card_catalog_before_variant_live_matching_2a2_patch_20260610_140738.py
+    hits: tcgplayer
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\archive_old_versions\install_tcgtracking_price_backend_patch.py
+    hits: market, price, tcgplayer
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\archive_old_versions\live_tcgplayer_prices_before_2a1_patch_20260610_140048.py
+    hits: market, price, tcgplayer
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\archive_old_versions\price_cache.sample.json
+    hits: market, price
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\archive_old_versions\price_cache_before_live_tcgplayer_2a1_patch_20260610_140048.py
+    hits: ebay, market, price, tcgplayer
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\archive_old_versions\price_cache_before_live_tcgplayer_patch_20260610_135359.py
+    hits: ebay, market, price, tcgplayer
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\archive_old_versions\price_cache_before_tcgtracking_patch_20260610_101317.py
+    hits: ebay, market, price, tcgplayer
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\archive_old_versions\price_cache_before_variant_live_matching_2a2_patch_20260610_140738.py
+    hits: ebay, market, price, tcgplayer
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\archive_old_versions\viewer_server_before_patch_2c_1_20260610_155257.py
+    hits: price, pricing, tcgplayer
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\archive_old_versions\viewer_server_before_patch_2c_20260610_154224.py
+    hits: price, tcgplayer
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\archive_old_versions\viewer_server_before_patch_2c_3_20260610_160244.py
+    hits: price, pricing, tcgplayer
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\card_catalog.py
+    hits: price, tcgplayer
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\card_catalog_before_search_ranking_patch_20260610_114403.py
+    hits: tcgplayer
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\data_sources.json
+    hits: price
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\legacy_viewer\viewer.css
+    hits: market, price
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\legacy_viewer\viewer.html
+    hits: price
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\legacy_viewer\viewer.js
+    hits: market, price
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\live_tcgplayer_prices.py
+    hits: market, price, tcgplayer
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\native_host_legacy\native_host.py
+    hits: price
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\price_cache.py
+    hits: ebay, market, price, pricing, tcgplayer
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\start_watcher_backend.bat
+    hits: price
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\tools\import_tcgplayer_prices.bat
+    hits: price, tcgplayer
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\tools\init_price_cache.bat
+    hits: price
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\tools\install_fast_search_lazy_prices_patch_2c_1_backend.py
+    hits: price
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\tools\install_fast_search_patch_2c.py
+    hits: price, pricing, tcgplayer
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\tools\install_live_tcgplayer_price_patch.py
+    hits: market, price, tcgplayer
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\tools\install_live_tcgplayer_price_patch_2a1.py
+    hits: market, price, tcgplayer
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\tools\install_search_ranking_patch.py
+    hits: price, tcgplayer
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\tools\install_session_price_cache_patch_2c_3.py
+    hits: price
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\tools\install_tcgplayer_product_cache_patch_2c_9.py
+    hits: price, tcgplayer
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\tools\install_variant_live_matching_patch_2a2.py
+    hits: price, tcgplayer
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\tools\refresh_tcgdex_prices.bat
+    hits: price
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\tools\sync_tcgplayer_links.bat
+    hits: price, tcgplayer
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\tools\tcgdex_prices.py
+    hits: market, price, pricing, tcgplayer
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\tools\tcgplayer_live_listings_probe.py
+    hits: price, tcgplayer
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\tools\tcgplayer_page_probe.py
+    hits: market, price, pricing, tcgplayer
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\viewer_server.py
+    hits: price, tcgplayer
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\docs\release_notes\v0.4.0.md
+    hits: price, pricing
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\docs\release_notes\v0.5.0.md
+    hits: price
+  ... plus 879 more
+
+[Database]
+  - Archive\card_intake_app_v2_1_2_resurrected.py
+    hits: database, sqlite
+  - Archive\install_bottom_id_special_number_patch.py
+    hits: database, sqlite
+  - Archive\install_db_assisted_name_from_number_patch.py
+    hits: database, sqlite
+  - Archive\install_set_total_tiebreak_patch.py
+    hits: database
+  - Archive\install_special_number_total_normalization_patch.py
+    hits: database
+  - Archive\install_tg_ocr_focus_v2_1_patch.py
+    hits: database, sqlite
+  - Archive\install_tg_ocr_focus_v2_patch.py
+    hits: database, sqlite
+  - Archive\install_tg_special_number_repair_patch.py
+    hits: database
+  - Archive\known_good\template_region_warp_matcher_v0_7.py
+    hits: database
+  - Archive\project_locks\locked_backups\20260608_120750__known_good__template_region_warp_matcher_v0_7.py
+    hits: database
+  - Archive\project_locks\locked_backups\20260608_124624__known_good__template_region_warp_matcher_v0_7.py
+    hits: database
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\archive_old_versions\card_catalog_before_variant_live_matching_2a2_patch_20260610_140738.py
+    hits: sqlite
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\archive_old_versions\install_tcgtracking_price_backend_patch.py
+    hits: db_path, sqlite
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\archive_old_versions\price_cache_before_live_tcgplayer_2a1_patch_20260610_140048.py
+    hits: db_path, sqlite
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\archive_old_versions\price_cache_before_live_tcgplayer_patch_20260610_135359.py
+    hits: db_path, sqlite
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\archive_old_versions\price_cache_before_tcgtracking_patch_20260610_101317.py
+    hits: db_path, sqlite
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\archive_old_versions\price_cache_before_variant_live_matching_2a2_patch_20260610_140738.py
+    hits: db_path, sqlite
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\card_catalog.py
+    hits: database, sqlite
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\card_catalog_before_search_ranking_patch_20260610_114403.py
+    hits: sqlite
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\data_sources.json
+    hits: database, sqlite
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\native_host_legacy\native_host.py
+    hits: sqlite
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\price_cache.py
+    hits: db_path, sqlite
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\tools\install_search_ranking_patch.py
+    hits: sqlite
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\tools\tcgplayer_page_probe.py
+    hits: sqlite
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\extension\archive_old_versions\overlay_before_live_price_display_2b_patch_20260610_143023.js
+    hits: database
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\extension\archive_old_versions\overlay_before_live_price_display_2b_patch_20260610_143057.js
+    hits: database
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\extension\archive_old_versions\overlay_before_live_price_display_2b_patch_20260610_143124.js
+    hits: database
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\extension\archive_old_versions\overlay_before_live_price_display_2b_patch_20260610_143322.js
+    hits: database
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\extension\archive_old_versions\overlay_before_live_price_display_2b_safe_20260610_143628.js
+    hits: database
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\extension\archive_old_versions\overlay_before_patch_2c_1_20260610_155617.js
+    hits: database
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\extension\archive_old_versions\overlay_before_patch_2c_2_20260610_155906.js
+    hits: database
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\extension\archive_old_versions\overlay_before_patch_2c_4_20260610_160604.js
+    hits: database
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\extension\archive_old_versions\overlay_before_patch_2d_1_20260610_153740.js
+    hits: database
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\extension\archive_old_versions\overlay_before_patch_2d_20260610_152759.js
+    hits: database
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\extension\overlay.js
+    hits: database
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\extension\popup.html
+    hits: database
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\extension\tools\install_overlay_ui_patch_2d.py
+    hits: database
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\tools\audit_missing_links_v0_7_3.py
+    hits: database, sqlite
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\tools\audit_modern_set_recovery_v0_9_1.py
+    hits: database, sqlite
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\tools\audit_paldea_evolved_unlinked.py
+    hits: database, sqlite
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\tools\audit_promo_deep_v0_9_2.py
+    hits: database, sqlite
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\tools\build_coverage_analytics_v0_8_3.py
+    hits: database, sqlite
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\tools\build_v0_8_4_set_alias_audit.py
+    hits: database, sqlite
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\tools\diagnose_ascended_heroes_pikachu.py
+    hits: database, sqlite
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\tools\diagnose_market_prices_pikachu.py
+    hits: sqlite
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\tools\fix_data_sources_portability_p0_2.py
+    hits: .db, database, sqlite
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\tools\inspect_ascended_heroes_products.py
+    hits: sqlite
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\tools\inspect_burning_shadows_charizard.py
+    hits: sqlite
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\tools\inspect_charizard_gx_150.py
+    hits: database, sqlite
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\tools\inspect_dragon_frontiers_charizard.py
+    hits: sqlite
+  ... plus 283 more
+
+[UI]
+  - Archive\border_trainer_v0_6.html
+    hits: button, tab
+  - Archive\card_intake_app_v2_1_2_resurrected.py
+    hits: tab
+  - Archive\install_bottom_id_special_number_patch.py
+    hits: tab
+  - Archive\install_db_assisted_name_from_number_patch.py
+    hits: tab
+  - Archive\install_set_total_tiebreak_patch.py
+    hits: tab
+  - Archive\install_special_number_total_normalization_patch.py
+    hits: tab
+  - Archive\install_studio_copy_buttons_patch.py
+    hits: button, panel
+  - Archive\install_tg_ocr_focus_v2_1_patch.py
+    hits: tab
+  - Archive\install_tg_ocr_focus_v2_patch.py
+    hits: tab
+  - Archive\install_tg_special_number_repair_patch.py
+    hits: tab
+  - Archive\known_good\template_region_warp_matcher_v0_7.py
+    hits: tab
+  - Archive\project_locks\locked_backups\20260608_120750__known_good__template_region_warp_matcher_v0_7.py
+    hits: tab
+  - Archive\project_locks\locked_backups\20260608_120750__scanner_studio.html
+    hits: button
+  - Archive\project_locks\locked_backups\20260608_124624__known_good__template_region_warp_matcher_v0_7.py
+    hits: tab
+  - Archive\project_locks\locked_backups\20260608_124624__scanner_studio.html
+    hits: button
+  - Archive\Putnam_OS_legacy_20260626_123254\app\putnam_os.py
+    hits: button, sidebar
+  - Archive\Putnam_OS_PreV2_20260626_112630\app\putnam_os_v1.py
+    hits: button, sidebar
+  - Archive\Putnam_OS_PreV2_20260626_112630\tools\putnam_os_dashboard_v0_1.py
+    hits: button
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\archive_old_versions\price_cache_before_live_tcgplayer_2a1_patch_20260610_140048.py
+    hits: tab
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\archive_old_versions\price_cache_before_live_tcgplayer_patch_20260610_135359.py
+    hits: tab
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\archive_old_versions\price_cache_before_tcgtracking_patch_20260610_101317.py
+    hits: tab
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\archive_old_versions\price_cache_before_variant_live_matching_2a2_patch_20260610_140738.py
+    hits: tab
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\card_catalog.py
+    hits: tab
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\data_sources.json
+    hits: tab
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\legacy_viewer\viewer.css
+    hits: button, panel
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\legacy_viewer\viewer.html
+    hits: button, panel
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\legacy_viewer\viewer.js
+    hits: component, render, tab
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\native_host_legacy\native_host.py
+    hits: tab
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\price_cache.py
+    hits: tab
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\tools\install_fast_search_lazy_prices_patch_2c_1_backend.py
+    hits: component, render
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\tools\tcgplayer_page_probe.py
+    hits: render
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\viewer_server.py
+    hits: tab
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\docs\launcher_scripts.md
+    hits: tab
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\docs\release_notes\v0.5.0.md
+    hits: button
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\docs\RELEASE_NOTES_v0_7_1.txt
+    hits: button, render, tab
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\docs\RELEASE_NOTES_v0_7_3.txt
+    hits: tab
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\extension\archive_old_versions\overlay_before_live_price_display_2b_patch_20260610_143023.css
+    hits: button
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\extension\archive_old_versions\overlay_before_live_price_display_2b_patch_20260610_143023.js
+    hits: button, render, tab
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\extension\archive_old_versions\overlay_before_live_price_display_2b_patch_20260610_143057.css
+    hits: button
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\extension\archive_old_versions\overlay_before_live_price_display_2b_patch_20260610_143057.js
+    hits: button, render, tab
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\extension\archive_old_versions\overlay_before_live_price_display_2b_patch_20260610_143124.css
+    hits: button
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\extension\archive_old_versions\overlay_before_live_price_display_2b_patch_20260610_143124.js
+    hits: button, render, tab
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\extension\archive_old_versions\overlay_before_live_price_display_2b_patch_20260610_143322.css
+    hits: button
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\extension\archive_old_versions\overlay_before_live_price_display_2b_patch_20260610_143322.js
+    hits: button, render, tab
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\extension\archive_old_versions\overlay_before_live_price_display_2b_safe_20260610_143628.css
+    hits: button
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\extension\archive_old_versions\overlay_before_live_price_display_2b_safe_20260610_143628.js
+    hits: button, render, tab
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\extension\archive_old_versions\overlay_before_patch_2c_1_20260610_155617.css
+    hits: button, tab
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\extension\archive_old_versions\overlay_before_patch_2c_1_20260610_155617.js
+    hits: button, render, tab
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\extension\archive_old_versions\overlay_before_patch_2c_2_20260610_155906.js
+    hits: button, component, render, tab
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\extension\archive_old_versions\overlay_before_patch_2c_4_20260610_160604.js
+    hits: button, component, render, tab
+  ... plus 585 more
+
+[Config]
+  - Archive\border_trainer_v0_6.html
+    hits: path
+  - Archive\card_intake_app_v2_1_2_resurrected.py
+    hits: config, path
+  - Archive\detect_card_borders_v0_2.py
+    hits: path
+  - Archive\install_bottom_id_special_number_patch.py
+    hits: config, path
+  - Archive\install_db_assisted_name_from_number_patch.py
+    hits: config, path
+  - Archive\install_denominator_tiebreak_patch.py
+    hits: path
+  - Archive\install_project_locks.py
+    hits: path
+  - Archive\install_set_total_tiebreak_patch.py
+    hits: path
+  - Archive\install_special_number_total_normalization_patch.py
+    hits: path
+  - Archive\install_studio_copy_buttons_patch.py
+    hits: path
+  - Archive\install_tg_ocr_focus_v2_1_patch.py
+    hits: config, path
+  - Archive\install_tg_ocr_focus_v2_patch.py
+    hits: config, path
+  - Archive\install_tg_special_number_repair_patch.py
+    hits: path
+  - Archive\known_good\template_region_warp_matcher_v0_7.py
+    hits: env, path
+  - Archive\project_locks\locked_backups\20260608_120750__known_good__template_region_warp_matcher_v0_7.py
+    hits: env, path
+  - Archive\project_locks\locked_backups\20260608_120750__scanner_studio.html
+    hits: path
+  - Archive\project_locks\locked_backups\20260608_124624__known_good__template_region_warp_matcher_v0_7.py
+    hits: env, path
+  - Archive\project_locks\locked_backups\20260608_124624__scanner_studio.html
+    hits: path
+  - Archive\project_locks\locked_manifest.json
+    hits: path
+  - Archive\Putnam_OS_legacy_20260626_123254\app\core\pricing_engine.py
+    hits: config, env, path
+  - Archive\Putnam_OS_legacy_20260626_123254\app\putnam_os.py
+    hits: config, path, settings
+  - Archive\Putnam_OS_PreV2_20260626_112630\app\putnam_os_v1.py
+    hits: config, env, path, settings
+  - Archive\Putnam_OS_PreV2_20260626_112630\Bulk_Price_Reviser\app\main.py
+    hits: config, env, path
+  - Archive\Putnam_OS_PreV2_20260626_112630\Bulk_Price_Reviser\config\pricing_ladder.json
+    hits: config
+  - Archive\Putnam_OS_PreV2_20260626_112630\Bulk_Price_Reviser\run_bulk_price_reviser.bat
+    hits: env
+  - Archive\Putnam_OS_PreV2_20260626_112630\config\pricing_ladder.json
+    hits: config
+  - Archive\Putnam_OS_PreV2_20260626_112630\tools\putnam_os_dashboard_v0_1.py
+    hits: config, env, path
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\archive_old_versions\card_catalog_before_variant_live_matching_2a2_patch_20260610_140738.py
+    hits: config, path
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\archive_old_versions\install_tcgtracking_price_backend_patch.py
+    hits: path
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\archive_old_versions\price_cache_before_live_tcgplayer_2a1_patch_20260610_140048.py
+    hits: config, path
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\archive_old_versions\price_cache_before_live_tcgplayer_patch_20260610_135359.py
+    hits: config, path
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\archive_old_versions\price_cache_before_tcgtracking_patch_20260610_101317.py
+    hits: config, path
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\archive_old_versions\price_cache_before_variant_live_matching_2a2_patch_20260610_140738.py
+    hits: config, path
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\archive_old_versions\viewer_server_before_patch_2c_1_20260610_155257.py
+    hits: path
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\archive_old_versions\viewer_server_before_patch_2c_20260610_154224.py
+    hits: path
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\archive_old_versions\viewer_server_before_patch_2c_3_20260610_160244.py
+    hits: path
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\card_catalog.py
+    hits: config, path
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\card_catalog_before_search_ranking_patch_20260610_114403.py
+    hits: config, path
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\data_sources.json
+    hits: path
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\native_host_legacy\com.putnam.pokemon_watcher.json
+    hits: path
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\native_host_legacy\install_native_host.ps1
+    hits: path
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\native_host_legacy\native-host-manifest.template.json
+    hits: path
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\native_host_legacy\native_host.py
+    hits: path
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\price_cache.py
+    hits: config, path
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\tools\import_tcgplayer_prices.bat
+    hits: path
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\tools\install_fast_search_lazy_prices_patch_2c_1_backend.py
+    hits: path
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\tools\install_fast_search_patch_2c.py
+    hits: path
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\tools\install_live_tcgplayer_price_patch.py
+    hits: path
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\tools\install_live_tcgplayer_price_patch_2a1.py
+    hits: path
+  - Archive\Putnam_Pokemon_Lookup_Overlay_v0.9.3\backend\tools\install_search_ranking_patch.py
+    hits: config, path
+  ... plus 1350 more
+
+POTENTIAL ARCHIVE CANDIDATES
+----------------------------------------------------------------------------------------------------
+- Archive\1 | modified 2026-06-08 12:17 | 0 B
+- Archive\border_trainer_v0_6.html | modified 2026-06-08 09:52 | 12.5 KB
+- Archive\border_training_crops\IMG_7507_card_crop.jpg | modified 2026-06-08 10:05 | 1.7 MB
+- Archive\border_training_crops\IMG_7507_name_crop.jpg | modified 2026-06-08 10:05 | 87.8 KB
+- Archive\border_training_crops\IMG_7507_number_crop.jpg | modified 2026-06-08 10:05 | 8.9 KB
+- Archive\border_training_crops\IMG_7507_setcode_crop.jpg | modified 2026-06-08 10:05 | 8.0 KB
+- Archive\border_training_labels\IMG_6893.json | modified 2026-06-08 14:52 | 631 B
+- Archive\border_training_labels\IMG_6905.json | modified 2026-06-08 13:07 | 633 B
+- Archive\border_training_labels\IMG_7304.json | modified 2026-06-08 21:30 | 632 B
+- Archive\border_training_labels\IMG_7467.json | modified 2026-06-08 12:04 | 633 B
+- Archive\border_training_labels\IMG_7502.json | modified 2026-06-08 11:24 | 617 B
+- Archive\border_training_labels\IMG_7505.json | modified 2026-06-08 09:54 | 1.1 KB
+- Archive\border_training_labels\IMG_7506.json | modified 2026-06-08 12:38 | 631 B
+- Archive\border_training_labels\IMG_7507.json | modified 2026-06-08 10:05 | 1.1 KB
+- Archive\border_training_labels\IMG_7616.json | modified 2026-06-08 13:15 | 628 B
+- Archive\border_training_labels\KAGGLE_FLAREON_TG01_TEST.json | modified 2026-06-08 13:57 | 530 B
+- Archive\border_training_labels\KAGGLE_GG_TEST.json | modified 2026-06-08 13:25 | 520 B
+- Archive\border_training_labels\KAGGLE_SOLROCK_GG15_TEST.json | modified 2026-06-08 13:42 | 530 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0001_en_US-SWSH10-TG001-abomasnow.json | modified 2026-06-08 14:00 | 564 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0002_en_US-SWSH10-TG002-flapple.json | modified 2026-06-08 14:00 | 562 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0003_en_US-SWSH10-TG003-kingdra.json | modified 2026-06-08 14:01 | 562 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0004_en_US-SWSH10-TG004-frosmoth.json | modified 2026-06-08 14:01 | 563 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0005_en_US-SWSH10-TG005-gardevoir.json | modified 2026-06-08 14:01 | 564 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0006_en_US-SWSH10-TG006-wyrdeer.json | modified 2026-06-08 14:02 | 562 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0007_en_US-SWSH10-TG007-falinks.json | modified 2026-06-08 14:02 | 562 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0008_en_US-SWSH10-TG008-kleavor.json | modified 2026-06-08 14:02 | 562 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0009_en_US-SWSH10-TG009-mightyena.json | modified 2026-06-08 14:03 | 564 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0010_en_US-SWSH10-TG010-galarian_obstagoon.json | modified 2026-06-08 14:03 | 573 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0011_en_US-SWSH10-TG011-bronzong.json | modified 2026-06-08 14:03 | 563 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0012_en_US-SWSH10-TG012-hoothoot.json | modified 2026-06-08 14:04 | 563 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0013_en_US-SWSH10-TG013-starmie_v.json | modified 2026-06-08 14:04 | 564 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0014_en_US-SWSH10-TG014-ice_rider_calyrex_v.json | modified 2026-06-08 14:05 | 574 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0015_en_US-SWSH10-TG015-ice_rider_calyrex_vmax.json | modified 2026-06-08 14:05 | 577 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0016_en_US-SWSH10-TG016-galarian_articuno_v.json | modified 2026-06-08 14:05 | 574 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0017_en_US-SWSH10-TG017-shadow_rider_calyrex_v.json | modified 2026-06-08 14:06 | 577 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0018_en_US-SWSH10-TG018-shadow_rider_calyrex_vmax.json | modified 2026-06-08 14:06 | 580 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0019_en_US-SWSH10-TG019-galarian_zapdos_v.json | modified 2026-06-08 14:06 | 572 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0020_en_US-SWSH10-TG020-galarian_moltres_v.json | modified 2026-06-08 14:07 | 573 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0021_en_US-SWSH10-TG021-zacian_v.json | modified 2026-06-08 14:07 | 563 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0022_en_US-SWSH10-TG022-zamazenta_v.json | modified 2026-06-08 14:07 | 566 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0023_en_US-SWSH10-TG023-garchomp_v.json | modified 2026-06-08 14:08 | 565 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0024_en_US-SWSH10-TG024-allister.json | modified 2026-06-08 14:08 | 563 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0025_en_US-SWSH10-TG025-bea.json | modified 2026-06-08 14:08 | 558 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0026_en_US-SWSH10-TG026-melony.json | modified 2026-06-08 14:09 | 561 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0027_en_US-SWSH10-TG027-milo.json | modified 2026-06-08 14:09 | 559 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0028_en_US-SWSH10-TG028-piers.json | modified 2026-06-08 14:09 | 560 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0029_en_US-SWSH10-TG029-ice_rider_calyrex_vmax.json | modified 2026-06-08 14:09 | 577 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0030_en_US-SWSH10-TG030-shadow_rider_calyrex_vmax.json | modified 2026-06-08 14:10 | 580 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0031_en_US-SWSH9-TG001-flareon.json | modified 2026-06-08 14:10 | 561 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0032_en_US-SWSH9-TG002-vaporeon.json | modified 2026-06-08 14:11 | 562 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0033_en_US-SWSH9-TG003-octillery.json | modified 2026-06-08 14:11 | 563 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0034_en_US-SWSH9-TG004-jolteon.json | modified 2026-06-08 14:11 | 561 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0035_en_US-SWSH9-TG005-zekrom.json | modified 2026-06-08 14:11 | 560 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0036_en_US-SWSH9-TG006-dusknoir.json | modified 2026-06-08 14:12 | 562 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0037_en_US-SWSH9-TG007-dedenne.json | modified 2026-06-08 14:12 | 561 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0038_en_US-SWSH9-TG008-alcremie.json | modified 2026-06-08 14:12 | 562 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0039_en_US-SWSH9-TG009-ariados.json | modified 2026-06-08 14:13 | 561 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0040_en_US-SWSH9-TG010-houndoom.json | modified 2026-06-08 14:13 | 562 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0041_en_US-SWSH9-TG011-eevee.json | modified 2026-06-08 14:13 | 559 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0042_en_US-SWSH9-TG012-oranguru.json | modified 2026-06-08 14:14 | 562 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0043_en_US-SWSH9-TG013-boltund_v.json | modified 2026-06-08 14:14 | 563 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0044_en_US-SWSH9-TG014-sylveon_v.json | modified 2026-06-08 14:14 | 563 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0045_en_US-SWSH9-TG015-sylveon_vmax.json | modified 2026-06-08 14:14 | 566 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0046_en_US-SWSH9-TG016-mimikyu_v.json | modified 2026-06-08 14:15 | 563 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0047_en_US-SWSH9-TG017-mimikyu_vmax.json | modified 2026-06-08 14:15 | 566 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0048_en_US-SWSH9-TG018-single_strike_urshifu_v.json | modified 2026-06-08 14:15 | 577 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0049_en_US-SWSH9-TG019-single_strike_urshifu_vmax.json | modified 2026-06-08 14:16 | 580 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0050_en_US-SWSH9-TG020-rapid_strike_urshifu_v.json | modified 2026-06-08 14:16 | 576 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0051_en_US-SWSH9-TG021-rapid_strike_urshifu_vmax.json | modified 2026-06-08 14:16 | 579 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0052_en_US-SWSH9-TG022-umbreon_v.json | modified 2026-06-08 14:16 | 563 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0053_en_US-SWSH9-TG023-umbreon_vmax.json | modified 2026-06-08 14:17 | 566 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0054_en_US-SWSH9-TG024-acerolas_premonition.json | modified 2026-06-08 14:17 | 574 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0055_en_US-SWSH9-TG025-cafe_master.json | modified 2026-06-08 14:17 | 565 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0056_en_US-SWSH9-TG026-gloria.json | modified 2026-06-08 14:18 | 560 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0057_en_US-SWSH9-TG027-rapid_strike_style_mustard.json | modified 2026-06-08 14:18 | 580 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0058_en_US-SWSH9-TG028-single_strike_style_mustard.json | modified 2026-06-08 14:18 | 581 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0059_en_US-SWSH9-TG029-single_strike_urshifu_vmax.json | modified 2026-06-08 14:19 | 580 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0060_en_US-SWSH9-TG030-rapid_strike_urshifu_vmax.json | modified 2026-06-08 14:19 | 579 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0061_en_US-SWSH11-TG001-parasect.json | modified 2026-06-08 14:19 | 563 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0062_en_US-SWSH11-TG002-roserade.json | modified 2026-06-08 14:19 | 563 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0063_en_US-SWSH11-TG003-charizard.json | modified 2026-06-08 14:20 | 564 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0064_en_US-SWSH11-TG004-chandelure.json | modified 2026-06-08 14:20 | 565 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0065_en_US-SWSH11-TG005-pikachu.json | modified 2026-06-08 14:20 | 562 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0066_en_US-SWSH11-TG006-gengar.json | modified 2026-06-08 14:21 | 561 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0067_en_US-SWSH11-TG007-banette.json | modified 2026-06-08 14:21 | 562 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0068_en_US-SWSH11-TG008-hisuian_arcanine.json | modified 2026-06-08 14:21 | 571 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0069_en_US-SWSH11-TG009-spiritomb.json | modified 2026-06-08 14:22 | 564 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0070_en_US-SWSH11-TG010-snorlax.json | modified 2026-06-08 14:22 | 562 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0071_en_US-SWSH11-TG011-castform.json | modified 2026-06-08 14:22 | 563 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0072_en_US-SWSH11-TG012-orbeetle_v.json | modified 2026-06-08 14:22 | 565 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0073_en_US-SWSH11-TG013-orbeetle_vmax.json | modified 2026-06-08 14:23 | 568 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0074_en_US-SWSH11-TG014-centiskorch_v.json | modified 2026-06-08 14:23 | 568 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0075_en_US-SWSH11-TG015-centiskorch_vmax.json | modified 2026-06-08 14:23 | 571 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0076_en_US-SWSH11-TG016-pikachu_v.json | modified 2026-06-08 14:24 | 564 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0077_en_US-SWSH11-TG017-pikachu_vmax.json | modified 2026-06-08 14:24 | 567 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0078_en_US-SWSH11-TG018-enamorus_v.json | modified 2026-06-08 14:24 | 565 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0079_en_US-SWSH11-TG019-gallade_v.json | modified 2026-06-08 14:25 | 564 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0080_en_US-SWSH11-TG020-crobat_v.json | modified 2026-06-08 14:25 | 563 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0081_en_US-SWSH11-TG021-eternatus_v.json | modified 2026-06-08 14:25 | 566 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0082_en_US-SWSH11-TG022-eternatus_vmax.json | modified 2026-06-08 14:25 | 569 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0083_en_US-SWSH11-TG023-adventurers_discovery.json | modified 2026-06-08 14:26 | 576 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0084_en_US-SWSH11-TG024-bosss_orders.json | modified 2026-06-08 14:26 | 567 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0085_en_US-SWSH11-TG025-cook.json | modified 2026-06-08 14:27 | 559 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0086_en_US-SWSH11-TG026-kabu.json | modified 2026-06-08 14:27 | 559 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0087_en_US-SWSH11-TG027-nessa.json | modified 2026-06-08 14:27 | 560 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0088_en_US-SWSH11-TG028-opal.json | modified 2026-06-08 14:27 | 559 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0089_en_US-SWSH11-TG029-pikachu_vmax.json | modified 2026-06-08 14:28 | 567 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0090_en_US-SWSH11-TG030-mew_vmax.json | modified 2026-06-08 14:28 | 563 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0091_en_US-SWSH12-TG001-braixen.json | modified 2026-06-08 14:28 | 562 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0092_en_US-SWSH12-TG002-milotic.json | modified 2026-06-08 14:29 | 562 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0093_en_US-SWSH12-TG003-flaaffy.json | modified 2026-06-08 14:29 | 562 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0094_en_US-SWSH12-TG004-jynx.json | modified 2026-06-08 14:29 | 559 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0095_en_US-SWSH12-TG005-gardevoir.json | modified 2026-06-08 14:30 | 564 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0096_en_US-SWSH12-TG006-malamar.json | modified 2026-06-08 14:30 | 562 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0097_en_US-SWSH12-TG007-rockruff.json | modified 2026-06-08 14:30 | 563 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0098_en_US-SWSH12-TG008-passimian.json | modified 2026-06-08 14:30 | 564 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0099_en_US-SWSH12-TG009-druddigon.json | modified 2026-06-08 14:31 | 564 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0100_en_US-SWSH12-TG010-smeargle.json | modified 2026-06-08 14:31 | 563 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0101_en_US-SWSH12-TG011-altaria.json | modified 2026-06-08 14:31 | 562 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0102_en_US-SWSH12-TG012-kricketune_v.json | modified 2026-06-08 14:32 | 567 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0103_en_US-SWSH12-TG013-serperior_v.json | modified 2026-06-08 14:32 | 566 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0104_en_US-SWSH12-TG014-blaziken_v.json | modified 2026-06-08 14:32 | 565 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0105_en_US-SWSH12-TG015-blaziken_vmax.json | modified 2026-06-08 14:32 | 568 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0106_en_US-SWSH12-TG016-zeraora_v.json | modified 2026-06-08 14:33 | 564 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0107_en_US-SWSH12-TG017-mawile_v.json | modified 2026-06-08 14:33 | 563 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0108_en_US-SWSH12-TG018-corviknight_v.json | modified 2026-06-08 14:33 | 568 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0109_en_US-SWSH12-TG019-corviknight_vmax.json | modified 2026-06-08 14:34 | 571 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0110_en_US-SWSH12-TG020-rayquaza_vmax.json | modified 2026-06-08 14:34 | 568 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0111_en_US-SWSH12-TG021-duraludon_vmax.json | modified 2026-06-08 14:34 | 569 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0112_en_US-SWSH12-TG022-blissey_v.json | modified 2026-06-08 14:35 | 564 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0113_en_US-SWSH12-TG023-friends_in_galar.json | modified 2026-06-08 14:35 | 571 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0114_en_US-SWSH12-TG024-gordie.json | modified 2026-06-08 14:35 | 561 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0115_en_US-SWSH12-TG025-judge.json | modified 2026-06-08 14:35 | 560 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0116_en_US-SWSH12-TG026-professor_burnet.json | modified 2026-06-08 14:36 | 571 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0117_en_US-SWSH12-TG027-raihan.json | modified 2026-06-08 14:36 | 561 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0118_en_US-SWSH12-TG028-sordward_shielbert.json | modified 2026-06-08 14:36 | 573 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0119_en_US-SWSH12-TG029-rayquaza_vmax.json | modified 2026-06-08 14:36 | 568 B
+- Archive\border_training_labels\KAGGLE_TG_BATCH_0120_en_US-SWSH12-TG030-duraludon_vmax.json | modified 2026-06-08 14:37 | 569 B
+- Archive\border_training_labels\KAGGLE_TG_FAST_0001_en_US-SWSH10-TG001-abomasnow.json | modified 2026-06-08 14:48 | 568 B
+- Archive\border_training_labels\KAGGLE_TG_FAST_0002_en_US-SWSH10-TG002-flapple.json | modified 2026-06-08 14:48 | 566 B
+- Archive\border_training_labels\KAGGLE_TG_FAST_0003_en_US-SWSH10-TG003-kingdra.json | modified 2026-06-08 14:48 | 566 B
+- Archive\border_training_labels\KAGGLE_TG_FAST_0004_en_US-SWSH10-TG004-frosmoth.json | modified 2026-06-08 14:49 | 567 B
+- Archive\border_training_labels\KAGGLE_TG_FAST_0005_en_US-SWSH10-TG005-gardevoir.json | modified 2026-06-08 14:49 | 568 B
+- Archive\border_training_labels\KAGGLE_TG_FAST_0006_en_US-SWSH10-TG006-wyrdeer.json | modified 2026-06-08 14:49 | 566 B
+- Archive\border_training_labels\KAGGLE_TG_FAST_0007_en_US-SWSH10-TG007-falinks.json | modified 2026-06-08 14:49 | 566 B
+- Archive\border_training_labels\KAGGLE_TG_FAST_0008_en_US-SWSH10-TG008-kleavor.json | modified 2026-06-08 14:50 | 566 B
+- Archive\border_training_labels\KAGGLE_TG_FAST_0009_en_US-SWSH10-TG009-mightyena.json | modified 2026-06-08 14:50 | 568 B
+- Archive\border_training_labels\KAGGLE_TG_FAST_0010_en_US-SWSH10-TG010-galarian_obstagoon.json | modified 2026-06-08 14:50 | 577 B
+- Archive\card_intake_app_v2_1_2_resurrected.py | modified 2026-06-08 08:56 | 31.1 KB
+- Archive\detect_card_borders_v0_2.py | modified 2026-06-08 09:24 | 8.6 KB
+... plus 23594 more
+
+NEXT REVIEW TARGETS
+----------------------------------------------------------------------------------------------------
+1. Confirm which launcher starts the active production app.
+2. Trace that launcher to the active Python entry point.
+3. Locate Label Center files using qrcode / label / printer hits.
+4. Locate Capture thumbnail rail files using thumbnail / thumb / rail hits.
+5. Locate OBS files using obs / websocket / scene hits.
+6. Do not archive anything until active production paths are confirmed.

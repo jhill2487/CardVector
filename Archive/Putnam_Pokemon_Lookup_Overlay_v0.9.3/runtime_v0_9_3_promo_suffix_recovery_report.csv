@@ -1,0 +1,1277 @@
+putnam_card_id,catalog_set,card_name,printed_number,product_id,product_name,status,promo_code,score
+pkm-swsh-black-star-promos-swsh001-307-3427e49df3,SWSH Black Star Promos,Grookey,SWSH001/307,200300,Grookey - SWSH001,LINKED,swsh1,1.00
+pkm-swsh-black-star-promos-swsh002-307-813fcac39d,SWSH Black Star Promos,Scorbunny,SWSH002/307,200301,Scorbunny - SWSH002,LINKED,swsh2,1.00
+pkm-swsh-black-star-promos-swsh003-307-169ed20311,SWSH Black Star Promos,Sobble,SWSH003/307,200302,Sobble - SWSH003,LINKED,swsh3,1.00
+pkm-swsh-black-star-promos-swsh004-307-db92bc625f,SWSH Black Star Promos,Meowth V,SWSH004/307,205465,Meowth V - SWSH004,LINKED,swsh4,1.00
+pkm-swsh-black-star-promos-swsh005-307-7ff8bc479f,SWSH Black Star Promos,Meowth VMAX,SWSH005/307,205466,Meowth VMAX - SWSH005,LINKED,swsh5,1.00
+pkm-swsh-black-star-promos-swsh006-307-da58fbe6c3,SWSH Black Star Promos,Rillaboom,SWSH006/307,208261,Rillaboom - SWSH006 (Prerelease),SKIP_NAME_MISMATCH,swsh6,0.50
+pkm-swsh-black-star-promos-swsh006-307-da58fbe6c3,SWSH Black Star Promos,Rillaboom,SWSH006/307,208260,Rillaboom - SWSH006 (Prerelease) [Staff],SKIP_NAME_MISMATCH,swsh6,0.50
+pkm-swsh-black-star-promos-swsh007-307-020c95d270,SWSH Black Star Promos,Frosmoth,SWSH007/307,208262,Frosmoth - SWSH007 (Prerelease),SKIP_NAME_MISMATCH,swsh7,0.50
+pkm-swsh-black-star-promos-swsh007-307-020c95d270,SWSH Black Star Promos,Frosmoth,SWSH007/307,208263,Frosmoth - SWSH007 (Prerelease) [Staff],SKIP_NAME_MISMATCH,swsh7,0.50
+pkm-swsh-black-star-promos-swsh008-307-09631d3068,SWSH Black Star Promos,Galarian Perrserker,SWSH008/307,208265,Galarian Perrserker - SWSH008 (Prerelease),SKIP_NAME_MISMATCH,swsh8,0.67
+pkm-swsh-black-star-promos-swsh008-307-09631d3068,SWSH Black Star Promos,Galarian Perrserker,SWSH008/307,208264,Galarian Perrserker - SWSH008 (Prerelease) [Staff],SKIP_NAME_MISMATCH,swsh8,0.67
+pkm-swsh-black-star-promos-swsh009-307-d283536c87,SWSH Black Star Promos,Cinccino,SWSH009/307,208266,Cinccino - SWSH009 (Prerelease),SKIP_NAME_MISMATCH,swsh9,0.50
+pkm-swsh-black-star-promos-swsh009-307-d283536c87,SWSH Black Star Promos,Cinccino,SWSH009/307,208267,Cinccino - SWSH009 (Prerelease) [Staff],SKIP_NAME_MISMATCH,swsh9,0.50
+pkm-swsh-black-star-promos-swsh010-307-d0b6198f9d,SWSH Black Star Promos,Gossifleur,SWSH010/307,206429,Gossifleur - SWSH010,LINKED,swsh10,1.00
+pkm-swsh-black-star-promos-swsh011-307-f9d7d5bf50,SWSH Black Star Promos,Wooloo,SWSH011/307,206427,Wooloo - SWSH011,LINKED,swsh11,1.00
+pkm-swsh-black-star-promos-swsh012-307-32644c2cb0,SWSH Black Star Promos,Morpeko,SWSH012/307,206428,Morpeko - SWSH012,LINKED,swsh12,1.00
+pkm-swsh-black-star-promos-swsh013-307-2acdb14502,SWSH Black Star Promos,Galarian Ponyta,SWSH013/307,206430,Galarian Ponyta - SWSH013,LINKED,swsh13,1.00
+pkm-swsh-black-star-promos-swsh014-307-e2d97db323,SWSH Black Star Promos,Rillaboom V,SWSH014/307,206421,Rillaboom V - SWSH014,LINKED,swsh14,1.00
+pkm-swsh-black-star-promos-swsh015-307-cff1d99ff8,SWSH Black Star Promos,Cinderace V,SWSH015/307,206419,Cinderace V - SWSH015,LINKED,swsh15,1.00
+pkm-swsh-black-star-promos-swsh016-307-7cdc444aec,SWSH Black Star Promos,Inteleon V,SWSH016/307,206418,Inteleon V - SWSH016,LINKED,swsh16,1.00
+pkm-swsh-black-star-promos-swsh017-307-717f0cde46,SWSH Black Star Promos,Toxtricity V,SWSH017/307,206425,Toxtricity V - SWSH017,LINKED,swsh17,1.00
+pkm-swsh-black-star-promos-swsh018-307-99ed30277a,SWSH Black Star Promos,Zacian V,SWSH018/307,214233,Zacian V - SWSH018,LINKED,swsh18,1.00
+pkm-swsh-black-star-promos-swsh019-307-a90daf2f9d,SWSH Black Star Promos,Zamazenta V,SWSH019/307,214234,Zamazenta V - SWSH019,LINKED,swsh19,1.00
+pkm-swsh-black-star-promos-swsh020-307-f62ddc77d4,SWSH Black Star Promos,Pikachu,SWSH020/307,214241,Pikachu - SWSH020,LINKED,swsh20,1.00
+pkm-swsh-black-star-promos-swsh021-307-236bb149b5,SWSH Black Star Promos,Polteageist V,SWSH021/307,214235,Polteageist V - SWSH021,LINKED,swsh21,1.00
+pkm-swsh-black-star-promos-swsh022-307-0b62c8f680,SWSH Black Star Promos,Flapple,SWSH022/307,213096,Flapple - SWSH022 (Prerelease),SKIP_NAME_MISMATCH,swsh22,0.50
+pkm-swsh-black-star-promos-swsh022-307-0b62c8f680,SWSH Black Star Promos,Flapple,SWSH022/307,213097,Flapple - SWSH022 (Prerelease) [Staff],SKIP_NAME_MISMATCH,swsh22,0.50
+pkm-swsh-black-star-promos-swsh023-307-fd5a535841,SWSH Black Star Promos,Luxray,SWSH023/307,213144,Luxray - SWSH023 (Prerelease),SKIP_NAME_MISMATCH,swsh23,0.50
+pkm-swsh-black-star-promos-swsh023-307-fd5a535841,SWSH Black Star Promos,Luxray,SWSH023/307,213145,Luxray - SWSH023 (Prerelease) [Staff],SKIP_NAME_MISMATCH,swsh23,0.50
+pkm-swsh-black-star-promos-swsh024-307-9d276e92d4,SWSH Black Star Promos,Coalossal,SWSH024/307,213196,Coalossal - SWSH024 (Prerelease),SKIP_NAME_MISMATCH,swsh24,0.50
+pkm-swsh-black-star-promos-swsh024-307-9d276e92d4,SWSH Black Star Promos,Coalossal,SWSH024/307,213197,Coalossal - SWSH024 (Prerelease) [Staff],SKIP_NAME_MISMATCH,swsh24,0.50
+pkm-swsh-black-star-promos-swsh025-307-eaf96e6c15,SWSH Black Star Promos,Garbodor,SWSH025/307,213211,Garbodor - SWSH025 (Prerelease),SKIP_NAME_MISMATCH,swsh25,0.50
+pkm-swsh-black-star-promos-swsh025-307-eaf96e6c15,SWSH Black Star Promos,Garbodor,SWSH025/307,213212,Garbodor - SWSH025 (Prerelease) [Staff],SKIP_NAME_MISMATCH,swsh25,0.50
+pkm-swsh-black-star-promos-swsh026-307-e1f95e00ff,SWSH Black Star Promos,Mantine,SWSH026/307,,,NO_CANDIDATE,swsh26,
+pkm-swsh-black-star-promos-swsh027-307-299e0077f0,SWSH Black Star Promos,Noctowl,SWSH027/307,214238,Noctowl - SWSH027,LINKED,swsh27,1.00
+pkm-swsh-black-star-promos-swsh028-307-b1c61312b9,SWSH Black Star Promos,Duraludon,SWSH028/307,214239,Duraludon - SWSH028,LINKED,swsh28,1.00
+pkm-swsh-black-star-promos-swsh029-307-26cb3068b7,SWSH Black Star Promos,Rayquaza,SWSH029/307,214240,Rayquaza - SWSH029,LINKED,swsh29,1.00
+pkm-swsh-black-star-promos-swsh030-307-d7f1cc3833,SWSH Black Star Promos,Copperajah V,SWSH030/307,214228,Copperajah V - SWSH030,LINKED,swsh30,1.00
+pkm-swsh-black-star-promos-swsh031-307-54d40ce1df,SWSH Black Star Promos,Morpeko,SWSH031/307,210579,Morpeko - SWSH031,LINKED,swsh31,1.00
+pkm-swsh-black-star-promos-swsh032-307-d0698a0a37,SWSH Black Star Promos,Snorlax,SWSH032/307,210578,Snorlax - SWSH032,LINKED,swsh32,1.00
+pkm-swsh-black-star-promos-swsh033-307-45fe28c866,SWSH Black Star Promos,Zacian,SWSH033/307,220313,Zacian - SWSH033,LINKED,swsh33,1.00
+pkm-swsh-black-star-promos-swsh034-307-eb98f1029a,SWSH Black Star Promos,Zamazenta,SWSH034/307,220314,Zamazenta - SWSH034,LINKED,swsh34,1.00
+pkm-swsh-black-star-promos-swsh035-307-f92dc19f07,SWSH Black Star Promos,Decidueye,SWSH035/307,218579,Decidueye - SWSH035 (Prerelease),SKIP_NAME_MISMATCH,swsh35,0.50
+pkm-swsh-black-star-promos-swsh035-307-f92dc19f07,SWSH Black Star Promos,Decidueye,SWSH035/307,218578,Decidueye - SWSH035 (Prerelease) [Staff],SKIP_NAME_MISMATCH,swsh35,0.50
+pkm-swsh-black-star-promos-swsh036-307-651205b30f,SWSH Black Star Promos,Arctozolt,SWSH036/307,218580,Arctozolt - SWSH036 (Prerelease),SKIP_NAME_MISMATCH,swsh36,0.50
+pkm-swsh-black-star-promos-swsh036-307-651205b30f,SWSH Black Star Promos,Arctozolt,SWSH036/307,218581,Arctozolt - SWSH036 (Prerelease) [Staff],SKIP_NAME_MISMATCH,swsh36,0.50
+pkm-swsh-black-star-promos-swsh037-307-ac3d206154,SWSH Black Star Promos,Hydreigon,SWSH037/307,218583,Hydreigon - SWSH037 (Prerelease),SKIP_NAME_MISMATCH,swsh37,0.50
+pkm-swsh-black-star-promos-swsh037-307-ac3d206154,SWSH Black Star Promos,Hydreigon,SWSH037/307,218582,Hydreigon - SWSH037 (Prerelease) [Staff],SKIP_NAME_MISMATCH,swsh37,0.50
+pkm-swsh-black-star-promos-swsh038-307-87aa596689,SWSH Black Star Promos,Kangaskhan,SWSH038/307,218574,Kangaskhan - SWSH038 (Prerelease),SKIP_NAME_MISMATCH,swsh38,0.50
+pkm-swsh-black-star-promos-swsh038-307-87aa596689,SWSH Black Star Promos,Kangaskhan,SWSH038/307,218576,Kangaskhan - SWSH038 (Prerelease) [Staff],SKIP_NAME_MISMATCH,swsh38,0.50
+pkm-swsh-black-star-promos-swsh039-307-542ff75edb,SWSH Black Star Promos,Pikachu,SWSH039/307,220268,Pikachu - SWSH039,LINKED,swsh39,1.00
+pkm-swsh-black-star-promos-swsh040-307-f8d44c377e,SWSH Black Star Promos,Hatenna,SWSH040/307,220269,Hatenna - SWSH040,LINKED,swsh40,1.00
+pkm-swsh-black-star-promos-swsh041-307-e6be820d4a,SWSH Black Star Promos,Flareon,SWSH041/307,220270,Flareon - SWSH041,LINKED,swsh41,1.00
+pkm-swsh-black-star-promos-swsh042-307-8fac8e15cb,SWSH Black Star Promos,Eevee,SWSH042/307,220271,Eevee - SWSH042,LINKED,swsh42,1.00
+pkm-swsh-black-star-promos-swsh044-307-79057dec76,SWSH Black Star Promos,Eternatus V,SWSH044/307,220279,Eternatus V - SWSH044,LINKED,swsh44,1.00
+pkm-swsh-black-star-promos-swsh045-307-b8a319507a,SWSH Black Star Promos,Eternatus VMAX,SWSH045/307,220281,Eternatus VMAX - SWSH045,LINKED,swsh45,1.00
+pkm-swsh-black-star-promos-swsh046-307-86b30af025,SWSH Black Star Promos,Eldegoss,SWSH046/307,223751,Eldegoss - SWSH046,LINKED,swsh46,1.00
+pkm-swsh-black-star-promos-swsh047-307-386b2efc8e,SWSH Black Star Promos,Drednaw,SWSH047/307,223750,Drednaw - SWSH047,LINKED,swsh47,1.00
+pkm-swsh-black-star-promos-swsh048-307-6d42d89a50,SWSH Black Star Promos,Centiskorch,SWSH048/307,223749,Centiskorch - SWSH048,LINKED,swsh48,1.00
+pkm-swsh-black-star-promos-swsh049-307-fc9c852a22,SWSH Black Star Promos,Dubwool V,SWSH049/307,223752,Dubwool V - SWSH049,LINKED,swsh49,1.00
+pkm-swsh-black-star-promos-swsh050-307-13e0bd909c,SWSH Black Star Promos,Charizard V,SWSH050/307,223754,Charizard V - SWSH050,LINKED,swsh50,1.00
+pkm-swsh-black-star-promos-swsh051-307-c3d4efb63c,SWSH Black Star Promos,Lapras,SWSH051/307,222071,Lapras - SWSH051,LINKED,swsh51,1.00
+pkm-swsh-black-star-promos-swsh052-307-465b3afbd1,SWSH Black Star Promos,Gengar,SWSH052/307,222072,Gengar - SWSH052,LINKED,swsh52,1.00
+pkm-swsh-black-star-promos-swsh053-307-8f79665088,SWSH Black Star Promos,Machamp,SWSH053/307,222073,Machamp - SWSH053,LINKED,swsh53,1.00
+pkm-swsh-black-star-promos-swsh054-307-1fdf5d381d,SWSH Black Star Promos,Coalossal,SWSH054/307,222074,Coalossal - SWSH054,LINKED,swsh54,1.00
+pkm-swsh-black-star-promos-swsh055-307-ad11476c92,SWSH Black Star Promos,Hatterene V,SWSH055/307,223755,Hatterene V - SWSH055,LINKED,swsh55,1.00
+pkm-swsh-black-star-promos-swsh056-307-0d6105c223,SWSH Black Star Promos,Morpeko V,SWSH056/307,223757,Morpeko V - SWSH056,LINKED,swsh56,1.00
+pkm-swsh-black-star-promos-swsh057-307-1790804501,SWSH Black Star Promos,Grimmsnarl V,SWSH057/307,223758,Grimmsnarl V - SWSH057,LINKED,swsh57,1.00
+pkm-swsh-black-star-promos-swsh058-307-08d6e2cf60,SWSH Black Star Promos,Alcremie,SWSH058/307,227029,Alcremie - SWSH058,LINKED,swsh58,1.00
+pkm-swsh-black-star-promos-swsh059-307-319d03e624,SWSH Black Star Promos,Galarian Obstagoon,SWSH059/307,227030,Galarian Obstagoon - SWSH059,LINKED,swsh59,1.00
+pkm-swsh-black-star-promos-swsh060-307-25c58eec48,SWSH Black Star Promos,Duraludon,SWSH060/307,227031,Duraludon - SWSH060,LINKED,swsh60,1.00
+pkm-swsh-black-star-promos-swsh061-307-aceec5b31d,SWSH Black Star Promos,Pikachu V,SWSH061/307,232434,Pikachu V - SWSH061,LINKED,swsh61,1.00
+pkm-swsh-black-star-promos-swsh062-307-aafd68eec2,SWSH Black Star Promos,Pikachu VMAX,SWSH062/307,251086,Pikachu VMAX - SWSH062,LINKED,swsh62,1.00
+pkm-swsh-black-star-promos-swsh063-307-a116838666,SWSH Black Star Promos,Pikachu V,SWSH063/307,220315,Pikachu V - SWSH063,LINKED,swsh63,1.00
+pkm-swsh-black-star-promos-swsh064-307-320b5ee4d0,SWSH Black Star Promos,Eternatus V,SWSH064/307,220316,Eternatus V - SWSH064,LINKED,swsh64,1.00
+pkm-swsh-black-star-promos-swsh065-307-1d2a0fae32,SWSH Black Star Promos,Eevee V,SWSH065/307,220317,Eevee V - SWSH065,LINKED,swsh65,1.00
+pkm-swsh-black-star-promos-swsh066-307-7276bf182c,SWSH Black Star Promos,Charizard,SWSH066/307,224365,Charizard - SWSH066 (Prerelease),SKIP_NAME_MISMATCH,swsh66,0.50
+pkm-swsh-black-star-promos-swsh066-307-7276bf182c,SWSH Black Star Promos,Charizard,SWSH066/307,224366,Charizard - SWSH066 (Prerelease) [Staff],SKIP_NAME_MISMATCH,swsh66,0.50
+pkm-swsh-black-star-promos-swsh067-307-704936ae76,SWSH Black Star Promos,Donphan,SWSH067/307,224368,Donphan - SWSH067 (Prerelease),SKIP_NAME_MISMATCH,swsh67,0.50
+pkm-swsh-black-star-promos-swsh067-307-704936ae76,SWSH Black Star Promos,Donphan,SWSH067/307,224367,Donphan - SWSH067 (Prerelease) [Staff],SKIP_NAME_MISMATCH,swsh67,0.50
+pkm-swsh-black-star-promos-swsh068-307-07f0f48616,SWSH Black Star Promos,Snorlax,SWSH068/307,224361,Snorlax - SWSH068 (Prerelease),SKIP_NAME_MISMATCH,swsh68,0.50
+pkm-swsh-black-star-promos-swsh068-307-07f0f48616,SWSH Black Star Promos,Snorlax,SWSH068/307,224362,Snorlax - SWSH068 (Prerelease) [Staff],SKIP_NAME_MISMATCH,swsh68,0.50
+pkm-swsh-black-star-promos-swsh069-307-8e55dc8d39,SWSH Black Star Promos,Lugia,SWSH069/307,224364,Lugia - SWSH069 (Prerelease),SKIP_NAME_MISMATCH,swsh69,0.50
+pkm-swsh-black-star-promos-swsh069-307-8e55dc8d39,SWSH Black Star Promos,Lugia,SWSH069/307,224363,Lugia - SWSH069 (Prerelease) [Staff],SKIP_NAME_MISMATCH,swsh69,0.50
+pkm-swsh-black-star-promos-swsh070-307-779b85947a,SWSH Black Star Promos,Grookey,SWSH070/307,227028,Grookey - SWSH070,LINKED,swsh70,1.00
+pkm-swsh-black-star-promos-swsh071-307-62fe50c528,SWSH Black Star Promos,Scorbunny,SWSH071/307,227027,Scorbunny - SWSH071,LINKED,swsh71,1.00
+pkm-swsh-black-star-promos-swsh072-307-d1648583c0,SWSH Black Star Promos,Vaporeon,SWSH072/307,221753,Vaporeon - SWSH072,LINKED,swsh72,1.00
+pkm-swsh-black-star-promos-swsh073-307-6264d386c4,SWSH Black Star Promos,Sobble,SWSH073/307,221754,Sobble - SWSH073,LINKED,swsh73,1.00
+pkm-swsh-black-star-promos-swsh076-307-0060d20372,SWSH Black Star Promos,Zacian V,SWSH076/307,228595,Zacian V - SWSH076,LINKED,swsh76,1.00
+pkm-swsh-black-star-promos-swsh077-307-233f8bcb0b,SWSH Black Star Promos,Zamazenta V,SWSH077/307,228596,Zamazenta V - SWSH077,LINKED,swsh77,1.00
+pkm-swsh-black-star-promos-swsh078-307-2c20f41987,SWSH Black Star Promos,Orbeetle V,SWSH078/307,227025,Orbeetle V - SWSH078,LINKED,swsh78,1.00
+pkm-swsh-black-star-promos-swsh080-307-71d20c4739,SWSH Black Star Promos,Dedenne,SWSH080/307,232453,Dedenne - SWSH080,LINKED,swsh80,1.00
+pkm-swsh-black-star-promos-swsh081-307-be1888f08f,SWSH Black Star Promos,Polteageist,SWSH081/307,232458,Polteageist - SWSH081,LINKED,swsh81,1.00
+pkm-swsh-black-star-promos-swsh082-307-f96ac7d7da,SWSH Black Star Promos,Bunnelby,SWSH082/307,232461,Bunnelby - SWSH082,LINKED,swsh82,1.00
+pkm-swsh-black-star-promos-swsh083-307-6c768081bf,SWSH Black Star Promos,Alakazam V,SWSH083/307,228980,Alakazam V - SWSH083,LINKED,swsh83,1.00
+pkm-swsh-black-star-promos-swsh084-307-b920791af4,SWSH Black Star Promos,Eldegoss V,SWSH084/307,232481,Eldegoss V - SWSH084,LINKED,swsh84,1.00
+pkm-swsh-black-star-promos-swsh085-307-c055ecdad4,SWSH Black Star Promos,Boltund V,SWSH085/307,232499,Boltund V - SWSH085,LINKED,swsh85,1.00
+pkm-swsh-black-star-promos-swsh086-307-71c06d2a7c,SWSH Black Star Promos,Cramorant V,SWSH086/307,232503,Cramorant V - SWSH086,LINKED,swsh86,1.00
+pkm-swsh-black-star-promos-swsh087-307-effea080e1,SWSH Black Star Promos,Eevee VMAX,SWSH087/307,232611,Eevee VMAX - SWSH087,LINKED,swsh87,1.00
+pkm-swsh-black-star-promos-swsh088-307-bdaf5b7e3c,SWSH Black Star Promos,Cherrim,SWSH088/307,234276,Cherrim - SWSH088 (Prerelease),SKIP_NAME_MISMATCH,swsh88,0.50
+pkm-swsh-black-star-promos-swsh089-307-f40fa8397a,SWSH Black Star Promos,Octillery,SWSH089/307,234277,Octillery - SWSH089 (Prerelease),SKIP_NAME_MISMATCH,swsh89,0.50
+pkm-swsh-black-star-promos-swsh090-307-e9289e90bb,SWSH Black Star Promos,Houndoom,SWSH090/307,234278,Houndoom - SWSH090 (Prerelease),SKIP_NAME_MISMATCH,swsh90,0.50
+pkm-swsh-black-star-promos-swsh091-307-f8e865819f,SWSH Black Star Promos,Bronzong,SWSH091/307,234279,Bronzong - SWSH091 (Prerelease),SKIP_NAME_MISMATCH,swsh91,0.50
+pkm-swsh-black-star-promos-swsh092-307-557b8a3e68,SWSH Black Star Promos,Charmander,SWSH092/307,234282,Charmander - SWSH092,LINKED,swsh92,1.00
+pkm-swsh-black-star-promos-swsh093-307-80f1414881,SWSH Black Star Promos,Arrokuda,SWSH093/307,234283,Arrokuda - SWSH093,LINKED,swsh93,1.00
+pkm-swsh-black-star-promos-swsh094-307-bd7cff437b,SWSH Black Star Promos,Jolteon,SWSH094/307,234284,Jolteon - SWSH094,LINKED,swsh94,1.00
+pkm-swsh-black-star-promos-swsh095-307-4a33cefa7b,SWSH Black Star Promos,Eevee,SWSH095/307,234287,Eevee - SWSH095,LINKED,swsh95,1.00
+pkm-swsh-black-star-promos-swsh096-307-c64506397e,SWSH Black Star Promos,Dragapult V,SWSH096/307,232610,Dragapult V - SWSH096,LINKED,swsh96,1.00
+pkm-swsh-black-star-promos-swsh097-307-bf15cf27d6,SWSH Black Star Promos,Dragapult VMAX,SWSH097/307,232608,Dragapult VMAX - SWSH097,LINKED,swsh97,1.00
+pkm-swsh-black-star-promos-swsh098-307-6156a365a7,SWSH Black Star Promos,Crobat V,SWSH098/307,232612,Crobat V - SWSH098,LINKED,swsh98,1.00
+pkm-swsh-black-star-promos-swsh099-307-3c49e9ee5a,SWSH Black Star Promos,Crobat VMAX,SWSH099/307,232613,Crobat VMAX - SWSH099,LINKED,swsh99,1.00
+pkm-swsh-black-star-promos-swsh100-307-9536a86060,SWSH Black Star Promos,Venusaur V,SWSH100/307,232723,Venusaur V - SWSH100,LINKED,swsh100,1.00
+pkm-swsh-black-star-promos-swsh101-307-badb35cb9f,SWSH Black Star Promos,Blastoise V,SWSH101/307,232724,Blastoise V - SWSH101,LINKED,swsh101,1.00
+pkm-swsh-black-star-promos-swsh102-307-bbed71cf4d,SWSH Black Star Promos,Venusaur VMAX,SWSH102/307,234298,Venusaur VMAX - SWSH102,LINKED,swsh102,1.00
+pkm-swsh-black-star-promos-swsh103-307-fa546b593e,SWSH Black Star Promos,Blastoise VMAX,SWSH103/307,234299,Blastoise VMAX - SWSH103,LINKED,swsh103,1.00
+pkm-swsh-black-star-promos-swsh104-307-0082c8ca63,SWSH Black Star Promos,Victini V,SWSH104/307,,,NO_CANDIDATE,swsh104,
+pkm-swsh-black-star-promos-swsh105-307-fa7e187a70,SWSH Black Star Promos,Gardevoir V,SWSH105/307,238545,Gardevoir V - SWSH105,LINKED,swsh105,1.00
+pkm-swsh-black-star-promos-swsh108-307-a1be88f0fa,SWSH Black Star Promos,Empoleon V,SWSH108/307,238555,Empoleon V - SWSH108,LINKED,swsh108,1.00
+pkm-swsh-black-star-promos-swsh109-307-c39fb8ba22,SWSH Black Star Promos,Tyranitar V,SWSH109/307,238553,Tyranitar V - SWSH109,LINKED,swsh109,1.00
+pkm-swsh-black-star-promos-swsh110-307-23f641f064,SWSH Black Star Promos,Crobat V,SWSH110/307,245875,Crobat V - SWSH110,LINKED,swsh110,1.00
+pkm-swsh-black-star-promos-swsh112-307-d92fc498f3,SWSH Black Star Promos,Cinderace,SWSH112/307,240891,Cinderace - SWSH112 (Prerelease),SKIP_NAME_MISMATCH,swsh112,0.50
+pkm-swsh-black-star-promos-swsh113-307-6a032ca026,SWSH Black Star Promos,Inteleon,SWSH113/307,240892,Inteleon - SWSH113 (Prerelease),SKIP_NAME_MISMATCH,swsh113,0.50
+pkm-swsh-black-star-promos-swsh114-307-12fe210907,SWSH Black Star Promos,Cresselia,SWSH114/307,240893,Cresselia - SWSH114 (Prerelease),SKIP_NAME_MISMATCH,swsh114,0.50
+pkm-swsh-black-star-promos-swsh115-307-0a88996970,SWSH Black Star Promos,Passimian,SWSH115/307,240894,Passimian - SWSH115 (Prerelease),SKIP_NAME_MISMATCH,swsh115,0.50
+pkm-swsh-black-star-promos-swsh116-307-31eaba7e7d,SWSH Black Star Promos,Morpeko,SWSH116/307,241881,Morpeko - SWSH116,LINKED,swsh116,1.00
+pkm-swsh-black-star-promos-swsh117-307-af584f2da2,SWSH Black Star Promos,Phanpy,SWSH117/307,241882,Phanpy - SWSH117,LINKED,swsh117,1.00
+pkm-swsh-black-star-promos-swsh118-307-9f3a94ed11,SWSH Black Star Promos,Eevee,SWSH118/307,241883,Eevee - SWSH118,LINKED,swsh118,1.00
+pkm-swsh-black-star-promos-swsh119-307-cc56cdd2e0,SWSH Black Star Promos,Snorlax,SWSH119/307,241884,Snorlax - SWSH119,LINKED,swsh119,1.00
+pkm-swsh-black-star-promos-swsh120-307-4c4f912a46,SWSH Black Star Promos,Marnie,SWSH120/307,245871,Marnie - SWSH120,LINKED,swsh120,1.00
+pkm-swsh-black-star-promos-swsh121-307-c0a5d91836,SWSH Black Star Promos,Marnie,SWSH121/307,245872,Marnie - SWSH121,LINKED,swsh121,1.00
+pkm-swsh-black-star-promos-swsh122-307-941f2b9194,SWSH Black Star Promos,Flaaffy,SWSH122/307,246931,Flaaffy - SWSH122 (Prerelease),SKIP_NAME_MISMATCH,swsh122,0.50
+pkm-swsh-black-star-promos-swsh123-307-7f3f27f5ed,SWSH Black Star Promos,Galarian Articuno,SWSH123/307,246927,Galarian Articuno - SWSH123 (Prerelease),SKIP_NAME_MISMATCH,swsh123,0.67
+pkm-swsh-black-star-promos-swsh124-307-3976957fcd,SWSH Black Star Promos,Galarian Zapdos,SWSH124/307,246933,Galarian Zapdos - SWSH124 (Prerelease),SKIP_NAME_MISMATCH,swsh124,0.67
+pkm-swsh-black-star-promos-swsh125-307-5f10d5692d,SWSH Black Star Promos,Galarian Moltres,SWSH125/307,246929,Galarian Moltres - SWSH125 (Prerelease),SKIP_NAME_MISMATCH,swsh125,0.67
+pkm-swsh-black-star-promos-swsh126-307-44496aadd6,SWSH Black Star Promos,Galarian Slowpoke,SWSH126/307,247290,Galarian Slowpoke - SWSH126,LINKED,swsh126,1.00
+pkm-swsh-black-star-promos-swsh127-307-fb20d5d91f,SWSH Black Star Promos,Eevee,SWSH127/307,247291,Eevee - SWSH127,LINKED,swsh127,1.00
+pkm-swsh-black-star-promos-swsh128-307-54013a8da1,SWSH Black Star Promos,Eiscue,SWSH128/307,247292,Eiscue - SWSH128,LINKED,swsh128,1.00
+pkm-swsh-black-star-promos-swsh129-307-26e8947d77,SWSH Black Star Promos,Umbreon,SWSH129/307,247294,Umbreon - SWSH129,LINKED,swsh129,1.00
+pkm-swsh-black-star-promos-swsh132-307-5e588c9f31,SWSH Black Star Promos,Dragapult,SWSH132/307,251088,Dragapult (Prime) - SWSH132,SKIP_NAME_MISMATCH,swsh132,0.50
+pkm-swsh-black-star-promos-swsh137-307-0f51f57956,SWSH Black Star Promos,Light Toxtricity,SWSH137/307,251093,Light Toxtricity - SWSH137,LINKED,swsh137,1.00
+pkm-swsh-black-star-promos-swsh138-307-cd02aec86d,SWSH Black Star Promos,Hydreigon C,SWSH138/307,251094,Hydreigon C lv.61 - SWSH138,SKIP_NAME_MISMATCH,swsh138,0.50
+pkm-swsh-black-star-promos-swsh139-307-d9de053675,SWSH Black Star Promos,Pikachu V-UNION,SWSH139/307,251095,Pikachu V-Union - SWSH139,LINKED,swsh139,1.00
+pkm-swsh-black-star-promos-swsh140-307-f3d5cb45b0,SWSH Black Star Promos,Pikachu V-UNION,SWSH140/307,251096,Pikachu V-Union - SWSH140,LINKED,swsh140,1.00
+pkm-swsh-black-star-promos-swsh141-307-e63f6880a7,SWSH Black Star Promos,Pikachu V-UNION,SWSH141/307,251097,Pikachu V-Union - SWSH141,LINKED,swsh141,1.00
+pkm-swsh-black-star-promos-swsh142-307-b76af1187a,SWSH Black Star Promos,Pikachu V-UNION,SWSH142/307,251098,Pikachu V-Union - SWSH142,LINKED,swsh142,1.00
+pkm-swsh-black-star-promos-swsh143-307-c7c1f18b15,SWSH Black Star Promos,Pikachu V,SWSH143/307,251101,Pikachu V - SWSH143,LINKED,swsh143,1.00
+pkm-swsh-black-star-promos-swsh145-307-ffdb0518f3,SWSH Black Star Promos,Pikachu V,SWSH145/307,251102,Pikachu V - SWSH145,LINKED,swsh145,1.00
+pkm-swsh-black-star-promos-swsh146-307-f48c35d4f6,SWSH Black Star Promos,Poké Ball,SWSH146/307,251103,Poke Ball - SWSH146,LINKED,swsh146,1.00
+pkm-swsh-black-star-promos-swsh147-307-fdd42e83aa,SWSH Black Star Promos,Rayquaza V,SWSH147/307,250577,Rayquaza V - SWSH147,LINKED,swsh147,1.00
+pkm-swsh-black-star-promos-swsh148-307-8e04e0acc2,SWSH Black Star Promos,Noivern V,SWSH148/307,250578,Noivern V - SWSH148,LINKED,swsh148,1.00
+pkm-swsh-black-star-promos-swsh149-307-9860723dec,SWSH Black Star Promos,Flareon V,SWSH149/307,247295,Flareon V - SWSH149,LINKED,swsh149,1.00
+pkm-swsh-black-star-promos-swsh150-307-28172e63f7,SWSH Black Star Promos,Vaporeon V,SWSH150/307,247296,Vaporeon V - SWSH150,LINKED,swsh150,1.00
+pkm-swsh-black-star-promos-swsh151-307-97b5d428a6,SWSH Black Star Promos,Jolteon V,SWSH151/307,247297,Jolteon V - SWSH151,LINKED,swsh151,1.00
+pkm-swsh-black-star-promos-swsh153-307-2ed4142afc,SWSH Black Star Promos,Pikachu,SWSH153/307,283301,Pikachu - SWSH153 (Holiday Calendar),SKIP_NAME_MISMATCH,swsh153,0.25
+pkm-swsh-black-star-promos-swsh154-307-0388d42e2d,SWSH Black Star Promos,Dragonite V,SWSH154/307,247298,Dragonite V - SWSH154,LINKED,swsh154,1.00
+pkm-swsh-black-star-promos-swsh155-307-8b14f590c1,SWSH Black Star Promos,Greninja V-UNION,SWSH155/307,248887,Greninja V-UNION - SWSH155,LINKED,swsh155,1.00
+pkm-swsh-black-star-promos-swsh156-307-f890ab4355,SWSH Black Star Promos,Greninja V-UNION,SWSH156/307,248888,Greninja V-UNION - SWSH156,LINKED,swsh156,1.00
+pkm-swsh-black-star-promos-swsh157-307-d868e6c19c,SWSH Black Star Promos,Greninja V-UNION,SWSH157/307,248889,Greninja V-UNION - SWSH157,LINKED,swsh157,1.00
+pkm-swsh-black-star-promos-swsh158-307-e724a9ba4e,SWSH Black Star Promos,Greninja V-UNION,SWSH158/307,248890,Greninja V-UNION - SWSH158,LINKED,swsh158,1.00
+pkm-swsh-black-star-promos-swsh159-307-feaed0a009,SWSH Black Star Promos,Mewtwo V-UNION,SWSH159/307,248891,Mewtwo V-UNION - SWSH159,LINKED,swsh159,1.00
+pkm-swsh-black-star-promos-swsh160-307-2852ebea8a,SWSH Black Star Promos,Mewtwo V-UNION,SWSH160/307,248892,Mewtwo V-UNION - SWSH160,LINKED,swsh160,1.00
+pkm-swsh-black-star-promos-swsh161-307-16d4062ab9,SWSH Black Star Promos,Mewtwo V-UNION,SWSH161/307,248893,Mewtwo V-UNION - SWSH161,LINKED,swsh161,1.00
+pkm-swsh-black-star-promos-swsh162-307-b4fe2aa249,SWSH Black Star Promos,Mewtwo V-UNION,SWSH162/307,248894,Mewtwo V-UNION - SWSH162,LINKED,swsh162,1.00
+pkm-swsh-black-star-promos-swsh163-307-f1b286acc4,SWSH Black Star Promos,Zacian V-UNION,SWSH163/307,247364,Zacian V-UNION - SWSH163,LINKED,swsh163,1.00
+pkm-swsh-black-star-promos-swsh164-307-af645f5537,SWSH Black Star Promos,Zacian V-UNION,SWSH164/307,247365,Zacian V-UNION - SWSH164,LINKED,swsh164,1.00
+pkm-swsh-black-star-promos-swsh165-307-fb6437fb31,SWSH Black Star Promos,Zacian V-UNION,SWSH165/307,247366,Zacian V-UNION - SWSH165,LINKED,swsh165,1.00
+pkm-swsh-black-star-promos-swsh166-307-8c9663674d,SWSH Black Star Promos,Zacian V-UNION,SWSH166/307,247367,Zacian V-UNION - SWSH166,LINKED,swsh166,1.00
+pkm-swsh-black-star-promos-swsh167-307-07198127cf,SWSH Black Star Promos,Professor Burnet,SWSH167/307,247299,Professor Burnet - SWSH167,LINKED,swsh167,1.00
+pkm-swsh-black-star-promos-swsh167-307-07198127cf,SWSH Black Star Promos,Professor Burnet,SWSH167/307,247300,Professor Burnet - SWSH167 (25th Anniversary Stamp),SKIP_NAME_MISMATCH,swsh167,0.33
+pkm-swsh-black-star-promos-swsh168-307-7d0ccf752b,SWSH Black Star Promos,Oricorio,SWSH168/307,253404,Oricorio - SWSH168 (Prerelease),SKIP_NAME_MISMATCH,swsh168,0.50
+pkm-swsh-black-star-promos-swsh169-307-ee81e589af,SWSH Black Star Promos,Pyukumuku,SWSH169/307,253405,Pyukumuku - SWSH169 (Prerelease),SKIP_NAME_MISMATCH,swsh169,0.50
+pkm-swsh-black-star-promos-swsh170-307-9a60209d8e,SWSH Black Star Promos,Deoxys,SWSH170/307,253406,Deoxys - SWSH170 (Prerelease),SKIP_NAME_MISMATCH,swsh170,0.50
+pkm-swsh-black-star-promos-swsh171-307-568363f571,SWSH Black Star Promos,Latias,SWSH171/307,253407,Latias - SWSH171 (Prerelease),SKIP_NAME_MISMATCH,swsh171,0.50
+pkm-swsh-black-star-promos-swsh172-307-e79f211d05,SWSH Black Star Promos,Tepig,SWSH172/307,253408,Tepig - SWSH172,LINKED,swsh172,1.00
+pkm-swsh-black-star-promos-swsh173-307-68018c24c4,SWSH Black Star Promos,Blitzle,SWSH173/307,253409,Blitzle - SWSH173,LINKED,swsh173,1.00
+pkm-swsh-black-star-promos-swsh174-307-ea734633c3,SWSH Black Star Promos,Espeon,SWSH174/307,253410,Espeon - SWSH174,LINKED,swsh174,1.00
+pkm-swsh-black-star-promos-swsh175-307-73981de99b,SWSH Black Star Promos,Eevee,SWSH175/307,253413,Eevee - SWSH175,LINKED,swsh175,1.00
+pkm-swsh-black-star-promos-swsh176-307-9d12946270,SWSH Black Star Promos,Hoopa V,SWSH176/307,253412,Hoopa V - SWSH176,LINKED,swsh176,1.00
+pkm-swsh-black-star-promos-swsh179-307-dc643e6dd5,SWSH Black Star Promos,Flareon V,SWSH179/307,253414,Flareon V - SWSH179,LINKED,swsh179,1.00
+pkm-swsh-black-star-promos-swsh180-307-a34d9c7b07,SWSH Black Star Promos,Flareon VMAX,SWSH180/307,253415,Flareon VMAX - SWSH180,LINKED,swsh180,1.00
+pkm-swsh-black-star-promos-swsh181-307-0e8a93c743,SWSH Black Star Promos,Vaporeon V,SWSH181/307,253416,Vaporeon V - SWSH181,LINKED,swsh181,1.00
+pkm-swsh-black-star-promos-swsh182-307-8b0c65e5a8,SWSH Black Star Promos,Vaporeon VMAX,SWSH182/307,253417,Vaporeon VMAX - SWSH182,LINKED,swsh182,1.00
+pkm-swsh-black-star-promos-swsh183-307-7efaf103c1,SWSH Black Star Promos,Jolteon V,SWSH183/307,253418,Jolteon V - SWSH183,LINKED,swsh183,1.00
+pkm-swsh-black-star-promos-swsh184-307-2614e4850e,SWSH Black Star Promos,Jolteon VMAX,SWSH184/307,253419,Jolteon VMAX - SWSH184,LINKED,swsh184,1.00
+pkm-swsh-black-star-promos-swsh185-307-c5c0198737,SWSH Black Star Promos,Moltres,SWSH185/307,264277,Moltres - SWSH185,LINKED,swsh185,1.00
+pkm-swsh-black-star-promos-swsh186-307-7087af0a96,SWSH Black Star Promos,Lucario,SWSH186/307,264278,Lucario - SWSH186,LINKED,swsh186,1.00
+pkm-swsh-black-star-promos-swsh187-307-707476be06,SWSH Black Star Promos,Liepard,SWSH187/307,264279,Liepard - SWSH187,LINKED,swsh187,1.00
+pkm-swsh-black-star-promos-swsh188-307-abdf3d0e57,SWSH Black Star Promos,Bibarel,SWSH188/307,264280,Bibarel - SWSH188,LINKED,swsh188,1.00
+pkm-swsh-black-star-promos-swsh189-307-1be7eb3f54,SWSH Black Star Promos,Flapple,SWSH189/307,264282,Flapple - SWSH189,LINKED,swsh189,1.00
+pkm-swsh-black-star-promos-swsh190-307-1766ab0ef0,SWSH Black Star Promos,Eevee,SWSH190/307,264283,Eevee - SWSH190,LINKED,swsh190,1.00
+pkm-swsh-black-star-promos-swsh191-307-9838dd33cc,SWSH Black Star Promos,Leafeon,SWSH191/307,264284,Leafeon - SWSH191,LINKED,swsh191,1.00
+pkm-swsh-black-star-promos-swsh192-307-86f63b61cc,SWSH Black Star Promos,Glaceon,SWSH192/307,264285,Glaceon - SWSH192,LINKED,swsh192,1.00
+pkm-swsh-black-star-promos-swsh193-307-5e0a53d633,SWSH Black Star Promos,Galarian Obstagoon,SWSH193/307,268708,Galarian Obstagoon - SWSH193,LINKED,swsh193,1.00
+pkm-swsh-black-star-promos-swsh194-307-e248975068,SWSH Black Star Promos,Leafeon V,SWSH194/307,262563,Leafeon V - SWSH194,LINKED,swsh194,1.00
+pkm-swsh-black-star-promos-swsh195-307-2cd5856a64,SWSH Black Star Promos,Leafeon VSTAR,SWSH195/307,262566,Leafeon VSTAR - SWSH195,LINKED,swsh195,1.00
+pkm-swsh-black-star-promos-swsh196-307-dc28b482ed,SWSH Black Star Promos,Glaceon V,SWSH196/307,262571,Glaceon V - SWSH196,LINKED,swsh196,1.00
+pkm-swsh-black-star-promos-swsh197-307-d86639a1ad,SWSH Black Star Promos,Glaceon VSTAR,SWSH197/307,262569,Glaceon VSTAR - SWSH197,LINKED,swsh197,1.00
+pkm-swsh-black-star-promos-swsh198-307-e35d72aa74,SWSH Black Star Promos,Pikachu V,SWSH198/307,260711,Pikachu V - SWSH198,LINKED,swsh198,1.00
+pkm-swsh-black-star-promos-swsh199-307-461b17e440,SWSH Black Star Promos,Lycanroc V,SWSH199/307,266616,Lycanroc V - SWSH199,LINKED,swsh199,1.00
+pkm-swsh-black-star-promos-swsh200-307-1a57f9e797,SWSH Black Star Promos,Corviknight V,SWSH200/307,266627,Corviknight V - SWSH200,LINKED,swsh200,1.00
+pkm-swsh-black-star-promos-swsh201-307-8f5b416776,SWSH Black Star Promos,Espeon V,SWSH201/307,268710,Espeon V - SWSH201,LINKED,swsh201,1.00
+pkm-swsh-black-star-promos-swsh202-307-24af83b921,SWSH Black Star Promos,Sylveon V,SWSH202/307,268711,Sylveon V - SWSH202,LINKED,swsh202,1.00
+pkm-swsh-black-star-promos-swsh203-307-bf815cf1ee,SWSH Black Star Promos,Umbreon V,SWSH203/307,268712,Umbreon V - SWSH203,LINKED,swsh203,1.00
+pkm-swsh-black-star-promos-swsh204-307-60410dcb8b,SWSH Black Star Promos,Arceus V,SWSH204/307,271837,Arceus V - SWSH204,LINKED,swsh204,1.00
+pkm-swsh-black-star-promos-swsh205-307-42747031e1,SWSH Black Star Promos,Hisuian Basculegion,SWSH205/307,273154,Hisuian Basculegion - SWSH205,LINKED,swsh205,1.00
+pkm-swsh-black-star-promos-swsh206-307-11deeceb9a,SWSH Black Star Promos,Wyrdeer,SWSH206/307,273155,Wyrdeer - SWSH206,LINKED,swsh206,1.00
+pkm-swsh-black-star-promos-swsh207-307-0c20d3a807,SWSH Black Star Promos,Hisuian Samurott,SWSH207/307,273156,Hisuian Samurott - SWSH207,LINKED,swsh207,1.00
+pkm-swsh-black-star-promos-swsh208-307-69cdefe4e1,SWSH Black Star Promos,Magnezone,SWSH208/307,273158,Magnezone - SWSH208,LINKED,swsh208,1.00
+pkm-swsh-black-star-promos-swsh209-307-80cd980057,SWSH Black Star Promos,Toxel,SWSH209/307,273583,Toxel - SWSH209,LINKED,swsh209,1.00
+pkm-swsh-black-star-promos-swsh210-307-a2e559e68f,SWSH Black Star Promos,Oricorio,SWSH210/307,273585,Oricorio - SWSH210,LINKED,swsh210,1.00
+pkm-swsh-black-star-promos-swsh211-307-b79bae7ac1,SWSH Black Star Promos,Sylveon,SWSH211/307,273588,Sylveon - SWSH211,LINKED,swsh211,1.00
+pkm-swsh-black-star-promos-swsh212-307-ae58d0c433,SWSH Black Star Promos,Eevee,SWSH212/307,273590,Eevee - SWSH212,LINKED,swsh212,1.00
+pkm-swsh-black-star-promos-swsh213-307-c9d47e86b2,SWSH Black Star Promos,Lucario V,SWSH213/307,268306,Lucario V - SWSH213,LINKED,swsh213,1.00
+pkm-swsh-black-star-promos-swsh214-307-da976a95c0,SWSH Black Star Promos,Lucario VSTAR,SWSH214/307,268304,Lucario VSTAR - SWSH214,LINKED,swsh214,1.00
+pkm-swsh-black-star-promos-swsh215-307-352b40f41d,SWSH Black Star Promos,Morpeko V-UNION,SWSH215/307,268444,Morpeko V-Union - SWSH215,LINKED,swsh215,1.00
+pkm-swsh-black-star-promos-swsh216-307-9f3e1f0be9,SWSH Black Star Promos,Morpeko V-UNION,SWSH216/307,268445,Morpeko V-Union - SWSH216,LINKED,swsh216,1.00
+pkm-swsh-black-star-promos-swsh217-307-abf7422c25,SWSH Black Star Promos,Morpeko V-UNION,SWSH217/307,268446,Morpeko V-Union - SWSH217,LINKED,swsh217,1.00
+pkm-swsh-black-star-promos-swsh218-307-6dc79a825a,SWSH Black Star Promos,Morpeko V-UNION,SWSH218/307,268447,Morpeko V-Union - SWSH218,LINKED,swsh218,1.00
+pkm-swsh-black-star-promos-swsh218-307-6dc79a825a,SWSH Black Star Promos,Morpeko V-UNION,SWSH218/307,268450,Morpeko V-Union [Set of 4],SKIP_NAME_MISMATCH,swsh218,0.40
+pkm-swsh-black-star-promos-swsh219-307-801281e56d,SWSH Black Star Promos,Boltund V,SWSH219/307,270468,Boltund V - SWSH219,LINKED,swsh219,1.00
+pkm-swsh-black-star-promos-swsh220-307-cbcb0867c6,SWSH Black Star Promos,Rowlet,SWSH220/307,268705,Rowlet - SWSH220,LINKED,swsh220,1.00
+pkm-swsh-black-star-promos-swsh221-307-db7e1e33ab,SWSH Black Star Promos,Cyndaquil,SWSH221/307,268706,Cyndaquil - SWSH221,LINKED,swsh221,1.00
+pkm-swsh-black-star-promos-swsh221-307-db7e1e33ab,SWSH Black Star Promos,Cyndaquil,SWSH221/307,489390,Cyndaquil - SWSH221 (Cosmos Holo),SKIP_NAME_MISMATCH,swsh221,0.50
+pkm-swsh-black-star-promos-swsh222-307-3e960ed70c,SWSH Black Star Promos,Oshawott,SWSH222/307,268707,Oshawott - SWSH222,LINKED,swsh222,1.00
+pkm-swsh-black-star-promos-swsh222-307-3e960ed70c,SWSH Black Star Promos,Oshawott,SWSH222/307,594750,Oshawott - SWSH222 (Cosmo Holo),SKIP_NAME_MISMATCH,swsh222,0.33
+pkm-swsh-black-star-promos-swsh223-307-a69b1f230d,SWSH Black Star Promos,Mewtwo V,SWSH223/307,270718,Mewtwo V - SWSH223,LINKED,swsh223,1.00
+pkm-swsh-black-star-promos-swsh224-307-7c6980f11b,SWSH Black Star Promos,Melmetal V,SWSH224/307,270719,Melmetal V - SWSH224,LINKED,swsh224,1.00
+pkm-swsh-black-star-promos-swsh226-307-d1188a7f76,SWSH Black Star Promos,Spark,SWSH226/307,270720,Spark - SWSH226,LINKED,swsh226,1.00
+pkm-swsh-black-star-promos-swsh227-307-f631290da9,SWSH Black Star Promos,Blanche,SWSH227/307,270721,Blanche - SWSH227,LINKED,swsh227,1.00
+pkm-swsh-black-star-promos-swsh228-307-197781d1f8,SWSH Black Star Promos,Candela,SWSH228/307,270722,Candela - SWSH228,LINKED,swsh228,1.00
+pkm-swsh-black-star-promos-swsh229-307-fb01493979,SWSH Black Star Promos,Mewtwo V,SWSH229/307,277040,Mewtwo V - SWSH229,LINKED,swsh229,1.00
+pkm-swsh-black-star-promos-swsh230-307-689c95ac63,SWSH Black Star Promos,Radiant Eevee,SWSH230/307,270724,Radiant Eevee - SWSH230,LINKED,swsh230,1.00
+pkm-swsh-black-star-promos-swsh231-307-c29a3a246d,SWSH Black Star Promos,Bulbasaur,SWSH231/307,275828,Bulbasaur - SWSH231,LINKED,swsh231,1.00
+pkm-swsh-black-star-promos-swsh232-307-2862f4cd9b,SWSH Black Star Promos,Charmander,SWSH232/307,275829,Charmander - SWSH232,LINKED,swsh232,1.00
+pkm-swsh-black-star-promos-swsh233-307-58565f1b28,SWSH Black Star Promos,Squirtle,SWSH233/307,275830,Squirtle - SWSH233,LINKED,swsh233,1.00
+pkm-swsh-black-star-promos-swsh234-307-7d796588b3,SWSH Black Star Promos,Pikachu,SWSH234/307,277039,Pikachu - SWSH234,LINKED,swsh234,1.00
+pkm-swsh-black-star-promos-swsh235-307-e41bca3211,SWSH Black Star Promos,Dragonite V,SWSH235/307,275844,Dragonite V - SWSH235,LINKED,swsh235,1.00
+pkm-swsh-black-star-promos-swsh236-307-7b2c5b0c92,SWSH Black Star Promos,Dragonite VSTAR,SWSH236/307,275843,Dragonite VSTAR - SWSH236,LINKED,swsh236,1.00
+pkm-swsh-black-star-promos-swsh240-307-808a01f337,SWSH Black Star Promos,Finneon,SWSH240/307,680245,Finneon - SWSH240 (Prerelease Staff),SKIP_NAME_MISMATCH,swsh240,0.50
+pkm-swsh-black-star-promos-swsh240-307-808a01f337,SWSH Black Star Promos,Finneon,SWSH240/307,285254,Finneon - SWSH240 (Prerelease),SKIP_NAME_MISMATCH,swsh240,0.50
+pkm-swsh-black-star-promos-swsh241-307-f7e05038f2,SWSH Black Star Promos,Gengar,SWSH241/307,285257,Gengar - SWSH241 (Prerelease),SKIP_NAME_MISMATCH,swsh241,0.50
+pkm-swsh-black-star-promos-swsh241-307-f7e05038f2,SWSH Black Star Promos,Gengar,SWSH241/307,607368,Gengar - SWSH241 (Prerelease) (Staff),SKIP_NAME_MISMATCH,swsh241,0.50
+pkm-swsh-black-star-promos-swsh242-307-5b8d5ce4c4,SWSH Black Star Promos,Comfey,SWSH242/307,285253,Comfey - SWSH242 (Prerelease),SKIP_NAME_MISMATCH,swsh242,0.50
+pkm-swsh-black-star-promos-swsh243-307-b3f0f74793,SWSH Black Star Promos,Machamp,SWSH243/307,285251,Machamp - SWSH243 (Prerelease),SKIP_NAME_MISMATCH,swsh243,0.50
+pkm-swsh-black-star-promos-swsh244-307-78b0414e00,SWSH Black Star Promos,Scorbunny,SWSH244/307,285264,Scorbunny - SWSH244 (Cosmos Holo),SKIP_NAME_MISMATCH,swsh244,0.50
+pkm-swsh-black-star-promos-swsh245-307-277644b6d5,SWSH Black Star Promos,Croagunk,SWSH245/307,285259,Croagunk - SWSH245 (Cosmos Holo),SKIP_NAME_MISMATCH,swsh245,0.50
+pkm-swsh-black-star-promos-swsh246-307-900a128a00,SWSH Black Star Promos,Weavile,SWSH246/307,285262,Weavile - SWSH246 (Cosmos Holo),SKIP_NAME_MISMATCH,swsh246,0.50
+pkm-swsh-black-star-promos-swsh247-307-f7cbfe9db4,SWSH Black Star Promos,Regigigas,SWSH247/307,285258,Regigigas - SWSH247 (Cosmos Holo),SKIP_NAME_MISMATCH,swsh247,0.50
+pkm-swsh-black-star-promos-swsh248-307-1035cbf1ad,SWSH Black Star Promos,Kleavor V,SWSH248/307,273938,Kleavor V (Full Art) - SWSH248,SKIP_NAME_MISMATCH,swsh248,0.50
+pkm-swsh-black-star-promos-swsh249-307-6bcbe17d0d,SWSH Black Star Promos,Kleavor VSTAR,SWSH249/307,273939,Kleavor VSTAR - SWSH249,LINKED,swsh249,1.00
+pkm-swsh-black-star-promos-swsh250-307-00e195a802,SWSH Black Star Promos,Lumineon V,SWSH250/307,279141,Lumineon V - SWSH250,LINKED,swsh250,1.00
+pkm-swsh-black-star-promos-swsh252-307-6d3c958d99,SWSH Black Star Promos,Infernape V,SWSH252/307,283369,Infernape V - SWSH252,LINKED,swsh252,1.00
+pkm-swsh-black-star-promos-swsh257-307-bd8cbe75b0,SWSH Black Star Promos,Rotom V,SWSH257/307,450653,Rotom V - SWSH257,LINKED,swsh257,1.00
+pkm-swsh-black-star-promos-swsh258-307-e89afe68bc,SWSH Black Star Promos,Gallade V,SWSH258/307,450656,Gallade V - SWSH258,LINKED,swsh258,1.00
+pkm-swsh-black-star-promos-swsh259-307-a99faf8574,SWSH Black Star Promos,Giratina V,SWSH259/307,,,NO_CANDIDATE,swsh259,
+pkm-swsh-black-star-promos-swsh260-307-305977f9cb,SWSH Black Star Promos,Charizard V,SWSH260/307,285384,Charizard V - SWSH260,LINKED,swsh260,1.00
+pkm-swsh-black-star-promos-swsh261-307-2118c27152,SWSH Black Star Promos,Charizard VMAX,SWSH261/307,285378,Charizard VMAX - SWSH261,LINKED,swsh261,1.00
+pkm-swsh-black-star-promos-swsh262-307-2894c00c35,SWSH Black Star Promos,Charizard VSTAR,SWSH262/307,285396,Charizard VSTAR - SWSH262,LINKED,swsh262,1.00
+pkm-swsh-black-star-promos-swsh263-307-25597aa52d,SWSH Black Star Promos,Zeraora V,SWSH263/307,449518,Zeraora V - SWSH263,LINKED,swsh263,1.00
+pkm-swsh-black-star-promos-swsh264-307-530b04c4fa,SWSH Black Star Promos,Zeraora VMAX,SWSH264/307,449519,Zeraora VMAX - SWSH264,LINKED,swsh264,1.00
+pkm-swsh-black-star-promos-swsh265-307-3956ff8558,SWSH Black Star Promos,Zeraora VSTAR,SWSH265/307,449520,Zeraora VSTAR - SWSH265,LINKED,swsh265,1.00
+pkm-swsh-black-star-promos-swsh266-307-a54b2b8959,SWSH Black Star Promos,Deoxys V,SWSH266/307,449521,Deoxys V - SWSH266,LINKED,swsh266,1.00
+pkm-swsh-black-star-promos-swsh267-307-681bbee96c,SWSH Black Star Promos,Deoxys VMAX,SWSH267/307,449522,Deoxys VMAX - SWSH267,LINKED,swsh267,1.00
+pkm-swsh-black-star-promos-swsh268-307-4fdf1b6627,SWSH Black Star Promos,Deoxys VSTAR,SWSH268/307,449523,Deoxys VSTAR - SWSH268,LINKED,swsh268,1.00
+pkm-swsh-black-star-promos-swsh269-307-9515019b46,SWSH Black Star Promos,Sunflora,SWSH269/307,451844,Sunflora - SWSH269 (Prerelease),SKIP_NAME_MISMATCH,swsh269,0.50
+pkm-swsh-black-star-promos-swsh269-307-9515019b46,SWSH Black Star Promos,Sunflora,SWSH269/307,451884,Sunflora - SWSH269 (Prerelease) [STAFF],SKIP_NAME_MISMATCH,swsh269,0.50
+pkm-swsh-black-star-promos-swsh270-307-bbbff618ee,SWSH Black Star Promos,Rapidash,SWSH270/307,451845,Rapidash - SWSH270 (Prerelease),SKIP_NAME_MISMATCH,swsh270,0.50
+pkm-swsh-black-star-promos-swsh270-307-bbbff618ee,SWSH Black Star Promos,Rapidash,SWSH270/307,451885,Rapidash - SWSH270 (Prerelease) [STAFF],SKIP_NAME_MISMATCH,swsh270,0.50
+pkm-swsh-black-star-promos-swsh271-307-784cfefe9b,SWSH Black Star Promos,Kirlia,SWSH271/307,451846,Kirlia - SWSH271 (Prerelease),SKIP_NAME_MISMATCH,swsh271,0.50
+pkm-swsh-black-star-promos-swsh271-307-784cfefe9b,SWSH Black Star Promos,Kirlia,SWSH271/307,451886,Kirlia - SWSH271 (Prerelease) [STAFF],SKIP_NAME_MISMATCH,swsh271,0.50
+pkm-swsh-black-star-promos-swsh272-307-d33797d207,SWSH Black Star Promos,Archeops,SWSH272/307,451847,Archeops - SWSH272 (Prerelease),SKIP_NAME_MISMATCH,swsh272,0.50
+pkm-swsh-black-star-promos-swsh272-307-d33797d207,SWSH Black Star Promos,Archeops,SWSH272/307,451887,Archeops - SWSH272 (Prerelease) [STAFF],SKIP_NAME_MISMATCH,swsh272,0.50
+pkm-swsh-black-star-promos-swsh273-307-f939eab50e,SWSH Black Star Promos,Hisuian Basculin,SWSH273/307,454228,Hisuian Basculin - SWSH273,LINKED,swsh273,1.00
+pkm-swsh-black-star-promos-swsh274-307-d3ddbca099,SWSH Black Star Promos,Cranidos,SWSH274/307,454227,Cranidos - SWSH274,LINKED,swsh274,1.00
+pkm-swsh-black-star-promos-swsh275-307-261b9e6ba1,SWSH Black Star Promos,Manaphy,SWSH275/307,454226,Manaphy - SWSH275,LINKED,swsh275,1.00
+pkm-swsh-black-star-promos-swsh276-307-7d5f4e91c2,SWSH Black Star Promos,Togetic,SWSH276/307,454225,Togetic - SWSH276,LINKED,swsh276,1.00
+pkm-swsh-black-star-promos-swsh277-307-0f61b5a997,SWSH Black Star Promos,Rillaboom,SWSH277/307,475621,Rillaboom - SWSH277,LINKED,swsh277,1.00
+pkm-swsh-black-star-promos-swsh278-307-42cf9e4c5a,SWSH Black Star Promos,Cinderace,SWSH278/307,475622,Cinderace - SWSH278,LINKED,swsh278,1.00
+pkm-swsh-black-star-promos-swsh279-307-2ae65f99c6,SWSH Black Star Promos,Inteleon,SWSH279/307,475623,Inteleon - SWSH279,LINKED,swsh279,1.00
+pkm-swsh-black-star-promos-swsh280-307-40c854ea1d,SWSH Black Star Promos,Regieleki V,SWSH280/307,453483,Regieleki V - SWSH280,LINKED,swsh280,1.00
+pkm-swsh-black-star-promos-swsh281-307-f864d38ec7,SWSH Black Star Promos,Regidrago V,SWSH281/307,453485,Regidrago V - SWSH281,LINKED,swsh281,1.00
+pkm-swsh-black-star-promos-swsh282-307-2a4dcbc6a5,SWSH Black Star Promos,Galarian Articuno,SWSH282/307,488271,Galarian Articuno - SWSH282,LINKED,swsh282,1.00
+pkm-swsh-black-star-promos-swsh283-307-a141eb91e4,SWSH Black Star Promos,Galarian Zapdos,SWSH283/307,488274,Galarian Zapdos - SWSH283,LINKED,swsh283,1.00
+pkm-swsh-black-star-promos-swsh284-307-c467ddafa9,SWSH Black Star Promos,Galarian Moltres,SWSH284/307,488275,Galarian Moltres - SWSH284,LINKED,swsh284,1.00
+pkm-swsh-black-star-promos-swsh285-307-4ca90a6498,SWSH Black Star Promos,Pikachu V,SWSH285/307,478423,Pikachu V - SWSH285,LINKED,swsh285,1.00
+pkm-swsh-black-star-promos-swsh286-307-0ee498f9eb,SWSH Black Star Promos,Pikachu VMAX,SWSH286/307,478424,Pikachu VMAX - SWSH286,LINKED,swsh286,1.00
+pkm-swsh-black-star-promos-swsh287-307-45a225421c,SWSH Black Star Promos,Morpeko V-UNION,SWSH287/307,477065,Morpeko V-Union - SWSH287,LINKED,swsh287,1.00
+pkm-swsh-black-star-promos-swsh288-307-1facb380f9,SWSH Black Star Promos,Morpeko V-UNION,SWSH288/307,477066,Morpeko V-Union - SWSH288,LINKED,swsh288,1.00
+pkm-swsh-black-star-promos-swsh289-307-78fe24ef93,SWSH Black Star Promos,Morpeko V-UNION,SWSH289/307,477067,Morpeko V-Union - SWSH289,LINKED,swsh289,1.00
+pkm-swsh-black-star-promos-swsh290-307-4420050451,SWSH Black Star Promos,Morpeko V-UNION,SWSH290/307,477068,Morpeko V-Union - SWSH290,LINKED,swsh290,1.00
+pkm-swsh-black-star-promos-swsh290-307-4420050451,SWSH Black Star Promos,Morpeko V-UNION,SWSH290/307,495215,Morpeko V-Union (SWSH287-290) [Set of 4],SKIP_NAME_MISMATCH,swsh290,0.29
+pkm-swsh-black-star-promos-swsh291-307-c2ef0f5c97,SWSH Black Star Promos,Lucario VSTAR,SWSH291/307,475642,Lucario VSTAR - SWSH291,LINKED,swsh291,1.00
+pkm-swsh-black-star-promos-swsh292-307-95026cef58,SWSH Black Star Promos,Zacian V,SWSH292/307,477063,Zacian V (Shiny) - SWSH292,SKIP_NAME_MISMATCH,swsh292,0.67
+pkm-swsh-black-star-promos-swsh293-307-73dfc768c3,SWSH Black Star Promos,Zamazenta V,SWSH293/307,477064,Zamazenta V (Shiny) - SWSH293,SKIP_NAME_MISMATCH,swsh293,0.67
+pkm-swsh-black-star-promos-swsh295-307-dca270427d,SWSH Black Star Promos,Virizion V,SWSH295/307,449515,Virizion V - SWSH295,LINKED,swsh295,1.00
+pkm-swsh-black-star-promos-swsh296-307-b95e25db9d,SWSH Black Star Promos,Champions Festival,SWSH296/307,575154,Champions Festival - SWSH296 (World Championships 2022),SKIP_NAME_MISMATCH,swsh296,0.33
+pkm-swsh-black-star-promos-swsh296-307-b95e25db9d,SWSH Black Star Promos,Champions Festival,SWSH296/307,503454,Champions Festival - SWSH296 (World Championships 2022) [Staff],SKIP_NAME_MISMATCH,swsh296,0.33
+pkm-swsh-black-star-promos-swsh303-307-59c35b409d,SWSH Black Star Promos,Bulbasaur,SWSH303/307,485843,Bulbasaur (Illustration Contest 2022),SKIP_NAME_MISMATCH,swsh303,0.25
+pkm-swsh-black-star-promos-swsh304-307-972733eb1c,SWSH Black Star Promos,Arcanine,SWSH304/307,485844,Arcanine (Illustration Contest 2022),SKIP_NAME_MISMATCH,swsh304,0.25
+pkm-swsh-black-star-promos-swsh305-307-4ae160f3e2,SWSH Black Star Promos,Greninja,SWSH305/307,485845,Greninja (Illustration Contest 2022),SKIP_NAME_MISMATCH,swsh305,0.25
+pkm-swsh-black-star-promos-swsh306-307-3f7662caff,SWSH Black Star Promos,Arceus V,SWSH306/307,499989,Arceus V - SWSH306,LINKED,swsh306,1.00
+pkm-swsh-black-star-promos-swsh307-307-14d50c096b,SWSH Black Star Promos,Arceus VSTAR,SWSH307/307,499984,Arceus VSTAR - SWSH307,LINKED,swsh307,1.00
+pkm-scarlet-and-violet-black-star-promos-1-102-96ca4d4a3e,Scarlet and Violet Black Star Promos,Sprigatito,1/102,477184,Sprigatito - 001,LINKED,1,1.00
+pkm-scarlet-and-violet-black-star-promos-2-102-59d0d7826a,Scarlet and Violet Black Star Promos,Fuecoco,2/102,477182,Fuecoco - 002,LINKED,2,1.00
+pkm-scarlet-and-violet-black-star-promos-3-102-11c8bfff3e,Scarlet and Violet Black Star Promos,Quaxly,3/102,477183,Quaxly - 003,LINKED,3,1.00
+pkm-scarlet-and-violet-black-star-promos-4-102-c1162f180d,Scarlet and Violet Black Star Promos,Mimikyu ex,4/102,487435,Mimikyu ex - 004,LINKED,4,1.00
+pkm-scarlet-and-violet-black-star-promos-5-102-32c35ffa39,Scarlet and Violet Black Star Promos,Quaquaval,5/102,487751,Quaquaval - 005 (Prerelease),LINKED,5,1.00
+pkm-scarlet-and-violet-black-star-promos-5-102-32c35ffa39,Scarlet and Violet Black Star Promos,Quaquaval,5/102,522650,Quaquaval - 005 (Prerelease) [Staff],SKIP_NAME_MISMATCH,5,0.50
+pkm-scarlet-and-violet-black-star-promos-6-102-33c51f490d,Scarlet and Violet Black Star Promos,Pawmot,6/102,487752,Pawmot - 006 (Prerelease),LINKED,6,1.00
+pkm-scarlet-and-violet-black-star-promos-6-102-33c51f490d,Scarlet and Violet Black Star Promos,Pawmot,6/102,522648,Pawmot - 006 (Prerelease) [Staff],SKIP_NAME_MISMATCH,6,0.50
+pkm-scarlet-and-violet-black-star-promos-7-102-0f6308c340,Scarlet and Violet Black Star Promos,Hawlucha,7/102,487755,Hawlucha - 007 (Prerelease),LINKED,7,1.00
+pkm-scarlet-and-violet-black-star-promos-7-102-0f6308c340,Scarlet and Violet Black Star Promos,Hawlucha,7/102,522649,Hawlucha - 007 (Prerelease) [Staff],SKIP_NAME_MISMATCH,7,0.50
+pkm-scarlet-and-violet-black-star-promos-8-102-d2e18e18ce,Scarlet and Violet Black Star Promos,Revavroom,8/102,487756,Revavroom - 008 (Prerelease),LINKED,8,1.00
+pkm-scarlet-and-violet-black-star-promos-8-102-d2e18e18ce,Scarlet and Violet Black Star Promos,Revavroom,8/102,515203,Revavroom - 008 (Prerelease) [Staff],SKIP_NAME_MISMATCH,8,0.50
+pkm-scarlet-and-violet-black-star-promos-9-102-a3557e97f8,Scarlet and Violet Black Star Promos,Spidops,9/102,491184,Spidops - 009,LINKED,9,1.00
+pkm-scarlet-and-violet-black-star-promos-10-102-ca246c57bd,Scarlet and Violet Black Star Promos,Espathra,10/102,491185,Espathra - 010,LINKED,10,1.00
+pkm-scarlet-and-violet-black-star-promos-11-102-b058877a20,Scarlet and Violet Black Star Promos,Arcanine,11/102,491186,Arcanine - 011,LINKED,11,1.00
+pkm-scarlet-and-violet-black-star-promos-12-102-cd2a283a43,Scarlet and Violet Black Star Promos,Dondozo,12/102,491187,Dondozo - 012,LINKED,12,1.00
+pkm-scarlet-and-violet-black-star-promos-12-102-cd2a283a43,Scarlet and Violet Black Star Promos,Dondozo,12/102,653800,Dondozo - 012 (Cosmos Holofoil),LINKED,12,1.00
+pkm-scarlet-and-violet-black-star-promos-13-102-d5ca66f021,Scarlet and Violet Black Star Promos,Miraidon,13/102,490719,Miraidon - 013,LINKED,13,1.00
+pkm-scarlet-and-violet-black-star-promos-13-102-d5ca66f021,Scarlet and Violet Black Star Promos,Miraidon,13/102,490730,Miraidon - 013 (Pokemon Center Exclusive),LINKED,13,1.00
+pkm-scarlet-and-violet-black-star-promos-14-102-af2f56d1cf,Scarlet and Violet Black Star Promos,Koraidon,14/102,490721,Koraidon - 014,LINKED,14,1.00
+pkm-scarlet-and-violet-black-star-promos-14-102-af2f56d1cf,Scarlet and Violet Black Star Promos,Koraidon,14/102,490725,Koraidon - 014 (Pokemon Center Exclusive),LINKED,14,1.00
+pkm-scarlet-and-violet-black-star-promos-15-102-0a69be2e43,Scarlet and Violet Black Star Promos,Flaaffy,15/102,496972,Flaaffy - 015,LINKED,15,1.00
+pkm-scarlet-and-violet-black-star-promos-16-102-561e9103af,Scarlet and Violet Black Star Promos,Ampharos ex,16/102,484397,Ampharos ex - 016,LINKED,16,1.00
+pkm-scarlet-and-violet-black-star-promos-17-102-3b816543be,Scarlet and Violet Black Star Promos,Lucario ex,17/102,484396,Lucario ex - 017,LINKED,17,1.00
+pkm-scarlet-and-violet-black-star-promos-18-102-592a04c430,Scarlet and Violet Black Star Promos,Cyclizar ex,18/102,496429,Cyclizar ex - 018,LINKED,18,1.00
+pkm-scarlet-and-violet-black-star-promos-19-102-cf107138a8,Scarlet and Violet Black Star Promos,Baxcalibur,19/102,501885,Baxcalibur - 019 (Prerelease),LINKED,19,1.00
+pkm-scarlet-and-violet-black-star-promos-19-102-cf107138a8,Scarlet and Violet Black Star Promos,Baxcalibur,19/102,515202,Baxcalibur - 019 (Prerelease) [Staff],SKIP_NAME_MISMATCH,19,0.50
+pkm-scarlet-and-violet-black-star-promos-20-102-0e4e4f9599,Scarlet and Violet Black Star Promos,Tinkaton,20/102,,,NO_CANDIDATE,20,
+pkm-scarlet-and-violet-black-star-promos-21-102-dd8d8ddfd6,Scarlet and Violet Black Star Promos,Murkrow,21/102,501893,Murkrow - 021 (Prerelease),LINKED,21,1.00
+pkm-scarlet-and-violet-black-star-promos-21-102-dd8d8ddfd6,Scarlet and Violet Black Star Promos,Murkrow,21/102,527563,Murkrow - 021 (Prerelease) [Staff],SKIP_NAME_MISMATCH,21,0.50
+pkm-scarlet-and-violet-black-star-promos-22-102-0036a77a6f,Scarlet and Violet Black Star Promos,Pelipper,22/102,501896,Pelipper - 022 (Prerelease),LINKED,22,1.00
+pkm-scarlet-and-violet-black-star-promos-22-102-0036a77a6f,Scarlet and Violet Black Star Promos,Pelipper,22/102,527564,Pelipper - 022 (Prerelease) [Staff],SKIP_NAME_MISMATCH,22,0.50
+pkm-scarlet-and-violet-black-star-promos-22-102-0036a77a6f,Scarlet and Violet Black Star Promos,Pelipper,22/102,553715,Sinistcha - 022/167 (Prerelease),SKIP_NAME_MISMATCH,22,0.00
+pkm-scarlet-and-violet-black-star-promos-23-102-eaa3402527,Scarlet and Violet Black Star Promos,Smoliv,23/102,500833,Smoliv - 023,LINKED,23,1.00
+pkm-scarlet-and-violet-black-star-promos-24-102-1819bc860e,Scarlet and Violet Black Star Promos,Growlithe,24/102,500563,Growlithe - 024,LINKED,24,1.00
+pkm-scarlet-and-violet-black-star-promos-25-102-cc3ecbf473,Scarlet and Violet Black Star Promos,Tinkatink,25/102,,,NO_CANDIDATE,25,
+pkm-scarlet-and-violet-black-star-promos-26-102-84162f696d,Scarlet and Violet Black Star Promos,Varoom,26/102,532538,Varoom - 026 (Cosmos Holo),LINKED,26,1.00
+pkm-scarlet-and-violet-black-star-promos-27-102-0c66f653ea,Scarlet and Violet Black Star Promos,Pikachu,27/102,500263,Pikachu - 027,LINKED,27,1.00
+pkm-scarlet-and-violet-black-star-promos-27-102-0c66f653ea,Scarlet and Violet Black Star Promos,Pikachu,27/102,500264,Pikachu - 027 (Pokemon Center Exclusive),LINKED,27,1.00
+pkm-scarlet-and-violet-black-star-promos-28-102-a468b2242a,Scarlet and Violet Black Star Promos,Miraidon ex,28/102,500062,Miraidon ex - 028,LINKED,28,1.00
+pkm-scarlet-and-violet-black-star-promos-29-102-f5de95bf7e,Scarlet and Violet Black Star Promos,Koraidon ex,29/102,500070,Koraidon ex - 029,LINKED,29,1.00
+pkm-scarlet-and-violet-black-star-promos-31-102-3688fe7ec5,Scarlet and Violet Black Star Promos,Tinkaton ex,31/102,,,NO_CANDIDATE,31,
+pkm-scarlet-and-violet-black-star-promos-32-102-0e0a76ba3a,Scarlet and Violet Black Star Promos,Annihilape ex,32/102,502981,Annihilape ex - 032,LINKED,32,1.00
+pkm-scarlet-and-violet-black-star-promos-33-102-3d8c3295fb,Scarlet and Violet Black Star Promos,Meowscarada ex,33/102,513876,Meowscarada ex - 033,LINKED,33,1.00
+pkm-scarlet-and-violet-black-star-promos-34-102-9afee4d901,Scarlet and Violet Black Star Promos,Skeledirge ex,34/102,513831,Skeledirge ex - 034,LINKED,34,1.00
+pkm-scarlet-and-violet-black-star-promos-35-102-0a3ce749ac,Scarlet and Violet Black Star Promos,Quaquaval ex,35/102,513874,Quaquaval ex - 035,LINKED,35,1.00
+pkm-scarlet-and-violet-black-star-promos-36-102-acefb8d990,Scarlet and Violet Black Star Promos,Palafin,36/102,513424,Palafin - 036 (Prerelease),LINKED,36,1.00
+pkm-scarlet-and-violet-black-star-promos-36-102-acefb8d990,Scarlet and Violet Black Star Promos,Palafin,36/102,513425,Palafin - 036 (Prerelease) [Staff],SKIP_NAME_MISMATCH,36,0.50
+pkm-scarlet-and-violet-black-star-promos-37-102-08edc27216,Scarlet and Violet Black Star Promos,Cleffa,37/102,512896,Cleffa - 037 (Prerelease),LINKED,37,1.00
+pkm-scarlet-and-violet-black-star-promos-37-102-08edc27216,Scarlet and Violet Black Star Promos,Cleffa,37/102,513423,Cleffa - 037 (Prerelease) [Staff],SKIP_NAME_MISMATCH,37,0.50
+pkm-scarlet-and-violet-black-star-promos-38-102-5e206db241,Scarlet and Violet Black Star Promos,Togekiss,38/102,513426,Togekiss - 038 (Prerelease),LINKED,38,1.00
+pkm-scarlet-and-violet-black-star-promos-38-102-5e206db241,Scarlet and Violet Black Star Promos,Togekiss,38/102,513427,Togekiss - 038 (Prerelease) [Staff],SKIP_NAME_MISMATCH,38,0.50
+pkm-scarlet-and-violet-black-star-promos-39-102-9b05482a12,Scarlet and Violet Black Star Promos,Mawile,39/102,513428,Mawile - 039 (Prerelease),LINKED,39,1.00
+pkm-scarlet-and-violet-black-star-promos-39-102-9b05482a12,Scarlet and Violet Black Star Promos,Mawile,39/102,513429,Mawile - 039 (Prerelease) [Staff],SKIP_NAME_MISMATCH,39,0.50
+pkm-scarlet-and-violet-black-star-promos-40-102-be06d506d8,Scarlet and Violet Black Star Promos,Pawmi,40/102,512043,Pawmi - 040,LINKED,40,1.00
+pkm-scarlet-and-violet-black-star-promos-40-102-be06d506d8,Scarlet and Violet Black Star Promos,Pawmi,40/102,607764,Pawmi - 040 (Cosmos Holo),LINKED,40,1.00
+pkm-scarlet-and-violet-black-star-promos-41-102-0b1889a0b0,Scarlet and Violet Black Star Promos,Paldean Wooper,41/102,512049,Paldean Wooper - 041,LINKED,41,1.00
+pkm-scarlet-and-violet-black-star-promos-42-102-877ad5e155,Scarlet and Violet Black Star Promos,Houndstone,42/102,512914,Houndstone - 042,LINKED,42,1.00
+pkm-scarlet-and-violet-black-star-promos-43-102-f4b9d80792,Scarlet and Violet Black Star Promos,Eevee,43/102,512492,Eevee - 043,LINKED,43,1.00
+pkm-scarlet-and-violet-black-star-promos-44-102-4573490312,Scarlet and Violet Black Star Promos,Charmander,44/102,512035,Charmander - 044,LINKED,44,1.00
+pkm-scarlet-and-violet-black-star-promos-44-102-4573490312,Scarlet and Violet Black Star Promos,Charmander,44/102,512036,Charmander - 044 (Pokemon Center Exclusive),LINKED,44,1.00
+pkm-scarlet-and-violet-black-star-promos-45-102-0d3907c6dd,Scarlet and Violet Black Star Promos,Paradise Resort,45/102,518863,Paradise Resort - 045 (World Championships 2023),LINKED,45,1.00
+pkm-scarlet-and-violet-black-star-promos-45-102-0d3907c6dd,Scarlet and Violet Black Star Promos,Paradise Resort,45/102,583700,Paradise Resort - 045 (World Championships 2023) [Staff],SKIP_NAME_MISMATCH,45,0.33
+pkm-scarlet-and-violet-black-star-promos-46-102-4aee4c798e,Scarlet and Violet Black Star Promos,Bulbasaur,46/102,517271,Bulbasaur - 046 (Cosmos Holo),LINKED,46,1.00
+pkm-scarlet-and-violet-black-star-promos-47-102-7c37641415,Scarlet and Violet Black Star Promos,Charmander,47/102,517272,Charmander - 047 (Cosmos Holo),LINKED,47,1.00
+pkm-scarlet-and-violet-black-star-promos-48-102-dff776fdc8,Scarlet and Violet Black Star Promos,Squirtle,48/102,517273,Squirtle - 048 (Cosmos Holo),LINKED,48,1.00
+pkm-scarlet-and-violet-black-star-promos-49-102-0d82027e73,Scarlet and Violet Black Star Promos,Zapdos ex,49/102,518869,Zapdos ex - 049,LINKED,49,1.00
+pkm-scarlet-and-violet-black-star-promos-50-102-517ac10aa5,Scarlet and Violet Black Star Promos,Alakazam ex,50/102,518868,Alakazam ex - 050,LINKED,50,1.00
+pkm-scarlet-and-violet-black-star-promos-51-102-8901e0f979,Scarlet and Violet Black Star Promos,Snorlax,51/102,517175,Snorlax - 051,LINKED,51,1.00
+pkm-scarlet-and-violet-black-star-promos-51-102-8901e0f979,Scarlet and Violet Black Star Promos,Snorlax,51/102,517270,Snorlax - 051 (Pokemon Center Exclusive),LINKED,51,1.00
+pkm-scarlet-and-violet-black-star-promos-52-102-b350d3034a,Scarlet and Violet Black Star Promos,Mewtwo,52/102,518872,Mewtwo - 052,LINKED,52,1.00
+pkm-scarlet-and-violet-black-star-promos-53-102-039058d136,Scarlet and Violet Black Star Promos,Mew ex,53/102,518871,Mew ex - 053,LINKED,53,1.00
+pkm-scarlet-and-violet-black-star-promos-54-102-9a25692547,Scarlet and Violet Black Star Promos,Greninja ex,54/102,518878,Greninja ex - 054,LINKED,54,1.00
+pkm-scarlet-and-violet-black-star-promos-55-102-2f97246d23,Scarlet and Violet Black Star Promos,Kangaskhan ex,55/102,519482,Kangaskhan ex - 055,LINKED,55,1.00
+pkm-scarlet-and-violet-black-star-promos-56-102-e46162eb99,Scarlet and Violet Black Star Promos,Charizard ex,56/102,521697,Charizard ex - 056,LINKED,56,1.00
+pkm-scarlet-and-violet-black-star-promos-57-102-1badfb6ed7,Scarlet and Violet Black Star Promos,Chi-Yu,57/102,526574,Chi-Yu - 057 (Prerelease),LINKED,57,1.00
+pkm-scarlet-and-violet-black-star-promos-57-102-1badfb6ed7,Scarlet and Violet Black Star Promos,Chi-Yu,57/102,548552,Chi-Yu - 057 (Prerelease) [Staff],SKIP_NAME_MISMATCH,57,0.67
+pkm-scarlet-and-violet-black-star-promos-58-102-7450b4afee,Scarlet and Violet Black Star Promos,Iron Bundle,58/102,,,NO_CANDIDATE,58,
+pkm-scarlet-and-violet-black-star-promos-59-102-865f7f0e50,Scarlet and Violet Black Star Promos,Xatu,59/102,526590,Xatu - 059 (Prerelease),LINKED,59,1.00
+pkm-scarlet-and-violet-black-star-promos-59-102-865f7f0e50,Scarlet and Violet Black Star Promos,Xatu,59/102,548554,Xatu - 059 (Prerelease) [Staff],SKIP_NAME_MISMATCH,59,0.50
+pkm-scarlet-and-violet-black-star-promos-60-102-f5d4f2b50d,Scarlet and Violet Black Star Promos,Aegislash,60/102,526610,Aegislash - 060 (Prerelease),LINKED,60,1.00
+pkm-scarlet-and-violet-black-star-promos-60-102-f5d4f2b50d,Scarlet and Violet Black Star Promos,Aegislash,60/102,548555,Aegislash - 060 (Prerelease) [Staff],SKIP_NAME_MISMATCH,60,0.50
+pkm-scarlet-and-violet-black-star-promos-61-102-bdf411c783,Scarlet and Violet Black Star Promos,Pineco,61/102,526634,Pineco - 061,LINKED,61,1.00
+pkm-scarlet-and-violet-black-star-promos-62-102-7502f3d1b2,Scarlet and Violet Black Star Promos,Sinistea,62/102,526638,Sinistea - 062,LINKED,62,1.00
+pkm-scarlet-and-violet-black-star-promos-63-102-06fb57921c,Scarlet and Violet Black Star Promos,Cetitan,63/102,526640,Cetitan - 063,LINKED,63,1.00
+pkm-scarlet-and-violet-black-star-promos-63-102-06fb57921c,Scarlet and Violet Black Star Promos,Cetitan,63/102,561591,Cetitan - 063 (Cosmos Holo),LINKED,63,1.00
+pkm-scarlet-and-violet-black-star-promos-64-102-acf31d850b,Scarlet and Violet Black Star Promos,Arctibax,64/102,526646,Arctibax - 064,LINKED,64,1.00
+pkm-scarlet-and-violet-black-star-promos-64-102-acf31d850b,Scarlet and Violet Black Star Promos,Arctibax,64/102,561590,Arctibax - 064 (Cosmos Holo),LINKED,64,1.00
+pkm-scarlet-and-violet-black-star-promos-65-102-ea0fba9ac1,Scarlet and Violet Black Star Promos,Scream Tail,65/102,526649,Scream Tail - 065,LINKED,65,1.00
+pkm-scarlet-and-violet-black-star-promos-65-102-ea0fba9ac1,Scarlet and Violet Black Star Promos,Scream Tail,65/102,526655,Scream Tail - 065 (Pokemon Center Exclusive),LINKED,65,1.00
+pkm-scarlet-and-violet-black-star-promos-66-102-71ed111014,Scarlet and Violet Black Star Promos,Iron Bundle,66/102,,,NO_CANDIDATE,66,
+pkm-scarlet-and-violet-black-star-promos-69-102-a2b1586783,Scarlet and Violet Black Star Promos,Fidough,69/102,536070,Fidough - 069,LINKED,69,1.00
+pkm-scarlet-and-violet-black-star-promos-70-102-5b6a28127b,Scarlet and Violet Black Star Promos,Greavard,70/102,536072,Greavard - 070,LINKED,70,1.00
+pkm-scarlet-and-violet-black-star-promos-71-102-eec04b625f,Scarlet and Violet Black Star Promos,Maschiff,71/102,536075,Maschiff - 071,LINKED,71,1.00
+pkm-scarlet-and-violet-black-star-promos-74-102-2da441d0ff,Scarlet and Violet Black Star Promos,Charizard ex,74/102,538687,Charizard ex - 074,LINKED,74,1.00
+pkm-scarlet-and-violet-black-star-promos-75-102-158f9a333c,Scarlet and Violet Black Star Promos,Mimikyu,75/102,535952,Mimikyu - 075,LINKED,75,1.00
+pkm-scarlet-and-violet-black-star-promos-75-102-158f9a333c,Scarlet and Violet Black Star Promos,Mimikyu,75/102,535953,Mimikyu - 075 (Pokemon Center Exclusive),LINKED,75,1.00
+pkm-scarlet-and-violet-black-star-promos-76-102-969e867c04,Scarlet and Violet Black Star Promos,Sprigatito,76/102,537971,Sprigatito - 076,LINKED,76,1.00
+pkm-scarlet-and-violet-black-star-promos-77-102-ed5d63c4ac,Scarlet and Violet Black Star Promos,Floragato,77/102,537980,Floragato - 077,LINKED,77,1.00
+pkm-scarlet-and-violet-black-star-promos-78-102-87e6537c79,Scarlet and Violet Black Star Promos,Meowscarada ex,78/102,537978,Meowscarada ex - 078,LINKED,78,1.00
+pkm-scarlet-and-violet-black-star-promos-79-102-a7d25a9782,Scarlet and Violet Black Star Promos,Fuecoco,79/102,537818,Fuecoco - 079,LINKED,79,1.00
+pkm-scarlet-and-violet-black-star-promos-80-102-cf1fd58b85,Scarlet and Violet Black Star Promos,Crocalor,80/102,537981,Crocalor - 080,LINKED,80,1.00
+pkm-scarlet-and-violet-black-star-promos-81-102-d2a33cae1b,Scarlet and Violet Black Star Promos,Skeledirge ex,81/102,537975,Skeledirge ex - 081,LINKED,81,1.00
+pkm-scarlet-and-violet-black-star-promos-82-102-59722609de,Scarlet and Violet Black Star Promos,Quaxly,82/102,537974,Quaxly - 082,LINKED,82,1.00
+pkm-scarlet-and-violet-black-star-promos-83-102-740bc476ca,Scarlet and Violet Black Star Promos,Quaxwell,83/102,537972,Quaxwell - 083,LINKED,83,1.00
+pkm-scarlet-and-violet-black-star-promos-84-102-b472a89aa3,Scarlet and Violet Black Star Promos,Quaquaval ex,84/102,537973,Quaquaval ex - 084,LINKED,84,1.00
+pkm-scarlet-and-violet-black-star-promos-86-102-f48f6b2081,Scarlet and Violet Black Star Promos,Mabosstiff ex,86/102,542255,Mabosstiff ex - 086,LINKED,86,1.00
+pkm-scarlet-and-violet-black-star-promos-87-102-27727a8aee,Scarlet and Violet Black Star Promos,Sprigatito ex,87/102,542468,Sprigatito ex - 087,LINKED,87,1.00
+pkm-scarlet-and-violet-black-star-promos-88-102-8720e747e1,Scarlet and Violet Black Star Promos,Pikachu,88/102,542481,Pikachu - 088,LINKED,88,1.00
+pkm-scarlet-and-violet-black-star-promos-89-102-c9b0812bcd,Scarlet and Violet Black Star Promos,Feraligatr,89/102,543950,Feraligatr - 089 (Prerelease),LINKED,89,1.00
+pkm-scarlet-and-violet-black-star-promos-89-102-c9b0812bcd,Scarlet and Violet Black Star Promos,Feraligatr,89/102,548310,Feraligatr - 089 (Prerelease) [Staff],SKIP_NAME_MISMATCH,89,0.50
+pkm-scarlet-and-violet-black-star-promos-90-102-adbc53dd51,Scarlet and Violet Black Star Promos,Metang,90/102,543951,Metang - 090 (Prerelease),LINKED,90,1.00
+pkm-scarlet-and-violet-black-star-promos-90-102-adbc53dd51,Scarlet and Violet Black Star Promos,Metang,90/102,548311,Metang - 090 (Prerelease) [Staff],SKIP_NAME_MISMATCH,90,0.50
+pkm-scarlet-and-violet-black-star-promos-91-102-b6555687c1,Scarlet and Violet Black Star Promos,Koraidon,91/102,543952,Koraidon - 091 (Prerelease),LINKED,91,1.00
+pkm-scarlet-and-violet-black-star-promos-91-102-b6555687c1,Scarlet and Violet Black Star Promos,Koraidon,91/102,548308,Koraidon - 091 (Prerelease) [Staff],SKIP_NAME_MISMATCH,91,0.50
+pkm-scarlet-and-violet-black-star-promos-92-102-bb8d086185,Scarlet and Violet Black Star Promos,Miraidon,92/102,543953,Miraidon - 092 (Prerelease),LINKED,92,1.00
+pkm-scarlet-and-violet-black-star-promos-92-102-bb8d086185,Scarlet and Violet Black Star Promos,Miraidon,92/102,548309,Miraidon - 092 (Prerelease) [Staff],SKIP_NAME_MISMATCH,92,0.50
+pkm-scarlet-and-violet-black-star-promos-93-102-222146b8b1,Scarlet and Violet Black Star Promos,Carvanha,93/102,544183,Carvanha - 093,LINKED,93,1.00
+pkm-scarlet-and-violet-black-star-promos-94-102-c9555ad2b3,Scarlet and Violet Black Star Promos,Bellibolt,94/102,544194,Bellibolt - 094,LINKED,94,1.00
+pkm-scarlet-and-violet-black-star-promos-95-102-80ae50e6b9,Scarlet and Violet Black Star Promos,Cleffa,95/102,544201,Cleffa - 095,LINKED,95,1.00
+pkm-scarlet-and-violet-black-star-promos-96-102-63cc34824a,Scarlet and Violet Black Star Promos,Cyclizar,96/102,544214,Cyclizar - 096,LINKED,96,1.00
+pkm-scarlet-and-violet-black-star-promos-97-102-f84976e01e,Scarlet and Violet Black Star Promos,Flutter Mane,97/102,543946,Flutter Mane - 097,LINKED,97,1.00
+pkm-scarlet-and-violet-black-star-promos-97-102-f84976e01e,Scarlet and Violet Black Star Promos,Flutter Mane,97/102,543947,Flutter Mane - 097 (Pokemon Center),LINKED,97,1.00
+pkm-scarlet-and-violet-black-star-promos-98-102-79e11448cd,Scarlet and Violet Black Star Promos,Iron Thorns,98/102,543948,Iron Thorns - 098,LINKED,98,1.00
+pkm-scarlet-and-violet-black-star-promos-98-102-79e11448cd,Scarlet and Violet Black Star Promos,Iron Thorns,98/102,543949,Iron Thorns - 098 (Pokemon Center),LINKED,98,1.00
+pkm-scarlet-and-violet-black-star-promos-99-102-bddfdeec0f,Scarlet and Violet Black Star Promos,Shroodle,99/102,546450,Shroodle - 099,LINKED,99,1.00
+pkm-scarlet-and-violet-black-star-promos-100-102-12c5212164,Scarlet and Violet Black Star Promos,Grafaiai ex,100/102,546448,Grafaiai ex - 100,LINKED,100,1.00
+pkm-scarlet-and-violet-black-star-promos-101-102-8aa0eeb692,Scarlet and Violet Black Star Promos,Pikachu,101/102,528365,Pikachu - 101,LINKED,101,1.00
+pkm-scarlet-and-violet-black-star-promos-101-102-8aa0eeb692,Scarlet and Violet Black Star Promos,Pikachu,101/102,681225,Pikachu (Asia Championship Series 23-24),SKIP_NAME_MISMATCH,101,0.17
+pkm-scarlet-and-violet-black-star-promos-102-102-c7b7305213,Scarlet and Violet Black Star Promos,Oddish,102/102,525293,Oddish - 102,LINKED,102,1.00
+pkm-scarlet-and-violet-black-star-promos-103-102-b18f264c0c,Scarlet and Violet Black Star Promos,Houndoom ex,103/102,546754,Houndoom ex - 103,LINKED,103,1.00
+pkm-scarlet-and-violet-black-star-promos-104-102-e59580e56b,Scarlet and Violet Black Star Promos,Melmetal ex,104/102,546755,Melmetal ex - 104,LINKED,104,1.00
+pkm-scarlet-and-violet-black-star-promos-105-102-0a1e459a80,Scarlet and Violet Black Star Promos,Armarouge ex,105/102,,,NO_CANDIDATE,105,
+pkm-scarlet-and-violet-black-star-promos-106-102-850e4678f3,Scarlet and Violet Black Star Promos,Pikachu ex,106/102,,,NO_CANDIDATE,106,
+pkm-scarlet-and-violet-black-star-promos-107-102-754abe212f,Scarlet and Violet Black Star Promos,Mareep,107/102,,,NO_CANDIDATE,107,
+pkm-scarlet-and-violet-black-star-promos-108-102-96f8935798,Scarlet and Violet Black Star Promos,Flaaffy,108/102,,,NO_CANDIDATE,108,
+pkm-scarlet-and-violet-black-star-promos-109-102-4dc20b396d,Scarlet and Violet Black Star Promos,Ampharos,109/102,,,NO_CANDIDATE,109,
+pkm-scarlet-and-violet-black-star-promos-110-102-c52c1f982d,Scarlet and Violet Black Star Promos,Darkrai ex,110/102,,,NO_CANDIDATE,110,
+pkm-scarlet-and-violet-black-star-promos-111-102-0639b81ac6,Scarlet and Violet Black Star Promos,Pawniard,111/102,,,NO_CANDIDATE,111,
+pkm-scarlet-and-violet-black-star-promos-112-102-a82e874ca9,Scarlet and Violet Black Star Promos,Bisharp,112/102,,,NO_CANDIDATE,112,
+pkm-scarlet-and-violet-black-star-promos-113-102-602a0ea8e0,Scarlet and Violet Black Star Promos,Kingambit,113/102,,,NO_CANDIDATE,113,
+pkm-scarlet-and-violet-black-star-promos-114-102-a88dd9f2ce,Scarlet and Violet Black Star Promos,Picnicker,114/102,551687,Picnicker - 114,LINKED,114,1.00
+pkm-scarlet-and-violet-black-star-promos-115-102-7055a9ba95,Scarlet and Violet Black Star Promos,Thwackey,115/102,551688,Thwackey - 115,LINKED,115,1.00
+pkm-scarlet-and-violet-black-star-promos-115-102-7055a9ba95,Scarlet and Violet Black Star Promos,Thwackey,115/102,563315,Thwackey - 115 (Prerelease) [Staff],SKIP_NAME_MISMATCH,115,0.50
+pkm-scarlet-and-violet-black-star-promos-116-102-ec7fbcf699,Scarlet and Violet Black Star Promos,Infernape,116/102,551689,Infernape - 116,LINKED,116,1.00
+pkm-scarlet-and-violet-black-star-promos-116-102-ec7fbcf699,Scarlet and Violet Black Star Promos,Infernape,116/102,563316,Infernape - 116 (Prerelease) [Staff],SKIP_NAME_MISMATCH,116,0.50
+pkm-scarlet-and-violet-black-star-promos-116-102-ec7fbcf699,Scarlet and Violet Black Star Promos,Infernape,116/102,678764,Rockruff - 116/193 (Cosmos Holo),SKIP_NAME_MISMATCH,116,0.00
+pkm-scarlet-and-violet-black-star-promos-117-102-3096e60505,Scarlet and Violet Black Star Promos,Froslass,117/102,551691,Froslass - 117,LINKED,117,1.00
+pkm-scarlet-and-violet-black-star-promos-117-102-3096e60505,Scarlet and Violet Black Star Promos,Froslass,117/102,563317,Froslass - 117 (Prerelease) [Staff],SKIP_NAME_MISMATCH,117,0.50
+pkm-scarlet-and-violet-black-star-promos-118-102-ed91b40c48,Scarlet and Violet Black Star Promos,Tatsugiri,118/102,551692,Tatsugiri - 118,LINKED,118,1.00
+pkm-scarlet-and-violet-black-star-promos-118-102-ed91b40c48,Scarlet and Violet Black Star Promos,Tatsugiri,118/102,563318,Tatsugiri - 118 (Prerelease) [Staff],SKIP_NAME_MISMATCH,118,0.50
+pkm-scarlet-and-violet-black-star-promos-119-102-96ca032e9d,Scarlet and Violet Black Star Promos,Toxel,119/102,554293,Toxel - 119,LINKED,119,1.00
+pkm-scarlet-and-violet-black-star-promos-120-102-dd54bd7723,Scarlet and Violet Black Star Promos,Pupitar,120/102,554189,Pupitar - 120,LINKED,120,1.00
+pkm-scarlet-and-violet-black-star-promos-121-102-ff4f2fcfe8,Scarlet and Violet Black Star Promos,Revavroom,121/102,554296,Revavroom - 121,LINKED,121,1.00
+pkm-scarlet-and-violet-black-star-promos-121-102-ff4f2fcfe8,Scarlet and Violet Black Star Promos,Revavroom,121/102,560618,Revavroom - 121 (Cosmos Holo),LINKED,121,1.00
+pkm-scarlet-and-violet-black-star-promos-122-102-d1c84b4135,Scarlet and Violet Black Star Promos,Snorlax,122/102,554297,Snorlax - 122,LINKED,122,1.00
+pkm-scarlet-and-violet-black-star-promos-124-102-9255799f60,Scarlet and Violet Black Star Promos,Iono,124/102,545661,Iono - 124,LINKED,124,1.00
+pkm-scarlet-and-violet-black-star-promos-125-102-cc84185b48,Scarlet and Violet Black Star Promos,Armarouge ex,125/102,547653,Armarouge ex - 125,LINKED,125,1.00
+pkm-scarlet-and-violet-black-star-promos-126-102-0e41289495,Scarlet and Violet Black Star Promos,Palafin ex,126/102,556449,Palafin ex - 126,LINKED,126,1.00
+pkm-scarlet-and-violet-black-star-promos-129-102-d346cb7441,Scarlet and Violet Black Star Promos,Pecharunt,129/102,564137,Pecharunt - 129,LINKED,129,1.00
+pkm-scarlet-and-violet-black-star-promos-129-102-d346cb7441,Scarlet and Violet Black Star Promos,Pecharunt,129/102,573720,Pecharunt - 129 (Pokemon Center Exclusive),LINKED,129,1.00
+pkm-scarlet-and-violet-black-star-promos-130-102-976d6a22bf,Scarlet and Violet Black Star Promos,Kingambit,130/102,562087,Kingambit - 130,LINKED,130,1.00
+pkm-scarlet-and-violet-black-star-promos-131-102-2becb3b664,Scarlet and Violet Black Star Promos,Kingdra ex,131/102,562019,Kingdra ex - 131,LINKED,131,1.00
+pkm-scarlet-and-violet-black-star-promos-132-102-24bac2b5b1,Scarlet and Violet Black Star Promos,Greninja ex,132/102,562018,Greninja ex - 132,LINKED,132,1.00
+pkm-scarlet-and-violet-black-star-promos-133-102-b9b6236f4c,Scarlet and Violet Black Star Promos,Ledian,133/102,576970,Ledian - 133,LINKED,133,1.00
+pkm-scarlet-and-violet-black-star-promos-133-102-b9b6236f4c,Scarlet and Violet Black Star Promos,Ledian,133/102,580334,Ledian - 133 (Prerelease) [Staff],SKIP_NAME_MISMATCH,133,0.50
+pkm-scarlet-and-violet-black-star-promos-134-102-8269981207,Scarlet and Violet Black Star Promos,Crabominable,134/102,576972,Crabominable - 134,LINKED,134,1.00
+pkm-scarlet-and-violet-black-star-promos-134-102-8269981207,Scarlet and Violet Black Star Promos,Crabominable,134/102,580335,Crabominable - 134 (Prerelease) [Staff],SKIP_NAME_MISMATCH,134,0.50
+pkm-scarlet-and-violet-black-star-promos-135-102-7ecde6d465,Scarlet and Violet Black Star Promos,Drifblim,135/102,576974,Drifblim - 135,LINKED,135,1.00
+pkm-scarlet-and-violet-black-star-promos-135-102-7ecde6d465,Scarlet and Violet Black Star Promos,Drifblim,135/102,580336,Drifblim - 135 (Prerelease) [Staff],SKIP_NAME_MISMATCH,135,0.50
+pkm-scarlet-and-violet-black-star-promos-136-102-64c9c1887e,Scarlet and Violet Black Star Promos,Bouffalant,136/102,576976,Bouffalant - 136,LINKED,136,1.00
+pkm-scarlet-and-violet-black-star-promos-136-102-64c9c1887e,Scarlet and Violet Black Star Promos,Bouffalant,136/102,580337,Bouffalant - 136 (Prerelease) [Staff],SKIP_NAME_MISMATCH,136,0.50
+pkm-scarlet-and-violet-black-star-promos-137-102-a337e42dfa,Scarlet and Violet Black Star Promos,Horsea,137/102,585578,Horsea - 137 (Cosmo Holo),LINKED,137,1.00
+pkm-scarlet-and-violet-black-star-promos-138-102-5e2983d139,Scarlet and Violet Black Star Promos,Porygon2,138/102,585577,Porygon2 - 138 (Cosmos Holo),LINKED,138,1.00
+pkm-scarlet-and-violet-black-star-promos-139-102-6245e45d77,Scarlet and Violet Black Star Promos,Latias,139/102,585579,Latias - 139 (Cosmo Holo),LINKED,139,1.00
+pkm-scarlet-and-violet-black-star-promos-140-102-bc2b3ac246,Scarlet and Violet Black Star Promos,Tinkaton,140/102,,,NO_CANDIDATE,140,
+pkm-scarlet-and-violet-black-star-promos-141-102-c0f5de7302,Scarlet and Violet Black Star Promos,Noctowl,141/102,578811,Noctowl - 141,LINKED,141,1.00
+pkm-scarlet-and-violet-black-star-promos-141-102-c0f5de7302,Scarlet and Violet Black Star Promos,Noctowl,141/102,578812,Noctowl - 141 (Pokemon Center Exclusive),LINKED,141,1.00
+pkm-scarlet-and-violet-black-star-promos-142-102-f668bce565,Scarlet and Violet Black Star Promos,Victini ex,142/102,,,NO_CANDIDATE,142,
+pkm-scarlet-and-violet-black-star-promos-143-102-7fd3dc07e3,Scarlet and Violet Black Star Promos,Miraidon ex,143/102,593277,Miraidon ex - 143,LINKED,143,1.00
+pkm-scarlet-and-violet-black-star-promos-148-102-60c05f469a,Scarlet and Violet Black Star Promos,Miraidon,148/102,593282,Miraidon - 148,LINKED,148,1.00
+pkm-scarlet-and-violet-black-star-promos-149-102-f45e3eb4a9,Scarlet and Violet Black Star Promos,Pecharunt,149/102,562025,Pecharunt - 149,LINKED,149,1.00
+pkm-scarlet-and-violet-black-star-promos-150-102-2e07202f0f,Scarlet and Violet Black Star Promos,Paradise Resort,150/102,578146,Paradise Resort - 150 (World Championships 2024),LINKED,150,1.00
+pkm-scarlet-and-violet-black-star-promos-150-102-2e07202f0f,Scarlet and Violet Black Star Promos,Paradise Resort,150/102,583726,Paradise Resort - 150 (World Championships 2024) [Staff],SKIP_NAME_MISMATCH,150,0.33
+pkm-scarlet-and-violet-black-star-promos-151-102-99d96a23da,Scarlet and Violet Black Star Promos,Gouging Fire,151/102,594382,Gouging Fire - 151,LINKED,151,1.00
+pkm-scarlet-and-violet-black-star-promos-151-102-99d96a23da,Scarlet and Violet Black Star Promos,Gouging Fire,151/102,607013,Gouging Fire - 151 (Staff),LINKED,151,1.00
+pkm-scarlet-and-violet-black-star-promos-152-102-6c85839e11,Scarlet and Violet Black Star Promos,Chien-Pao,152/102,594383,Chien-Pao - 152,LINKED,152,1.00
+pkm-scarlet-and-violet-black-star-promos-152-102-6c85839e11,Scarlet and Violet Black Star Promos,Chien-Pao,152/102,607014,Chien-Pao - 152 (Staff),LINKED,152,1.00
+pkm-scarlet-and-violet-black-star-promos-153-102-2627941637,Scarlet and Violet Black Star Promos,Magneton,153/102,594385,Magneton - 153,LINKED,153,1.00
+pkm-scarlet-and-violet-black-star-promos-153-102-2627941637,Scarlet and Violet Black Star Promos,Magneton,153/102,607015,Magneton - 153 (Staff),LINKED,153,1.00
+pkm-scarlet-and-violet-black-star-promos-154-102-9e8ee4c990,Scarlet and Violet Black Star Promos,Indeedee,154/102,594388,Indeedee - 154,LINKED,154,1.00
+pkm-scarlet-and-violet-black-star-promos-154-102-9e8ee4c990,Scarlet and Violet Black Star Promos,Indeedee,154/102,607016,Indeedee - 154 (Staff),LINKED,154,1.00
+pkm-scarlet-and-violet-black-star-promos-155-102-1ac07a5028,Scarlet and Violet Black Star Promos,Wooper,155/102,594389,Wooper - 155,LINKED,155,1.00
+pkm-scarlet-and-violet-black-star-promos-156-102-41b6497605,Scarlet and Violet Black Star Promos,Quagsire,156/102,594403,Quagsire - 156,LINKED,156,1.00
+pkm-scarlet-and-violet-black-star-promos-157-102-72dae6a3a3,Scarlet and Violet Black Star Promos,Zapdos,157/102,594405,Zapdos - 157,LINKED,157,1.00
+pkm-scarlet-and-violet-black-star-promos-158-102-c68afa6108,Scarlet and Violet Black Star Promos,Pachirisu,158/102,594410,Pachirisu - 158,LINKED,158,1.00
+pkm-scarlet-and-violet-black-star-promos-159-102-a8524b738a,Scarlet and Violet Black Star Promos,Magneton,159/102,594386,Magneton - 159,LINKED,159,1.00
+pkm-scarlet-and-violet-black-star-promos-159-102-a8524b738a,Scarlet and Violet Black Star Promos,Magneton,159/102,594468,Magneton - 159 (Pokémon Center Exclusive),LINKED,159,1.00
+pkm-scarlet-and-violet-black-star-promos-160-102-64cb34b700,Scarlet and Violet Black Star Promos,Squawkabilly ex,160/102,587945,Squawkabilly ex - 160,LINKED,160,1.00
+pkm-scarlet-and-violet-black-star-promos-161-102-29ee939251,Scarlet and Violet Black Star Promos,Charizard ex,161/102,586831,Charizard ex - 161,LINKED,161,1.00
+pkm-scarlet-and-violet-black-star-promos-163-102-a3f1d6c1ce,Scarlet and Violet Black Star Promos,Cinderace ex,163/102,596420,Cinderace ex - 163,LINKED,163,1.00
+pkm-scarlet-and-violet-black-star-promos-164-102-ce5196119a,Scarlet and Violet Black Star Promos,Lapras ex,164/102,596421,Lapras ex - 164,LINKED,164,1.00
+pkm-scarlet-and-violet-black-star-promos-165-102-3791ccfd55,Scarlet and Violet Black Star Promos,Terapagos ex,165/102,596422,Terapagos ex - 165,LINKED,165,1.00
+pkm-wizards-black-star-promos-1-53-18c0742931,Wizards Black Star Promos,Pikachu,1/53,121772,Pikachu (1),SKIP_NAME_MISMATCH,1,0.50
+pkm-wizards-black-star-promos-1-53-18c0742931,Wizards Black Star Promos,Pikachu,1/53,88065,Pikachu (1) (Misprint),SKIP_NAME_MISMATCH,1,0.33
+pkm-wizards-black-star-promos-1-53-18c0742931,Wizards Black Star Promos,Pikachu,1/53,154998,Aerodactyl (Prerelease),SKIP_NAME_MISMATCH,1,0.00
+pkm-wizards-black-star-promos-1-53-18c0742931,Wizards Black Star Promos,Pikachu,1/53,154997,Clefable (Prerelease),SKIP_NAME_MISMATCH,1,0.00
+pkm-wizards-black-star-promos-2-53-d8a3f73e67,Wizards Black Star Promos,Electabuzz,2/53,85107,Electabuzz (Movie Promo),SKIP_NAME_MISMATCH,2,0.50
+pkm-wizards-black-star-promos-3-53-7ac3906f02,Wizards Black Star Promos,Mewtwo,3/53,87414,Mewtwo (Movie Promo),SKIP_NAME_MISMATCH,3,0.50
+pkm-wizards-black-star-promos-4-53-737085b8b0,Wizards Black Star Promos,Pikachu,4/53,88066,Pikachu (Movie Promo),SKIP_NAME_MISMATCH,4,0.50
+pkm-wizards-black-star-promos-5-53-58c037e548,Wizards Black Star Promos,Dragonite,5/53,84909,Dragonite (Movie Promo),SKIP_NAME_MISMATCH,5,0.50
+pkm-wizards-black-star-promos-8-53-3fc871e21c,Wizards Black Star Promos,Mew,8/53,607818,Mew - 8 (Glossy Finish),LINKED,8,1.00
+pkm-wizards-black-star-promos-8-53-3fc871e21c,Wizards Black Star Promos,Mew,8/53,87394,Mew (8),SKIP_NAME_MISMATCH,8,0.50
+pkm-wizards-black-star-promos-8-53-3fc871e21c,Wizards Black Star Promos,Mew,8/53,118775,Dark Gyarados (Prerelease),SKIP_NAME_MISMATCH,8,0.00
+pkm-wizards-black-star-promos-9-53-ce1740d88a,Wizards Black Star Promos,Mew,9/53,123445,Misty's Seadra (Prerelease),SKIP_NAME_MISMATCH,9,0.00
+pkm-wizards-black-star-promos-9-53-ce1740d88a,Wizards Black Star Promos,Mew,9/53,87395,Mew (9),SKIP_NAME_MISMATCH,9,0.50
+pkm-wizards-black-star-promos-12-53-487a66bd56,Wizards Black Star Promos,Mewtwo,12/53,87416,Mewtwo (12),SKIP_NAME_MISMATCH,12,0.50
+pkm-wizards-black-star-promos-14-53-89ae9fda53,Wizards Black Star Promos,Mewtwo,14/53,87417,Mewtwo (14),SKIP_NAME_MISMATCH,14,0.50
+pkm-wizards-black-star-promos-16-53-36a3e3917e,Wizards Black Star Promos,Computer Error,16/53,84414,Computer Error (Rocket's Secret Machine),SKIP_NAME_MISMATCH,16,0.33
+pkm-wizards-black-star-promos-22-53-764aa516f5,Wizards Black Star Promos,Articuno,22/53,83647,Articuno (22),SKIP_NAME_MISMATCH,22,0.50
+pkm-wizards-black-star-promos-26-53-3199aa00fc,Wizards Black Star Promos,Pikachu,26/53,88068,Pikachu (SNAP Promo),SKIP_NAME_MISMATCH,26,0.50
+pkm-wizards-black-star-promos-27-53-d53478c463,Wizards Black Star Promos,Pikachu,27/53,88069,Pikachu (27),SKIP_NAME_MISMATCH,27,0.50
+pkm-wizards-black-star-promos-47-53-1f53adfef0,Wizards Black Star Promos,Mew,47/53,87397,Mew (47),SKIP_NAME_MISMATCH,47,0.50
+pkm-wizards-black-star-promos-48-53-fa68227394,Wizards Black Star Promos,Articuno,48/53,83648,Articuno (48),SKIP_NAME_MISMATCH,48,0.50
+pkm-wizards-black-star-promos-51-53-eeaeae17bd,Wizards Black Star Promos,Rapidash,51/53,88575,Rapidash (51),SKIP_NAME_MISMATCH,51,0.50
+pkm-wizards-black-star-promos-51-53-eeaeae17bd,Wizards Black Star Promos,Rapidash,51/53,244347,Rapidash [Pokemon Center NY],SKIP_NAME_MISMATCH,51,0.25
+pkm-bw-black-star-promos-bw01-101-425906d511,BW Black Star Promos,Snivy,BW01/101,89377,Snivy - BW01,LINKED,bw1,1.00
+pkm-bw-black-star-promos-bw02-101-dee01b457f,BW Black Star Promos,Tepig,BW02/101,89881,Tepig (BW02),SKIP_NAME_MISMATCH,bw2,0.50
+pkm-bw-black-star-promos-bw03-101-f395159513,BW Black Star Promos,Oshawott,BW03/101,87892,Oshawott - BW03,LINKED,bw3,1.00
+pkm-bw-black-star-promos-bw004-101-ca7c195eaa,BW Black Star Promos,Reshiram,BW004/101,88705,Reshiram - BW004,LINKED,bw4,1.00
+pkm-bw-black-star-promos-bw005-101-4c1c5ee48d,BW Black Star Promos,Zekrom,BW005/101,90733,Zekrom - BW005,LINKED,bw5,1.00
+pkm-bw-black-star-promos-bw06-101-69da14f4ce,BW Black Star Promos,Snivy,BW06/101,89379,Snivy - BW06,LINKED,bw6,1.00
+pkm-bw-black-star-promos-bw07-101-b3f2800728,BW Black Star Promos,Tepig,BW07/101,89883,Tepig - BW07,LINKED,bw7,1.00
+pkm-bw-black-star-promos-bw08-101-42a037e8c1,BW Black Star Promos,Oshawott,BW08/101,87894,Oshawott - BW08,LINKED,bw8,1.00
+pkm-bw-black-star-promos-bw09-101-91b0b5979f,BW Black Star Promos,Zoroark,BW09/101,90751,Zoroark - BW09,LINKED,bw9,1.00
+pkm-bw-black-star-promos-bw10-101-476ad80900,BW Black Star Promos,Axew,BW10/101,83666,Axew - BW10,LINKED,bw10,1.00
+pkm-bw-black-star-promos-bw11-101-821c0cba76,BW Black Star Promos,Pansage,BW11/101,87934,Pansage - BW11,LINKED,bw11,1.00
+pkm-bw-black-star-promos-bw12-101-10ec07a6e1,BW Black Star Promos,Zorua,BW12/101,90760,Zorua - BW12,LINKED,bw12,1.00
+pkm-bw-black-star-promos-bw13-101-5bb2beda48,BW Black Star Promos,Minccino,BW13/101,87475,Minccino - BW13 (Cosmos Holo),SKIP_NAME_MISMATCH,bw13,0.50
+pkm-bw-black-star-promos-bw13-101-5bb2beda48,BW Black Star Promos,Minccino,BW13/101,96881,Minccino - BW13 (Cracked Ice Holo),SKIP_NAME_MISMATCH,bw13,0.25
+pkm-bw-black-star-promos-bw14-101-a487d30333,BW Black Star Promos,Pansage,BW14/101,87935,Pansage - BW14,LINKED,bw14,1.00
+pkm-bw-black-star-promos-bw15-101-4c22bea2c3,BW Black Star Promos,Pidove,BW15/101,88057,Pidove - BW15,LINKED,bw15,1.00
+pkm-bw-black-star-promos-bw16-101-bc2bfb5519,BW Black Star Promos,Axew,BW16/101,83667,Axew - BW16,LINKED,bw16,1.00
+pkm-bw-black-star-promos-bw17-101-ad2d5c41b2,BW Black Star Promos,Ducklett,BW17/101,84992,Ducklett - BW17,LINKED,bw17,1.00
+pkm-bw-black-star-promos-bw18-101-038ce70fda,BW Black Star Promos,Darumaka,BW18/101,84720,Darumaka - BW18,LINKED,bw18,1.00
+pkm-bw-black-star-promos-bw19-101-13c578b325,BW Black Star Promos,Zoroark,BW19/101,90752,Zoroark - BW19,LINKED,bw19,1.00
+pkm-bw-black-star-promos-bw20-101-6d9096ad87,BW Black Star Promos,Serperior,BW20/101,89071,Serperior - BW20,LINKED,bw20,1.00
+pkm-bw-black-star-promos-bw21-101-9bffe67f7a,BW Black Star Promos,Emboar,BW21/101,85183,Emboar - BW21,LINKED,bw21,1.00
+pkm-bw-black-star-promos-bw22-101-ebff63e1ae,BW Black Star Promos,Samurott,BW22/101,88909,Samurott - BW22,LINKED,bw22,1.00
+pkm-bw-black-star-promos-bw23-101-cca2f97da7,BW Black Star Promos,Reshiram,BW23/101,88706,Reshiram - BW23,LINKED,bw23,1.00
+pkm-bw-black-star-promos-bw24-101-edaf4719e5,BW Black Star Promos,Zekrom,BW24/101,90734,Zekrom - BW24,LINKED,bw24,1.00
+pkm-bw-black-star-promos-bw25-101-b23b4d7ced,BW Black Star Promos,Scraggy,BW25/101,88982,Scraggy - BW25 (Cosmos Holo),SKIP_NAME_MISMATCH,bw25,0.50
+pkm-bw-black-star-promos-bw25-101-b23b4d7ced,BW Black Star Promos,Scraggy,BW25/101,96882,Scraggy - BW25 (Cracked Ice Holo),SKIP_NAME_MISMATCH,bw25,0.25
+pkm-bw-black-star-promos-bw26-101-ecb8a1cc2b,BW Black Star Promos,Axew,BW26/101,83669,Axew - BW26,LINKED,bw26,1.00
+pkm-bw-black-star-promos-bw27-101-c9e5444e17,BW Black Star Promos,Litwick,BW27/101,86810,Litwick - BW27,LINKED,bw27,1.00
+pkm-bw-black-star-promos-bw28-101-046004a973,BW Black Star Promos,Tropical Beach,BW28/101,90048,Tropical Beach - BW28 (Worlds 11),SKIP_NAME_MISMATCH,bw28,0.40
+pkm-bw-black-star-promos-bw28-101-046004a973,BW Black Star Promos,Tropical Beach,BW28/101,96873,Tropical Beach - BW28 (Worlds 11) [Finalist],SKIP_NAME_MISMATCH,bw28,0.33
+pkm-bw-black-star-promos-bw28-101-046004a973,BW Black Star Promos,Tropical Beach,BW28/101,96871,Tropical Beach - BW28 (Worlds 11) [Quarter-Finalist],SKIP_NAME_MISMATCH,bw28,0.29
+pkm-bw-black-star-promos-bw28-101-046004a973,BW Black Star Promos,Tropical Beach,BW28/101,96872,Tropical Beach - BW28 (Worlds 11) [Semi Finalist],SKIP_NAME_MISMATCH,bw28,0.29
+pkm-bw-black-star-promos-bw28-101-046004a973,BW Black Star Promos,Tropical Beach,BW28/101,96874,Tropical Beach - BW28 (Worlds 11) [Staff],SKIP_NAME_MISMATCH,bw28,0.40
+pkm-bw-black-star-promos-bw28-101-046004a973,BW Black Star Promos,Tropical Beach,BW28/101,96870,Tropical Beach - BW28 (Worlds 11) [Top 16],SKIP_NAME_MISMATCH,bw28,0.29
+pkm-bw-black-star-promos-bw28-101-046004a973,BW Black Star Promos,Tropical Beach,BW28/101,96869,Tropical Beach - BW28 (Worlds 11) [Top 32],SKIP_NAME_MISMATCH,bw28,0.29
+pkm-bw-black-star-promos-bw29-101-e6ee3aa8f5,BW Black Star Promos,Victory Cup,BW29/101,90355,Victory Cup - BW29 (Battle Road Autumn 2011) [3rd Place],SKIP_NAME_MISMATCH,bw29,0.22
+pkm-bw-black-star-promos-bw29-101-e6ee3aa8f5,BW Black Star Promos,Victory Cup,BW29/101,96862,Victory Cup - BW29 (Battle Road Autumn 2012) [3rd Place],SKIP_NAME_MISMATCH,bw29,0.22
+pkm-bw-black-star-promos-bw29-101-e6ee3aa8f5,BW Black Star Promos,Victory Cup,BW29/101,96863,Victory Cup - BW29 (Battle Road Spring 2012) [3rd Place],SKIP_NAME_MISMATCH,bw29,0.22
+pkm-bw-black-star-promos-bw29-101-e6ee3aa8f5,BW Black Star Promos,Victory Cup,BW29/101,96868,Victory Cup - BW29 (Battle Road Spring 2013) [3rd Place],SKIP_NAME_MISMATCH,bw29,0.22
+pkm-bw-black-star-promos-bw30-101-ff68752185,BW Black Star Promos,Victory Cup,BW30/101,90354,Victory Cup - BW30 (Battle Road Autumn 2011) [2nd Place],SKIP_NAME_MISMATCH,bw30,0.22
+pkm-bw-black-star-promos-bw30-101-ff68752185,BW Black Star Promos,Victory Cup,BW30/101,96861,Victory Cup - BW30 (Battle Road Autumn 2012) [2nd Place],SKIP_NAME_MISMATCH,bw30,0.22
+pkm-bw-black-star-promos-bw30-101-ff68752185,BW Black Star Promos,Victory Cup,BW30/101,96864,Victory Cup - BW30 (Battle Road Spring 2012) [2nd Place],SKIP_NAME_MISMATCH,bw30,0.22
+pkm-bw-black-star-promos-bw30-101-ff68752185,BW Black Star Promos,Victory Cup,BW30/101,96867,Victory Cup - BW30 (Battle Road Spring 2013) [2nd Place],SKIP_NAME_MISMATCH,bw30,0.22
+pkm-bw-black-star-promos-bw31-101-a7fe090f95,BW Black Star Promos,Victory Cup,BW31/101,90353,Victory Cup - BW31 (Battle Road Autumn 2011) [1st Place],SKIP_NAME_MISMATCH,bw31,0.22
+pkm-bw-black-star-promos-bw31-101-a7fe090f95,BW Black Star Promos,Victory Cup,BW31/101,96860,Victory Cup - BW31 (Battle Road Autumn 2012) [1st Place],SKIP_NAME_MISMATCH,bw31,0.22
+pkm-bw-black-star-promos-bw31-101-a7fe090f95,BW Black Star Promos,Victory Cup,BW31/101,96865,Victory Cup - BW31 (Battle Road Spring 2012) [1st Place],SKIP_NAME_MISMATCH,bw31,0.22
+pkm-bw-black-star-promos-bw31-101-a7fe090f95,BW Black Star Promos,Victory Cup,BW31/101,96866,Victory Cup - BW31 (Battle Road Spring 2013) [1st Place],SKIP_NAME_MISMATCH,bw31,0.22
+pkm-bw-black-star-promos-bw32-101-b0c13247ee,BW Black Star Promos,Victini,BW32/101,,,NO_CANDIDATE,bw32,
+pkm-bw-black-star-promos-bw33-101-03e552e4b8,BW Black Star Promos,Riolu,BW33/101,96883,Riolu - BW33,LINKED,bw33,1.00
+pkm-bw-black-star-promos-bw33-101-03e552e4b8,BW Black Star Promos,Riolu,BW33/101,88760,Riolu - BW33 (Cosmos Holo),SKIP_NAME_MISMATCH,bw33,0.50
+pkm-bw-black-star-promos-bw34-101-8afc66db44,BW Black Star Promos,Luxio,BW34/101,86945,Luxio - BW34 (Cosmos Holo),SKIP_NAME_MISMATCH,bw34,0.50
+pkm-bw-black-star-promos-bw34-101-8afc66db44,BW Black Star Promos,Luxio,BW34/101,96884,Luxio - BW34 (Cracked Ice Holo),SKIP_NAME_MISMATCH,bw34,0.25
+pkm-bw-black-star-promos-bw35-101-29a2c2018e,BW Black Star Promos,Meowth,BW35/101,87327,Meowth - BW35,LINKED,bw35,1.00
+pkm-bw-black-star-promos-bw36-101-6f6ff058a5,BW Black Star Promos,Reshiram-EX,BW36/101,88714,Reshiram EX - BW36,LINKED,bw36,1.00
+pkm-bw-black-star-promos-bw37-101-3589f847dc,BW Black Star Promos,Kyurem-EX,BW37/101,86567,Kyurem EX - BW37,LINKED,bw37,1.00
+pkm-bw-black-star-promos-bw38-101-812978cd2b,BW Black Star Promos,Zekrom-EX,BW38/101,90741,Zekrom EX - BW38,LINKED,bw38,1.00
+pkm-bw-black-star-promos-bw39-101-2ec0b5c697,BW Black Star Promos,Battle City,BW39/101,83739,Battle City - BW39,LINKED,bw39,1.00
+pkm-bw-black-star-promos-bw40-101-caa113e7f8,BW Black Star Promos,Volcarona,BW40/101,90403,Volcarona - BW40 (Prerelease),SKIP_NAME_MISMATCH,bw40,0.50
+pkm-bw-black-star-promos-bw40-101-caa113e7f8,BW Black Star Promos,Volcarona,BW40/101,97093,Volcarona - BW40 (Prerelease) [Staff],SKIP_NAME_MISMATCH,bw40,0.50
+pkm-bw-black-star-promos-bw41-101-f37440f72c,BW Black Star Promos,Thundurus,BW41/101,89904,Thundurus - BW41,LINKED,bw41,1.00
+pkm-bw-black-star-promos-bw42-101-4141fc2eba,BW Black Star Promos,Tornadus,BW42/101,89975,Tornadus - BW42,LINKED,bw42,1.00
+pkm-bw-black-star-promos-bw43-101-74da346e98,BW Black Star Promos,Landorus,BW43/101,86592,Landorus - BW43,LINKED,bw43,1.00
+pkm-bw-black-star-promos-bw44-101-180dcc58c7,BW Black Star Promos,Kyurem,BW44/101,86562,Kyurem - BW44,LINKED,bw44,1.00
+pkm-bw-black-star-promos-bw45-101-93f44c2d9a,BW Black Star Promos,Mewtwo-EX,BW45/101,87430,Mewtwo EX - BW45,LINKED,bw45,1.00
+pkm-bw-black-star-promos-bw46-101-83fc4f867d,BW Black Star Promos,Darkrai-EX,BW46/101,84707,Darkrai EX - BW46,LINKED,bw46,1.00
+pkm-bw-black-star-promos-bw47-101-87d3d99057,BW Black Star Promos,Rayquaza-EX,BW47/101,88646,Rayquaza EX -BW47,LINKED,bw47,1.00
+pkm-bw-black-star-promos-bw48-101-1e7b647233,BW Black Star Promos,Altaria,BW48/101,83520,Altaria - BW48 (Prerelease),SKIP_NAME_MISMATCH,bw48,0.50
+pkm-bw-black-star-promos-bw48-101-1e7b647233,BW Black Star Promos,Altaria,BW48/101,96566,Altaria - BW48 (Prerelease) [Staff],SKIP_NAME_MISMATCH,bw48,0.50
+pkm-bw-black-star-promos-bw49-101-44047ffdea,BW Black Star Promos,Lilligant,BW49/101,86795,Lilligant - BW49,LINKED,bw49,1.00
+pkm-bw-black-star-promos-bw50-101-aefcbb9233,BW Black Star Promos,Tropical Beach,BW50/101,90049,Tropical Beach - BW50 (Worlds 12),SKIP_NAME_MISMATCH,bw50,0.40
+pkm-bw-black-star-promos-bw50-101-aefcbb9233,BW Black Star Promos,Tropical Beach,BW50/101,96879,Tropical Beach - BW50 (Worlds 12) [Finalist],SKIP_NAME_MISMATCH,bw50,0.33
+pkm-bw-black-star-promos-bw50-101-aefcbb9233,BW Black Star Promos,Tropical Beach,BW50/101,96877,Tropical Beach - BW50 (Worlds 12) [Quarter-Finalist],SKIP_NAME_MISMATCH,bw50,0.29
+pkm-bw-black-star-promos-bw50-101-aefcbb9233,BW Black Star Promos,Tropical Beach,BW50/101,96878,Tropical Beach - BW50 (Worlds 12) [Semi-Finalist],SKIP_NAME_MISMATCH,bw50,0.29
+pkm-bw-black-star-promos-bw50-101-aefcbb9233,BW Black Star Promos,Tropical Beach,BW50/101,96880,Tropical Beach - BW50 (Worlds 12) [Staff],SKIP_NAME_MISMATCH,bw50,0.40
+pkm-bw-black-star-promos-bw50-101-aefcbb9233,BW Black Star Promos,Tropical Beach,BW50/101,96876,Tropical Beach - BW50 (Worlds 12) [Top 16],SKIP_NAME_MISMATCH,bw50,0.29
+pkm-bw-black-star-promos-bw50-101-aefcbb9233,BW Black Star Promos,Tropical Beach,BW50/101,96875,Tropical Beach - BW50 (Worlds 12) [Top 32],SKIP_NAME_MISMATCH,bw50,0.29
+pkm-bw-black-star-promos-bw51-101-2d840f7412,BW Black Star Promos,Crobat,BW51/101,84492,Crobat - BW51 (Team Plasma) (Prerelease),SKIP_NAME_MISMATCH,bw51,0.25
+pkm-bw-black-star-promos-bw51-101-2d840f7412,BW Black Star Promos,Crobat,BW51/101,96573,Crobat - BW51 (Team Plasma) (Prerelease) [Staff],SKIP_NAME_MISMATCH,bw51,0.25
+pkm-bw-black-star-promos-bw52-101-7d10915d07,BW Black Star Promos,Lillipup,BW52/101,86801,Lillipup - BW52,LINKED,bw52,1.00
+pkm-bw-black-star-promos-bw53-101-2a52ceba6f,BW Black Star Promos,Flygon,BW53/101,85528,Flygon - BW53 (Prerelease),SKIP_NAME_MISMATCH,bw53,0.50
+pkm-bw-black-star-promos-bw53-101-2a52ceba6f,BW Black Star Promos,Flygon,BW53/101,96574,Flygon - BW53 (Prerelease) [Staff],SKIP_NAME_MISMATCH,bw53,0.50
+pkm-bw-black-star-promos-bw54-101-7c4c2e81a7,BW Black Star Promos,Pikachu,BW54/101,202379,Pikachu - BW54,LINKED,bw54,1.00
+pkm-bw-black-star-promos-bw55-101-faca588acd,BW Black Star Promos,Elgyem,BW55/101,85178,Elgyem - BW55,LINKED,bw55,1.00
+pkm-bw-black-star-promos-bw56-101-7f990e1ae8,BW Black Star Promos,Empoleon,BW56/101,85202,Empoleon - BW56,LINKED,bw56,1.00
+pkm-bw-black-star-promos-bw57-101-5630593c04,BW Black Star Promos,Haxorus,BW57/101,86035,Haxorus - BW57,LINKED,bw57,1.00
+pkm-bw-black-star-promos-bw58-101-a5850759a2,BW Black Star Promos,Black Kyurem,BW58/101,83852,Black Kyurem - BW58,LINKED,bw58,1.00
+pkm-bw-black-star-promos-bw59-101-12746f8ac6,BW Black Star Promos,White Kyurem,BW59/101,90587,White Kyurem - BW59,LINKED,bw59,1.00
+pkm-bw-black-star-promos-bw60-101-fddb3bc596,BW Black Star Promos,Keldeo,BW60/101,96885,Keldeo - BW60,LINKED,bw60,1.00
+pkm-bw-black-star-promos-bw61-101-5ec052370a,BW Black Star Promos,Keldeo-EX,BW61/101,86437,Keldeo EX - BW61,LINKED,bw61,1.00
+pkm-bw-black-star-promos-bw64-101-4a18382d5d,BW Black Star Promos,Drifblim,BW64/101,84950,Drifblim - BW64,LINKED,bw64,1.00
+pkm-bw-black-star-promos-bw65-101-5788e9467c,BW Black Star Promos,Jigglypuff,BW65/101,86321,Jigglypuff - BW65,LINKED,bw65,1.00
+pkm-bw-black-star-promos-bw66-101-c3f3d8dfa9,BW Black Star Promos,Ninetales,BW66/101,87779,Ninetales - BW66,LINKED,bw66,1.00
+pkm-bw-black-star-promos-bw67-101-80c03c2cd8,BW Black Star Promos,Ampharos,BW67/101,83548,Ampharos - BW67,LINKED,bw67,1.00
+pkm-bw-black-star-promos-bw68-101-0651a42d48,BW Black Star Promos,Meloetta,BW68/101,87300,Meloetta - BW68,LINKED,bw68,1.00
+pkm-bw-black-star-promos-bw69-101-cafdc7859a,BW Black Star Promos,Meloetta,BW69/101,87301,Meloetta - BW69,LINKED,bw69,1.00
+pkm-bw-black-star-promos-bw70-101-661d146188,BW Black Star Promos,Virizion,BW70/101,90389,Virizion - BW70,LINKED,bw70,1.00
+pkm-bw-black-star-promos-bw71-101-bde7d6a0b6,BW Black Star Promos,Terrakion,BW71/101,89889,Terrakion - BW71,LINKED,bw71,1.00
+pkm-bw-black-star-promos-bw72-101-05ab409577,BW Black Star Promos,Cobalion,BW72/101,84379,Cobalion - BW72,LINKED,bw72,1.00
+pkm-bw-black-star-promos-bw73-101-1149340393,BW Black Star Promos,Darkrai,BW73/101,84703,Darkrai (Team Plasma) - BW73,SKIP_NAME_MISMATCH,bw73,0.33
+pkm-bw-black-star-promos-bw74-101-bb7e3d9d05,BW Black Star Promos,Giratina,BW74/101,,,NO_CANDIDATE,bw74,
+pkm-bw-black-star-promos-bw75-101-bf34016bc4,BW Black Star Promos,Metagross,BW75/101,87344,Metagross - BW75 (Team Plasma) (Prerelease),SKIP_NAME_MISMATCH,bw75,0.25
+pkm-bw-black-star-promos-bw75-101-bf34016bc4,BW Black Star Promos,Metagross,BW75/101,97090,Metagross - BW75 (Team Plasma) (Prerelease) [Staff],SKIP_NAME_MISMATCH,bw75,0.25
+pkm-bw-black-star-promos-bw76-101-33b1460de2,BW Black Star Promos,Electrode,BW76/101,85164,Electrode (Team Plasma) - BW76,SKIP_NAME_MISMATCH,bw76,0.33
+pkm-bw-black-star-promos-bw77-101-bf2a714ae1,BW Black Star Promos,Pikachu,BW77/101,,,NO_CANDIDATE,bw77,
+pkm-bw-black-star-promos-bw78-101-366c9fd88f,BW Black Star Promos,Raichu,BW78/101,,,NO_CANDIDATE,bw78,
+pkm-bw-black-star-promos-bw79-101-9c087fcae4,BW Black Star Promos,Landorus,BW79/101,86594,Landorus (Team Plasma) - BW79,SKIP_NAME_MISMATCH,bw79,0.33
+pkm-bw-black-star-promos-bw80-101-a4801075ad,BW Black Star Promos,Druddigon,BW80/101,84983,Druddigon (Team Plasma) - BW80,SKIP_NAME_MISMATCH,bw80,0.33
+pkm-bw-black-star-promos-bw80-101-a4801075ad,BW Black Star Promos,Druddigon,BW80/101,242032,Druddigon (Team Plasma) - BW80 (Cosmos Holo),SKIP_NAME_MISMATCH,bw80,0.25
+pkm-bw-black-star-promos-bw81-101-1b90ce38c5,BW Black Star Promos,Thundurus-EX,BW81/101,89908,Thundurus EX (Team Plasma) - BW81,SKIP_NAME_MISMATCH,bw81,0.50
+pkm-bw-black-star-promos-bw82-101-0db073f35a,BW Black Star Promos,Deoxys-EX,BW82/101,84776,Deoxys EX (Team Plasma) - BW82,SKIP_NAME_MISMATCH,bw82,0.50
+pkm-bw-black-star-promos-bw83-101-8232d9e1fe,BW Black Star Promos,Lugia-EX,BW83/101,86914,Lugia EX (Team Plasma) - BW83,SKIP_NAME_MISMATCH,bw83,0.50
+pkm-bw-black-star-promos-bw84-101-6e9f154e0c,BW Black Star Promos,Porygon-Z,BW84/101,88318,Porygon-Z (Team Plasma) - BW84 (Prerelease),SKIP_NAME_MISMATCH,bw84,0.40
+pkm-bw-black-star-promos-bw84-101-6e9f154e0c,BW Black Star Promos,Porygon-Z,BW84/101,97091,Porygon-Z (Team Plasma) - BW84 (Prerelease) [Staff],SKIP_NAME_MISMATCH,bw84,0.40
+pkm-bw-black-star-promos-bw85-101-5f842a615f,BW Black Star Promos,Lucario,BW85/101,86885,Lucario - BW85,LINKED,bw85,1.00
+pkm-bw-black-star-promos-bw86-101-465400cf66,BW Black Star Promos,Genesect,BW86/101,85664,Genesect (Team Plasma) - BW86,SKIP_NAME_MISMATCH,bw86,0.33
+pkm-bw-black-star-promos-bw87-101-a5a6fdd4c7,BW Black Star Promos,Leafeon,BW87/101,91600,Leafeon - BW87,LINKED,bw87,1.00
+pkm-bw-black-star-promos-bw88-101-04cb7e8667,BW Black Star Promos,Flareon,BW88/101,91599,Flareon - BW88,LINKED,bw88,1.00
+pkm-bw-black-star-promos-bw89-101-dd311125fc,BW Black Star Promos,Vaporeon,BW89/101,90289,Vaporeon - BW89,LINKED,bw89,1.00
+pkm-bw-black-star-promos-bw90-101-1d3c8572f0,BW Black Star Promos,Glaceon,BW90/101,85748,Glaceon - BW90,LINKED,bw90,1.00
+pkm-bw-black-star-promos-bw91-101-9e1dabb9a5,BW Black Star Promos,Jolteon,BW91/101,86348,Jolteon - BW91,LINKED,bw91,1.00
+pkm-bw-black-star-promos-bw92-101-4160237b74,BW Black Star Promos,Espeon,BW92/101,85326,Espeon - BW92,LINKED,bw92,1.00
+pkm-bw-black-star-promos-bw93-101-b0376e87bb,BW Black Star Promos,Umbreon,BW93/101,90150,Umbreon - BW93,LINKED,bw93,1.00
+pkm-bw-black-star-promos-bw94-101-70e7bab5bb,BW Black Star Promos,Eevee,BW94/101,85095,Eevee - BW94,LINKED,bw94,1.00
+pkm-bw-black-star-promos-bw95-101-d264c58fb9,BW Black Star Promos,Champions Festival,BW95/101,84162,Champions Festival - BW95 (Worlds 13),SKIP_NAME_MISMATCH,bw95,0.40
+pkm-bw-black-star-promos-bw95-101-d264c58fb9,BW Black Star Promos,Champions Festival,BW95/101,97089,Champions Festival - BW95 (Worlds 13) [Champion],SKIP_NAME_MISMATCH,bw95,0.33
+pkm-bw-black-star-promos-bw95-101-d264c58fb9,BW Black Star Promos,Champions Festival,BW95/101,96571,Champions Festival - BW95 (Worlds 13) [Finalist],SKIP_NAME_MISMATCH,bw95,0.33
+pkm-bw-black-star-promos-bw95-101-d264c58fb9,BW Black Star Promos,Champions Festival,BW95/101,96569,Champions Festival - BW95 (Worlds 13) [Quarter-Finalist],SKIP_NAME_MISMATCH,bw95,0.29
+pkm-bw-black-star-promos-bw95-101-d264c58fb9,BW Black Star Promos,Champions Festival,BW95/101,96570,Champions Festival - BW95 (Worlds 13) [Semi-Finalist],SKIP_NAME_MISMATCH,bw95,0.29
+pkm-bw-black-star-promos-bw95-101-d264c58fb9,BW Black Star Promos,Champions Festival,BW95/101,96572,Champions Festival - BW95 (Worlds 13) [Staff],SKIP_NAME_MISMATCH,bw95,0.40
+pkm-bw-black-star-promos-bw95-101-d264c58fb9,BW Black Star Promos,Champions Festival,BW95/101,96568,Champions Festival - BW95 (Worlds 13) [Top 16],SKIP_NAME_MISMATCH,bw95,0.29
+pkm-bw-black-star-promos-bw95-101-d264c58fb9,BW Black Star Promos,Champions Festival,BW95/101,96567,Champions Festival - BW95 (Worlds 13) [Top Thirty-Two],SKIP_NAME_MISMATCH,bw95,0.25
+pkm-bw-black-star-promos-bw96-101-2ed74c0772,BW Black Star Promos,Tornadus-EX,BW96/101,89979,Tornadus EX - BW96 (Prerelease),SKIP_NAME_MISMATCH,bw96,0.67
+pkm-bw-black-star-promos-bw96-101-2ed74c0772,BW Black Star Promos,Tornadus-EX,BW96/101,97092,Tornadus EX - BW96 (Prerelease) [Staff],SKIP_NAME_MISMATCH,bw96,0.67
+pkm-bw-black-star-promos-bw97-101-180d5d105a,BW Black Star Promos,Eevee,BW97/101,85096,Eevee - BW97,LINKED,bw97,1.00
+pkm-bw-black-star-promos-bw98-101-a3065fdaea,BW Black Star Promos,Mew,BW98/101,87406,Mew - BW98,LINKED,bw98,1.00
+pkm-bw-black-star-promos-bw99-101-053f53ab31,BW Black Star Promos,Genesect,BW99/101,85663,Genesect - BW99,LINKED,bw99,1.00
+pkm-bw-black-star-promos-bw100-101-8bf1fbbe17,BW Black Star Promos,N,BW100/101,87677,N (Supporter) - BW100,SKIP_NAME_MISMATCH,bw100,0.50
+pkm-bw-black-star-promos-bw101-101-15db3b0559,BW Black Star Promos,Genesect,BW101/101,108421,Genesect - BW101,LINKED,bw101,1.00
+pkm-dp-black-star-promos-dp01-56-47767b9da3,DP Black Star Promos,Turtwig,DP01/56,90075,Turtwig - DP01,LINKED,dp1,1.00
+pkm-dp-black-star-promos-dp02-56-21fc4f10dc,DP Black Star Promos,Chimchar,DP02/56,84286,Chimchar - DP02,LINKED,dp2,1.00
+pkm-dp-black-star-promos-dp03-56-7727ea2f83,DP Black Star Promos,Piplup,DP03/56,88147,Piplup - DP03,LINKED,dp3,1.00
+pkm-dp-black-star-promos-dp04-56-b84c56a873,DP Black Star Promos,Pachirisu,DP04/56,87901,Pachirisu - DP04,LINKED,dp4,1.00
+pkm-dp-black-star-promos-dp05-56-6b0df1a7b6,DP Black Star Promos,Tropical Wind,DP05/56,90054,Tropical Wind - DP05 (Worlds 07),SKIP_NAME_MISMATCH,dp5,0.40
+pkm-dp-black-star-promos-dp05-56-6b0df1a7b6,DP Black Star Promos,Tropical Wind,DP05/56,97810,Tropical Winds - DP05 (Worlds 07) [Staff],SKIP_NAME_MISMATCH,dp5,0.20
+pkm-dp-black-star-promos-dp06-56-dfe95d4026,DP Black Star Promos,Buneary,DP06/56,84041,Buneary - DP06,LINKED,dp6,1.00
+pkm-dp-black-star-promos-dp07-56-3960049a42,DP Black Star Promos,Cranidos,DP07/56,84459,Cranidos - DP07,LINKED,dp7,1.00
+pkm-dp-black-star-promos-dp08-56-2feff79c5d,DP Black Star Promos,Shieldon,DP08/56,89150,Shieldon - DP08,LINKED,dp8,1.00
+pkm-dp-black-star-promos-dp13-56-834545b11a,DP Black Star Promos,Buizel,DP13/56,84019,Buizel - DP13,LINKED,dp13,1.00
+pkm-dp-black-star-promos-dp14-56-1e458d6dd6,DP Black Star Promos,Chatot,DP14/56,84241,Chatot - DP14,LINKED,dp14,1.00
+pkm-dp-black-star-promos-dp15-56-992e80a090,DP Black Star Promos,Shinx,DP15/56,89175,Shinx - DP15,LINKED,dp15,1.00
+pkm-dp-black-star-promos-dp16-56-51a33df56b,DP Black Star Promos,Pikachu,DP16/56,88089,Pikachu - DP16,LINKED,dp16,1.00
+pkm-dp-black-star-promos-dp20-56-d3294e7b40,DP Black Star Promos,Magmortar,DP20/56,87057,Magmortar - DP20,LINKED,dp20,1.00
+pkm-dp-black-star-promos-dp21-56-030ae46356,DP Black Star Promos,Raichu,DP21/56,88512,Raichu - DP21,LINKED,dp21,1.00
+pkm-dp-black-star-promos-dp22-56-265c78d00e,DP Black Star Promos,Mime Jr.,DP22/56,87470,Mime Jr. - DP22,LINKED,dp22,1.00
+pkm-dp-black-star-promos-dp23-56-75442f0f70,DP Black Star Promos,Glameow,DP23/56,85761,Glameow - DP23,LINKED,dp23,1.00
+pkm-dp-black-star-promos-dp24-56-1a4f1a9c34,DP Black Star Promos,Darkrai,DP24/56,84701,Darkrai - DP24,LINKED,dp24,1.00
+pkm-dp-black-star-promos-dp25-56-b6125a188a,DP Black Star Promos,Tropical Wind,DP25/56,90055,Tropical Wind - DP25 (Worlds 08),SKIP_NAME_MISMATCH,dp25,0.40
+pkm-dp-black-star-promos-dp25-56-b6125a188a,DP Black Star Promos,Tropical Wind,DP25/56,97811,Tropical Wind - DP25 (Worlds 08) [Staff],SKIP_NAME_MISMATCH,dp25,0.40
+pkm-dp-black-star-promos-dp26-56-f9213376f0,DP Black Star Promos,Dialga,DP26/56,84801,Dialga - DP26,LINKED,dp26,1.00
+pkm-dp-black-star-promos-dp27-56-d079100c8d,DP Black Star Promos,Palkia,DP27/56,87909,Palkia - DP27,LINKED,dp27,1.00
+pkm-dp-black-star-promos-dp32-56-45a4bb7712,DP Black Star Promos,Magnezone,DP32/56,87116,Magnezone - DP32,LINKED,dp32,1.00
+pkm-dp-black-star-promos-dp33-56-85158431fe,DP Black Star Promos,Dusknoir,DP33/56,85039,Dusknoir - DP33,LINKED,dp33,1.00
+pkm-dp-black-star-promos-dp34-56-f978d35aec,DP Black Star Promos,Drifblim,DP34/56,84946,Drifblim - DP34,LINKED,dp34,1.00
+pkm-dp-black-star-promos-dp35-56-eff4bbe942,DP Black Star Promos,Porygon-Z,DP35/56,88316,Porygon-Z - DP35,LINKED,dp35,1.00
+pkm-dp-black-star-promos-dp36-56-c83357696a,DP Black Star Promos,Gliscor,DP36/56,85773,Gliscor - DP36,LINKED,dp36,1.00
+pkm-dp-black-star-promos-dp38-56-c107c93b2d,DP Black Star Promos,Giratina LV.X,DP38/56,,,NO_CANDIDATE,dp38,
+pkm-dp-black-star-promos-dp40-56-df22ee1527,DP Black Star Promos,Regigigas,DP40/56,88665,Regigigas - DP40,LINKED,dp40,1.00
+pkm-dp-black-star-promos-dp41-56-f4a094aa9c,DP Black Star Promos,Toxicroak G,DP41/56,90013,Toxicroak G - DP41,LINKED,dp41,1.00
+pkm-dp-black-star-promos-dp42-56-2bed12cf9d,DP Black Star Promos,Carnivine G,DP42/56,84108,Carnivine G - DP42,LINKED,dp42,1.00
+pkm-dp-black-star-promos-dp43-56-d16457e577,DP Black Star Promos,Probopass G,DP43/56,88380,Probopass G - DP43,LINKED,dp43,1.00
+pkm-dp-black-star-promos-dp44-56-9c01e9d3b0,DP Black Star Promos,Magnezone,DP44/56,87117,Magnezone - DP44,LINKED,dp44,1.00
+pkm-dp-black-star-promos-dp48-56-3c0b7522da,DP Black Star Promos,Tropical Wind,DP48/56,90056,Tropical Wind - DP48 (Worlds 09),SKIP_NAME_MISMATCH,dp48,0.40
+pkm-dp-black-star-promos-dp48-56-3c0b7522da,DP Black Star Promos,Tropical Wind,DP48/56,97812,Tropical Wind - DP48 (Worlds 09) [Staff],SKIP_NAME_MISMATCH,dp48,0.40
+pkm-dp-black-star-promos-dp49-56-d764edcbb3,DP Black Star Promos,Dialga,DP49/56,84805,Dialga - DP49,LINKED,dp49,1.00
+pkm-dp-black-star-promos-dp50-56-471206d047,DP Black Star Promos,Arceus,DP50/56,83601,Arceus - DP50,LINKED,dp50,1.00
+pkm-dp-black-star-promos-dp51-56-e6cc36d168,DP Black Star Promos,Cresselia,DP51/56,84469,Cresselia - DP51,LINKED,dp51,1.00
+pkm-dp-black-star-promos-dp52-56-7083257a28,DP Black Star Promos,Darkrai,DP52/56,84702,Darkrai - DP52,LINKED,dp52,1.00
+pkm-dp-black-star-promos-dp54-56-e162fb9e9d,DP Black Star Promos,Beginning Door,DP54/56,,,NO_CANDIDATE,dp54,
+pkm-dp-black-star-promos-dp55-56-eb9556464b,DP Black Star Promos,Ultimate Zone,DP55/56,,,NO_CANDIDATE,dp55,
+pkm-hgss-black-star-promos-hgss01-25-f4ff189248,HGSS Black Star Promos,Ho-Oh,HGSS01/25,86125,Ho-Oh - HGSS01,LINKED,hgss1,1.00
+pkm-hgss-black-star-promos-hgss02-25-c2564afe5f,HGSS Black Star Promos,Lugia,HGSS02/25,86909,Lugia - HGSS02,LINKED,hgss2,1.00
+pkm-hgss-black-star-promos-hgss03-25-3f25b83f80,HGSS Black Star Promos,Pikachu,HGSS03/25,88098,Pikachu - HGSS03,LINKED,hgss3,1.00
+pkm-hgss-black-star-promos-hgss04-25-78896fdfa9,HGSS Black Star Promos,Wobbuffet,HGSS04/25,90622,Wobbuffet - HGSS04,LINKED,hgss4,1.00
+pkm-hgss-black-star-promos-hgss05-25-d0dc54bdd9,HGSS Black Star Promos,Hoothoot,HGSS05/25,86174,Hoothoot - HGSS05,LINKED,hgss5,1.00
+pkm-hgss-black-star-promos-hgss06-25-cb8cfac0c9,HGSS Black Star Promos,Noctowl,HGSS06/25,87795,Noctowl - HGSS06,LINKED,hgss6,1.00
+pkm-hgss-black-star-promos-hgss07-25-e51f75fdc5,HGSS Black Star Promos,Feraligatr,HGSS07/25,85421,Feraligatr (Prime) - HGSS07,SKIP_NAME_MISMATCH,hgss7,0.50
+pkm-hgss-black-star-promos-hgss08-25-08bf732ca6,HGSS Black Star Promos,Meganium,HGSS08/25,87295,Meganium (Prime) - HGSS08,SKIP_NAME_MISMATCH,hgss8,0.50
+pkm-hgss-black-star-promos-hgss09-25-20c8b48f6e,HGSS Black Star Promos,Typhlosion,HGSS09/25,90108,Typhlosion (Prime) - HGSS09,SKIP_NAME_MISMATCH,hgss9,0.50
+pkm-hgss-black-star-promos-hgss10-25-3d147e4e7d,HGSS Black Star Promos,Latias,HGSS10/25,86653,Latias - HGSS10 (Cosmos Holo),SKIP_NAME_MISMATCH,hgss10,0.50
+pkm-hgss-black-star-promos-hgss10-25-3d147e4e7d,HGSS Black Star Promos,Latias,HGSS10/25,97705,Latias - HGSS10 (Cracked Ice Holo),SKIP_NAME_MISMATCH,hgss10,0.25
+pkm-hgss-black-star-promos-hgss11-25-3e342243be,HGSS Black Star Promos,Latios,HGSS11/25,86667,Latios - HGSS11 (Cosmos Holo),SKIP_NAME_MISMATCH,hgss11,0.50
+pkm-hgss-black-star-promos-hgss11-25-3e342243be,HGSS Black Star Promos,Latios,HGSS11/25,97706,Latios - HGSS11 (Cracked Ice Holo),SKIP_NAME_MISMATCH,hgss11,0.25
+pkm-hgss-black-star-promos-hgss12-25-0be63553d5,HGSS Black Star Promos,Cleffa,HGSS12/25,84368,Cleffa - HGSS12,LINKED,hgss12,1.00
+pkm-hgss-black-star-promos-hgss13-25-b8248e0e9d,HGSS Black Star Promos,Smoochum,HGSS13/25,89364,Smoochum - HGSS13,LINKED,hgss13,1.00
+pkm-hgss-black-star-promos-hgss14-25-d39968f214,HGSS Black Star Promos,Lapras,HGSS14/25,86621,Lapras - HGSS14,LINKED,hgss14,1.00
+pkm-hgss-black-star-promos-hgss15-25-0571fc3dee,HGSS Black Star Promos,Shuckle,HGSS15/25,89193,Shuckle - HGSS15,LINKED,hgss15,1.00
+pkm-hgss-black-star-promos-hgss16-25-9e093d1be2,HGSS Black Star Promos,Plusle,HGSS16/25,88172,Plusle - HGSS16,LINKED,hgss16,1.00
+pkm-hgss-black-star-promos-hgss17-25-237be50268,HGSS Black Star Promos,Minun,HGSS17/25,87492,Minun - HGSS17,LINKED,hgss17,1.00
+pkm-hgss-black-star-promos-hgss18-25-fb9a831f78,HGSS Black Star Promos,Tropical Tidal Wave,HGSS18/25,97704,Tropical Tidal Wave - HGSS18 (Worlds 10) [Finalist],SKIP_NAME_MISMATCH,hgss18,0.43
+pkm-hgss-black-star-promos-hgss18-25-fb9a831f78,HGSS Black Star Promos,Tropical Tidal Wave,HGSS18/25,90052,Tropical Tidal Wave - HGSS18 (Worlds 10) [Participation],SKIP_NAME_MISMATCH,hgss18,0.43
+pkm-hgss-black-star-promos-hgss18-25-fb9a831f78,HGSS Black Star Promos,Tropical Tidal Wave,HGSS18/25,97701,Tropical Tidal Wave - HGSS18 (Worlds 10) [Quarter-Finalist],SKIP_NAME_MISMATCH,hgss18,0.38
+pkm-hgss-black-star-promos-hgss18-25-fb9a831f78,HGSS Black Star Promos,Tropical Tidal Wave,HGSS18/25,97702,Tropical Tidal Wave - HGSS18 (Worlds 10) [Semi-Finalist],SKIP_NAME_MISMATCH,hgss18,0.38
+pkm-hgss-black-star-promos-hgss18-25-fb9a831f78,HGSS Black Star Promos,Tropical Tidal Wave,HGSS18/25,97703,Tropical Tidal Wave - HGSS18 (Worlds 10) [Staff],SKIP_NAME_MISMATCH,hgss18,0.50
+pkm-hgss-black-star-promos-hgss18-25-fb9a831f78,HGSS Black Star Promos,Tropical Tidal Wave,HGSS18/25,97700,Tropical Tidal Wave - HGSS18 (Worlds 10) [Top 16],SKIP_NAME_MISMATCH,hgss18,0.38
+pkm-hgss-black-star-promos-hgss18-25-fb9a831f78,HGSS Black Star Promos,Tropical Tidal Wave,HGSS18/25,97699,Tropical Tidal Wave - HGSS18 (Worlds 10) [Top 32],SKIP_NAME_MISMATCH,hgss18,0.38
+pkm-hgss-black-star-promos-hgss19-25-8edaf4ce63,HGSS Black Star Promos,Raikou,HGSS19/25,88535,Raikou - HGSS19,LINKED,hgss19,1.00
+pkm-hgss-black-star-promos-hgss20-25-366ce655d5,HGSS Black Star Promos,Entei,HGSS20/25,85273,Entei - HGSS20,LINKED,hgss20,1.00
+pkm-hgss-black-star-promos-hgss21-25-610b4bc3b7,HGSS Black Star Promos,Suicune,HGSS21/25,89605,Suicune - HGSS21,LINKED,hgss21,1.00
+pkm-hgss-black-star-promos-hgss22-25-98c9be7d92,HGSS Black Star Promos,Porygon,HGSS22/25,88313,Porygon - HGSS22,LINKED,hgss22,1.00
+pkm-hgss-black-star-promos-hgss23-25-bfd312fe79,HGSS Black Star Promos,Porygon2,HGSS23/25,88328,Porygon2 - HGSS23,LINKED,hgss23,1.00
+pkm-hgss-black-star-promos-hgss24-25-179c2c6175,HGSS Black Star Promos,Hitmonchan,HGSS24/25,86097,Hitmonchan - HGSS24,LINKED,hgss24,1.00
+pkm-hgss-black-star-promos-hgss25-25-38460ae5bc,HGSS Black Star Promos,Hitmonlee,HGSS25/25,86109,Hitmonlee - HGSS25,LINKED,hgss25,1.00
+pkm-nintendo-black-star-promos-1-40-d627565008,Nintendo Black Star Promos,Kyogre ex,1/40,86555,Kyogre ex - 001 (Nintendo Power Magazine),LINKED,1,1.00
+pkm-nintendo-black-star-promos-2-40-4bd402fe46,Nintendo Black Star Promos,Groudon ex,2/40,85928,Groudon ex - 002 (Nintendo Power Magazine),LINKED,2,1.00
+pkm-nintendo-black-star-promos-3-40-ea266814bc,Nintendo Black Star Promos,Treecko,3/40,90031,Treecko - 003 (e-League),LINKED,3,1.00
+pkm-nintendo-black-star-promos-4-40-d408d501a9,Nintendo Black Star Promos,Grovyle,4/40,85934,Grovyle - 004 (e-League) [Winner],SKIP_NAME_MISMATCH,4,0.20
+pkm-nintendo-black-star-promos-5-40-37fe7440a4,Nintendo Black Star Promos,Mudkip,5/40,87608,Mudkip - 005 (POP Tournament),LINKED,5,1.00
+pkm-nintendo-black-star-promos-6-40-fda58a087d,Nintendo Black Star Promos,Torchic,6/40,89952,Torchic - 006 (POP Tournament),LINKED,6,1.00
+pkm-nintendo-black-star-promos-7-40-7d9ff30cb9,Nintendo Black Star Promos,Treecko,7/40,90036,Treecko - 007 (POP Tournament),LINKED,7,1.00
+pkm-nintendo-black-star-promos-8-40-73f3767212,Nintendo Black Star Promos,Torchic,8/40,89948,Torchic - 008 (e-League),LINKED,8,1.00
+pkm-nintendo-black-star-promos-9-40-4694722d1a,Nintendo Black Star Promos,Combusken,9/40,84399,Combusken - 009 (e-League) [Winner],SKIP_NAME_MISMATCH,9,0.20
+pkm-nintendo-black-star-promos-10-40-29a3ef1519,Nintendo Black Star Promos,Mudkip,10/40,87604,Mudkip - 010 (e-League),LINKED,10,1.00
+pkm-nintendo-black-star-promos-11-40-3f0141dbdb,Nintendo Black Star Promos,Marshtomp,11/40,87231,Marshtomp - 011 (e-League) [Winner],SKIP_NAME_MISMATCH,11,0.20
+pkm-nintendo-black-star-promos-12-40-47d4d03798,Nintendo Black Star Promos,Pikachu,12/40,,,NO_CANDIDATE,12,
+pkm-nintendo-black-star-promos-13-40-4a1c8e63fe,Nintendo Black Star Promos,Meowth,13/40,,,NO_CANDIDATE,13,
+pkm-nintendo-black-star-promos-14-40-2cd9e34f5e,Nintendo Black Star Promos,Latias,14/40,86649,Latias - 014 (Pokemon Heroes: Latios & Latias DVD Release),LINKED,14,1.00
+pkm-nintendo-black-star-promos-15-40-32ae950a17,Nintendo Black Star Promos,Latios,15/40,86663,Latios - 015 (Pokemon Heroes: Latios & Latias DVD Release),LINKED,15,1.00
+pkm-nintendo-black-star-promos-16-40-80086a10e3,Nintendo Black Star Promos,Treecko,16/40,153316,Treecko - 016 (Target Promo),LINKED,16,1.00
+pkm-nintendo-black-star-promos-17-40-d8e29452ba,Nintendo Black Star Promos,Torchic,17/40,153317,Torchic - 017 (Target Promo),LINKED,17,1.00
+pkm-nintendo-black-star-promos-17-40-d8e29452ba,Nintendo Black Star Promos,Torchic,17/40,228481,Leafeon - 17/90 (Prerelease) [Staff],SKIP_NAME_MISMATCH,17,0.00
+pkm-nintendo-black-star-promos-18-40-136211e97d,Nintendo Black Star Promos,Mudkip,18/40,153319,Mudkip - 018 (Target Promo),LINKED,18,1.00
+pkm-nintendo-black-star-promos-19-40-590fcfcbd4,Nintendo Black Star Promos,Whismur,19/40,145343,Whismur - 019 (Target Promo),LINKED,19,1.00
+pkm-nintendo-black-star-promos-19-40-590fcfcbd4,Nintendo Black Star Promos,Whismur,19/40,213023,Salamence - 19/97 (e-League),SKIP_NAME_MISMATCH,19,0.00
+pkm-nintendo-black-star-promos-19-40-590fcfcbd4,Nintendo Black Star Promos,Whismur,19/40,213024,Salamence - 19/97 (e-League) [Winner],SKIP_NAME_MISMATCH,19,0.00
+pkm-nintendo-black-star-promos-20-40-668fbdae5a,Nintendo Black Star Promos,Ludicolo,20/40,,,NO_CANDIDATE,20,
+pkm-nintendo-black-star-promos-21-40-f7e7e1f84c,Nintendo Black Star Promos,Jirachi,21/40,86326,Jirachi - 021 (Jirachi: Wish Maker DVD Release),LINKED,21,1.00
+pkm-nintendo-black-star-promos-22-40-e6e6d91ec8,Nintendo Black Star Promos,Beldum,22/40,83784,Beldum - 022 (e-League),LINKED,22,1.00
+pkm-nintendo-black-star-promos-23-40-de574ea0d1,Nintendo Black Star Promos,Metang,23/40,87374,Metang - 023 (Stadium Challenge 2004),LINKED,23,1.00
+pkm-nintendo-black-star-promos-24-40-1ef795052f,Nintendo Black Star Promos,Chimecho,24/40,84293,Chimecho - 024 (e-League),LINKED,24,1.00
+pkm-nintendo-black-star-promos-24-40-1ef795052f,Nintendo Black Star Promos,Chimecho,24/40,228153,Chimecho - 024 (e-League) [Winner],SKIP_NAME_MISMATCH,24,0.20
+pkm-nintendo-black-star-promos-25-40-6f959bb511,Nintendo Black Star Promos,Flygon,25/40,85523,Flygon - 025 (e-League),LINKED,25,1.00
+pkm-nintendo-black-star-promos-25-40-6f959bb511,Nintendo Black Star Promos,Flygon,25/40,228158,Flygon - 025 (e-League) [Winner],SKIP_NAME_MISMATCH,25,0.20
+pkm-nintendo-black-star-promos-26-40-3b896fa19b,Nintendo Black Star Promos,Tropical Wind,26/40,90053,Tropical Wind - 026 (2004 World Championships) [Participation],SKIP_NAME_MISMATCH,26,0.29
+pkm-nintendo-black-star-promos-27-40-94a511f084,Nintendo Black Star Promos,Tropical Tidal Wave,27/40,224548,Tropical Tidal Wave - 027 (2005 World Championships) [Finalist],SKIP_NAME_MISMATCH,27,0.38
+pkm-nintendo-black-star-promos-27-40-94a511f084,Nintendo Black Star Promos,Tropical Tidal Wave,27/40,90050,Tropical Tidal Wave - 027 (2005 World Championships) [Participation],SKIP_NAME_MISMATCH,27,0.38
+pkm-nintendo-black-star-promos-27-40-94a511f084,Nintendo Black Star Promos,Tropical Tidal Wave,27/40,224549,Tropical Tidal Wave - 027 (2005 World Championships) [Quarter-Finalist],SKIP_NAME_MISMATCH,27,0.33
+pkm-nintendo-black-star-promos-27-40-94a511f084,Nintendo Black Star Promos,Tropical Tidal Wave,27/40,224550,Tropical Tidal Wave - 027 (2005 World Championships) [Semi-Finalist],SKIP_NAME_MISMATCH,27,0.33
+pkm-nintendo-black-star-promos-27-40-94a511f084,Nintendo Black Star Promos,Tropical Tidal Wave,27/40,224551,Tropical Tidal Wave - 027 (2005 World Championships) [Staff],SKIP_NAME_MISMATCH,27,0.43
+pkm-nintendo-black-star-promos-27-40-94a511f084,Nintendo Black Star Promos,Tropical Tidal Wave,27/40,224552,Tropical Tidal Wave - 027 (2005 World Championships) [Top 16],SKIP_NAME_MISMATCH,27,0.33
+pkm-nintendo-black-star-promos-27-40-94a511f084,Nintendo Black Star Promos,Tropical Tidal Wave,27/40,224547,Tropical Tidal Wave - 027 (2005 World Championships) [Top 32],SKIP_NAME_MISMATCH,27,0.33
+pkm-nintendo-black-star-promos-27-40-94a511f084,Nintendo Black Star Promos,Tropical Tidal Wave,27/40,221178,Raichu - 27/99 (Prerelease),SKIP_NAME_MISMATCH,27,0.00
+pkm-nintendo-black-star-promos-27-40-94a511f084,Nintendo Black Star Promos,Tropical Tidal Wave,27/40,221179,Raichu - 27/99 (Prerelease) [Staff],SKIP_NAME_MISMATCH,27,0.00
+pkm-nintendo-black-star-promos-28-40-c1b6e4a9c7,Nintendo Black Star Promos,Championship Arena,28/40,84163,Championship Arena - 028 (2005 World Championships),LINKED,28,1.00
+pkm-nintendo-black-star-promos-28-40-c1b6e4a9c7,Nintendo Black Star Promos,Championship Arena,28/40,277680,Dragonair (Delta Species) - 28/101 (Prerelease),SKIP_NAME_MISMATCH,28,0.00
+pkm-nintendo-black-star-promos-28-40-c1b6e4a9c7,Nintendo Black Star Promos,Championship Arena,28/40,213013,Pichu - 28/123 (Prerelease),SKIP_NAME_MISMATCH,28,0.00
+pkm-nintendo-black-star-promos-28-40-c1b6e4a9c7,Nintendo Black Star Promos,Championship Arena,28/40,213014,Pichu - 28/123 (Prerelease) [Staff],SKIP_NAME_MISMATCH,28,0.00
+pkm-nintendo-black-star-promos-29-40-911a9d45b6,Nintendo Black Star Promos,Celebi,29/40,220759,Grumpig - 29/106 (Prerelease),SKIP_NAME_MISMATCH,29,0.00
+pkm-nintendo-black-star-promos-30-40-1b0f73287e,Nintendo Black Star Promos,Suicune,30/40,,,NO_CANDIDATE,30,
+pkm-nintendo-black-star-promos-31-40-b12e6cd6f6,Nintendo Black Star Promos,Moltres ex,31/40,,,NO_CANDIDATE,31,
+pkm-nintendo-black-star-promos-32-40-bff7f5808f,Nintendo Black Star Promos,Articuno ex,32/40,239090,Gyarados - 32/97 (Prerelease),SKIP_NAME_MISMATCH,32,0.00
+pkm-nintendo-black-star-promos-33-40-fa7a9749fd,Nintendo Black Star Promos,Zapdos ex,33/40,213021,Snorlax - 33/95 (Prerelease),SKIP_NAME_MISMATCH,33,0.00
+pkm-nintendo-black-star-promos-33-40-fa7a9749fd,Nintendo Black Star Promos,Zapdos ex,33/40,228494,Snorlax - 33/95 (Prerelease) [Staff],SKIP_NAME_MISMATCH,33,0.00
+pkm-nintendo-black-star-promos-34-40-a4aaecfc31,Nintendo Black Star Promos,Typhlosion,34/40,90104,Typhlosion - 034 (Epic Collection Value Boxes),LINKED,34,1.00
+pkm-nintendo-black-star-promos-35-40-1033d31ba7,Nintendo Black Star Promos,Pikachu δ,35/40,118882,Ivysaur - 35/100 (Prerelease),SKIP_NAME_MISMATCH,35,0.00
+pkm-nintendo-black-star-promos-35-40-1033d31ba7,Nintendo Black Star Promos,Pikachu δ,35/40,232876,Bayleef - 35/115 (Prerelease),SKIP_NAME_MISMATCH,35,0.00
+pkm-nintendo-black-star-promos-36-40-c29ea14af8,Nintendo Black Star Promos,Tropical Tidal Wave,36/40,224553,Tropical Tidal Wave - 036 (2006 World Championships) [Finalist],SKIP_NAME_MISMATCH,36,0.38
+pkm-nintendo-black-star-promos-36-40-c29ea14af8,Nintendo Black Star Promos,Tropical Tidal Wave,36/40,90051,Tropical Tidal Wave - 036 (2006 World Championships) [Participation],SKIP_NAME_MISMATCH,36,0.38
+pkm-nintendo-black-star-promos-36-40-c29ea14af8,Nintendo Black Star Promos,Tropical Tidal Wave,36/40,224554,Tropical Tidal Wave - 036 (2006 World Championships) [Quarter-Finalist],SKIP_NAME_MISMATCH,36,0.33
+pkm-nintendo-black-star-promos-36-40-c29ea14af8,Nintendo Black Star Promos,Tropical Tidal Wave,36/40,224555,Tropical Tidal Wave - 036 (2006 World Championships) [Semi-Finalist],SKIP_NAME_MISMATCH,36,0.33
+pkm-nintendo-black-star-promos-36-40-c29ea14af8,Nintendo Black Star Promos,Tropical Tidal Wave,36/40,224556,Tropical Tidal Wave - 036 (2006 World Championships) [Staff],SKIP_NAME_MISMATCH,36,0.43
+pkm-nintendo-black-star-promos-36-40-c29ea14af8,Nintendo Black Star Promos,Tropical Tidal Wave,36/40,224557,Tropical Tidal Wave - 036 (2006 World Championships) [Top 16],SKIP_NAME_MISMATCH,36,0.33
+pkm-nintendo-black-star-promos-36-40-c29ea14af8,Nintendo Black Star Promos,Tropical Tidal Wave,36/40,224558,Tropical Tidal Wave - 036 (2006 World Championships) [Top 32],SKIP_NAME_MISMATCH,36,0.33
+pkm-nintendo-black-star-promos-37-40-5c82807a56,Nintendo Black Star Promos,Kyogre ex,37/40,245913,Dark Houndoom - 37/109 (Prerelease),SKIP_NAME_MISMATCH,37,0.00
+pkm-nintendo-black-star-promos-38-40-531ada9523,Nintendo Black Star Promos,Groudon ex,38/40,153078,Manectric - 38/107 (Prerelease),SKIP_NAME_MISMATCH,38,0.00
+pkm-nintendo-black-star-promos-39-40-e662cb6e9a,Nintendo Black Star Promos,Rayquaza ex,39/40,,,NO_CANDIDATE,39,
+pkm-nintendo-black-star-promos-40-40-0d8e3e94cf,Nintendo Black Star Promos,Mew,40/40,87402,Mew - 040 (Trainer's Challenge Set),LINKED,40,1.00
+pkm-sm-black-star-promos-sm01-248-ed1f05c96b,SM Black Star Promos,Rowlet,SM01/248,126031,Rowlet - SM01,LINKED,sm1,1.00
+pkm-sm-black-star-promos-sm02-248-61a8326b42,SM Black Star Promos,Litten,SM02/248,126030,Litten - SM02,LINKED,sm2,1.00
+pkm-sm-black-star-promos-sm03-248-c541dccd79,SM Black Star Promos,Popplio,SM03/248,126029,Popplio - SM03,LINKED,sm3,1.00
+pkm-sm-black-star-promos-sm04-248-33d43f7fdb,SM Black Star Promos,Pikachu,SM04/248,126032,Pikachu - SM04,LINKED,sm4,1.00
+pkm-sm-black-star-promos-sm04-248-33d43f7fdb,SM Black Star Promos,Pikachu,SM04/248,147224,Pikachu - SM04 (Target Non-Holo),SKIP_NAME_MISMATCH,sm4,0.25
+pkm-sm-black-star-promos-sm05-248-5a62980274,SM Black Star Promos,Snorlax-GX,SM05/248,126027,Snorlax GX - SM05,LINKED,sm5,1.00
+pkm-sm-black-star-promos-sm06-248-cb7f5b5ce7,SM Black Star Promos,Rockruff,SM06/248,127511,Rockruff - SM06,LINKED,sm6,1.00
+pkm-sm-black-star-promos-sm07-248-4ec81c9e5d,SM Black Star Promos,Pikipek,SM07/248,127512,Pikipek - SM07,LINKED,sm7,1.00
+pkm-sm-black-star-promos-sm08-248-c527cdbc4c,SM Black Star Promos,Litten,SM08/248,127513,Litten - SM08,LINKED,sm8,1.00
+pkm-sm-black-star-promos-sm09-248-6728248a4c,SM Black Star Promos,Togedemaru,SM09/248,127514,Togedemaru - SM09,LINKED,sm9,1.00
+pkm-sm-black-star-promos-sm10-248-b62b005d0a,SM Black Star Promos,Shiinotic,SM10/248,127181,Shiinotic - SM10 (Prerelease),SKIP_NAME_MISMATCH,sm10,0.50
+pkm-sm-black-star-promos-sm10-248-b62b005d0a,SM Black Star Promos,Shiinotic,SM10/248,127182,Shiinotic - SM10 (Prerelease) [Staff],SKIP_NAME_MISMATCH,sm10,0.50
+pkm-sm-black-star-promos-sm11-248-8496799af8,SM Black Star Promos,Bruxish,SM11/248,127184,Bruxish - SM11 (Prerelease),SKIP_NAME_MISMATCH,sm11,0.50
+pkm-sm-black-star-promos-sm11-248-8496799af8,SM Black Star Promos,Bruxish,SM11/248,127183,Bruxish - SM11 (Prerelease) [Staff],SKIP_NAME_MISMATCH,sm11,0.50
+pkm-sm-black-star-promos-sm12-248-4632f79a43,SM Black Star Promos,Passimian,SM12/248,127185,Passimian - SM12 (Prerelease),SKIP_NAME_MISMATCH,sm12,0.50
+pkm-sm-black-star-promos-sm12-248-4632f79a43,SM Black Star Promos,Passimian,SM12/248,127186,Passimian - SM12 (Prerelease) [Staff],SKIP_NAME_MISMATCH,sm12,0.50
+pkm-sm-black-star-promos-sm13-248-9c7ec9bfba,SM Black Star Promos,Oranguru,SM13/248,127188,Oranguru - SM13 (Prerelease),SKIP_NAME_MISMATCH,sm13,0.50
+pkm-sm-black-star-promos-sm13-248-9c7ec9bfba,SM Black Star Promos,Oranguru,SM13/248,127187,Oranguru - SM13 (Prerelease) [Staff],SKIP_NAME_MISMATCH,sm13,0.50
+pkm-sm-black-star-promos-sm14-248-7dafc14d26,SM Black Star Promos,Lycanroc-GX,SM14/248,127520,Lycanroc GX - SM14,LINKED,sm14,1.00
+pkm-sm-black-star-promos-sm15-248-c87c643cec,SM Black Star Promos,Zygarde,SM15/248,129313,Zygarde - SM15,LINKED,sm15,1.00
+pkm-sm-black-star-promos-sm16-248-ab4c4f6d3c,SM Black Star Promos,Solgaleo-GX,SM16/248,129311,Solgaleo GX - SM16,LINKED,sm16,1.00
+pkm-sm-black-star-promos-sm17-248-098223b5e9,SM Black Star Promos,Lunala-GX,SM17/248,129312,Lunala GX - SM17,LINKED,sm17,1.00
+pkm-sm-black-star-promos-sm18-248-a1c8601be4,SM Black Star Promos,Alolan Sandslash,SM18/248,131091,Alolan Sandslash - SM18 (Prerelease),SKIP_NAME_MISMATCH,sm18,0.67
+pkm-sm-black-star-promos-sm18-248-a1c8601be4,SM Black Star Promos,Alolan Sandslash,SM18/248,131092,Alolan Sandslash - SM18 (Prerelease) [Staff],SKIP_NAME_MISMATCH,sm18,0.67
+pkm-sm-black-star-promos-sm19-248-50915fc870,SM Black Star Promos,Oricorio,SM19/248,131089,Oricorio - SM19 (Prerelease),SKIP_NAME_MISMATCH,sm19,0.50
+pkm-sm-black-star-promos-sm19-248-50915fc870,SM Black Star Promos,Oricorio,SM19/248,131090,Oricorio - SM19 (Prerelease) [Staff],SKIP_NAME_MISMATCH,sm19,0.50
+pkm-sm-black-star-promos-sm20-248-2afc4c9b8f,SM Black Star Promos,Mudsdale,SM20/248,131085,Mudsdale - SM20 (Prerelease),SKIP_NAME_MISMATCH,sm20,0.50
+pkm-sm-black-star-promos-sm20-248-2afc4c9b8f,SM Black Star Promos,Mudsdale,SM20/248,131086,Mudsdale - SM20 (Prerelease) [Staff],SKIP_NAME_MISMATCH,sm20,0.50
+pkm-sm-black-star-promos-sm21-248-bf50921cd6,SM Black Star Promos,Drampa,SM21/248,131087,Drampa - SM21 (Prerelease),SKIP_NAME_MISMATCH,sm21,0.50
+pkm-sm-black-star-promos-sm21-248-bf50921cd6,SM Black Star Promos,Drampa,SM21/248,131088,Drampa - SM21 (Prerelease) [Staff],SKIP_NAME_MISMATCH,sm21,0.50
+pkm-sm-black-star-promos-sm22-248-649dfe397b,SM Black Star Promos,Rowlet,SM22/248,130683,Rowlet - SM22,LINKED,sm22,1.00
+pkm-sm-black-star-promos-sm23-248-d2f2c5f83a,SM Black Star Promos,Litten,SM23/248,130684,Litten - SM23,LINKED,sm23,1.00
+pkm-sm-black-star-promos-sm24-248-977c932e18,SM Black Star Promos,Popplio,SM24/248,130685,Popplio - SM24,LINKED,sm24,1.00
+pkm-sm-black-star-promos-sm25-248-e09caa08b4,SM Black Star Promos,Lurantis,SM25/248,133829,Lurantis - SM25,LINKED,sm25,1.00
+pkm-sm-black-star-promos-sm26-248-9c9d214b30,SM Black Star Promos,Tsareena,SM26/248,139096,Tsareena - SM26,LINKED,sm26,1.00
+pkm-sm-black-star-promos-sm27-248-38ab1ee4f3,SM Black Star Promos,Turtonator,SM27/248,131294,Turtonator - SM27,LINKED,sm27,1.00
+pkm-sm-black-star-promos-sm28-248-3b0e22e257,SM Black Star Promos,Vikavolt,SM28/248,131293,Vikavolt - SM28,LINKED,sm28,1.00
+pkm-sm-black-star-promos-sm29-248-eccc87128e,SM Black Star Promos,Mimikyu,SM29/248,129894,Mimikyu - SM29,LINKED,sm29,1.00
+pkm-sm-black-star-promos-sm30-248-458a3635b7,SM Black Star Promos,Tapu Koko,SM30/248,131733,Tapu Koko - SM30,LINKED,sm30,1.00
+pkm-sm-black-star-promos-sm30a-248-9e9b6e0668,SM Black Star Promos,Tapu Koko,SM30a/248,,,NO_CANDIDATE,sm30a,
+pkm-sm-black-star-promos-sm31-248-5c02ed12cb,SM Black Star Promos,Tapu Koko,SM31/248,132239,Tapu Koko - SM31,LINKED,sm31,1.00
+pkm-sm-black-star-promos-sm34-248-18ff62745f,SM Black Star Promos,Bewear-GX,SM34/248,132240,Bewear GX - SM34,LINKED,sm34,1.00
+pkm-sm-black-star-promos-sm35-248-536e8cf1b2,SM Black Star Promos,Espeon-GX,SM35/248,137525,Espeon GX - SM35,LINKED,sm35,1.00
+pkm-sm-black-star-promos-sm36-248-92fe2436ca,SM Black Star Promos,Umbreon-GX,SM36/248,137526,Umbreon GX - SM36,LINKED,sm36,1.00
+pkm-sm-black-star-promos-sm37-248-bce3687c47,SM Black Star Promos,Decidueye-GX,SM37/248,133821,Decidueye GX - SM37,LINKED,sm37,1.00
+pkm-sm-black-star-promos-sm38-248-d05da856b9,SM Black Star Promos,Incineroar-GX,SM38/248,133822,Incineroar GX - SM38,LINKED,sm38,1.00
+pkm-sm-black-star-promos-sm39-248-fe85606201,SM Black Star Promos,Primarina-GX,SM39/248,133820,Primarina GX - SM39,LINKED,sm39,1.00
+pkm-sm-black-star-promos-sm40-248-e2de8f77eb,SM Black Star Promos,Jangmo-o,SM40/248,139097,Jangmo-o - SM40,LINKED,sm40,1.00
+pkm-sm-black-star-promos-sm41-248-82175c3e06,SM Black Star Promos,Komala,SM41/248,139101,Komala - SM41,LINKED,sm41,1.00
+pkm-sm-black-star-promos-sm42-248-35b9f862ae,SM Black Star Promos,Cosmog,SM42/248,139100,Cosmog - SM42,LINKED,sm42,1.00
+pkm-sm-black-star-promos-sm43-248-7a1d0463d1,SM Black Star Promos,Alolan Meowth,SM43/248,139099,Alolan Meowth - SM43,LINKED,sm43,1.00
+pkm-sm-black-star-promos-sm44-248-5dc7df8ea7,SM Black Star Promos,Togedemaru,SM44/248,139098,Togedemaru - SM44,LINKED,sm44,1.00
+pkm-sm-black-star-promos-sm45-248-01603640c7,SM Black Star Promos,Tapu Lele,SM45/248,173399,Tapu Lele - SM45,LINKED,sm45,1.00
+pkm-sm-black-star-promos-sm46-248-29d24ea6fd,SM Black Star Promos,Seviper,SM46/248,139088,Seviper - SM46 (Prerelease),SKIP_NAME_MISMATCH,sm46,0.50
+pkm-sm-black-star-promos-sm46-248-29d24ea6fd,SM Black Star Promos,Seviper,SM46/248,139089,Seviper - SM46 (Prerelease) [Staff],SKIP_NAME_MISMATCH,sm46,0.50
+pkm-sm-black-star-promos-sm47-248-289de9c28a,SM Black Star Promos,Crabominable,SM47/248,139095,Crabominable - SM47 (Prerelease),SKIP_NAME_MISMATCH,sm47,0.50
+pkm-sm-black-star-promos-sm47-248-289de9c28a,SM Black Star Promos,Crabominable,SM47/248,139094,Crabominable - SM47 (Prerelease) [Staff],SKIP_NAME_MISMATCH,sm47,0.50
+pkm-sm-black-star-promos-sm48-248-c8a93334e0,SM Black Star Promos,Zygarde,SM48/248,139093,Zygarde - SM48 (Prerelease),SKIP_NAME_MISMATCH,sm48,0.50
+pkm-sm-black-star-promos-sm48-248-c8a93334e0,SM Black Star Promos,Zygarde,SM48/248,139092,Zygarde - SM48 (Prerelease) [Staff],SKIP_NAME_MISMATCH,sm48,0.50
+pkm-sm-black-star-promos-sm49-248-adbf27f211,SM Black Star Promos,Bewear,SM49/248,139090,Bewear - SM49 (Prerelease),SKIP_NAME_MISMATCH,sm49,0.50
+pkm-sm-black-star-promos-sm49-248-adbf27f211,SM Black Star Promos,Bewear,SM49/248,139091,Bewear - SM49 (Prerelease) [Staff],SKIP_NAME_MISMATCH,sm49,0.50
+pkm-sm-black-star-promos-sm51-248-9353600b78,SM Black Star Promos,Alolan Meowth,SM51/248,139102,Alolan Meowth - SM51,LINKED,sm51,1.00
+pkm-sm-black-star-promos-sm52-248-11c1cb9318,SM Black Star Promos,Golisopod,SM52/248,162606,Golisopod - SM52,LINKED,sm52,1.00
+pkm-sm-black-star-promos-sm53-248-65afe5aacb,SM Black Star Promos,Dhelmise,SM53/248,162607,Dhelmise - SM53,LINKED,sm53,1.00
+pkm-sm-black-star-promos-sm54-248-d431a9ddfa,SM Black Star Promos,Lucario,SM54/248,153452,Lucario - SM54,LINKED,sm54,1.00
+pkm-sm-black-star-promos-sm55-248-b73b084d56,SM Black Star Promos,Decidueye,SM55/248,164460,Decidueye - SM55,LINKED,sm55,1.00
+pkm-sm-black-star-promos-sm56-248-b35d24b6ef,SM Black Star Promos,Tsareena-GX,SM56/248,141244,Tsareena GX - SM56,LINKED,sm56,1.00
+pkm-sm-black-star-promos-sm58-248-a88741d7d7,SM Black Star Promos,Necrozma-GX,SM58/248,148423,Necrozma GX - SM58,LINKED,sm58,1.00
+pkm-sm-black-star-promos-sm59-248-5867380a7c,SM Black Star Promos,Marshadow-GX,SM59/248,148422,Marshadow GX - SM59,LINKED,sm59,1.00
+pkm-sm-black-star-promos-sm60-248-bb042864d5,SM Black Star Promos,Charizard-GX,SM60/248,148151,Charizard GX - SM60,LINKED,sm60,1.00
+pkm-sm-black-star-promos-sm61-248-f1344a9cdf,SM Black Star Promos,Tapu Bulu,SM61/248,173382,Tapu Bulu - SM61,LINKED,sm61,1.00
+pkm-sm-black-star-promos-sm62-248-d45054e15b,SM Black Star Promos,Golisopod-GX,SM62/248,148430,Golisopod GX - SM62,LINKED,sm62,1.00
+pkm-sm-black-star-promos-sm63-248-031ca389ed,SM Black Star Promos,Salazzle-GX,SM63/248,148429,Salazzle GX - SM63,LINKED,sm63,1.00
+pkm-sm-black-star-promos-sm64-248-fedfaf27e0,SM Black Star Promos,Silvally,SM64/248,152606,Silvally - SM64,LINKED,sm64,1.00
+pkm-sm-black-star-promos-sm65-248-59439b3cb6,SM Black Star Promos,Alolan Raichu,SM65/248,156111,Alolan Raichu - SM65,LINKED,sm65,1.00
+pkm-sm-black-star-promos-sm66-248-4b9c5e9f6e,SM Black Star Promos,Pheromosa-GX,SM66/248,149381,Pheromosa GX - SM66,LINKED,sm66,1.00
+pkm-sm-black-star-promos-sm67-248-a655533331,SM Black Star Promos,Celesteela-GX,SM67/248,149382,Celesteela GX - SM67,LINKED,sm67,1.00
+pkm-sm-black-star-promos-sm68-248-a7ae7d7037,SM Black Star Promos,Xurkitree-GX,SM68/248,149383,Xurkitree GX - SM68,LINKED,sm68,1.00
+pkm-sm-black-star-promos-sm69-248-2961e5825c,SM Black Star Promos,Buzzwole-GX,SM69/248,149384,Buzzwole GX - SM69,LINKED,sm69,1.00
+pkm-sm-black-star-promos-sm72-248-0ff9d58d33,SM Black Star Promos,Alolan Raichu,SM72/248,151701,Alolan Raichu - SM72 (Prerelease),SKIP_NAME_MISMATCH,sm72,0.67
+pkm-sm-black-star-promos-sm72-248-0ff9d58d33,SM Black Star Promos,Alolan Raichu,SM72/248,151708,Alolan Raichu - SM72 (Prerelease) [Staff],SKIP_NAME_MISMATCH,sm72,0.67
+pkm-sm-black-star-promos-sm73-248-9f1b287e8a,SM Black Star Promos,Salazzle,SM73/248,151702,Salazzle - SM73 (Prerelease),SKIP_NAME_MISMATCH,sm73,0.50
+pkm-sm-black-star-promos-sm73-248-9f1b287e8a,SM Black Star Promos,Salazzle,SM73/248,151706,Salazzle - SM73 (Prerelease) [Staff],SKIP_NAME_MISMATCH,sm73,0.50
+pkm-sm-black-star-promos-sm74-248-cb380f310a,SM Black Star Promos,Regirock,SM74/248,151703,Regirock - SM74 (Prerelease),SKIP_NAME_MISMATCH,sm74,0.50
+pkm-sm-black-star-promos-sm74-248-cb380f310a,SM Black Star Promos,Regirock,SM74/248,151707,Regirock - SM74 (Prerelease) [Staff],SKIP_NAME_MISMATCH,sm74,0.50
+pkm-sm-black-star-promos-sm75-248-6e99a6a494,SM Black Star Promos,Registeel,SM75/248,151704,Registeel - SM75 (Prerelease),SKIP_NAME_MISMATCH,sm75,0.50
+pkm-sm-black-star-promos-sm75-248-6e99a6a494,SM Black Star Promos,Registeel,SM75/248,151705,Registeel - SM75 (Prerelease) [Staff],SKIP_NAME_MISMATCH,sm75,0.50
+pkm-sm-black-star-promos-sm76-248-d7dc7525c1,SM Black Star Promos,Pikachu,SM76/248,146980,Pikachu - SM76,LINKED,sm76,1.00
+pkm-sm-black-star-promos-sm77-248-4e76a87023,SM Black Star Promos,Mewtwo,SM77/248,146982,Mewtwo - SM77,LINKED,sm77,1.00
+pkm-sm-black-star-promos-sm78-248-53429b9880,SM Black Star Promos,Champions Festival,SM78/248,179429,Champions Festival - SM78 (World Championships 2017),SKIP_NAME_MISMATCH,sm78,0.33
+pkm-sm-black-star-promos-sm78-248-53429b9880,SM Black Star Promos,Champions Festival,SM78/248,179435,Champions Festival - SM78 (World Championships 2017) [Champion],SKIP_NAME_MISMATCH,sm78,0.29
+pkm-sm-black-star-promos-sm78-248-53429b9880,SM Black Star Promos,Champions Festival,SM78/248,179434,Champions Festival - SM78 (World Championships 2017) [Finalist],SKIP_NAME_MISMATCH,sm78,0.29
+pkm-sm-black-star-promos-sm78-248-53429b9880,SM Black Star Promos,Champions Festival,SM78/248,179432,Champions Festival - SM78 (World Championships 2017) [Quarter-Finalist],SKIP_NAME_MISMATCH,sm78,0.25
+pkm-sm-black-star-promos-sm78-248-53429b9880,SM Black Star Promos,Champions Festival,SM78/248,179433,Champions Festival - SM78 (World Championships 2017) [Semi-Finalist],SKIP_NAME_MISMATCH,sm78,0.25
+pkm-sm-black-star-promos-sm78-248-53429b9880,SM Black Star Promos,Champions Festival,SM78/248,179428,Champions Festival - SM78 (World Championships 2017) [Staff],SKIP_NAME_MISMATCH,sm78,0.33
+pkm-sm-black-star-promos-sm78-248-53429b9880,SM Black Star Promos,Champions Festival,SM78/248,179431,Champions Festival - SM78 (World Championships 2017) [Top Sixteen],SKIP_NAME_MISMATCH,sm78,0.25
+pkm-sm-black-star-promos-sm78-248-53429b9880,SM Black Star Promos,Champions Festival,SM78/248,179430,Champions Festival - SM78 (World Championships 2017) [Top Thirty-Two],SKIP_NAME_MISMATCH,sm78,0.22
+pkm-sm-black-star-promos-sm79-248-985a968273,SM Black Star Promos,Shining Celebi,SM79/248,148427,Shining Celebi - SM79,LINKED,sm79,1.00
+pkm-sm-black-star-promos-sm81-248-72e284fe23,SM Black Star Promos,Pikachu,SM81/248,148426,Pikachu - SM81,LINKED,sm81,1.00
+pkm-sm-black-star-promos-sm82-248-a1d7511fff,SM Black Star Promos,Shining Lugia,SM82/248,148428,Shining Lugia - SM82,LINKED,sm82,1.00
+pkm-sm-black-star-promos-sm83-248-76037f5979,SM Black Star Promos,Zorua,SM83/248,149385,Zorua - SM83,LINKED,sm83,1.00
+pkm-sm-black-star-promos-sm84-248-29a064a6fa,SM Black Star Promos,Zoroark-GX,SM84/248,149386,Zoroark GX - SM84,LINKED,sm84,1.00
+pkm-sm-black-star-promos-sm85-248-f7bd0b2603,SM Black Star Promos,Marshadow,SM85/248,152610,Marshadow - SM85,LINKED,sm85,1.00
+pkm-sm-black-star-promos-sm86-248-46693fa58a,SM Black Star Promos,Pikachu,SM86/248,152608,Pikachu - SM86,LINKED,sm86,1.00
+pkm-sm-black-star-promos-sm87-248-40c68605b6,SM Black Star Promos,Latias,SM87/248,152609,Latias - SM87,LINKED,sm87,1.00
+pkm-sm-black-star-promos-sm88-248-b3541ab50a,SM Black Star Promos,Latios,SM88/248,152607,Latios - SM88,LINKED,sm88,1.00
+pkm-sm-black-star-promos-sm89-248-cb6e589ad9,SM Black Star Promos,Zoroark,SM89/248,154718,Zoroark - SM89,LINKED,sm89,1.00
+pkm-sm-black-star-promos-sm90-248-26cdc2d1a7,SM Black Star Promos,Raichu-GX,SM90/248,155587,Raichu GX - SM90,LINKED,sm90,1.00
+pkm-sm-black-star-promos-sm91-248-c4eddaacbd,SM Black Star Promos,Silvally-GX,SM91/248,152604,Silvally GX - SM91,LINKED,sm91,1.00
+pkm-sm-black-star-promos-sm92-248-ec853343cf,SM Black Star Promos,Tapu Fini,SM92/248,173383,Tapu Fini - SM92,LINKED,sm92,1.00
+pkm-sm-black-star-promos-sm93-248-e92fa299a9,SM Black Star Promos,Marshadow,SM93/248,155597,Marshadow - SM93,LINKED,sm93,1.00
+pkm-sm-black-star-promos-sm94-248-7317738061,SM Black Star Promos,Wash Rotom,SM94/248,158167,Wash Rotom - SM94 (Prerelease),SKIP_NAME_MISMATCH,sm94,0.67
+pkm-sm-black-star-promos-sm94-248-7317738061,SM Black Star Promos,Wash Rotom,SM94/248,158168,Wash Rotom - SM94 (Prerelease) [Staff],SKIP_NAME_MISMATCH,sm94,0.67
+pkm-sm-black-star-promos-sm95-248-b1e9e1a264,SM Black Star Promos,Lucario,SM95/248,158165,Lucario - SM95 (Prerelease),SKIP_NAME_MISMATCH,sm95,0.50
+pkm-sm-black-star-promos-sm95-248-b1e9e1a264,SM Black Star Promos,Lucario,SM95/248,158166,Lucario - SM95 (Prerelease) [Staff],SKIP_NAME_MISMATCH,sm95,0.50
+pkm-sm-black-star-promos-sm96-248-13234288b4,SM Black Star Promos,Heatran,SM96/248,158171,Heatran - SM96 (Prerelease),SKIP_NAME_MISMATCH,sm96,0.50
+pkm-sm-black-star-promos-sm96-248-13234288b4,SM Black Star Promos,Heatran,SM96/248,158172,Heatran - SM96 (Prerelease) [Staff],SKIP_NAME_MISMATCH,sm96,0.50
+pkm-sm-black-star-promos-sm97-248-53ea55be18,SM Black Star Promos,Gumshoos,SM97/248,158169,Gumshoos - SM97 (Prerelease),SKIP_NAME_MISMATCH,sm97,0.50
+pkm-sm-black-star-promos-sm97-248-53ea55be18,SM Black Star Promos,Gumshoos,SM97/248,158170,Gumshoos - SM97 (Prerelease) [Staff],SKIP_NAME_MISMATCH,sm97,0.50
+pkm-sm-black-star-promos-sm98-248-6700c04dff,SM Black Star Promos,Pikachu,SM98/248,166411,Pikachu - SM98,LINKED,sm98,1.00
+pkm-sm-black-star-promos-sm99-248-468272ff33,SM Black Star Promos,Mimikyu,SM99/248,166412,Mimikyu - SM99,LINKED,sm99,1.00
+pkm-sm-black-star-promos-sm100-248-8517e4003c,SM Black Star Promos,Lucario-GX,SM100/248,162042,Lucario GX - SM100,LINKED,sm100,1.00
+pkm-sm-black-star-promos-sm103-248-d86e8d3d24,SM Black Star Promos,Lunala-GX,SM103/248,177710,Lunala GX - SM103,LINKED,sm103,1.00
+pkm-sm-black-star-promos-sm103a-248-7122f97135,SM Black Star Promos,Lunala-GX,SM103a/248,202636,Lunala GX - SM103a,LINKED,sm103a,1.00
+pkm-sm-black-star-promos-sm104-248-b92c4c1f4c,SM Black Star Promos,Solgaleo-GX,SM104/248,177900,Solgaleo GX - SM104,LINKED,sm104,1.00
+pkm-sm-black-star-promos-sm104a-248-ab594cb8bc,SM Black Star Promos,Solgaleo-GX,SM104a/248,202637,Solgaleo GX - SM104a,LINKED,sm104a,1.00
+pkm-sm-black-star-promos-sm105-248-27ee6b5c46,SM Black Star Promos,Lycanroc,SM105/248,162604,Lycanroc - SM105,LINKED,sm105,1.00
+pkm-sm-black-star-promos-sm115-248-2308b4ba3f,SM Black Star Promos,Pheromosa,SM115/248,166288,Pheromosa - SM115 (Prerelease),SKIP_NAME_MISMATCH,sm115,0.50
+pkm-sm-black-star-promos-sm115-248-2308b4ba3f,SM Black Star Promos,Pheromosa,SM115/248,166289,Pheromosa - SM115 (Prerelease) [Staff],SKIP_NAME_MISMATCH,sm115,0.50
+pkm-sm-black-star-promos-sm116-248-f08de62300,SM Black Star Promos,Xurkitree,SM116/248,166290,Xurkitree - SM116 (Prerelease),SKIP_NAME_MISMATCH,sm116,0.50
+pkm-sm-black-star-promos-sm116-248-f08de62300,SM Black Star Promos,Xurkitree,SM116/248,166291,Xurkitree - SM116 (Prerelease) [Staff],SKIP_NAME_MISMATCH,sm116,0.50
+pkm-sm-black-star-promos-sm117-248-f8f6736412,SM Black Star Promos,Malamar,SM117/248,166292,Malamar - SM117 (Prerelease),SKIP_NAME_MISMATCH,sm117,0.50
+pkm-sm-black-star-promos-sm117-248-f8f6736412,SM Black Star Promos,Malamar,SM117/248,166293,Malamar - SM117 (Prerelease) [Staff],SKIP_NAME_MISMATCH,sm117,0.50
+pkm-sm-black-star-promos-sm118-248-778113e9e1,SM Black Star Promos,Lycanroc,SM118/248,166294,Lycanroc - SM118 (Prerelease),SKIP_NAME_MISMATCH,sm118,0.50
+pkm-sm-black-star-promos-sm118-248-778113e9e1,SM Black Star Promos,Lycanroc,SM118/248,166295,Lycanroc - SM118 (Prerelease) [Staff],SKIP_NAME_MISMATCH,sm118,0.50
+pkm-sm-black-star-promos-sm119-248-f6e856a594,SM Black Star Promos,Exeggcute,SM119/248,168026,Exeggcute - SM119,LINKED,sm119,1.00
+pkm-sm-black-star-promos-sm120-248-7b21c44e12,SM Black Star Promos,Rockruff,SM120/248,168030,Rockruff - SM120,LINKED,sm120,1.00
+pkm-sm-black-star-promos-sm122-248-15abaf042e,SM Black Star Promos,Zygarde-GX,SM122/248,168088,Zygarde GX - SM122,LINKED,sm122,1.00
+pkm-sm-black-star-promos-sm125-248-43e0f43ee9,SM Black Star Promos,Naganadel-GX,SM125/248,176944,Naganadel GX - SM125,LINKED,sm125,1.00
+pkm-sm-black-star-promos-sm127-248-c289c838d2,SM Black Star Promos,Alolan Sandslash,SM127/248,168211,Alolan Sandslash - SM127,LINKED,sm127,1.00
+pkm-sm-black-star-promos-sm128-248-3ec1741128,SM Black Star Promos,Alolan Ninetales,SM128/248,168245,Alolan Ninetales - SM128,LINKED,sm128,1.00
+pkm-sm-black-star-promos-sm129-248-61d17e1899,SM Black Star Promos,Kyogre,SM129/248,172930,Kyogre - SM129 (Prerelease),SKIP_NAME_MISMATCH,sm129,0.50
+pkm-sm-black-star-promos-sm129-248-61d17e1899,SM Black Star Promos,Kyogre,SM129/248,172931,Kyogre - SM129 (Prerelease) [Staff],SKIP_NAME_MISMATCH,sm129,0.50
+pkm-sm-black-star-promos-sm130-248-a072cf8ccb,SM Black Star Promos,Manectric,SM130/248,172933,Manectric - SM130 (Prerelease),SKIP_NAME_MISMATCH,sm130,0.50
+pkm-sm-black-star-promos-sm130-248-a072cf8ccb,SM Black Star Promos,Manectric,SM130/248,172932,Manectric - SM130 (Prerelease) [Staff],SKIP_NAME_MISMATCH,sm130,0.50
+pkm-sm-black-star-promos-sm131-248-85dc2c1c34,SM Black Star Promos,Celesteela,SM131/248,172935,Celesteela - SM131 (Prerelease),SKIP_NAME_MISMATCH,sm131,0.50
+pkm-sm-black-star-promos-sm131-248-85dc2c1c34,SM Black Star Promos,Celesteela,SM131/248,172934,Celesteela - SM131 (Prerelease) [Staff],SKIP_NAME_MISMATCH,sm131,0.50
+pkm-sm-black-star-promos-sm132-248-7f30cc498f,SM Black Star Promos,Delcatty,SM132/248,172937,Delcatty - SM132 (Prerelease),SKIP_NAME_MISMATCH,sm132,0.50
+pkm-sm-black-star-promos-sm132-248-7f30cc498f,SM Black Star Promos,Delcatty,SM132/248,172936,Delcatty - SM132 (Prerelease) [Staff],SKIP_NAME_MISMATCH,sm132,0.50
+pkm-sm-black-star-promos-sm133-248-cc3e910a6f,SM Black Star Promos,Thundurus-GX,SM133/248,170032,Thundurus GX - SM133,LINKED,sm133,1.00
+pkm-sm-black-star-promos-sm134-248-6b0fe8441e,SM Black Star Promos,Tornadus-GX,SM134/248,170033,Tornadus GX - SM134,LINKED,sm134,1.00
+pkm-sm-black-star-promos-sm135-248-02df5c5718,SM Black Star Promos,Latias,SM135/248,175564,Latias - SM135,LINKED,sm135,1.00
+pkm-sm-black-star-promos-sm136-248-2990192b62,SM Black Star Promos,Latios,SM136/248,175563,Latios - SM136,LINKED,sm136,1.00
+pkm-sm-black-star-promos-sm137-248-258f4b9db6,SM Black Star Promos,Reshiram-GX,SM137/248,179034,Reshiram GX - SM137,LINKED,sm137,1.00
+pkm-sm-black-star-promos-sm138-248-9aa5f5ae02,SM Black Star Promos,Zekrom-GX,SM138/248,179035,Zekrom GX - SM138,LINKED,sm138,1.00
+pkm-sm-black-star-promos-sm139-248-f00a4b9376,SM Black Star Promos,Salamence-GX,SM139/248,180529,Salamence GX - SM139,LINKED,sm139,1.00
+pkm-sm-black-star-promos-sm140-248-dd055f2996,SM Black Star Promos,Salamence,SM140/248,180530,Salamence - SM140,LINKED,sm140,1.00
+pkm-sm-black-star-promos-sm142-248-e1f84f0a1e,SM Black Star Promos,Kyurem,SM142/248,180528,Kyurem - SM142,LINKED,sm142,1.00
+pkm-sm-black-star-promos-sm143-248-8de982456a,SM Black Star Promos,Moltres,SM143/248,180519,Moltres - SM143,LINKED,sm143,1.00
+pkm-sm-black-star-promos-sm144-248-32ab4022f0,SM Black Star Promos,Articuno,SM144/248,180520,Articuno - SM144,LINKED,sm144,1.00
+pkm-sm-black-star-promos-sm145-248-46bbe1c311,SM Black Star Promos,Zapdos,SM145/248,180521,Zapdos - SM145,LINKED,sm145,1.00
+pkm-sm-black-star-promos-sm146-248-2401b2e5ee,SM Black Star Promos,Leafeon-GX,SM146/248,177112,Leafeon GX - SM146,LINKED,sm146,1.00
+pkm-sm-black-star-promos-sm147-248-31419b373e,SM Black Star Promos,Glaceon-GX,SM147/248,177111,Glaceon GX - SM147,LINKED,sm147,1.00
+pkm-sm-black-star-promos-sm148-248-7895021403,SM Black Star Promos,Champions Festival,SM148/248,175064,Champions Festival - SM148 (World Championships 2018),SKIP_NAME_MISMATCH,sm148,0.33
+pkm-sm-black-star-promos-sm148-248-7895021403,SM Black Star Promos,Champions Festival,SM148/248,199336,Champions Festival - SM148 (World Championships 2018) [Champion],SKIP_NAME_MISMATCH,sm148,0.29
+pkm-sm-black-star-promos-sm148-248-7895021403,SM Black Star Promos,Champions Festival,SM148/248,199335,Champions Festival - SM148 (World Championships 2018) [Finalist],SKIP_NAME_MISMATCH,sm148,0.29
+pkm-sm-black-star-promos-sm148-248-7895021403,SM Black Star Promos,Champions Festival,SM148/248,199333,Champions Festival - SM148 (World Championships 2018) [Quarter Finalist],SKIP_NAME_MISMATCH,sm148,0.25
+pkm-sm-black-star-promos-sm148-248-7895021403,SM Black Star Promos,Champions Festival,SM148/248,199334,Champions Festival - SM148 (World Championships 2018) [Semi-Finalist],SKIP_NAME_MISMATCH,sm148,0.25
+pkm-sm-black-star-promos-sm148-248-7895021403,SM Black Star Promos,Champions Festival,SM148/248,178755,Champions Festival - SM148 (World Championships 2018) [Staff],SKIP_NAME_MISMATCH,sm148,0.33
+pkm-sm-black-star-promos-sm148-248-7895021403,SM Black Star Promos,Champions Festival,SM148/248,199332,Champions Festival - SM148 (World Championships 2018) [Top Sixteen],SKIP_NAME_MISMATCH,sm148,0.25
+pkm-sm-black-star-promos-sm148-248-7895021403,SM Black Star Promos,Champions Festival,SM148/248,199331,Champions Festival - SM148 (World Championships 2018) [Top Thirty-Two],SKIP_NAME_MISMATCH,sm148,0.22
+pkm-sm-black-star-promos-sm149-248-29ab75f005,SM Black Star Promos,Suicune,SM149/248,158255,Suicune - SM149 (Prerelease),SKIP_NAME_MISMATCH,sm149,0.50
+pkm-sm-black-star-promos-sm149-248-29ab75f005,SM Black Star Promos,Suicune,SM149/248,178793,Suicune - SM149 (Prerelease) [Staff],SKIP_NAME_MISMATCH,sm149,0.50
+pkm-sm-black-star-promos-sm150-248-f8bd17665a,SM Black Star Promos,Raikou,SM150/248,158256,Raikou - SM150 (Prerelease),SKIP_NAME_MISMATCH,sm150,0.50
+pkm-sm-black-star-promos-sm150-248-f8bd17665a,SM Black Star Promos,Raikou,SM150/248,178794,Raikou - SM150 (Prerelease) (Staff),SKIP_NAME_MISMATCH,sm150,0.50
+pkm-sm-black-star-promos-sm151-248-c9e70f5254,SM Black Star Promos,Giratina,SM151/248,,,NO_CANDIDATE,sm151,
+pkm-sm-black-star-promos-sm152-248-0f47f0e243,SM Black Star Promos,Tapu Lele,SM152/248,178796,Tapu Lele - SM152 (Prerelease),SKIP_NAME_MISMATCH,sm152,0.67
+pkm-sm-black-star-promos-sm152-248-0f47f0e243,SM Black Star Promos,Tapu Lele,SM152/248,178797,Tapu Lele - SM152 (Prerelease) [Staff],SKIP_NAME_MISMATCH,sm152,0.67
+pkm-sm-black-star-promos-sm153-248-31b13c9fa0,SM Black Star Promos,Rowlet,SM153/248,181000,Rowlet - SM153,LINKED,sm153,1.00
+pkm-sm-black-star-promos-sm154-248-9ae264dc80,SM Black Star Promos,Salandit,SM154/248,181560,Salandit - SM154,LINKED,sm154,1.00
+pkm-sm-black-star-promos-sm155-248-f049ef74f6,SM Black Star Promos,Kingdra-GX,SM155/248,178693,Kingdra GX - SM155,LINKED,sm155,1.00
+pkm-sm-black-star-promos-sm156-248-d107d9f0fc,SM Black Star Promos,Dragonite-GX,SM156/248,178692,Dragonite GX - SM156,LINKED,sm156,1.00
+pkm-sm-black-star-promos-sm157-248-c600931097,SM Black Star Promos,Pikachu,SM157/248,179377,Pikachu - SM157,LINKED,sm157,1.00
+pkm-sm-black-star-promos-sm158-248-3b4b661143,SM Black Star Promos,Charizard,SM158/248,183966,Charizard - SM158,LINKED,sm158,1.00
+pkm-sm-black-star-promos-sm158-248-3b4b661143,SM Black Star Promos,Charizard,SM158/248,183967,Charizard - SM158 [Staff],SKIP_NAME_MISMATCH,sm158,0.50
+pkm-sm-black-star-promos-sm159-248-4d0d7fc022,SM Black Star Promos,Zapdos,SM159/248,183972,Zapdos - SM159 (Prerelease),SKIP_NAME_MISMATCH,sm159,0.50
+pkm-sm-black-star-promos-sm159-248-4d0d7fc022,SM Black Star Promos,Zapdos,SM159/248,183973,Zapdos - SM159 (Prerelease) [Staff],SKIP_NAME_MISMATCH,sm159,0.50
+pkm-sm-black-star-promos-sm160-248-f81440157c,SM Black Star Promos,Nidoqueen,SM160/248,183970,Nidoqueen - SM160 (Prerelease),SKIP_NAME_MISMATCH,sm160,0.50
+pkm-sm-black-star-promos-sm160-248-f81440157c,SM Black Star Promos,Nidoqueen,SM160/248,183971,Nidoqueen - SM160 (Prerelease) [Staff],SKIP_NAME_MISMATCH,sm160,0.50
+pkm-sm-black-star-promos-sm161-248-335b2468d7,SM Black Star Promos,Jirachi,SM161/248,183968,Jirachi - SM161,LINKED,sm161,1.00
+pkm-sm-black-star-promos-sm161-248-335b2468d7,SM Black Star Promos,Jirachi,SM161/248,183969,Jirachi - SM161 [Staff],SKIP_NAME_MISMATCH,sm161,0.50
+pkm-sm-black-star-promos-sm162-248-6f812f75dc,SM Black Star Promos,Pikachu,SM162/248,184483,Pikachu - SM162,LINKED,sm162,1.00
+pkm-sm-black-star-promos-sm163-248-43ecfaf5cd,SM Black Star Promos,Mimikyu,SM163/248,184487,Mimikyu - SM163,LINKED,sm163,1.00
+pkm-sm-black-star-promos-sm164-248-459002ab91,SM Black Star Promos,Deoxys,SM164/248,184493,Deoxys - SM164,LINKED,sm164,1.00
+pkm-sm-black-star-promos-sm165-248-b2fd68cd01,SM Black Star Promos,Ultra Necrozma,SM165/248,184495,Ultra Necrozma - SM165,LINKED,sm165,1.00
+pkm-sm-black-star-promos-sm170-248-fc573066f3,SM Black Star Promos,Detective Pikachu,SM170/248,190940,Detective Pikachu - SM170,LINKED,sm170,1.00
+pkm-sm-black-star-promos-sm170-248-fc573066f3,SM Black Star Promos,Detective Pikachu,SM170/248,206823,Detective Pikachu - SM170 (Stamped),SKIP_NAME_MISMATCH,sm170,0.67
+pkm-sm-black-star-promos-sm171-248-16d4db8507,SM Black Star Promos,Flareon-GX,SM171/248,183563,Flareon GX - SM171,LINKED,sm171,1.00
+pkm-sm-black-star-promos-sm172-248-0dc48d2ca6,SM Black Star Promos,Vaporeon-GX,SM172/248,183567,Vaporeon GX - SM172,LINKED,sm172,1.00
+pkm-sm-black-star-promos-sm173-248-ef601cca9f,SM Black Star Promos,Jolteon-GX,SM173/248,183566,Jolteon GX - SM173,LINKED,sm173,1.00
+pkm-sm-black-star-promos-sm174-248-662ebaaf52,SM Black Star Promos,Eevee-GX,SM174/248,183560,Eevee GX - SM174,LINKED,sm174,1.00
+pkm-sm-black-star-promos-sm175-248-34f8464e81,SM Black Star Promos,Eevee-GX,SM175/248,183561,Eevee GX - SM175,LINKED,sm175,1.00
+pkm-sm-black-star-promos-sm176-248-92b27656e0,SM Black Star Promos,Eevee-GX,SM176/248,183562,Eevee GX - SM176,LINKED,sm176,1.00
+pkm-sm-black-star-promos-sm177-248-2ac44612d1,SM Black Star Promos,Meltan,SM177/248,185247,Meltan - SM177,LINKED,sm177,1.00
+pkm-sm-black-star-promos-sm178-248-a145275a53,SM Black Star Promos,Melmetal-GX,SM178/248,185248,Melmetal GX - SM178,LINKED,sm178,1.00
+pkm-sm-black-star-promos-sm179-248-8228b9e89e,SM Black Star Promos,Volcanion,SM179/248,189010,Volcanion - SM179 (Prerelease),SKIP_NAME_MISMATCH,sm179,0.50
+pkm-sm-black-star-promos-sm179-248-8228b9e89e,SM Black Star Promos,Volcanion,SM179/248,189455,Volcanion - SM179 (Prerelease) [Staff],SKIP_NAME_MISMATCH,sm179,0.50
+pkm-sm-black-star-promos-sm180-248-6c1c2e3d3b,SM Black Star Promos,Stakataka,SM180/248,189012,Stakataka - SM180 (Prerelease),SKIP_NAME_MISMATCH,sm180,0.50
+pkm-sm-black-star-promos-sm180-248-6c1c2e3d3b,SM Black Star Promos,Stakataka,SM180/248,189456,Stakataka - SM180 (Prerelease) [Staff],SKIP_NAME_MISMATCH,sm180,0.50
+pkm-sm-black-star-promos-sm181-248-1c9dd9463a,SM Black Star Promos,Melmetal,SM181/248,189021,Melmetal - SM181 (Prerelease),SKIP_NAME_MISMATCH,sm181,0.50
+pkm-sm-black-star-promos-sm181-248-1c9dd9463a,SM Black Star Promos,Melmetal,SM181/248,189457,Melmetal - SM181 (Prerelease) [Staff],SKIP_NAME_MISMATCH,sm181,0.50
+pkm-sm-black-star-promos-sm182-248-0c3a35a368,SM Black Star Promos,Persian,SM182/248,189022,Persian - SM182 (Prerelease),SKIP_NAME_MISMATCH,sm182,0.50
+pkm-sm-black-star-promos-sm182-248-0c3a35a368,SM Black Star Promos,Persian,SM182/248,189458,Persian - SM182 (Prerelease) [Staff],SKIP_NAME_MISMATCH,sm182,0.50
+pkm-sm-black-star-promos-sm183-248-35cb22e33b,SM Black Star Promos,Pikachu,SM183/248,189756,Pikachu - SM183,LINKED,sm183,1.00
+pkm-sm-black-star-promos-sm184-248-a83dab6519,SM Black Star Promos,Eevee,SM184/248,609698,Eevee - SM184 (Cosmos Holo),SKIP_NAME_MISMATCH,sm184,0.50
+pkm-sm-black-star-promos-sm185-248-b9c7db7587,SM Black Star Promos,Typhlosion,SM185/248,189758,Typhlosion - SM185,LINKED,sm185,1.00
+pkm-sm-black-star-promos-sm186-248-ab08c182cc,SM Black Star Promos,Flareon,SM186/248,189759,"Flareon - SM186 (Let's Play, Eevee!)",SKIP_NAME_MISMATCH,sm186,0.17
+pkm-sm-black-star-promos-sm188-248-963ad650f9,SM Black Star Promos,Kangaskhan-GX,SM188/248,192084,Kangaskhan GX - SM188,LINKED,sm188,1.00
+pkm-sm-black-star-promos-sm189-248-69e26bc5e9,SM Black Star Promos,Blastoise-GX,SM189/248,193277,Blastoise GX - SM189,LINKED,sm189,1.00
+pkm-sm-black-star-promos-sm190-248-fe563b3a98,SM Black Star Promos,Detective Pikachu,SM190/248,189805,Detective Pikachu - SM190,LINKED,sm190,1.00
+pkm-sm-black-star-promos-sm190-248-fe563b3a98,SM Black Star Promos,Detective Pikachu,SM190/248,196992,Detective Pikachu - SM190 (Stamped),SKIP_NAME_MISMATCH,sm190,0.67
+pkm-sm-black-star-promos-sm193-248-65385a2a04,SM Black Star Promos,Garchomp & Giratina-GX,SM193/248,,,NO_CANDIDATE,sm193,
+pkm-sm-black-star-promos-sm194-248-1a125a1322,SM Black Star Promos,Detective Pikachu,SM194/248,185254,Detective Pikachu - SM194,LINKED,sm194,1.00
+pkm-sm-black-star-promos-sm195-248-7ff141472d,SM Black Star Promos,Charizard-GX,SM195/248,185253,Charizard GX - SM195,LINKED,sm195,1.00
+pkm-sm-black-star-promos-sm196-248-62dbd5e454,SM Black Star Promos,Mewtwo-GX,SM196/248,188165,Mewtwo GX - SM196,LINKED,sm196,1.00
+pkm-sm-black-star-promos-sm197-248-27db12cdad,SM Black Star Promos,Greninja-GX,SM197/248,185250,Greninja GX - SM197,LINKED,sm197,1.00
+pkm-sm-black-star-promos-sm198-248-6d78bbe0b5,SM Black Star Promos,Bulbasaur,SM198/248,206824,Bulbasaur - SM198 (Detective Pikachu Stamped),SKIP_NAME_MISMATCH,sm198,0.25
+pkm-sm-black-star-promos-sm198-248-6d78bbe0b5,SM Black Star Promos,Bulbasaur,SM198/248,188320,Bulbasaur - SM198 (In-Store Event Promo),SKIP_NAME_MISMATCH,sm198,0.20
+pkm-sm-black-star-promos-sm199-248-3f64004e06,SM Black Star Promos,Psyduck,SM199/248,206825,Psyduck - SM199 (Detective Pikachu Stamped),SKIP_NAME_MISMATCH,sm199,0.25
+pkm-sm-black-star-promos-sm199-248-3f64004e06,SM Black Star Promos,Psyduck,SM199/248,188321,Psyduck - SM199 (In-Store Event Promo),SKIP_NAME_MISMATCH,sm199,0.20
+pkm-sm-black-star-promos-sm200-248-668af9224c,SM Black Star Promos,Snubbull,SM200/248,206826,Snubbull - SM200 (Detective Pikachu Stamped),SKIP_NAME_MISMATCH,sm200,0.25
+pkm-sm-black-star-promos-sm200-248-668af9224c,SM Black Star Promos,Snubbull,SM200/248,188322,Snubbull - SM200 (In-Store Event Promo),SKIP_NAME_MISMATCH,sm200,0.20
+pkm-sm-black-star-promos-sm202-248-4c6185b63e,SM Black Star Promos,Amoonguss,SM202/248,196715,Amoonguss - SM202 (Prerelease),SKIP_NAME_MISMATCH,sm202,0.50
+pkm-sm-black-star-promos-sm202-248-4c6185b63e,SM Black Star Promos,Amoonguss,SM202/248,199609,Amoonguss - SM202 (Prerelease) [Staff],SKIP_NAME_MISMATCH,sm202,0.50
+pkm-sm-black-star-promos-sm203-248-a6de283cda,SM Black Star Promos,Tapu Fini,SM203/248,196718,Tapu Fini - SM203 (Prerelease),SKIP_NAME_MISMATCH,sm203,0.67
+pkm-sm-black-star-promos-sm203-248-a6de283cda,SM Black Star Promos,Tapu Fini,SM203/248,199611,Tapu Fini - SM203 (Prerelease) [Staff],SKIP_NAME_MISMATCH,sm203,0.67
+pkm-sm-black-star-promos-sm204-248-8326d8e2bd,SM Black Star Promos,Necrozma,SM204/248,196716,Necrozma - SM204 (Prerelease),SKIP_NAME_MISMATCH,sm204,0.50
+pkm-sm-black-star-promos-sm204-248-8326d8e2bd,SM Black Star Promos,Necrozma,SM204/248,199622,Necrozma - SM204 (Prerelease) [Staff],SKIP_NAME_MISMATCH,sm204,0.50
+pkm-sm-black-star-promos-sm205-248-44823c931c,SM Black Star Promos,Terrakion,SM205/248,196717,Terrakion - SM205 (Prerelease),SKIP_NAME_MISMATCH,sm205,0.50
+pkm-sm-black-star-promos-sm205-248-44823c931c,SM Black Star Promos,Terrakion,SM205/248,199617,Terrakion - SM205 (Prerelease) [Staff],SKIP_NAME_MISMATCH,sm205,0.50
+pkm-sm-black-star-promos-sm206-248-6d4ec41468,SM Black Star Promos,Pikachu,SM206/248,198771,Pikachu - SM206,LINKED,sm206,1.00
+pkm-sm-black-star-promos-sm207-248-07648751a6,SM Black Star Promos,Sudowoodo,SM207/248,199488,Sudowoodo - SM207,LINKED,sm207,1.00
+pkm-sm-black-star-promos-sm208-248-1bbe592e1d,SM Black Star Promos,Vikavolt,SM208/248,197889,Vikavolt - SM208,LINKED,sm208,1.00
+pkm-sm-black-star-promos-sm209-248-bbbd2e6454,SM Black Star Promos,Stakataka,SM209/248,197888,Stakataka - SM209,LINKED,sm209,1.00
+pkm-sm-black-star-promos-sm211-248-4d3b51d54a,SM Black Star Promos,Charizard-GX,SM211/248,197874,Charizard GX - SM211,LINKED,sm211,1.00
+pkm-sm-black-star-promos-sm212-248-931f316675,SM Black Star Promos,Gyarados-GX,SM212/248,197875,Gyarados GX - SM212,LINKED,sm212,1.00
+pkm-sm-black-star-promos-sm213-248-9e5d72d4c0,SM Black Star Promos,Raichu-GX,SM213/248,197876,Raichu GX - SM213,LINKED,sm213,1.00
+pkm-sm-black-star-promos-sm214-248-c70b11ccb7,SM Black Star Promos,Mewtwo,SM214/248,197855,Mewtwo - SM214,LINKED,sm214,1.00
+pkm-sm-black-star-promos-sm215-248-895031b17b,SM Black Star Promos,Mew,SM215/248,197854,Mew - SM215,LINKED,sm215,1.00
+pkm-sm-black-star-promos-sm218-248-8c3add5e42,SM Black Star Promos,Buzzwole,SM218/248,201940,Buzzwole - SM218 (Prerelease),SKIP_NAME_MISMATCH,sm218,0.50
+pkm-sm-black-star-promos-sm218-248-8c3add5e42,SM Black Star Promos,Buzzwole,SM218/248,201941,Buzzwole - SM218 (Prerelease) [Staff],SKIP_NAME_MISMATCH,sm218,0.50
+pkm-sm-black-star-promos-sm219-248-dbd47ec343,SM Black Star Promos,Entei,SM219/248,201943,Entei - SM219 (Prerelease),SKIP_NAME_MISMATCH,sm219,0.50
+pkm-sm-black-star-promos-sm219-248-dbd47ec343,SM Black Star Promos,Entei,SM219/248,201942,Entei - SM219 (Prerelease) [Staff],SKIP_NAME_MISMATCH,sm219,0.50
+pkm-sm-black-star-promos-sm220-248-1543207a75,SM Black Star Promos,Phione,SM220/248,201938,Phione - SM220 (Prerelease),SKIP_NAME_MISMATCH,sm220,0.50
+pkm-sm-black-star-promos-sm220-248-1543207a75,SM Black Star Promos,Phione,SM220/248,201939,Phione - SM220 (Prerelease) [Staff],SKIP_NAME_MISMATCH,sm220,0.50
+pkm-sm-black-star-promos-sm221-248-201f10e8a2,SM Black Star Promos,Blacephalon,SM221/248,201944,Blacephalon - SM221 (Prerelease),SKIP_NAME_MISMATCH,sm221,0.50
+pkm-sm-black-star-promos-sm221-248-201f10e8a2,SM Black Star Promos,Blacephalon,SM221/248,201945,Blacephalon - SM221 (Prerelease) [Staff],SKIP_NAME_MISMATCH,sm221,0.50
+pkm-sm-black-star-promos-sm222-248-9819422595,SM Black Star Promos,Mismagius,SM222/248,204985,Mismagius - SM222,LINKED,sm222,1.00
+pkm-sm-black-star-promos-sm223-248-1dc0b3e962,SM Black Star Promos,Terrakion,SM223/248,204984,Terrakion - SM223,LINKED,sm223,1.00
+pkm-sm-black-star-promos-sm224-248-f5d601837e,SM Black Star Promos,Celebi,SM224/248,204973,Celebi - SM224,LINKED,sm224,1.00
+pkm-sm-black-star-promos-sm225-248-0ff459d3a1,SM Black Star Promos,Victini,SM225/248,,,NO_CANDIDATE,sm225,
+pkm-sm-black-star-promos-sm226-248-259c0bdd50,SM Black Star Promos,Charizard,SM226/248,205171,Charizard - SM226,LINKED,sm226,1.00
+pkm-sm-black-star-promos-sm227-248-acb4f066cd,SM Black Star Promos,Pikachu,SM227/248,205170,Pikachu - SM227,LINKED,sm227,1.00
+pkm-sm-black-star-promos-sm228-248-1bd93bef01,SM Black Star Promos,Armored Mewtwo,SM228/248,205169,Armored Mewtwo - SM228,LINKED,sm228,1.00
+pkm-sm-black-star-promos-sm231-248-85a86946bd,SM Black Star Promos,Champions Festival,SM231/248,198360,Champions Festival - SM231 (World Championships 2019),SKIP_NAME_MISMATCH,sm231,0.33
+pkm-sm-black-star-promos-sm231-248-85a86946bd,SM Black Star Promos,Champions Festival,SM231/248,198367,Champions Festival - SM231 (World Championships 2019) [Champion],SKIP_NAME_MISMATCH,sm231,0.29
+pkm-sm-black-star-promos-sm231-248-85a86946bd,SM Black Star Promos,Champions Festival,SM231/248,198366,Champions Festival - SM231 (World Championships 2019) [Finalist],SKIP_NAME_MISMATCH,sm231,0.29
+pkm-sm-black-star-promos-sm231-248-85a86946bd,SM Black Star Promos,Champions Festival,SM231/248,198364,Champions Festival - SM231 (World Championships 2019) [Quarter Finalist],SKIP_NAME_MISMATCH,sm231,0.25
+pkm-sm-black-star-promos-sm231-248-85a86946bd,SM Black Star Promos,Champions Festival,SM231/248,198365,Champions Festival - SM231 (World Championships 2019) [Semi-Finalist],SKIP_NAME_MISMATCH,sm231,0.25
+pkm-sm-black-star-promos-sm231-248-85a86946bd,SM Black Star Promos,Champions Festival,SM231/248,198361,Champions Festival - SM231 (World Championships 2019) [Staff],SKIP_NAME_MISMATCH,sm231,0.33
+pkm-sm-black-star-promos-sm231-248-85a86946bd,SM Black Star Promos,Champions Festival,SM231/248,198363,Champions Festival - SM231 (World Championships 2019) [Top Sixteen],SKIP_NAME_MISMATCH,sm231,0.25
+pkm-sm-black-star-promos-sm231-248-85a86946bd,SM Black Star Promos,Champions Festival,SM231/248,198362,Champions Festival - SM231 (World Championships 2019) [Top Thirty-Two],SKIP_NAME_MISMATCH,sm231,0.22
+pkm-sm-black-star-promos-sm232-248-0f2c30afea,SM Black Star Promos,Pikachu-GX,SM232/248,200273,Pikachu GX - SM232,LINKED,sm232,1.00
+pkm-sm-black-star-promos-sm233-248-65a921f921,SM Black Star Promos,Eevee-GX,SM233/248,200272,Eevee GX - SM233,LINKED,sm233,1.00
+pkm-sm-black-star-promos-sm234-248-28c2339987,SM Black Star Promos,Pikachu,SM234/248,200275,Pikachu - SM234,LINKED,sm234,1.00
+pkm-sm-black-star-promos-sm235-248-61e1f2283a,SM Black Star Promos,Eevee,SM235/248,200276,Eevee - SM235,LINKED,sm235,1.00
+pkm-sm-black-star-promos-sm237-248-565d7dcdea,SM Black Star Promos,Leafeon,SM237/248,211627,Leafeon - SM237,LINKED,sm237,1.00
+pkm-sm-black-star-promos-sm238-248-8bfe7b995b,SM Black Star Promos,Glaceon,SM238/248,211628,Glaceon - SM238,LINKED,sm238,1.00
+pkm-sm-black-star-promos-sm239-248-400dac8312,SM Black Star Promos,Carracosta-GX,SM239/248,211451,Carracosta GX - SM239,LINKED,sm239,1.00
+pkm-sm-black-star-promos-sm242-248-e3a06cad82,SM Black Star Promos,Eevee-GX,SM242/248,211456,Eevee GX - SM242,LINKED,sm242,1.00
+pkm-sm-black-star-promos-sm243-248-2a6bd4e574,SM Black Star Promos,Regigigas,SM243/248,211626,Regigigas - SM243,LINKED,sm243,1.00
+pkm-sm-black-star-promos-sm244-248-4e90273a5d,SM Black Star Promos,Aipom,SM244/248,214272,Aipom - SM244,LINKED,sm244,1.00
+pkm-sm-black-star-promos-sm245-248-f84bd36b4e,SM Black Star Promos,Mismagius,SM245/248,245874,Mismagius - SM245,LINKED,sm245,1.00
+pkm-sm-black-star-promos-sm246-248-fc7f332616,SM Black Star Promos,Sabrina & Brycen,SM246/248,245873,Sabrina & Brycen - SM246,LINKED,sm246,1.00
+pkm-xy-black-star-promos-xy01-211-058febcbae,XY Black Star Promos,Chespin,XY01/211,84270,Chespin - XY01,LINKED,xy1,1.00
+pkm-xy-black-star-promos-xy03-211-d833c9ff75,XY Black Star Promos,Froakie,XY03/211,85568,Froakie - XY03,LINKED,xy3,1.00
+pkm-xy-black-star-promos-xy04-211-aa388a03c5,XY Black Star Promos,Sylveon,XY04/211,89729,Sylveon - XY04,LINKED,xy4,1.00
+pkm-xy-black-star-promos-xy05-211-6231e68055,XY Black Star Promos,Xerneas,XY05/211,90670,Xerneas - XY05,LINKED,xy5,1.00
+pkm-xy-black-star-promos-xy06-211-30668052d1,XY Black Star Promos,Yveltal,XY06/211,90698,Yveltal - XY06,LINKED,xy6,1.00
+pkm-xy-black-star-promos-xy07-211-0a338979c4,XY Black Star Promos,Xerneas-EX,XY07/211,90673,Xerneas EX - XY07,LINKED,xy7,1.00
+pkm-xy-black-star-promos-xy08-211-96a1828433,XY Black Star Promos,Yveltal-EX,XY08/211,90701,Yveltal EX - XY08,LINKED,xy8,1.00
+pkm-xy-black-star-promos-xy10-211-3752724ed3,XY Black Star Promos,Dragalge,XY10/211,96371,Dragalge - XY10 (Prerelease),SKIP_NAME_MISMATCH,xy10,0.50
+pkm-xy-black-star-promos-xy10-211-3752724ed3,XY Black Star Promos,Dragalge,XY10/211,96370,Dragalge - XY10 (Prerelease) [Staff],SKIP_NAME_MISMATCH,xy10,0.50
+pkm-xy-black-star-promos-xy11-211-deab5d9d83,XY Black Star Promos,Skiddo,XY11/211,96372,Skiddo - XY11,LINKED,xy11,1.00
+pkm-xy-black-star-promos-xy12-211-967bf6f539,XY Black Star Promos,Honedge,XY12/211,96373,Honedge - XY12,LINKED,xy12,1.00
+pkm-xy-black-star-promos-xy13-211-6cc1989497,XY Black Star Promos,Machamp,XY13/211,96374,Machamp - XY13 (Prerelease),SKIP_NAME_MISMATCH,xy13,0.50
+pkm-xy-black-star-promos-xy13-211-6cc1989497,XY Black Star Promos,Machamp,XY13/211,96375,Machamp - XY13 (Prerelease) [Staff],SKIP_NAME_MISMATCH,xy13,0.50
+pkm-xy-black-star-promos-xy14-211-6777013de8,XY Black Star Promos,Trevenant,XY14/211,96376,Trevenant - XY14,LINKED,xy14,1.00
+pkm-xy-black-star-promos-xy15-211-bee786dea7,XY Black Star Promos,Slurpuff,XY15/211,96377,Slurpuff - XY15,LINKED,xy15,1.00
+pkm-xy-black-star-promos-xy16-211-6bfd4f67f8,XY Black Star Promos,Gogoat,XY16/211,96378,Gogoat - XY16,LINKED,xy16,1.00
+pkm-xy-black-star-promos-xy17-211-5bab50c2c2,XY Black Star Promos,Charizard-EX,XY17/211,96379,Charizard EX - XY17,LINKED,xy17,1.00
+pkm-xy-black-star-promos-xy18-211-fc5d7a8e46,XY Black Star Promos,Chesnaught-EX,XY18/211,96380,Chesnaught EX - XY18,LINKED,xy18,1.00
+pkm-xy-black-star-promos-xy19-211-c7ea249297,XY Black Star Promos,Delphox-EX,XY19/211,96381,Delphox EX - XY19,LINKED,xy19,1.00
+pkm-xy-black-star-promos-xy20-211-47be8069f5,XY Black Star Promos,Greninja-EX,XY20/211,96382,Greninja EX - XY20,LINKED,xy20,1.00
+pkm-xy-black-star-promos-xy21-211-9119b960e3,XY Black Star Promos,Bronzong,XY21/211,96383,Bronzong - XY21 (Prerelease),SKIP_NAME_MISMATCH,xy21,0.50
+pkm-xy-black-star-promos-xy21-211-9119b960e3,XY Black Star Promos,Bronzong,XY21/211,96384,Bronzong - XY21 (Prerelease) [Staff],SKIP_NAME_MISMATCH,xy21,0.50
+pkm-xy-black-star-promos-xy22-211-d1cbde5e0c,XY Black Star Promos,Darkrai,XY22/211,96385,Darkrai - XY22,LINKED,xy22,1.00
+pkm-xy-black-star-promos-xy23-211-50f622daa3,XY Black Star Promos,Shiftry,XY23/211,96386,Shiftry - XY23,LINKED,xy23,1.00
+pkm-xy-black-star-promos-xy24-211-6c22a0cff8,XY Black Star Promos,Greninja,XY24/211,96387,Greninja - XY24,LINKED,xy24,1.00
+pkm-xy-black-star-promos-xy25-211-e0d50a313f,XY Black Star Promos,Krookodile-EX,XY25/211,96388,Krookodile EX - XY25,LINKED,xy25,1.00
+pkm-xy-black-star-promos-xy26-211-498662c9b0,XY Black Star Promos,Pyroar,XY26/211,96389,Pyroar - XY26,LINKED,xy26,1.00
+pkm-xy-black-star-promos-xy27-211-099f15d251,XY Black Star Promos,Champions Festival,XY27/211,96484,Champions Festival - XY27 (2014 Champion),SKIP_NAME_MISMATCH,xy27,0.40
+pkm-xy-black-star-promos-xy27-211-099f15d251,XY Black Star Promos,Champions Festival,XY27/211,96483,Champions Festival - XY27 (2014 Finalist),SKIP_NAME_MISMATCH,xy27,0.40
+pkm-xy-black-star-promos-xy27-211-099f15d251,XY Black Star Promos,Champions Festival,XY27/211,96481,Champions Festival - XY27 (2014 Quarter Finalist),SKIP_NAME_MISMATCH,xy27,0.33
+pkm-xy-black-star-promos-xy27-211-099f15d251,XY Black Star Promos,Champions Festival,XY27/211,96482,Champions Festival - XY27 (2014 Semi-Finalist),SKIP_NAME_MISMATCH,xy27,0.33
+pkm-xy-black-star-promos-xy27-211-099f15d251,XY Black Star Promos,Champions Festival,XY27/211,96485,Champions Festival - XY27 (2014 Staff),SKIP_NAME_MISMATCH,xy27,0.50
+pkm-xy-black-star-promos-xy27-211-099f15d251,XY Black Star Promos,Champions Festival,XY27/211,96480,Champions Festival - XY27 (2014 Top Sixteen),SKIP_NAME_MISMATCH,xy27,0.33
+pkm-xy-black-star-promos-xy27-211-099f15d251,XY Black Star Promos,Champions Festival,XY27/211,96479,Champions Festival - XY27 (2014 Top Thirty-Two),SKIP_NAME_MISMATCH,xy27,0.29
+pkm-xy-black-star-promos-xy27-211-099f15d251,XY Black Star Promos,Champions Festival,XY27/211,96390,Champions Festival - XY27 (2014),SKIP_NAME_MISMATCH,xy27,0.50
+pkm-xy-black-star-promos-xy28-211-76c8566e4e,XY Black Star Promos,Venusaur-EX,XY28/211,96391,Venusaur EX - XY28,LINKED,xy28,1.00
+pkm-xy-black-star-promos-xy29-211-61340f668c,XY Black Star Promos,Charizard-EX,XY29/211,96392,Charizard EX - XY29,LINKED,xy29,1.00
+pkm-xy-black-star-promos-xy30-211-2bd45c91c6,XY Black Star Promos,Blastoise-EX,XY30/211,96393,Blastoise EX - XY30,LINKED,xy30,1.00
+pkm-xy-black-star-promos-xy31-211-4c33822a40,XY Black Star Promos,Xerneas,XY31/211,96394,Xerneas - XY31,LINKED,xy31,1.00
+pkm-xy-black-star-promos-xy32-211-d43f07d6db,XY Black Star Promos,Yveltal,XY32/211,96395,Yveltal - XY32,LINKED,xy32,1.00
+pkm-xy-black-star-promos-xy33-211-ce4039d51e,XY Black Star Promos,Trevor,XY33/211,96396,Trevor - XY33,LINKED,xy33,1.00
+pkm-xy-black-star-promos-xy34-211-b72dd8fbaf,XY Black Star Promos,Metagross-EX,XY34/211,96397,Metagross EX (Shiny),SKIP_NAME_MISMATCH,xy34,0.67
+pkm-xy-black-star-promos-xy35-211-5393696da1,XY Black Star Promos,M Metagross-EX,XY35/211,96398,M Metagross EX (Shiny),SKIP_NAME_MISMATCH,xy35,0.75
+pkm-xy-black-star-promos-xy36-211-e45b621c4e,XY Black Star Promos,Treecko,XY36/211,96419,Treecko - XY36,LINKED,xy36,1.00
+pkm-xy-black-star-promos-xy37-211-18348f3211,XY Black Star Promos,Torchic,XY37/211,96420,Torchic - XY37,LINKED,xy37,1.00
+pkm-xy-black-star-promos-xy38-211-49a7f85818,XY Black Star Promos,Mudkip,XY38/211,96421,Mudkip - XY38,LINKED,xy38,1.00
+pkm-xy-black-star-promos-xy39-211-d348d7190b,XY Black Star Promos,Kingdra,XY39/211,96413,Kingdra - XY39 (Prerelease),SKIP_NAME_MISMATCH,xy39,0.50
+pkm-xy-black-star-promos-xy39-211-d348d7190b,XY Black Star Promos,Kingdra,XY39/211,96414,Kingdra - XY39 (Prerelease) [Staff],SKIP_NAME_MISMATCH,xy39,0.50
+pkm-xy-black-star-promos-xy43-211-d6f07a03e0,XY Black Star Promos,Diancie-EX,XY43/211,96416,Diancie EX - XY43,LINKED,xy43,1.00
+pkm-xy-black-star-promos-xy44-211-3a23fad9c5,XY Black Star Promos,M Diancie-EX,XY44/211,96417,M Diancie EX - XY44,LINKED,xy44,1.00
+pkm-xy-black-star-promos-xy45-211-6056817da6,XY Black Star Promos,Gallade-EX,XY45/211,96418,Gallade EX - XY45,LINKED,xy45,1.00
+pkm-xy-black-star-promos-xy46-211-07d7d86fbf,XY Black Star Promos,Altaria,XY46/211,100503,Altaria - XY46 (Prerelease),SKIP_NAME_MISMATCH,xy46,0.50
+pkm-xy-black-star-promos-xy46-211-07d7d86fbf,XY Black Star Promos,Altaria,XY46/211,100504,Altaria - XY46 (Prerelease) [Staff],SKIP_NAME_MISMATCH,xy46,0.50
+pkm-xy-black-star-promos-xy47-211-b3700fdc84,XY Black Star Promos,Heliolisk,XY47/211,100505,Heliolisk - XY47,LINKED,xy47,1.00
+pkm-xy-black-star-promos-xy48-211-6ae61c0a93,XY Black Star Promos,Meowstic,XY48/211,100506,Meowstic - XY48,LINKED,xy48,1.00
+pkm-xy-black-star-promos-xy49-211-210c15da15,XY Black Star Promos,Regirock,XY49/211,100507,Regirock - XY49,LINKED,xy49,1.00
+pkm-xy-black-star-promos-xy50-211-b5ee33f167,XY Black Star Promos,Pangoro,XY50/211,100508,Pangoro - XY50,LINKED,xy50,1.00
+pkm-xy-black-star-promos-xy51-211-2bad16c2c5,XY Black Star Promos,Kyogre,XY51/211,98732,Kyogre - XY51,LINKED,xy51,1.00
+pkm-xy-black-star-promos-xy52-211-9e06ff4dbc,XY Black Star Promos,Groudon,XY52/211,98733,Groudon - XY52,LINKED,xy52,1.00
+pkm-xy-black-star-promos-xy53-211-bf306c5277,XY Black Star Promos,Sceptile-EX,XY53/211,100509,Sceptile EX - XY53,LINKED,xy53,1.00
+pkm-xy-black-star-promos-xy54-211-4e5d6e86f4,XY Black Star Promos,Blaziken-EX,XY54/211,100510,Blaziken EX - XY54,LINKED,xy54,1.00
+pkm-xy-black-star-promos-xy55-211-cdb77b3f1f,XY Black Star Promos,Swampert-EX,XY55/211,100511,Swampert EX - XY55,LINKED,xy55,1.00
+pkm-xy-black-star-promos-xy56-211-235fa98f81,XY Black Star Promos,Blissey,XY56/211,108593,Blissey - XY56,LINKED,xy56,1.00
+pkm-xy-black-star-promos-xy58-211-45be75fd97,XY Black Star Promos,Malamar,XY58/211,104053,Malamar - XY58,LINKED,xy58,1.00
+pkm-xy-black-star-promos-xy59-211-3fd5fdb6ce,XY Black Star Promos,Salamence,XY59/211,108595,Salamence - XY59,LINKED,xy59,1.00
+pkm-xy-black-star-promos-xy60-211-9d5a4c5c5a,XY Black Star Promos,Gyarados,XY60/211,102802,Gyarados - XY60 (Prerelease),SKIP_NAME_MISMATCH,xy60,0.50
+pkm-xy-black-star-promos-xy60-211-9d5a4c5c5a,XY Black Star Promos,Gyarados,XY60/211,102803,Gyarados - XY60 (Prerelease) [Staff],SKIP_NAME_MISMATCH,xy60,0.50
+pkm-xy-black-star-promos-xy62-211-4c88f09179,XY Black Star Promos,Absol-EX,XY62/211,100512,Absol EX - XY62,LINKED,xy62,1.00
+pkm-xy-black-star-promos-xy63-211-f6ec388e31,XY Black Star Promos,M Absol-EX,XY63/211,100513,M Absol EX - XY63,LINKED,xy63,1.00
+pkm-xy-black-star-promos-xy64-211-4eb6d2a272,XY Black Star Promos,Rayquaza,XY64/211,100514,Rayquaza - XY64,LINKED,xy64,1.00
+pkm-xy-black-star-promos-xy65-211-a2d77ecfae,XY Black Star Promos,Latios,XY65/211,102804,Latios - XY65,LINKED,xy65,1.00
+pkm-xy-black-star-promos-xy66-211-3a024157c1,XY Black Star Promos,Rayquaza-EX,XY66/211,100515,Rayquaza EX - XY66,LINKED,xy66,1.00
+pkm-xy-black-star-promos-xy67-211-c75bb7a72d,XY Black Star Promos,Jirachi,XY67/211,108596,Jirachi - XY67,LINKED,xy67,1.00
+pkm-xy-black-star-promos-xy67a-211-33b4022f3f,XY Black Star Promos,Jirachi,XY67a/211,,,NO_CANDIDATE,xy67a,
+pkm-xy-black-star-promos-xy69-211-b837293a70,XY Black Star Promos,Rayquaza-EX,XY69/211,108599,Rayquaza EX (Shiny),SKIP_NAME_MISMATCH,xy69,0.67
+pkm-xy-black-star-promos-xy73-211-7245e19e06,XY Black Star Promos,Rayquaza-EX,XY73/211,108603,Rayquaza EX (XY73),SKIP_NAME_MISMATCH,xy73,0.67
+pkm-xy-black-star-promos-xy80-211-d5f57c6805,XY Black Star Promos,Black Kyurem,XY80/211,108610,Black Kyurem - XY80,LINKED,xy80,1.00
+pkm-xy-black-star-promos-xy83-211-8815b832d4,XY Black Star Promos,Arceus,XY83/211,108613,Arceus - XY83,LINKED,xy83,1.00
+pkm-xy-black-star-promos-xy84-211-7fad306b6d,XY Black Star Promos,Pikachu-EX,XY84/211,108614,Pikachu EX - XY84,LINKED,xy84,1.00
+pkm-xy-black-star-promos-xy85-211-a52d517509,XY Black Star Promos,Hoopa-EX,XY85/211,108615,Hoopa EX (Collection Promo),SKIP_NAME_MISMATCH,xy85,0.67
+pkm-xy-black-star-promos-xy88-211-dff3bfd2a1,XY Black Star Promos,Chespin,XY88/211,108618,Chespin (Collector Chest),SKIP_NAME_MISMATCH,xy88,0.33
+pkm-xy-black-star-promos-xy89-211-23caa890d6,XY Black Star Promos,Pikachu,XY89/211,108619,Pikachu (Collector Chest),SKIP_NAME_MISMATCH,xy89,0.33
+pkm-xy-black-star-promos-xy90-211-b4b78a22e9,XY Black Star Promos,Hoopa,XY90/211,108620,Hoopa (Collector Chest),SKIP_NAME_MISMATCH,xy90,0.33
+pkm-xy-black-star-promos-xy91-211-63cebf1490,XY Black Star Promos,Champions Festival,XY91/211,199320,Champions Festival (2015 Champion),SKIP_NAME_MISMATCH,xy91,0.50
+pkm-xy-black-star-promos-xy91-211-63cebf1490,XY Black Star Promos,Champions Festival,XY91/211,199319,Champions Festival (2015 Finalist),SKIP_NAME_MISMATCH,xy91,0.50
+pkm-xy-black-star-promos-xy91-211-63cebf1490,XY Black Star Promos,Champions Festival,XY91/211,199317,Champions Festival (2015 Quarter Finalist),SKIP_NAME_MISMATCH,xy91,0.40
+pkm-xy-black-star-promos-xy91-211-63cebf1490,XY Black Star Promos,Champions Festival,XY91/211,199318,Champions Festival (2015 Semi-Finalist),SKIP_NAME_MISMATCH,xy91,0.40
+pkm-xy-black-star-promos-xy91-211-63cebf1490,XY Black Star Promos,Champions Festival,XY91/211,199315,Champions Festival (2015 Top Sixteen),SKIP_NAME_MISMATCH,xy91,0.40
+pkm-xy-black-star-promos-xy91-211-63cebf1490,XY Black Star Promos,Champions Festival,XY91/211,199314,Champions Festival (2015 Top Thirty-Two),SKIP_NAME_MISMATCH,xy91,0.33
+pkm-xy-black-star-promos-xy91-211-63cebf1490,XY Black Star Promos,Champions Festival,XY91/211,199311,Champions Festival (2015),SKIP_NAME_MISMATCH,xy91,0.67
+pkm-xy-black-star-promos-xy91-211-63cebf1490,XY Black Star Promos,Champions Festival,XY91/211,199312,Champions Festival (2015) [Staff],SKIP_NAME_MISMATCH,xy91,0.67
+pkm-xy-black-star-promos-xy92-211-e39de35070,XY Black Star Promos,Sableye,XY92/211,108621,Sableye - XY92,LINKED,xy92,1.00
+pkm-xy-black-star-promos-xy93-211-8511be66d3,XY Black Star Promos,Celebi,XY93/211,108622,Celebi - XY93,LINKED,xy93,1.00
+pkm-xy-black-star-promos-xy97-211-55fc031f7d,XY Black Star Promos,Aerodactyl-EX,XY97/211,114007,Aerodactyl EX - XY97,LINKED,xy97,1.00
+pkm-xy-black-star-promos-xy99-211-f07934feb6,XY Black Star Promos,Aerodactyl Spirit Link,XY99/211,114009,Aerodactyl Spirit Link - XY99,LINKED,xy99,1.00
+pkm-xy-black-star-promos-xy100-211-38a9e6ec93,XY Black Star Promos,Mewtwo,XY100/211,108623,Mewtwo - XY100,LINKED,xy100,1.00
+pkm-xy-black-star-promos-xy101-211-34d6808486,XY Black Star Promos,Mewtwo,XY101/211,108624,Mewtwo - XY101,LINKED,xy101,1.00
+pkm-xy-black-star-promos-xy102-211-c818ff0220,XY Black Star Promos,Aurorus-EX,XY102/211,114010,Aurorus EX - XY102,LINKED,xy102,1.00
+pkm-xy-black-star-promos-xy107-211-bae338972f,XY Black Star Promos,Mewtwo-EX,XY107/211,117702,Mewtwo EX - XY107,LINKED,xy107,1.00
+pkm-xy-black-star-promos-xy109-211-32f6505625,XY Black Star Promos,Gyarados,XY109/211,177110,Gyarados - XY109,LINKED,xy109,1.00
+pkm-xy-black-star-promos-xy110-211-be258bff70,XY Black Star Promos,Mew,XY110/211,114006,Mew - XY110,LINKED,xy110,1.00
+pkm-xy-black-star-promos-xy111-211-e70190839b,XY Black Star Promos,Celebi,XY111/211,114526,Celebi - XY111,LINKED,xy111,1.00
+pkm-xy-black-star-promos-xy112-211-0bb527dd33,XY Black Star Promos,Jirachi,XY112/211,117266,Jirachi - XY112,LINKED,xy112,1.00
+pkm-xy-black-star-promos-xy114-211-fd1c537ba2,XY Black Star Promos,Darkrai,XY114/211,121946,Darkrai - XY114,LINKED,xy114,1.00
+pkm-xy-black-star-promos-xy115-211-813aaa508c,XY Black Star Promos,Shaymin,XY115/211,120115,Shaymin - XY115,LINKED,xy115,1.00
+pkm-xy-black-star-promos-xy116-211-1b1b58e3d5,XY Black Star Promos,Arceus,XY116/211,121364,Arceus - XY116,LINKED,xy116,1.00
+pkm-xy-black-star-promos-xy117-211-9d5da36ccb,XY Black Star Promos,Victini,XY117/211,,,NO_CANDIDATE,xy117,
+pkm-xy-black-star-promos-xy118-211-ed7af4ffb1,XY Black Star Promos,Keldeo,XY118/211,126034,Keldeo - XY118,LINKED,xy118,1.00
+pkm-xy-black-star-promos-xy120-211-7fccac5994,XY Black Star Promos,Meloetta,XY120/211,125898,Meloetta - XY120,LINKED,xy120,1.00
+pkm-xy-black-star-promos-xy121-211-8668d21259,XY Black Star Promos,Charizard-EX,XY121/211,117267,Charizard EX - XY121,LINKED,xy121,1.00
+pkm-xy-black-star-promos-xy122-211-06f625c762,XY Black Star Promos,Blastoise-EX,XY122/211,118862,Blastoise EX - XY122,LINKED,xy122,1.00
+pkm-xy-black-star-promos-xy123-211-a9983d6ed0,XY Black Star Promos,Venusaur-EX,XY123/211,120701,Venusaur EX - XY123,LINKED,xy123,1.00
+pkm-xy-black-star-promos-xy124-211-45969c33bb,XY Black Star Promos,Pikachu-EX,XY124/211,123436,Pikachu EX - XY124,LINKED,xy124,1.00
+pkm-xy-black-star-promos-xy125-211-6cbc33cf60,XY Black Star Promos,Mewtwo-EX,XY125/211,123435,Mewtwo EX - XY125,LINKED,xy125,1.00
+pkm-xy-black-star-promos-xy126-211-c60ffcb3ee,XY Black Star Promos,Mew-EX,XY126/211,123434,Mew EX - XY126,LINKED,xy126,1.00
+pkm-xy-black-star-promos-xy133-211-511beb6a67,XY Black Star Promos,Ash-Greninja-EX,XY133/211,118871,Ash-Greninja EX - XY133,LINKED,xy133,1.00
+pkm-xy-black-star-promos-xy135-211-9ebd152dcd,XY Black Star Promos,Beheeyem BREAK,XY135/211,114012,Beheeyem BREAK - XY135,LINKED,xy135,1.00
+pkm-xy-black-star-promos-xy138-211-1bd38ddf91,XY Black Star Promos,Froakie,XY138/211,118875,Froakie - XY138,LINKED,xy138,1.00
+pkm-xy-black-star-promos-xy140-211-d2df70b0a3,XY Black Star Promos,Lucario,XY140/211,134921,Lucario - XY140,LINKED,xy140,1.00
+pkm-xy-black-star-promos-xy141-211-50750d56ac,XY Black Star Promos,Rayquaza,XY141/211,134922,Rayquaza - XY141,LINKED,xy141,1.00
+pkm-xy-black-star-promos-xy142-211-bf7153f3e8,XY Black Star Promos,Azelf,XY142/211,123636,Azelf - XY142,LINKED,xy142,1.00
+pkm-xy-black-star-promos-xy144-211-b1d455fd89,XY Black Star Promos,Yanmega,XY144/211,129375,Yanmega - XY144 (Prerelease) [Staff],SKIP_NAME_MISMATCH,xy144,0.50
+pkm-xy-black-star-promos-xy144-211-b1d455fd89,XY Black Star Promos,Yanmega,XY144/211,129374,Yanmega (XY Steam Siege Prerelease),SKIP_NAME_MISMATCH,xy144,0.25
+pkm-xy-black-star-promos-xy145-211-bc7e69c6f0,XY Black Star Promos,Volcanion,XY145/211,129377,Volcanion - XY145 (Prerelease) [Staff],SKIP_NAME_MISMATCH,xy145,0.50
+pkm-xy-black-star-promos-xy145-211-bc7e69c6f0,XY Black Star Promos,Volcanion,XY145/211,129376,Volcanion (XY Steam Siege Prerelease),SKIP_NAME_MISMATCH,xy145,0.25
+pkm-xy-black-star-promos-xy146-211-3a2dafdcec,XY Black Star Promos,Clawitzer,XY146/211,129379,Clawitzer - XY146 (Prerelease) [Staff],SKIP_NAME_MISMATCH,xy146,0.50
+pkm-xy-black-star-promos-xy146-211-3a2dafdcec,XY Black Star Promos,Clawitzer,XY146/211,129378,Clawitzer (XY Steam Siege Prerelease),SKIP_NAME_MISMATCH,xy146,0.25
+pkm-xy-black-star-promos-xy147-211-5864bc28b7,XY Black Star Promos,Hoopa,XY147/211,129381,Hoopa - XY147 (Prerelease) [Staff],SKIP_NAME_MISMATCH,xy147,0.50
+pkm-xy-black-star-promos-xy147-211-5864bc28b7,XY Black Star Promos,Hoopa,XY147/211,129380,Hoopa (XY Steam Siege Prerelease),SKIP_NAME_MISMATCH,xy147,0.25
+pkm-xy-black-star-promos-xy149-211-1462157be4,XY Black Star Promos,Xerneas-EX,XY149/211,121952,Xerneas EX - XY149 (Shiny),SKIP_NAME_MISMATCH,xy149,0.50
+pkm-xy-black-star-promos-xy150-211-50693c967e,XY Black Star Promos,Yveltal-EX,XY150/211,121953,Yveltal EX - XY150 (Shiny),SKIP_NAME_MISMATCH,xy150,0.50
+pkm-xy-black-star-promos-xy150a-211-f186cc4978,XY Black Star Promos,Yveltal-EX,XY150a/211,,,NO_CANDIDATE,xy150a,
+pkm-xy-black-star-promos-xy151-211-cccfea35b8,XY Black Star Promos,Zygarde-EX,XY151/211,121954,Zygarde EX (Shiny),SKIP_NAME_MISMATCH,xy151,0.67
+pkm-xy-black-star-promos-xy157-211-3f12b06335,XY Black Star Promos,Beedrill-EX,XY157/211,125565,Beedrill EX - XY157,LINKED,xy157,1.00
+pkm-xy-black-star-promos-xy159-211-12d9b6026a,XY Black Star Promos,Beedrill Spirit Link,XY159/211,125564,Beedrill Spirit Link - XY159,LINKED,xy159,1.00
+pkm-xy-black-star-promos-xy160-211-42baa871d2,XY Black Star Promos,Black Kyurem,XY160/211,125159,Black Kyurem - XY160,LINKED,xy160,1.00
+pkm-xy-black-star-promos-xy161-211-69b4f80c31,XY Black Star Promos,Braixen,XY161/211,125160,Braixen - XY161,LINKED,xy161,1.00
+pkm-xy-black-star-promos-xy162-211-2350ab00ec,XY Black Star Promos,Greninja,XY162/211,126210,Greninja - XY162,LINKED,xy162,1.00
+pkm-xy-black-star-promos-xy163-211-26e8322206,XY Black Star Promos,Weezing,XY163/211,147098,Weezing - XY163,LINKED,xy163,1.00
+pkm-xy-black-star-promos-xy164-211-33972f49c7,XY Black Star Promos,Volcanion,XY164/211,125251,Volcanion - XY164,LINKED,xy164,1.00
+pkm-xy-black-star-promos-xy165-211-a2f990655a,XY Black Star Promos,Magearna,XY165/211,125252,Magearna - XY165,LINKED,xy165,1.00
+pkm-xy-black-star-promos-xy167-211-64e9ac11aa,XY Black Star Promos,Garchomp-EX,XY167/211,126562,Garchomp EX - XY167,LINKED,xy167,1.00
+pkm-xy-black-star-promos-xy168-211-2ef98d76bc,XY Black Star Promos,M Garchomp-EX,XY168/211,126563,M Garchomp EX - XY168,LINKED,xy168,1.00
+pkm-xy-black-star-promos-xy170-211-c964d5c7ad,XY Black Star Promos,Salamence-EX,XY170/211,126565,Salamence EX - XY170,LINKED,xy170,1.00
+pkm-xy-black-star-promos-xy171-211-6948c9ac5c,XY Black Star Promos,M Salamence-EX,XY171/211,126566,M Salamence EX - XY171,LINKED,xy171,1.00
+pkm-xy-black-star-promos-xy174-211-279fe5a8be,XY Black Star Promos,Pikachu-EX,XY174/211,123454,Pikachu EX - XY174,LINKED,xy174,1.00
+pkm-xy-black-star-promos-xy176-211-4f910708e9,XY Black Star Promos,Champions Festival,XY176/211,199321,Champions Festival (2016 Champion),SKIP_NAME_MISMATCH,xy176,0.50
+pkm-xy-black-star-promos-xy176-211-4f910708e9,XY Black Star Promos,Champions Festival,XY176/211,199322,Champions Festival (2016 Finalist),SKIP_NAME_MISMATCH,xy176,0.50
+pkm-xy-black-star-promos-xy176-211-4f910708e9,XY Black Star Promos,Champions Festival,XY176/211,199325,Champions Festival (2016 Quarter Finalist),SKIP_NAME_MISMATCH,xy176,0.40
+pkm-xy-black-star-promos-xy176-211-4f910708e9,XY Black Star Promos,Champions Festival,XY176/211,199324,Champions Festival (2016 Semi-Finalist),SKIP_NAME_MISMATCH,xy176,0.40
+pkm-xy-black-star-promos-xy176-211-4f910708e9,XY Black Star Promos,Champions Festival,XY176/211,199327,Champions Festival (2016 Top Sixteen),SKIP_NAME_MISMATCH,xy176,0.40
+pkm-xy-black-star-promos-xy176-211-4f910708e9,XY Black Star Promos,Champions Festival,XY176/211,199328,Champions Festival (2016 Top Thirty-Two),SKIP_NAME_MISMATCH,xy176,0.33
+pkm-xy-black-star-promos-xy176-211-4f910708e9,XY Black Star Promos,Champions Festival,XY176/211,199330,Champions Festival (2016),SKIP_NAME_MISMATCH,xy176,0.67
+pkm-xy-black-star-promos-xy176-211-4f910708e9,XY Black Star Promos,Champions Festival,XY176/211,199329,Champions Festival (2016) [Staff],SKIP_NAME_MISMATCH,xy176,0.67
+pkm-xy-black-star-promos-xy177a-211-2a8ede5018,XY Black Star Promos,Karen,XY177a/211,,,NO_CANDIDATE,xy177a,
+pkm-xy-black-star-promos-xy178-211-c073a79195,XY Black Star Promos,Absol,XY178/211,158183,Absol - XY178,LINKED,xy178,1.00
+pkm-xy-black-star-promos-xy179-211-4e72d4e2da,XY Black Star Promos,Snorlax,XY179/211,126028,Snorlax - XY179,LINKED,xy179,1.00
+pkm-xy-black-star-promos-xy180-211-66870c0f25,XY Black Star Promos,Arcanine BREAK,XY180/211,126559,Arcanine BREAK - XY180,LINKED,xy180,1.00
+pkm-xy-black-star-promos-xy183-211-ad969460dd,XY Black Star Promos,Mewtwo-EX,XY183/211,125254,Mewtwo EX - XY183,LINKED,xy183,1.00
+pkm-xy-black-star-promos-xy184-211-ff3c46fba4,XY Black Star Promos,Giratina,XY184/211,,,NO_CANDIDATE,xy184,
+pkm-xy-black-star-promos-xy185-211-6e5988f501,XY Black Star Promos,Volcanion,XY185/211,127139,Volcanion - XY185,LINKED,xy185,1.00
+pkm-xy-black-star-promos-xy186-211-0c4aa6fb4d,XY Black Star Promos,Magearna,XY186/211,127138,Magearna - XY186,LINKED,xy186,1.00
+pkm-xy-black-star-promos-xy187-211-bb9e40a510,XY Black Star Promos,Celebi,XY187/211,127129,Celebi - XY187,LINKED,xy187,1.00
+pkm-xy-black-star-promos-xy188-211-73f8c72854,XY Black Star Promos,Shaymin,XY188/211,127136,Shaymin - XY188,LINKED,xy188,1.00
+pkm-xy-black-star-promos-xy189-211-b8b3a1705b,XY Black Star Promos,Victini,XY189/211,,,NO_CANDIDATE,xy189,
+pkm-xy-black-star-promos-xy190-211-7ad9223d02,XY Black Star Promos,Manaphy,XY190/211,127134,Manaphy - XY190,LINKED,xy190,1.00
+pkm-xy-black-star-promos-xy191-211-4d1acca88a,XY Black Star Promos,Keldeo,XY191/211,127133,Keldeo - XY191,LINKED,xy191,1.00
+pkm-xy-black-star-promos-xy192-211-c9f1c4eea5,XY Black Star Promos,Mew,XY192/211,127135,Mew - XY192,LINKED,xy192,1.00
+pkm-xy-black-star-promos-xy193-211-24e50b74fa,XY Black Star Promos,Meloetta,XY193/211,152950,Meloetta - XY193,LINKED,xy193,1.00
+pkm-xy-black-star-promos-xy194-211-2e8a37646b,XY Black Star Promos,Darkrai,XY194/211,127130,Darkrai - XY194,LINKED,xy194,1.00
+pkm-xy-black-star-promos-xy195-211-a44a4a6f02,XY Black Star Promos,Jirachi,XY195/211,127132,Jirachi - XY195,LINKED,xy195,1.00
+pkm-xy-black-star-promos-xy196-211-ccf84b1f52,XY Black Star Promos,Genesect,XY196/211,127131,Genesect - XY196,LINKED,xy196,1.00
+pkm-xy-black-star-promos-xy197-211-dc63a17d60,XY Black Star Promos,Arceus,XY197/211,127128,Arceus - XY197,LINKED,xy197,1.00
+pkm-xy-black-star-promos-xy198-211-95e7c7fdcc,XY Black Star Promos,M Camerupt-EX,XY198/211,129898,M Camerupt EX - XY198,LINKED,xy198,1.00
+pkm-xy-black-star-promos-xy198a-211-6c38cc8d7b,XY Black Star Promos,M Camerupt-EX,XY198a/211,,,NO_CANDIDATE,xy198a,
+pkm-xy-black-star-promos-xy199-211-9123a8f17f,XY Black Star Promos,Camerupt Spirit Link,XY199/211,129899,Camerupt Spirit Link - XY199,LINKED,xy199,1.00
+pkm-xy-black-star-promos-xy200-211-dd356ac044,XY Black Star Promos,M Sharpedo-EX,XY200/211,129901,M Sharpedo EX - XY200,LINKED,xy200,1.00
+pkm-xy-black-star-promos-xy200a-211-727b0e6781,XY Black Star Promos,M Sharpedo-EX,XY200a/211,,,NO_CANDIDATE,xy200a,
+pkm-xy-black-star-promos-xy202-211-474d3e9eb4,XY Black Star Promos,Pikachu,XY202/211,,,NO_CANDIDATE,xy202,
+pkm-xy-black-star-promos-xy203-211-f1c8e66609,XY Black Star Promos,Gym Badge,XY203/211,127141,Gym Badge (Brock),SKIP_NAME_MISMATCH,xy203,0.67
+pkm-xy-black-star-promos-xy204-211-e8d36b3bbd,XY Black Star Promos,Gym Badge,XY204/211,127142,Gym Badge (Misty),SKIP_NAME_MISMATCH,xy204,0.67
+pkm-xy-black-star-promos-xy205-211-afe573355d,XY Black Star Promos,Gym Badge,XY205/211,127143,Gym Badge (Lt. Surge),SKIP_NAME_MISMATCH,xy205,0.50
+pkm-xy-black-star-promos-xy206-211-55c9d10ad6,XY Black Star Promos,Gym Badge,XY206/211,127144,Gym Badge (Erika),SKIP_NAME_MISMATCH,xy206,0.67
+pkm-xy-black-star-promos-xy207-211-2b620e5886,XY Black Star Promos,Gym Badge,XY207/211,127145,Gym Badge (Koga),SKIP_NAME_MISMATCH,xy207,0.67
+pkm-xy-black-star-promos-xy208-211-381d6bb203,XY Black Star Promos,Gym Badge,XY208/211,129720,Gym Badge (Sabrina),SKIP_NAME_MISMATCH,xy208,0.67
+pkm-xy-black-star-promos-xy209-211-085d56a49e,XY Black Star Promos,Gym Badge,XY209/211,129718,Gym Badge (Blaine),SKIP_NAME_MISMATCH,xy209,0.67
+pkm-xy-black-star-promos-xy210-211-1da1d33cab,XY Black Star Promos,Gym Badge,XY210/211,129719,Gym Badge (Giovanni),SKIP_NAME_MISMATCH,xy210,0.67

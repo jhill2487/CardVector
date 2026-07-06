@@ -1,0 +1,19 @@
+{
+  "obs_host": "localhost",
+  "obs_port": 4455,
+  "obs_password": "",
+  "obs_scene": "03 - Card Capture",
+  "capture_method": "obs_scene_screenshot",
+  "save_full_frame": true,
+  "save_cropped_frame": false,
+  "crop_rectangle": {
+    "left": 0,
+    "top": 0,
+    "right": 0,
+    "bottom": 0
+  },
+  "auto_capture_enabled": false,
+  "auto_capture_min_delay_seconds": 2.0,
+  "auto_capture_stable_seconds": 1.0,
+  "thumbnail_preview": true
+}

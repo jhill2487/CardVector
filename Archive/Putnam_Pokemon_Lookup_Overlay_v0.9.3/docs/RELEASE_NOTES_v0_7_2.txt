@@ -1,0 +1,22 @@
+v0.7.2 Variant Label Expansion
+
+Added variant label recognition for:
+- Energy Symbol Pattern
+- Friend Ball
+- Love Ball
+- Poke Ball
+- Master Ball
+- Ultra Ball
+- Great Ball
+- Team Rocket
+- Cosmos
+- Prerelease
+- Staff
+- League
+- Stamped
+- Promo
+- 1st Edition
+- Shadowless
+- Unlimited
+
+No UI layout changes.

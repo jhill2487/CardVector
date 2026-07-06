@@ -1,0 +1,26 @@
+{
+  "title": "Your Trusted Marketplace for Collectible Trading Card Games - TCGplayer",
+  "html_length": 26115,
+  "contains_next_data": false,
+  "contains_marketPrice": false,
+  "contains_lowPrice": false,
+  "contains_tcgplayer": true,
+  "price_like_values": [],
+  "keyword_hits": {
+    "marketPrice": false,
+    "lowPrice": false,
+    "midPrice": false,
+    "Near Mint": false,
+    "Lightly Played": false,
+    "Reverse Holofoil": false,
+    "Holofoil": false,
+    "Normal": false
+  },
+  "status": 200,
+  "url": "https://www.tcgplayer.com/product/42402/pokemon-base-set-pikachu",
+  "headers_subset": {
+    "content-type": "text/html",
+    "cache-control": null,
+    "server": "AmazonS3"
+  }
+}

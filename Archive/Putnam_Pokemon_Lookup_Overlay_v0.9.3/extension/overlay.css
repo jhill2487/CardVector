@@ -1,0 +1,1078 @@
+#putnam-pokemon-overlay {
+  position: fixed;
+  top: 76px;
+  right: 16px;
+  z-index: 2147483647;
+  width: 430px;
+  max-width: calc(100vw - 24px);
+  max-height: calc(100vh - 96px);
+  overflow: hidden;
+  border: 1px solid #d9d9d2;
+  border-radius: 8px;
+  background: #fbfbf8;
+  color: #171717;
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.24);
+  font-family: Arial, sans-serif;
+  font-size: 13px;
+}
+
+#putnam-pokemon-overlay * {
+  box-sizing: border-box;
+}
+
+.ppo-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 10px;
+  border-bottom: 1px solid #e5e5df;
+  background: #ffffff;
+}
+
+.ppo-header strong {
+  font-size: 14px;
+}
+
+.ppo-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.ppo-actions button,
+#ppo-search-form button {
+  border: 0;
+  border-radius: 6px;
+  background: #1f6feb;
+  color: white;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.ppo-actions button {
+  width: 26px;
+  height: 26px;
+  padding: 0;
+}
+
+#ppo-close {
+  background: #9f1d1d;
+}
+
+.ppo-body {
+  display: grid;
+  gap: 9px;
+  padding: 10px;
+}
+
+#ppo-search-form {
+  display: grid;
+  gap: 8px;
+}
+
+#ppo-search-form input {
+  width: 100%;
+  min-height: 34px;
+  padding: 8px 9px;
+  border: 1px solid #cecec7;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #171717;
+  font: inherit;
+}
+
+.ppo-filter-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 74px;
+  gap: 8px;
+}
+
+#ppo-search-form button {
+  min-height: 34px;
+}
+
+#ppo-status {
+  min-height: 18px;
+  color: #666;
+  font-size: 12px;
+}
+
+#ppo-results {
+  display: grid;
+  gap: 8px;
+  max-height: 420px;
+  overflow: auto;
+  padding-right: 2px;
+}
+
+.ppo-result {
+  display: grid;
+  grid-template-columns: 108px minmax(0, 1fr);
+  gap: 14px;
+  align-items: center;
+  padding: 8px;
+  border: 1px solid #e2e2dc;
+  border-radius: 6px;
+  background: #ffffff;
+}
+
+.ppo-media {
+  display: grid;
+  gap: 6px;
+}
+
+.ppo-thumb {
+  width: 108px;
+  height: 150px;
+  border-radius: 4px;
+  background: #e8e8e4;
+  object-fit: contain;
+}
+
+.ppo-thumb:not([src]),
+.ppo-thumb[src=""] {
+  display: none;
+}
+
+.ppo-price-badge {
+  width: 108px;
+  padding: 5px 4px;
+  border-radius: 5px;
+  background: #e8f4ec;
+  color: #17633a;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.ppo-muted-price {
+  background: #eeeeea;
+  color: #777;
+  font-weight: 400;
+}
+
+.ppo-result-details {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.ppo-result-details strong {
+  overflow: hidden;
+  font-size: 14px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ppo-result-details span {
+  color: #666;
+  font-size: 12px;
+}
+
+.ppo-price-source {
+  color: #5b6b5f;
+  font-size: 12px;
+}
+
+.ppo-collapsed {
+  width: 220px;
+}
+
+@media (max-width: 640px) {
+  #putnam-pokemon-overlay {
+    top: auto;
+    right: 8px;
+    bottom: 8px;
+    left: 8px;
+    width: auto;
+    max-height: 58vh;
+  }
+
+  .ppo-result {
+    grid-template-columns: 84px minmax(0, 1fr);
+  }
+
+  .ppo-thumb {
+    width: 84px;
+    height: 116px;
+  }
+
+  .ppo-price-badge {
+    width: 84px;
+  }
+}
+
+.ppo-result-details span:empty {
+  display: none;
+}
+
+
+/* Variant-aware pricing UI patch */
+.ppo-result {
+  align-items: start;
+}
+
+.ppo-variant-wrap {
+  display: grid;
+  gap: 7px;
+  margin-top: 7px;
+}
+
+.ppo-variant-title {
+  color: #333;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.ppo-variant-row {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  gap: 8px;
+  padding: 7px;
+  border: 1px solid #e3e7df;
+  border-radius: 6px;
+  background: #fbfdfb;
+}
+
+.ppo-variant-thumb {
+  width: 42px;
+  height: 58px;
+  border-radius: 3px;
+  background: #ecece7;
+  object-fit: contain;
+}
+
+.ppo-variant-main {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+}
+
+.ppo-variant-name {
+  color: #222;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.ppo-price-grid {
+  display: grid;
+  grid-template-columns: 28px 1fr 24px 1fr 24px 1fr;
+  gap: 4px;
+  align-items: center;
+  font-size: 12px;
+}
+
+.ppo-price-grid span {
+  color: #6a6a62;
+}
+
+.ppo-price-grid strong {
+  color: #17633a;
+  font-size: 12px;
+}
+
+.ppo-tcg-link {
+  color: #1f6feb;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.ppo-tcg-link:hover {
+  text-decoration: underline;
+}
+
+/* Patch 2B - Live Price Display UI */
+.ppo-live-price-card {
+  margin-top: 8px;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  border-radius: 10px;
+  padding: 9px;
+  background: rgba(15, 23, 42, 0.55);
+}
+
+.ppo-live-title {
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 1.25;
+  margin-bottom: 2px;
+}
+
+.ppo-live-subtitle {
+  font-size: 10px;
+  color: #94a3b8;
+  margin-bottom: 7px;
+}
+
+.ppo-live-price-table {
+  display: grid;
+  grid-template-columns: minmax(88px, 1.2fr) minmax(58px, 0.8fr) minmax(58px, 0.8fr);
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-top: 6px;
+}
+
+.ppo-live-cell {
+  padding: 6px 7px;
+  border-right: 1px solid rgba(148, 163, 184, 0.22);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.22);
+  font-size: 11px;
+}
+
+.ppo-live-cell:nth-child(3n) {
+  border-right: none;
+}
+
+.ppo-live-cell:nth-last-child(-n + 3) {
+  border-bottom: none;
+}
+
+.ppo-live-head {
+  font-weight: 700;
+  color: #cbd5e1;
+  background: rgba(30, 41, 59, 0.75);
+}
+
+.ppo-live-finish {
+  color: #e5e7eb;
+  font-weight: 600;
+}
+
+.ppo-live-price {
+  text-align: right;
+  font-weight: 800;
+}
+
+.ppo-live-price a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.ppo-live-price a:hover {
+  text-decoration: underline;
+}
+
+.ppo-live-source {
+  color: #86efac;
+}
+
+.ppo-cache-source {
+  color: #fde68a;
+}
+
+.ppo-live-meta {
+  margin-top: 6px;
+  font-size: 10px;
+  color: #94a3b8;
+}
+
+.ppo-live-link {
+  display: inline-flex;
+  margin-top: 7px;
+  padding: 5px 8px;
+  border-radius: 999px;
+  background: rgba(37, 99, 235, 0.95);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.ppo-live-link:hover {
+  background: rgba(59, 130, 246, 1);
+}
+
+.ppo-live-alternates {
+  margin-top: 6px;
+  font-size: 10px;
+  color: #64748b;
+}
+
+
+
+/* Patch 2D - Overlay UI Modernization */
+.ppo-result {
+  background: #ffffff !important;
+  color: #111827 !important;
+  border: 1px solid #d1d5db !important;
+}
+
+.ppo-result-details strong {
+  color: #050505 !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.06em !important;
+  text-transform: uppercase !important;
+}
+
+.ppo-result-details span {
+  color: #111827 !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.035em !important;
+}
+
+.ppo-card-setline,
+.ppo-card-rarity {
+  text-transform: uppercase !important;
+}
+
+.ppo-live-price-card {
+  margin-top: 10px !important;
+  background: #ffffff !important;
+  color: #111827 !important;
+  border: 1px solid #9ca3af !important;
+  border-radius: 8px !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  box-shadow: none !important;
+}
+
+.ppo-live-subtitle {
+  padding: 10px 12px 6px 12px !important;
+  color: #111827 !important;
+  font-size: 11px !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.06em !important;
+  text-transform: uppercase !important;
+}
+
+.ppo-live-price-table {
+  display: grid !important;
+  grid-template-columns: 1fr 1.25fr 1.25fr !important;
+  margin: 6px 10px 0 10px !important;
+  border: 1px solid #d1d5db !important;
+  border-radius: 7px !important;
+  overflow: hidden !important;
+  background: #ffffff !important;
+}
+
+.ppo-live-cell {
+  padding: 8px 7px !important;
+  border-right: 1px solid #d1d5db !important;
+  border-bottom: 1px solid #d1d5db !important;
+  font-size: 11px !important;
+  color: #111827 !important;
+  background: #ffffff !important;
+  text-align: center !important;
+}
+
+.ppo-live-head {
+  color: #050505 !important;
+  background: #ffffff !important;
+  font-weight: 900 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.04em !important;
+}
+
+.ppo-live-finish {
+  color: #050505 !important;
+  font-weight: 900 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+}
+
+.ppo-live-price {
+  color: #08751f !important;
+  font-size: 14px !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.04em !important;
+}
+
+.ppo-live-price a {
+  color: #08751f !important;
+  text-decoration: none !important;
+}
+
+.ppo-live-meta {
+  margin: 0 !important;
+  padding: 9px 10px !important;
+  color: #111827 !important;
+  font-size: 10px !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.045em !important;
+  text-transform: uppercase !important;
+  border-top: 1px solid #d1d5db !important;
+  display: inline-block !important;
+}
+
+.ppo-live-link {
+  float: right !important;
+  margin: 7px 10px 8px 0 !important;
+  padding: 8px 12px !important;
+  border-radius: 7px !important;
+  background: #165df5 !important;
+  color: #ffffff !important;
+  font-size: 11px !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase !important;
+  text-decoration: none !important;
+}
+
+.ppo-live-link:hover {
+  background: #004ce8 !important;
+}
+
+.ppo-price-source,
+.ppo-live-title,
+.ppo-live-alternates {
+  display: none !important;
+}
+
+
+/* Patch 2D.1 - Production UI Cleanup */
+.ppo-live-subtitle {
+  display: none !important;
+}
+
+.ppo-live-price-card {
+  padding-top: 0 !important;
+}
+
+.ppo-live-price-table {
+  margin-top: 10px !important;
+}
+
+.ppo-live-head {
+  font-size: 11px !important;
+  line-height: 1.1 !important;
+}
+
+.ppo-card-setline {
+  font-weight: 900 !important;
+}
+
+
+/* Patch 2C.1 - Lazy Price Loading UI */
+.ppo-price-loading {
+  margin-top: 10px;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #111827;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.ppo-price-error {
+  color: #b91c1c;
+}
+
+
+/* Patch v0.5.0 - Smart Cache and Pagination */
+.ppo-load-more {
+  width: 100%;
+  margin: 10px 0 4px 0;
+  padding: 10px 12px;
+  border: 1px solid #165df5;
+  border-radius: 8px;
+  background: #165df5;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.ppo-load-more:hover {
+  background: #004ce8;
+}
+
+.ppo-load-more:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.ppo-price-queued {
+  color: #374151;
+  background: #f9fafb;
+}
+
+
+/* v0.5.2 - Image Fallback */
+.ppo-no-image {
+  width: 92px;
+  min-width: 92px;
+  height: 128px;
+  border-radius: 6px;
+  background: #f3f4f6;
+  border: 1px dashed #cbd5e1;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.ppo-media .ppo-no-image {
+  margin-bottom: 6px;
+}
+
+
+/* v0.6.0 - Unified Search and Autocomplete */
+.ppo-unified-search-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.ppo-suggestions {
+  display: none;
+  position: absolute;
+  z-index: 2147483647;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  max-height: 260px;
+  overflow-y: auto;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.28);
+}
+
+.ppo-suggestions-open {
+  display: block;
+}
+
+.ppo-suggestion-item {
+  width: 100%;
+  display: block;
+  text-align: left;
+  padding: 9px 10px;
+  border: 0;
+  border-bottom: 1px solid #e5e7eb;
+  background: #ffffff;
+  color: #111827;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.ppo-suggestion-item:last-child {
+  border-bottom: 0;
+}
+
+.ppo-suggestion-item:hover,
+.ppo-suggestion-active {
+  background: #eff6ff;
+  color: #0f172a;
+}
+
+#ppo-query {
+  text-transform: none;
+}
+
+
+/* v0.6.1 - Autocomplete UX Fix */
+.ppo-suggestions {
+  max-height: 150px !important;
+  font-size: 10px !important;
+}
+
+.ppo-suggestion-item {
+  padding: 7px 9px !important;
+  line-height: 1.2 !important;
+}
+
+.ppo-suggestions-open {
+  max-height: min(150px, 35vh) !important;
+}
+
+
+/* v0.6.4A history/favorites */
+.ppo-quickbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 8px 0;
+}
+
+.ppo-mini-button,
+.ppo-fav-button,
+.ppo-quick-item {
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 8px;
+  padding: 5px 8px;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.ppo-quicklist {
+  display: none;
+  width: 100%;
+  max-height: 160px;
+  overflow: auto;
+  border-radius: 10px;
+  padding: 6px;
+  background: rgba(0,0,0,0.18);
+}
+
+.ppo-quicklist-open {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ppo-quick-item {
+  text-align: left;
+}
+
+.ppo-quick-empty {
+  font-size: 12px;
+  opacity: 0.75;
+  padding: 6px;
+}
+
+.ppo-fav-button {
+  align-self: flex-start;
+  margin-bottom: 4px;
+}
+
+.ppo-fav-active {
+  font-weight: 700;
+}
+
+
+/* v0.6.5C multi-variant compact price renderer */
+.ppo-compact-price-card {
+  padding: 7px 8px;
+}
+
+.ppo-compact-price-title {
+  font-size: 11px;
+  font-weight: 700;
+  opacity: 0.85;
+  margin-bottom: 4px;
+}
+
+.ppo-compact-price-row {
+  display: grid;
+  grid-template-columns: minmax(62px, 1fr) repeat(3, minmax(58px, 0.9fr));
+  gap: 5px;
+  align-items: center;
+  font-size: 11px;
+  line-height: 1.25;
+  margin: 2px 0;
+}
+
+.ppo-compact-variant-label {
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ppo-compact-price-cell {
+  white-space: nowrap;
+}
+
+.ppo-compact-price-cell a {
+  text-decoration: none;
+}
+
+
+/* v0.6.5D compact price spacing fix */
+.ppo-compact-price-card {
+  overflow: hidden;
+  max-width: 100%;
+}
+
+.ppo-compact-price-row {
+  display: grid !important;
+  grid-template-columns: 58px 64px 64px 64px !important;
+  gap: 6px !important;
+  align-items: center;
+  font-size: 10.5px !important;
+  line-height: 1.35 !important;
+  margin: 3px 0 !important;
+}
+
+.ppo-compact-variant-label {
+  min-width: 0;
+  font-weight: 800;
+}
+
+.ppo-compact-price-cell {
+  display: inline-block;
+  min-width: 58px;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.ppo-live-meta {
+  margin-top: 6px;
+  font-size: 9.5px !important;
+}
+
+
+/* v0.6.5E cleanup */
+
+.ppo-compact-separator{
+  display:inline-block;
+  padding:0 6px;
+  font-weight:700;
+  opacity:.75;
+}
+
+.ppo-compact-price-row{
+  column-gap:10px !important;
+}
+
+
+
+/* v0.6.5F result card layout refinement */
+.ppo-result {
+  display: block !important;
+  position: relative;
+}
+
+.ppo-result-content {
+  width: 100%;
+}
+
+.ppo-result-toprow {
+  display: grid;
+  grid-template-columns: 94px 1fr auto;
+  gap: 10px;
+  align-items: start;
+  width: 100%;
+}
+
+.ppo-result-toprow .ppo-media {
+  width: 94px;
+  min-width: 94px;
+}
+
+.ppo-result-toprow .ppo-thumb,
+.ppo-result-toprow .ppo-no-image {
+  width: 94px;
+  max-width: 94px;
+}
+
+.ppo-result-toprow .ppo-result-details {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ppo-result-toprow .ppo-fav-button {
+  justify-self: end;
+  align-self: start;
+  margin: 0;
+  white-space: nowrap;
+}
+
+.ppo-price-mount {
+  width: 100%;
+  margin-top: 8px;
+}
+
+.ppo-price-mount .ppo-live-price-card {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.ppo-compact-price-row {
+  grid-template-columns: minmax(78px, 1.15fr) repeat(3, minmax(68px, 0.9fr)) !important;
+  column-gap: 10px !important;
+}
+
+.ppo-compact-variant-label {
+  text-overflow: clip;
+}
+
+
+/* v0.6.5H restore MP column */
+.ppo-compact-price-row {
+  grid-template-columns: minmax(86px, 1.15fr) auto minmax(72px, .85fr) auto minmax(72px, .85fr) auto minmax(72px, .85fr) !important;
+  column-gap: 6px !important;
+}
+
+.ppo-compact-separator {
+  opacity: .6;
+  font-weight: 700;
+  text-align: center;
+}
+
+
+/* v0.6.5I price row fit + readability */
+.ppo-compact-price-row {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  gap: 4px !important;
+  width: 100% !important;
+  font-size: 10.5px !important;
+  line-height: 1.35 !important;
+  margin: 3px 0 !important;
+}
+
+.ppo-compact-variant-label {
+  flex: 0 0 72px !important;
+  max-width: 72px !important;
+  font-weight: 800 !important;
+  color: #111827 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: clip !important;
+}
+
+.ppo-compact-price-cell {
+  flex: 0 0 auto !important;
+  min-width: 0 !important;
+  color: #000000 !important;
+  font-weight: 800 !important;
+  white-space: nowrap !important;
+}
+
+.ppo-compact-price-cell a {
+  color: #000000 !important;
+  font-weight: 800 !important;
+  text-decoration: none !important;
+}
+
+.ppo-compact-separator {
+  flex: 0 0 auto !important;
+  padding: 0 2px !important;
+  color: #111827 !important;
+  opacity: .7 !important;
+  font-weight: 800 !important;
+}
+
+.ppo-live-source,
+.ppo-cache-source {
+  color: #000000 !important;
+  font-weight: 800 !important;
+}
+
+.ppo-live-meta {
+  font-weight: 500 !important;
+}
+
+
+/* v0.7.3 UI polish: image hover preview + progressive loading stability */
+.ppo-image-preview {
+  position: fixed;
+  z-index: 2147483647;
+  right: 390px;
+  top: 92px;
+  width: 260px;
+  max-width: 38vw;
+  padding: 8px;
+  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.96);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, .45);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(4px) scale(.98);
+  transition: opacity .08s ease, transform .08s ease;
+}
+
+.ppo-image-preview-open {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.ppo-image-preview img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 9px;
+}
+
+.ppo-result {
+  min-height: 178px;
+}
+
+.ppo-price-mount {
+  min-height: 58px;
+}
+
+.ppo-price-loading {
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+}
+
+
+/* v0.7.3A variant hover preview polish */
+.ppo-variant-preview-row {
+  cursor: zoom-in;
+  border-radius: 6px;
+  transition: background .08s ease, transform .08s ease;
+}
+
+.ppo-variant-preview-row:hover {
+  background: rgba(15, 23, 42, .06);
+}
+
+.ppo-image-preview {
+  cursor: default;
+}
+
+
+/* v0.7.6A UI Reliability + Polish */
+.ppo-live-price-card {
+  align-content: start;
+  padding-bottom: 8px;
+}
+
+.ppo-compact-price-card {
+  width: 100%;
+}
+
+.ppo-compact-price-row {
+  width: 100%;
+  grid-template-columns: minmax(86px, 1.15fr) repeat(5, auto);
+  column-gap: 6px;
+  align-items: center;
+}
+
+.ppo-compact-variant-label {
+  min-width: 82px;
+  max-width: 112px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ppo-compact-price-cell {
+  white-space: nowrap;
+  font-weight: 800;
+}
+
+.ppo-compact-separator {
+  opacity: .45;
+}
+
+.ppo-live-meta {
+  margin-top: 4px;
+  padding-top: 2px;
+  line-height: 1.15;
+}
+
+.ppo-compact-price-empty {
+  font-size: 11px;
+  font-weight: 800;
+  color: #64748b;
+  padding: 4px 0 2px;
+}
+
+.ppo-no-image {
+  font-size: 10px;
+  line-height: 1.15;
+}

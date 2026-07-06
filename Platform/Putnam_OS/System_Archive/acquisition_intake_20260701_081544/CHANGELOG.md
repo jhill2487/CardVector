@@ -1,0 +1,249 @@
+# Changelog
+
+## Marketplace Intelligence v1.1.0
+
+### Added
+
+- Added composite market provider support with CardUploader inventory/export prices, CardUploader/eBay sales-cache comps, and TCGtracking reference data.
+- Added report evidence fields for market source, confidence, reference-only status, accepted comps, rejected comps, and pricing reason.
+- Added conservative active-listing title identity parsing for rows without card-specific columns.
+
+### Changed
+
+- Marketplace Intelligence now prefers CardUploader evidence for actionable eBay repricing recommendations.
+- TCGtracking remains reference-only by default so TCGplayer-style data does not directly create eBay bulk revise rows.
+
+### Safety
+
+- Reference-only data and unmatched listings are held for review and excluded from changed-only bulk revise exports.
+
+## Marketplace Intelligence v1.0.2
+
+### Added
+
+- Added desktop Pricing Settings inputs for minimum price, ignored small changes, max increase percent, max decrease percent, shipping assumption, and flat shipping cost.
+- Added Save Pricing Profile action that writes settings to `config/pricing_profile.json`.
+
+### Changed
+
+- Seller-paid shipping can now add the configured flat shipping cost into the pricing recommendation basis.
+- Buyer-paid shipping remains unadjusted; mixed shipping remains conservative with no automatic shipping adjustment.
+
+## Marketplace Intelligence v1.0.1
+
+### Changed
+
+- Polished the standalone desktop UI appearance with a stronger header, card-based layout, clearer primary action styling, improved spacing, styled review table, status bar, and recommendation row highlighting.
+- No engine, pricing, report, or export behavior changed.
+
+## Marketplace Intelligence v1.0.0
+
+### Added
+
+- Added standalone Marketplace Intelligence desktop application and reusable Python engine.
+- Added eBay Active Listings CSV import, modular listing matching, local TCGtracking-style provider adapter, configurable pricing engine, separate decision engine, reports, and changed-only eBay bulk revise export.
+- Added Analysis Only beta mode, sample config, sample CSV, README, launcher, and smoke test.
+
+### Safety
+
+- Marketplace Intelligence has no Putnam OS inventory dependency, performs no automatic uploads, and never modifies source CSV files.
+
+## Putnam OS v4.0.0
+
+### Added
+
+- Added centralized UI design tokens and shared style helpers for Putnam OS.
+- Added `Platform/Putnam_OS/System/app/UI_STYLE_GUIDE.md` as the UI lock developer note.
+
+### Changed
+
+- Polished Putnam OS typography, sidebar navigation, panels, cards, buttons, drop zones, and action rows.
+- Made primary actions visually consistent while preserving existing Capture, Import, Pricing, and eBay export behavior.
+- Updated Putnam OS displayed and metadata version to `v4.0.0`.
+
+### Fixed
+
+- Reduced sidebar duplicate-label feel by making section headers and nav items visually distinct.
+- Added a horizontally scrollable quick-actions bar to prevent clipped quick-action buttons.
+
+## Putnam OS v3.6.0
+
+### Added
+
+- Added Mission Control Home dashboard for guided daily workflow status and next actions.
+- Added CardUploader URL setting plus Open CardUploader actions.
+- Added Capture Review foundation and Inventory ETB rollups from completed sessions.
+- Added `tools/validate_production_startup.py` startup validation with reports under Putnam OS Startup Logs.
+
+### Changed
+
+- Reorganized Putnam OS navigation into workflow sections with Home first and Shipping immediately after Orders.
+- Unified the Import workflow and renamed the active pricing screen to `Pricing & Decisions`.
+- Marked the legacy Listing Optimizer as retired from the active operator workflow in favor of CardUploader plus Putnam OS guidance.
+- Updated Putnam OS displayed and metadata version to `v3.6.0`.
+
+### Fixed
+
+- Improved Decision Engine panel wrapping and production launcher logging.
+
+## Putnam OS v3.5.6
+
+### Added
+
+- Added local eBay business policy config at `Platform/Putnam_OS/System/config/ebay_business_policies.json` with `shipping_policy`, `payment_policy`, and `return_policy`.
+- Added Settings fields for saving eBay business policy names.
+- Added Capture Studio `Capture Next Photo` to automatically alternate front/back pairs while preserving manual Capture Front and Capture Back buttons.
+- Added `Run Putnam OS Production.vbs` to launch Putnam OS through `pyw.exe` without a visible console.
+
+### Changed
+
+- Reordered main navigation to put the production workflow first: Capture, Import, Pricing, Inventory, Orders.
+- Updated Putnam OS displayed and metadata version to `v3.5.6`.
+
+### Fixed
+
+- eBay export now stamps configured shipping, payment, and return policy names instead of using hard-coded export logic.
+- eBay export now stops before writing a CSV if any required business policy value is missing.
+- Aligned the standalone Listing Optimizer support tool with the same eBay business policy config and preflight.
+
+## Putnam OS v3.5.5
+
+### Fixed
+
+- Updated Capture Studio to call `ReqClient.get_source_screenshot` using the installed obsws-python positional signature: `(name, img_format, width, height, quality)`.
+- Removed screenshot keyword arguments from the active Capture Studio path to avoid `source_name` / `sourceName` keyword errors.
+- Confirmed Capture Studio has no idle OBS status polling timer; OBS reconnects occur only on user-triggered status checks or capture actions.
+
+### Changed
+
+- Updated Putnam OS displayed and metadata version to `v3.5.5`.
+
+## Putnam OS v3.5.4
+
+### Fixed
+
+- Removed the camelCase `get_source_screenshot` fallback from Capture Studio so obsws-python only receives Python-style snake_case arguments: `source_name`, `image_format`, and `image_compression_quality`.
+- Added smoke coverage to fail if Capture Studio sends camelCase screenshot arguments such as `sourceName`, `imageFormat`, or `imageCompressionQuality`.
+
+### Changed
+
+- Updated Putnam OS displayed and metadata version to `v3.5.4`.
+
+## Putnam OS v3.5.3
+
+### Fixed
+
+- Consolidated Capture Studio OBS client creation so OBS Status, Capture Front, and Capture Back use the same OBS host, port, password, and client setup path.
+- Updated Capture Studio screenshot capture to use the current OBS program scene detected through the same OBS client path.
+- Replaced the generic Capture Studio capture failure with `Failed to capture screenshot:` plus the actual OBS exception.
+
+### Changed
+
+- Updated Putnam OS displayed and metadata version to `v3.5.3`.
+
+## Putnam OS v3.5.2
+
+### Added
+
+- Added local Putnam OS OBS WebSocket config at `Platform/Putnam_OS/System/config/obs_config.json` with exact keys `obs.host`, `obs.port`, and `obs.password`.
+- Added a minimal Settings tab OBS WebSocket section so the OBS password can be saved once without editing source code.
+
+### Fixed
+
+- Updated Capture Studio to read the local Putnam OS OBS config before connecting to OBS, while still allowing `PUTNAM_OBS_PASSWORD` to override the saved password.
+
+### Changed
+
+- Updated Putnam OS displayed and metadata version to `v3.5.2`.
+
+## Putnam OS v3.5.1
+
+### Fixed
+
+- Fixed Capture Studio OBS WebSocket authentication by loading the configured OBS password from Putnam OS capture settings or `PUTNAM_OBS_PASSWORD` and passing it to `obsws_python.ReqClient`.
+- Added clearer Capture Studio OBS status messages for connected, auth missing, auth failed, and OBS unavailable states.
+- Updated inactive Capture Studio session display so current card number shows `-` instead of `1`.
+
+### Changed
+
+- Updated Putnam OS displayed and metadata version to `v3.5.1`.
+
+## Putnam OS v3.5.0
+
+### Added
+
+- Established the current Putnam OS build as the baseline workflow testing release.
+- Included Capture Studio v1 for front/back card photo capture.
+- Included Import Module v1 for CardUploader CSV import and handoff to Listings/Pricing.
+- Included Orders / Pick Slip v1 for eBay orders CSV import and printable pick slips.
+- Included Inventory Location Foundation for ETB container registry and printable ETB labels.
+
+### Changed
+
+- Included Listing Workflow Polish: visible workflow stages, handled busy-state cleanup, $0.99 minimum fixed-price export floor, and pricing performance logging.
+- Updated Putnam OS displayed and metadata version to `v3.5.0`.
+
+### Known Issues
+
+- This is a workflow testing baseline; full daily-production validation is still recommended before relying on every module for live operations.
+
+## Putnam OS v3.4.1
+
+### Added
+
+- Added Inventory Audit v2 quick location assignment.
+- Added resumable audit session files under `Data/Logs/inventory_audit_sessions/`.
+- Added location update logging at `Data/Logs/location_update_log.csv`.
+- Added audit event logging at `Data/Logs/inventory_audit_event_log.csv`.
+- Added explicit audit statuses for Pending, Confirmed, Needs Review, Missing, and Location Updated.
+
+### Changed
+
+- Updated Inventory Audit UI labels and controls for faster audit work.
+- Updated Putnam OS visible version to `v3.4.1`.
+
+### Fixed
+
+- Updated Latest eBay inventory source search to include `Business/eBay_Store_Items`.
+
+### Known Issues
+
+- Inventory Audit v2 updates session/report data only; it does not directly edit source inventory CSVs.
+- Full manual UI testing is still recommended on the next live audit session.
+
+## Putnam OS v3.4.0
+
+### Added
+
+- Added fulfillment profile config foundation at `Data/Config/fulfillment_profiles.json`.
+- Added fulfillment profile documentation for future Profit per Envelope reporting.
+- Added backlog records for Inventory Audit v2, Profit Dashboard, Bulk Sales Performance Report, Offer Analytics Dashboard, Promotion Performance Dashboard, and Module Completeness Pass.
+
+### Changed
+
+- Retired the legacy `$0.89` cart sweetener export rule.
+- Updated the Listing Optimizer cart sweetener floor to `$0.99`.
+- Updated Putnam OS visible version to `v3.4.0`.
+
+### Fixed
+
+- Aligned active pricing workflow docs with the eBay-safe `$0.99` minimum export price.
+
+### Known Issues
+
+- Fulfillment profiles are config-only and are not connected to live profit calculations yet.
+- Profit, offer, promotion, and bulk sales dashboards remain backlog/planned items.
+
+## Putnam OS v3.3.5
+
+Initial tracked release.
+
+Future releases should follow:
+
+### Added
+
+### Changed
+
+### Fixed
+
+### Known Issues

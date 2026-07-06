@@ -1,0 +1,29 @@
+﻿Putnam Root Cleanup Audit
+Generated: 2026-06-27 16:44:31
+Root: C:\Users\user\OneDrive\PutnamCollectibles
+Mode: DRY RUN
+
+Canonical folder check:
+  OK: Putnam_OS
+  OK: Putnam_Platform
+  WOULD CREATE: Work Sessions
+  WOULD CREATE: Collectr
+  WOULD CREATE: Exports
+  WOULD CREATE: Imports
+  WOULD CREATE: Media
+  OK: Archive
+  OK: Docs
+
+Protected folders never moved:
+  Putnam_OS
+  Putnam_Platform
+  Work Sessions
+  Collectr
+
+Root clutter candidates:
+  No clutter candidates found.
+
+Summary:
+  Candidates: 0
+  Files/folders deleted: 0
+  Cleanup folder: C:\Users\user\OneDrive\PutnamCollectibles\Archive\Root_Cleanup_20260627_164431

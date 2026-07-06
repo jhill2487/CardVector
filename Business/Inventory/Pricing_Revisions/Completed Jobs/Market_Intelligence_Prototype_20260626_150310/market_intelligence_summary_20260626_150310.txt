@@ -1,0 +1,13 @@
+Putnam OS v2.4.0 - Market Intelligence Prototype
+Generated: 2026-06-26 15:03:28.898881
+Source: C:\Users\JaredHill\OneDrive\PutnamCollectibles\Putnam_Inventory\Pricing_Revisions\Completed Jobs\New_Listing_Price_Audit_20260626_123924\source_backup\pokemon-english_ebay_ungraded_fixed-price_2026-06-26_1150.csv
+
+Rows in CSV: 13
+Rows analyzed in prototype: 13
+Market opportunities flagged: 1
+
+Prototype notes:
+- Uses CardUploader observed endpoint: /backend/sales/search?q=...
+- Does not modify prices yet.
+- Excludes obvious graded/slab/pack/lot/proxy results.
+- Output is for review and tuning before automatic repricing is enabled.

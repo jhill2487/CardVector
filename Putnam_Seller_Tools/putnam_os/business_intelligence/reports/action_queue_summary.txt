@@ -1,0 +1,32 @@
+Putnam OS - Business Intelligence & Action Queue v0.1
+Generated: 2026-06-29T11:05:03
+
+Top 10 recommended actions:
+
+1. [Blocker - 90] Assign User SKU to listings missing warehouse location
+   Module: Warehouse / Location
+   Reason: 687 listings have missing or invalid User SKU / location values.
+   Estimated time: 240 minutes
+   Expected impact: Faster picking, fewer listing mistakes, cleaner bulk revise workflow.
+   Source: C:\Users\JaredHill\OneDrive\PutnamCollectibles\Platform\Putnam_OS\Putnam_Seller_Tools\seller_audit\reports\missing_or_invalid_user_sku.csv
+
+2. [Cash Flow - 80] Review $0.99 and under-$1.49 listings
+   Module: Pricing
+   Reason: 316 listings are under $1.49; 220 are exactly $0.99.
+   Estimated time: 79 minutes
+   Expected impact: Improves cash flow and validates cart-sweetener strategy.
+   Source: C:\Users\JaredHill\OneDrive\PutnamCollectibles\Platform\Putnam_OS\Putnam_Seller_Tools\seller_audit\reports\pricing_audit.csv
+
+3. [Cash Flow - 80] Publish current prepared batch
+   Module: Listing Pipeline
+   Reason: Latest eBay-ready export has 27 rows.
+   Estimated time: 15 minutes
+   Expected impact: Turns prepared inventory into active listings and cash-flow opportunity.
+   Source: C:\Users\JaredHill\OneDrive\PutnamCollectibles\Platform\Putnam_OS\Completed Jobs\Pricing_Analysis_20260629_090719\ebay_upload_ready.csv
+
+4. [SEO - 60] Fix title issues and duplicate titles
+   Module: Title / SEO
+   Reason: 1 title audit issues and 135 duplicate-title rows were found.
+   Estimated time: 68 minutes
+   Expected impact: Improves search quality and reduces duplicate listing confusion.
+   Source: C:\Users\JaredHill\OneDrive\PutnamCollectibles\Platform\Putnam_OS\Putnam_Seller_Tools\seller_audit\reports\title_audit.csv

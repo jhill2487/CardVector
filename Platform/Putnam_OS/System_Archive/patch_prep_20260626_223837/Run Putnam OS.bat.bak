@@ -1,0 +1,18 @@
+@echo off
+setlocal
+
+if "%USERENVIRONMENT%"=="" (
+    set "USERENVIRONMENT=%USERPROFILE%\OneDrive\PutnamCollectibles"
+)
+
+set "APP=%USERENVIRONMENT%\Putnam_OS\System\app\putnam_os.py"
+
+if not exist "%APP%" (
+    echo ERROR: Putnam OS app not found:
+    echo %APP%
+    pause
+    exit /b 1
+)
+
+py "%APP%"
+pause

@@ -1,0 +1,187 @@
+# Putnam Collectibles — Production Session Report
+
+## Beta Session #1
+
+**Date:** June 26, 2026
+
+## Objective
+
+Validate the complete production workflow for creating and uploading a new batch of Pokémon listings using CardUploader and Putnam OS.
+
+---
+
+# Workflow Tested
+
+Cards
+
+↓
+
+Photography
+
+↓
+
+Transfer to PC
+
+↓
+
+CardUploader Recognition
+
+↓
+
+CardUploader CSV Export
+
+↓
+
+Putnam OS Pricing Analysis
+
+↓
+
+eBay CSV Upload
+
+---
+
+# Results
+
+## Photography
+
+Cards photographed: **100**
+
+Elapsed time:
+
+**17 minutes 30 seconds**
+
+Average throughput:
+
+Approximately **343 cards/hour**
+
+Result:
+
+Photography was faster than expected and is no longer believed to be the primary workflow bottleneck.
+
+---
+
+## Photo Transfer
+
+Method:
+
+iPhone connected via USB.
+
+Time until photographs became available in Windows Explorer:
+
+Approximately **15 minutes**
+
+Observation:
+
+This is now considered one of the largest workflow bottlenecks.
+
+Future improvements should investigate:
+
+* Camera format optimization
+* Faster import workflow
+* Scanner evaluation
+* Automated import monitoring
+
+---
+
+## CardUploader
+
+Successfully imported photographs.
+
+Successfully generated eBay CSV.
+
+---
+
+## Putnam OS
+
+Version:
+
+3.2.1
+
+Rows analyzed:
+
+99
+
+Floor price changes:
+
+0
+
+Market opportunities identified:
+
+19
+
+Observation:
+
+The Market Intelligence Engine successfully completed processing.
+
+However, the Comparable Validation Engine is currently generating too many pricing opportunities and requires refinement.
+
+---
+
+## eBay Upload
+
+Status:
+
+**Successful**
+
+CSV accepted by eBay.
+
+No upload errors encountered.
+
+---
+
+# Production Bottlenecks Identified
+
+## High Priority
+
+1. iPhone → PC photo transfer.
+2. Too many clicks required before CSV analysis begins.
+3. Market Intelligence false positives.
+
+## Medium Priority
+
+1. Home page should prioritize the primary workflow.
+2. Pricing Workspace should become workflow-driven instead of tool-driven.
+
+---
+
+# Content Creation
+
+A complete recording of the production workflow was captured.
+
+The recording includes verbal observations throughout the session.
+
+Future uses:
+
+* YouTube workflow videos.
+* Training material.
+* Putnam OS development reference.
+* Workflow optimization.
+* Feature planning.
+
+---
+
+# Key Conclusions
+
+The complete production pipeline has now been validated.
+
+The project should shift from planning to iterative refinement based on measured production sessions.
+
+Future Putnam OS releases should prioritize reducing workflow friction over adding unrelated features.
+
+Every future optimization should be evaluated against measurable improvements to production throughput.
+
+---
+
+# Next Development Priorities
+
+1. Simplify the Pricing workflow to minimize clicks.
+2. Improve Comparable Validation accuracy.
+3. Reduce iPhone photo transfer time.
+4. Continue UI refinement using the Putnam Collectibles design system.
+5. Build Work Session tracking directly into Putnam OS.
+
+---
+
+## Milestone
+
+**First successful end-to-end production batch completed using Putnam OS.**

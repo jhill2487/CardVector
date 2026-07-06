@@ -1,0 +1,179 @@
+==========================================================================================
+CARDVECTOR ROOT CLEANUP REPORT
+==========================================================================================
+Generated: 2026-07-02 08:35:59.227306
+
+------------------------------------------------------------------------------------------
+.agents
+Classification: ❓ Review
+Type: Folder
+Subfolders: 0
+Files: 0
+------------------------------------------------------------------------------------------
+Archive
+Classification: 🟢 Keep
+Type: Folder
+Subfolders: 1009
+Files: 23328
+------------------------------------------------------------------------------------------
+Business
+Classification: 🟢 Keep
+Type: Folder
+Subfolders: 19
+Files: 81
+------------------------------------------------------------------------------------------
+Capture
+Classification: 🟡 Review
+Type: Folder
+Subfolders: 14
+Files: 196
+------------------------------------------------------------------------------------------
+Collectr
+Classification: ❓ Review
+Type: Folder
+Subfolders: 0
+Files: 0
+------------------------------------------------------------------------------------------
+Data
+Classification: 🟢 Keep
+Type: Folder
+Subfolders: 23
+Files: 101
+------------------------------------------------------------------------------------------
+Docs
+Classification: 🟢 Keep
+Type: Folder
+Subfolders: 3
+Files: 24
+------------------------------------------------------------------------------------------
+Platform
+Classification: 🟢 Keep
+Type: Folder
+Subfolders: 145
+Files: 713
+------------------------------------------------------------------------------------------
+Putnam_Content
+Classification: 🟡 Review
+Type: Folder
+Subfolders: 7
+Files: 8
+------------------------------------------------------------------------------------------
+Putnam_OS
+Classification: 🟡 Review
+Type: Folder
+Subfolders: 2
+Files: 4
+------------------------------------------------------------------------------------------
+Putnam_Platform
+Classification: 🟡 Review
+Type: Folder
+Subfolders: 1
+Files: 1
+------------------------------------------------------------------------------------------
+Putnam_Seller_Tools
+Classification: 🟡 Review
+Type: Folder
+Subfolders: 4
+Files: 8
+------------------------------------------------------------------------------------------
+Shared
+Classification: 🟢 Keep
+Type: Folder
+Subfolders: 8
+Files: 0
+------------------------------------------------------------------------------------------
+Tools
+Classification: 🟢 Keep
+Type: Folder
+Subfolders: 40
+Files: 120
+------------------------------------------------------------------------------------------
+Work_Sessions
+Classification: ❓ Review
+Type: Folder
+Subfolders: 9
+Files: 24
+------------------------------------------------------------------------------------------
+.putnam_root
+Classification: ❓ Review
+Type: File
+Size: 0 bytes
+------------------------------------------------------------------------------------------
+AGENTS.md
+Classification: ❓ Review
+Type: File
+Size: 506 bytes
+------------------------------------------------------------------------------------------
+cardvector_production_module_auditor.py
+Classification: ❓ Review
+Type: File
+Size: 4,272 bytes
+------------------------------------------------------------------------------------------
+CARDVECTOR_PRODUCTION_MODULE_REPORT.txt
+Classification: ❓ Review
+Type: File
+Size: 20,608 bytes
+------------------------------------------------------------------------------------------
+cardvector_production_path_auditor.py
+Classification: ❓ Review
+Type: File
+Size: 3,287 bytes
+------------------------------------------------------------------------------------------
+cardvector_production_path_auditor_v2.py
+Classification: ❓ Review
+Type: File
+Size: 6,012 bytes
+------------------------------------------------------------------------------------------
+CARDVECTOR_PRODUCTION_PATH_REPORT.txt
+Classification: ❓ Review
+Type: File
+Size: 813 bytes
+------------------------------------------------------------------------------------------
+CARDVECTOR_PRODUCTION_PATH_REPORT_V2.txt
+Classification: ❓ Review
+Type: File
+Size: 1,020 bytes
+------------------------------------------------------------------------------------------
+cardvector_production_reference_auditor.py
+Classification: ❓ Review
+Type: File
+Size: 4,656 bytes
+------------------------------------------------------------------------------------------
+CARDVECTOR_PRODUCTION_REFERENCE_REPORT.txt
+Classification: ❓ Review
+Type: File
+Size: 6,159 bytes
+------------------------------------------------------------------------------------------
+cardvector_root_cleanup_auditor.py
+Classification: ❓ Review
+Type: File
+Size: 2,787 bytes
+------------------------------------------------------------------------------------------
+CARDVECTOR_WORKSPACE_AUDIT_REPORT.txt
+Classification: ❓ Review
+Type: File
+Size: 76,771 bytes
+------------------------------------------------------------------------------------------
+cardvector_workspace_auditor.py
+Classification: ❓ Review
+Type: File
+Size: 7,165 bytes
+------------------------------------------------------------------------------------------
+PLATFORM_VISION.md
+Classification: ❓ Review
+Type: File
+Size: 4,167 bytes
+
+==========================================================================================
+SUMMARY
+==========================================================================================
+❓ Review: 17
+🟢 Keep: 7
+🟡 Review: 5
+
+NEXT STEP
+==========================================================================================
+Nothing should be moved yet.
+Use this report to decide the future workspace layout.
+Move items only after approval.
+Delete nothing.

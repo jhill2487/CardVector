@@ -1,0 +1,29 @@
+Putnam Seller Tools - SKU Repair Planner v1.1.2
+Timestamp: 2026-06-28T14:06:06
+Audit reports folder: C:\Users\user\OneDrive\PutnamCollectibles\Putnam_Seller_Tools\seller_audit\reports
+Default location prefix: ETB-05-A
+Game filter: one_piece
+Location registry: C:\Users\user\OneDrive\PutnamCollectibles\Putnam_OS\System\config\location_registry.json
+Location registry updated: no
+Core rule: User SKU = Batch Location
+Card-specific/non-location labels: preserved for manual review
+
+Rows in repair plan: 5
+Safe repair rows: 5
+Manual review rows: 0
+Missing SKU rows: 0
+Date-style batch label rows: 5
+Possible card-specific identifier rows preserved: 0
+Duplicate item ID rows: 0
+Excluded item ID rows: 0
+eBay bulk revise rows written: 5
+
+Outputs:
+- sku_repair_plan.csv
+- sku_repair_summary.txt
+- ebay_bulk_revise_sku_repair.csv
+
+Recommended next actions:
+- Review all manual_review rows before any eBay bulk upload.
+- Confirm the selected game/category is physically stored in the chosen ETB location.
+- Upload ebay_bulk_revise_sku_repair.csv only after review.

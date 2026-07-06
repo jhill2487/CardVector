@@ -1,0 +1,18 @@
+Putnam Platform Initializer v1.0 completed.
+
+Root: C:\Users\user\OneDrive\PutnamCollectibles
+
+Folders verified:
+C:\Users\user\OneDrive\PutnamCollectibles\Archive
+C:\Users\user\OneDrive\PutnamCollectibles\config
+C:\Users\user\OneDrive\PutnamCollectibles\docs
+C:\Users\user\OneDrive\PutnamCollectibles\Shared
+C:\Users\user\OneDrive\PutnamCollectibles\Putnam_Platform
+C:\Users\user\OneDrive\PutnamCollectibles\Putnam_Platform\tools
+C:\Users\user\OneDrive\PutnamCollectibles\Putnam_Platform\docs
+C:\Users\user\OneDrive\PutnamCollectibles\Putnam_Standards
+C:\Users\user\OneDrive\PutnamCollectibles\Putnam_Content
+C:\Users\user\OneDrive\PutnamCollectibles\TCG_Automation
+C:\Users\user\OneDrive\PutnamCollectibles\Pokemon_Live_Price_Lookup
+C:\Users\user\OneDrive\PutnamCollectibles\Putnam_Scanner
+C:\Users\user\OneDrive\PutnamCollectibles\Putnam_Listing_Optimizer

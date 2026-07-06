@@ -1,0 +1,16 @@
+{
+  "business_name": "Community Seller",
+  "primary_goal": "Identify active listings that deserve attention today.",
+  "default_recommendations": [
+    "No Change",
+    "Increase",
+    "Decrease",
+    "Review"
+  ],
+  "future_recommendations": [
+    "Move Marketplace",
+    "Hold",
+    "Clearance",
+    "Opportunity"
+  ]
+}

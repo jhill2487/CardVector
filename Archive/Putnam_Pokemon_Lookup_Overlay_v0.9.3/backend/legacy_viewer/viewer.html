@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Pokemon Watcher Viewer</title>
+    <link rel="stylesheet" href="viewer.css">
+  </head>
+  <body>
+    <main>
+      <header>
+        <div>
+          <h1>Pokemon Watcher</h1>
+          <p id="note">Waiting for capture status...</p>
+        </div>
+        <div id="health">Offline</div>
+      </header>
+
+      <section class="workspace">
+        <aside>
+          <div class="summary">
+            <span>Latest Card</span>
+            <strong id="cardName">No card detected</strong>
+            <small id="confidence">Confidence 0%</small>
+          </div>
+
+          <div class="search-panel">
+            <h2>Manual Search</h2>
+            <div class="search-mode">Search-enabled viewer</div>
+            <form id="searchForm">
+              <input id="searchQuery" type="search" placeholder="Card name">
+              <div class="search-filters">
+                <input id="searchSet" type="search" placeholder="Set">
+                <input id="searchNumber" type="search" placeholder="No.">
+              </div>
+              <button type="submit">Search</button>
+            </form>
+            <div id="searchStatus"></div>
+            <div id="searchResults"></div>
+          </div>
+
+          <div class="prices">
+            <h2>Raw Prices</h2>
+            <div id="priceRows"></div>
+          </div>
+
+          <div class="catalog">
+            <h2>Catalog</h2>
+            <div class="catalog-grid">
+              <div><span>Sets</span><strong id="setCount">0</strong></div>
+              <div><span>Cards</span><strong id="cardCount">0</strong></div>
+              <div><span>Fingerprints</span><strong id="fingerprintCount">0</strong></div>
+              <div><span>Visual Rows</span><strong id="visualCount">0</strong></div>
+            </div>
+          </div>
+
+          <div class="candidates">
+            <h2>Candidates</h2>
+            <div id="candidateRows"></div>
+          </div>
+        </aside>
+      </section>
+    </main>
+    <script src="viewer.js"></script>
+  </body>
+</html>

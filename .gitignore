@@ -1,0 +1,153 @@
+# CardVector canonical ignore rules
+#
+# Keep source code, governance, documentation, business configuration, SQL
+# schemas, and project standards trackable. Ignore generated runtime output and
+# machine-local artifacts only.
+
+# Python runtime and test caches
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Virtual environments
+.python-version
+.venv/
+venv/
+env/
+
+# Environment variables and local secrets
+.env
+.env.*
+secrets.json
+
+# IDE and editor state
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Operating system artifacts
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Generic runtime output
+logs/
+cache/
+temp/
+tmp/
+*.log
+*.tmp
+
+# CardVector generated data and runtime output
+/Capture/Sessions/
+/Capture/Completed/
+/Capture/Temp/
+/Capture/Cache/
+/Capture/[0-9][0-9].[0-9][0-9].[0-9][0-9]*/
+/Data/Exports/
+/Data/Logs/
+/Data/Media/
+/Data/Processed/
+!/Data/Config/
+
+# Large local datasets and generated visual indexes
+/Archive/kaggle_dataset/
+/Archive/kaggle_test_images/
+**/kaggle_dataset/
+**/Kaggle_Dataset/
+**/pokemon_tcg_image_dataset/
+**/Pokemon TCG/
+**/visual_index/
+**/visual_indexes/
+**/image_index/
+**/image_indexes/
+**/vector_index/images/
+
+# Scanner/OCR benchmark photos and generated image outputs
+/Archive/input_photos/
+/Archive/pre input photos/
+/Archive/processed_photos/
+/Archive/review_photos/
+/Archive/ocr_debug/
+/Archive/region_ocr_results/
+/Archive/region_ocr_results_v0_2/
+/Archive/region_ocr_v2_2_0_test/
+/Archive/studio_results/
+/Archive/studio_uploads/
+/Archive/border_training_crops/
+/Archive/border_training_labels/
+/Archive/verify_known_good_v0_7/projected_crops/
+/Archive/verify_known_good_v0_7/projected_overlays/
+**/benchmark_photos/
+**/benchmarks/photos/
+**/scanner_benchmark_photos/
+**/ocr_benchmark_photos/
+**/input_photos/
+**/review_photos/
+**/processed_photos/
+**/ocr_debug/
+**/region_crops/
+**/warped_cards/
+**/overlays/
+**/autocrop_output/
+**/autocrop_outputs/
+**/processed_autocrop/
+**/autocrop_test_images/
+**/autocrop_test_photos/
+**/scanner_test_images/
+**/scanner_test_photos/
+**/ocr_test_images/
+**/ocr_test_photos/
+**/latest_frame*.jpg
+**/test_artifacts/**/audit_images/
+**/test_artifacts/**/capture_source*.jpg
+
+# Generated media outputs and screen recordings
+**/generated_media/
+**/media_outputs/
+**/rendered_media/
+**/screen_recordings/
+**/recordings/
+/Putnam_Content/Raw Footage/
+/Work_Sessions/*_segments/
+/ScreenRecording_*.MP4
+/ScreenRecording_*.mp4
+**/ScreenRecording_*.MP4
+**/ScreenRecording_*.mp4
+
+# Obsolete bundled third-party video tooling
+Tools/LosslessCut.exe
+Tools/resources/
+
+# Generated pricing / tracking caches
+**/tcgtracking_cache.sqlite
+
+# CardVector OS generated runtime output
+/Platform/Putnam_OS/System/cache/
+/Platform/Putnam_OS/System/logs/
+/Platform/Putnam_OS/Completed Jobs/
+/Platform/Putnam_OS/Incoming Files/
+/Platform/Putnam_OS/Work Sessions/
+
+# Marketplace Intelligence generated output
+/Platform/Marketplace_Intelligence/reports/
+/Platform/Marketplace_Intelligence/backups/
+
+# Work session smoke-test and temporary output
+/Work_Sessions/*smoke*/
+/Work_Sessions/**/*smoke*/
+smoke_outputs/
+smoke-test-output/
+test_outputs/
+temp_reports/
+temporary_reports/
+
+# Machine-specific local configuration copies
+*-DESKTOP-*.json
+*-LAPTOP-*.json

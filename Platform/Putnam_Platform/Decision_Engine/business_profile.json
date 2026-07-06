@@ -1,0 +1,11 @@
+{
+  "version": "3.4.0",
+  "goals": {
+    "cash_flow": 0.4,
+    "profit": 0.4,
+    "growth": 0.2
+  },
+  "minimum_profit": "0.50",
+  "risk_tolerance": "medium",
+  "default_marketplace": "eBay"
+}

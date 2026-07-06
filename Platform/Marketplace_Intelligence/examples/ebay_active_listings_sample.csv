@@ -1,0 +1,5 @@
+Item number,Title,Custom label (SKU),Current price,Available quantity,Condition,Shipping policy
+100000000001,Pokemon TCG Test Card Alpha 001,PKM-001,0.99,1,Near Mint,Buyer Pays Shipping
+100000000002,Pokemon TCG Test Card Beta 002,PKM-002,2.99,1,Near Mint,Buyer Pays Shipping
+100000000003,Magic The Gathering Test Spell 003,MTG-001,1.49,1,Lightly Played,Buyer Pays Shipping
+100000000004,Unmatched Mystery Card,,4.99,1,Near Mint,Buyer Pays Shipping

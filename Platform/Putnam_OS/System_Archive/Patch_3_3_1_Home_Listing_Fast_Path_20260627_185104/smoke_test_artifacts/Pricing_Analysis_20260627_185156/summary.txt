@@ -1,0 +1,7 @@
+Putnam OS v3.3.1
+Rows: 1
+Floor changes: 1
+Market opportunities: 0
+Output: C:\Users\user\OneDrive\PutnamCollectibles\Putnam_OS\Completed Jobs\Pricing_Analysis_20260627_185156
+Export copy: C:\Users\user\OneDrive\PutnamCollectibles\Exports\ebay_upload_ready.csv
+Processed source copy: C:\Users\user\OneDrive\PutnamCollectibles\Imports\Processed\sample_carduploader_new.csv

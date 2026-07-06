@@ -1,0 +1,20 @@
+{
+  "prices": [
+    {
+      "sku": "PKM-001",
+      "market_price": "1.49"
+    },
+    {
+      "sku": "PKM-002",
+      "market_price": "3.99"
+    },
+    {
+      "sku": "MTG-001",
+      "market_price": "0.99"
+    },
+    {
+      "title_key": "pokemon tcg test card beta 002",
+      "market_price": "6.00"
+    }
+  ]
+}

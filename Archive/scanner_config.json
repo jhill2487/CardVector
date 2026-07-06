@@ -1,0 +1,13 @@
+{
+  "template_label": "border_training_labels/IMG_7505.json",
+  "target_labels": "border_training_labels",
+  "images": "input_photos",
+  "sqlite": "database/putnam_pokemon_cloud_ready.sqlite",
+  "output": "workbench_results",
+  "skip_template_source": true,
+  "save_ocr_text": true,
+  "strict_mode": true,
+  "crop_padding": 6,
+  "auto_match_min_similarity": 0.88,
+  "ambiguous_gap_min": 0.08
+}

@@ -1,0 +1,23 @@
+====================================================================================================
+FOLDER INSPECTION REPORT : Putnam_OS
+====================================================================================================
+Generated: 2026-07-02 08:40:12.175135
+
+Folder: C:\Users\JaredHill\OneDrive\PutnamCollectibles\Putnam_OS
+Subfolders: 2
+Files: 4
+
+FILE TYPES
+--------------------------------------------------------------------------------
+.txt         4
+
+LARGEST FILES
+--------------------------------------------------------------------------------
+       1,089 bytes   Putnam_OS\System\logs\Decision_Engine_Log_20260701_085609.txt
+       1,089 bytes   Putnam_OS\System\logs\Decision_Engine_Log_20260630_132515.txt
+       1,089 bytes   Putnam_OS\System\logs\Decision_Engine_Log_20260630_132446.txt
+       1,089 bytes   Putnam_OS\System\logs\Decision_Engine_Log_20260630_132438.txt
+
+TOP LEVEL CONTENTS
+--------------------------------------------------------------------------------
+DIR   System

@@ -1,0 +1,26 @@
+Putnam OS Inventory Audit Mode v1.0
+Generated: 2026-06-28T23:47:15
+Session ID: 20260628_234714
+Source file: C:\Users\user\OneDrive\PutnamCollectibles\Putnam_OS\System\app\test_artifacts\inventory_audit_v1_0\sample_ebay_active_listings.csv
+Source type: ebay_active_listings
+Game: Pokemon
+Batch Location: ETB-01-B
+Rule: User SKU = Batch Location
+
+Cards audited: 4
+Cards remaining: 0
+Confirmed: 1
+Already correct: 1
+Missing: 1
+Needs review: 1
+Skipped: 0
+Completion: 100.0%
+Bulk revise confirmed rows: 1
+
+Warning: batch has 4 cards. Target is 100; healthy range is 75-125.
+
+Safety:
+- eBay was not modified.
+- Only confirmed rows are included in ebay_bulk_revise_location_confirmed.csv.
+- Missing, needs-review, skipped, and already-correct rows are excluded from the bulk revise CSV.
+- Capture images are internal only and should never be uploaded to eBay.

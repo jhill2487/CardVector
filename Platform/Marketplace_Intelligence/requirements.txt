@@ -1,0 +1,2 @@
+# Marketplace Intelligence v1.0 uses only the Python standard library.
+# Optional: tkinterdnd2 enables drag-and-drop in the desktop UI when installed.

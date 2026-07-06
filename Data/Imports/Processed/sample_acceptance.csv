@@ -1,0 +1,9 @@
+﻿*Title,*StartPrice,*C:Card Name,*C:Set,*C:Card Number,*CustomLabel,User SKU,Inventory Location,*ShippingProfileName,Promotion Profile
+price 0.50,0.50,Card 1,Test Set,1,CARD-SKU-1,,,Old Policy,
+price 1.49,1.49,Card 2,Test Set,2,CARD-SKU-2,,,Old Policy,
+price 1.50,1.50,Card 3,Test Set,3,CARD-SKU-3,,,Old Policy,
+price 1.51,1.51,Card 4,Test Set,4,CARD-SKU-4,,,Old Policy,
+price 2.99,2.99,Card 5,Test Set,5,CARD-SKU-5,,,Old Policy,
+price 3.00,3.00,Card 6,Test Set,6,CARD-SKU-6,,,Old Policy,
+price 4.99,4.99,Card 7,Test Set,7,CARD-SKU-7,,,Old Policy,
+price 5.00,5.00,Card 8,Test Set,8,CARD-SKU-8,,,Old Policy,

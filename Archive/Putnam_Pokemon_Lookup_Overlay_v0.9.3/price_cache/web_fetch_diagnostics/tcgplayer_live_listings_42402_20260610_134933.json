@@ -1,0 +1,521 @@
+{
+  "errors": [],
+  "results": [
+    {
+      "totalResults": 491,
+      "resultId": "li95b13551-d4dc-4331-9520-10878780b875",
+      "aggregations": {
+        "condition": [
+          {
+            "value": "Lightly Played",
+            "count": 127.0
+          },
+          {
+            "value": "Moderately Played",
+            "count": 123.0
+          },
+          {
+            "value": "Damaged",
+            "count": 85.0
+          },
+          {
+            "value": "Heavily Played",
+            "count": 78.0
+          },
+          {
+            "value": "Near Mint",
+            "count": 78.0
+          }
+        ],
+        "quantity": [
+          {
+            "value": 1,
+            "count": 352.0
+          },
+          {
+            "value": 2,
+            "count": 65.0
+          },
+          {
+            "value": 3,
+            "count": 25.0
+          },
+          {
+            "value": 4,
+            "count": 15.0
+          },
+          {
+            "value": 6,
+            "count": 6.0
+          },
+          {
+            "value": 5,
+            "count": 5.0
+          },
+          {
+            "value": 8,
+            "count": 5.0
+          },
+          {
+            "value": 7,
+            "count": 4.0
+          },
+          {
+            "value": 9,
+            "count": 4.0
+          },
+          {
+            "value": 21,
+            "count": 2.0
+          },
+          {
+            "value": 10,
+            "count": 2.0
+          },
+          {
+            "value": 18,
+            "count": 2.0
+          },
+          {
+            "value": 20,
+            "count": 1.0
+          },
+          {
+            "value": 34,
+            "count": 1.0
+          },
+          {
+            "value": 17,
+            "count": 1.0
+          },
+          {
+            "value": 16,
+            "count": 1.0
+          }
+        ],
+        "listingType": [
+          {
+            "value": "standard",
+            "count": 468.0
+          },
+          {
+            "value": "custom",
+            "count": 23.0
+          }
+        ],
+        "language": [
+          {
+            "value": "English",
+            "count": 491.0
+          }
+        ],
+        "printing": [
+          {
+            "value": "Normal",
+            "count": 491.0
+          }
+        ]
+      },
+      "results": [
+        {
+          "directProduct": true,
+          "goldSeller": true,
+          "listingId": 662497882.0,
+          "channelId": 0.0,
+          "conditionId": 33.0,
+          "verifiedSeller": false,
+          "directInventory": 0.0,
+          "rankedShippingPrice": 4.99,
+          "productId": 42402.0,
+          "printing": "Normal",
+          "languageAbbreviation": "EN",
+          "sellerName": "Kurami TCG",
+          "sellerPrograms": [
+            "Direct",
+            "DirectViewable",
+            "Pro"
+          ],
+          "forwardFreight": false,
+          "sellerShippingPrice": 4.99,
+          "language": "English",
+          "shippingPrice": 4.99,
+          "condition": "Damaged",
+          "languageId": 1.0,
+          "score": 0.0,
+          "directSeller": true,
+          "productConditionId": 455881.0,
+          "sellerId": "254054",
+          "listingType": "standard",
+          "sellerRating": 100.0,
+          "sellerSales": "50000+",
+          "quantity": 1.0,
+          "sellerPrice": 0.74,
+          "sellerKey": "7b556f08",
+          "price": 0.74,
+          "customData": {
+            "images": []
+          },
+          "directListing": false
+        },
+        {
+          "directProduct": true,
+          "goldSeller": true,
+          "listingId": 448623304.0,
+          "channelId": 0.0,
+          "conditionId": 35.0,
+          "verifiedSeller": true,
+          "directInventory": 0.0,
+          "rankedShippingPrice": 7.0,
+          "productId": 42402.0,
+          "printing": "Normal",
+          "languageAbbreviation": "EN",
+          "sellerName": "Risen Phoenix TCG",
+          "sellerPrograms": [
+            "Direct",
+            "DirectViewable",
+            "Presale",
+            "International",
+            "CertifiedHobbyShop"
+          ],
+          "forwardFreight": false,
+          "sellerShippingPrice": 7.0,
+          "language": "English",
+          "shippingPrice": 7.0,
+          "condition": "Heavily Played",
+          "languageId": 1.0,
+          "score": 0.0,
+          "directSeller": true,
+          "productConditionId": 443413.0,
+          "sellerId": "3929",
+          "listingType": "standard",
+          "sellerRating": 100.0,
+          "sellerSales": "50000+",
+          "quantity": 1.0,
+          "sellerPrice": 4.72,
+          "sellerKey": "2b58a2cf",
+          "price": 4.72,
+          "customData": {
+            "images": []
+          },
+          "directListing": false
+        },
+        {
+          "directProduct": true,
+          "goldSeller": false,
+          "listingId": 748475164.0,
+          "channelId": 0.0,
+          "conditionId": 33.0,
+          "verifiedSeller": false,
+          "directInventory": 0.0,
+          "rankedShippingPrice": 1.49,
+          "productId": 42402.0,
+          "printing": "Normal",
+          "languageAbbreviation": "EN",
+          "sellerName": "Cards Odyssey",
+          "sellerPrograms": [],
+          "forwardFreight": false,
+          "sellerShippingPrice": 0.99,
+          "language": "English",
+          "shippingPrice": 1.49,
+          "condition": "Damaged",
+          "languageId": 1.0,
+          "score": 0.0,
+          "directSeller": false,
+          "productConditionId": 455881.0,
+          "sellerId": "373629",
+          "listingType": "standard",
+          "sellerRating": 100.0,
+          "sellerSales": "66",
+          "quantity": 1.0,
+          "sellerPrice": 0.86,
+          "sellerKey": "c9bfad6f",
+          "price": 0.86,
+          "customData": {
+            "images": []
+          },
+          "directListing": false
+        },
+        {
+          "directProduct": true,
+          "goldSeller": false,
+          "listingId": 757005533.0,
+          "channelId": 0.0,
+          "conditionId": 35.0,
+          "verifiedSeller": false,
+          "directInventory": 0.0,
+          "rankedShippingPrice": 1.49,
+          "productId": 42402.0,
+          "printing": "Normal",
+          "languageAbbreviation": "EN",
+          "sellerName": "Mercy Cards",
+          "sellerPrograms": [],
+          "forwardFreight": false,
+          "sellerShippingPrice": 1.36,
+          "language": "English",
+          "shippingPrice": 1.49,
+          "condition": "Heavily Played",
+          "languageId": 1.0,
+          "score": 0.0,
+          "directSeller": false,
+          "productConditionId": 443413.0,
+          "sellerId": "809211",
+          "listingType": "standard",
+          "sellerRating": 100.0,
+          "sellerSales": "19",
+          "quantity": 1.0,
+          "sellerPrice": 0.75,
+          "sellerKey": "f0b31917",
+          "price": 0.75,
+          "customData": {
+            "images": []
+          },
+          "directListing": false
+        },
+        {
+          "directProduct": true,
+          "goldSeller": true,
+          "listingId": 2545068.0,
+          "channelId": 0.0,
+          "conditionId": 35.0,
+          "verifiedSeller": true,
+          "directInventory": 0.0,
+          "rankedShippingPrice": 6.99,
+          "productId": 42402.0,
+          "printing": "Normal",
+          "languageAbbreviation": "EN",
+          "sellerName": "XtremeGames",
+          "sellerPrograms": [
+            "Direct",
+            "DirectViewable",
+            "Presale",
+            "International",
+            "CertifiedHobbyShop",
+            "WizardsPlayNetwork"
+          ],
+          "forwardFreight": false,
+          "sellerShippingPrice": 6.99,
+          "language": "English",
+          "shippingPrice": 6.99,
+          "condition": "Heavily Played",
+          "languageId": 1.0,
+          "score": 0.0,
+          "directSeller": true,
+          "productConditionId": 443413.0,
+          "sellerId": "35",
+          "listingType": "standard",
+          "sellerRating": 100.0,
+          "sellerSales": "50000+",
+          "quantity": 6.0,
+          "sellerPrice": 2.12,
+          "sellerKey": "2B1B94C4",
+          "price": 2.12,
+          "customData": {
+            "images": []
+          },
+          "directListing": false
+        },
+        {
+          "directProduct": true,
+          "goldSeller": true,
+          "listingId": 75420454.0,
+          "channelId": 0.0,
+          "conditionId": 33.0,
+          "verifiedSeller": true,
+          "directInventory": 0.0,
+          "rankedShippingPrice": 4.99,
+          "productId": 42402.0,
+          "printing": "Normal",
+          "languageAbbreviation": "EN",
+          "sellerName": "Game Nut",
+          "sellerPrograms": [
+            "DirectViewable",
+            "Presale",
+            "Pro",
+            "International",
+            "CertifiedHobbyShop",
+            "WizardsPlayNetwork"
+          ],
+          "forwardFreight": false,
+          "sellerShippingPrice": 4.99,
+          "language": "English",
+          "shippingPrice": 4.99,
+          "condition": "Damaged",
+          "languageId": 1.0,
+          "score": 0.0,
+          "directSeller": false,
+          "productConditionId": 455881.0,
+          "sellerId": "36416",
+          "listingType": "standard",
+          "sellerRating": 100.0,
+          "sellerSales": "50000+",
+          "quantity": 3.0,
+          "sellerPrice": 0.99,
+          "sellerKey": "c674cacf",
+          "price": 0.99,
+          "customData": {
+            "images": []
+          },
+          "directListing": false
+        },
+        {
+          "directProduct": true,
+          "goldSeller": true,
+          "listingId": 2545067.0,
+          "channelId": 0.0,
+          "conditionId": 34.0,
+          "verifiedSeller": true,
+          "directInventory": 0.0,
+          "rankedShippingPrice": 6.99,
+          "productId": 42402.0,
+          "printing": "Normal",
+          "languageAbbreviation": "EN",
+          "sellerName": "XtremeGames",
+          "sellerPrograms": [
+            "Direct",
+            "DirectViewable",
+            "Presale",
+            "International",
+            "CertifiedHobbyShop",
+            "WizardsPlayNetwork"
+          ],
+          "forwardFreight": false,
+          "sellerShippingPrice": 6.99,
+          "language": "English",
+          "shippingPrice": 6.99,
+          "condition": "Moderately Played",
+          "languageId": 1.0,
+          "score": 0.0,
+          "directSeller": true,
+          "productConditionId": 451725.0,
+          "sellerId": "35",
+          "listingType": "standard",
+          "sellerRating": 100.0,
+          "sellerSales": "50000+",
+          "quantity": 1.0,
+          "sellerPrice": 2.37,
+          "sellerKey": "2B1B94C4",
+          "price": 2.37,
+          "customData": {
+            "images": []
+          },
+          "directListing": false
+        },
+        {
+          "directProduct": true,
+          "goldSeller": true,
+          "listingId": 120537825.0,
+          "channelId": 0.0,
+          "conditionId": 33.0,
+          "verifiedSeller": true,
+          "directInventory": 0.0,
+          "rankedShippingPrice": 6.99,
+          "productId": 42402.0,
+          "printing": "Normal",
+          "languageAbbreviation": "EN",
+          "sellerName": "XtremeGames",
+          "sellerPrograms": [
+            "Direct",
+            "DirectViewable",
+            "Presale",
+            "International",
+            "CertifiedHobbyShop",
+            "WizardsPlayNetwork"
+          ],
+          "forwardFreight": false,
+          "sellerShippingPrice": 6.99,
+          "language": "English",
+          "shippingPrice": 6.99,
+          "condition": "Damaged",
+          "languageId": 1.0,
+          "score": 0.0,
+          "directSeller": true,
+          "productConditionId": 455881.0,
+          "sellerId": "35",
+          "listingType": "standard",
+          "sellerRating": 100.0,
+          "sellerSales": "50000+",
+          "quantity": 8.0,
+          "sellerPrice": 1.49,
+          "sellerKey": "2B1B94C4",
+          "price": 1.49,
+          "customData": {
+            "images": []
+          },
+          "directListing": false
+        },
+        {
+          "directProduct": true,
+          "goldSeller": false,
+          "listingId": 779739346.0,
+          "channelId": 0.0,
+          "conditionId": 34.0,
+          "verifiedSeller": false,
+          "directInventory": 0.0,
+          "rankedShippingPrice": 1.75,
+          "productId": 42402.0,
+          "printing": "Normal",
+          "languageAbbreviation": "EN",
+          "sellerName": "PokeAMG",
+          "sellerPrograms": [],
+          "forwardFreight": false,
+          "sellerShippingPrice": 1.75,
+          "language": "English",
+          "shippingPrice": 1.75,
+          "condition": "Moderately Played",
+          "languageId": 1.0,
+          "score": 0.0,
+          "directSeller": false,
+          "productConditionId": 451725.0,
+          "sellerId": "817297",
+          "listingType": "standard",
+          "sellerRating": 100.0,
+          "sellerSales": "43",
+          "quantity": 1.0,
+          "sellerPrice": 1.5,
+          "sellerKey": "01140280",
+          "price": 1.5,
+          "customData": {
+            "images": []
+          },
+          "directListing": false
+        },
+        {
+          "directProduct": true,
+          "goldSeller": false,
+          "listingId": 779739348.0,
+          "channelId": 0.0,
+          "conditionId": 35.0,
+          "verifiedSeller": false,
+          "directInventory": 0.0,
+          "rankedShippingPrice": 1.75,
+          "productId": 42402.0,
+          "printing": "Normal",
+          "languageAbbreviation": "EN",
+          "sellerName": "PokeAMG",
+          "sellerPrograms": [],
+          "forwardFreight": false,
+          "sellerShippingPrice": 1.75,
+          "language": "English",
+          "shippingPrice": 1.75,
+          "condition": "Heavily Played",
+          "languageId": 1.0,
+          "score": 0.0,
+          "directSeller": false,
+          "productConditionId": 443413.0,
+          "sellerId": "817297",
+          "listingType": "standard",
+          "sellerRating": 100.0,
+          "sellerSales": "43",
+          "quantity": 1.0,
+          "sellerPrice": 0.8,
+          "sellerKey": "01140280",
+          "price": 0.8,
+          "customData": {
+            "images": []
+          },
+          "directListing": false
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Pokemon Lookup</title>
+    <link rel="stylesheet" href="popup.css">
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>Pokemon Lookup</h1>
+        <span id="status">Checking</span>
+      </header>
+
+      <label>
+        Local lookup server
+        <input id="backendUrl" type="url" value="http://127.0.0.1:8790">
+      </label>
+
+      <div class="actions">
+        <button id="save">Save Settings</button>
+      </div>
+
+      <section>
+        <div id="hint">Open a Whatnot live page. The overlay appears automatically and searches your local Pokemon card database.</div>
+      </section>
+    </main>
+    <script src="popup.js"></script>
+  </body>
+</html>

@@ -1,0 +1,71 @@
+====================================================================================================
+CARDVECTOR BATCH FOLDER REPORT
+====================================================================================================
+Generated: 2026-07-02 08:43:42.155100
+
+====================================================================================================
+Capture
+Classification : ❓ Review
+Folders        : 14
+Files          : 196
+Python Files   : 0
+Newest File    : 2026-07-02 07:12:49.542475
+Extensions:
+   .jpg       183
+   .json      13
+
+====================================================================================================
+Putnam_Content
+Classification : 🟡 Small Folder
+Folders        : 7
+Files          : 8
+Python Files   : 0
+Newest File    : 2026-06-27 00:13:57
+Extensions:
+   .mkv       5
+   .txt       2
+   .llc       1
+
+====================================================================================================
+Putnam_Platform
+Classification : 🟡 Small Folder
+Folders        : 1
+Files          : 1
+Python Files   : 0
+Newest File    : 2026-06-29 16:25:02
+Extensions:
+   .json      1
+
+====================================================================================================
+Putnam_Seller_Tools
+Classification : ❓ Review (contains Python)
+Folders        : 4
+Files          : 8
+Python Files   : 1
+Newest File    : 2026-06-29 11:05:03.338369
+Extensions:
+   .csv       3
+   .md        2
+   .txt       2
+   .py        1
+
+====================================================================================================
+Work_Sessions
+Classification : ❓ Review
+Folders        : 9
+Files          : 24
+Python Files   : 0
+Newest File    : 2026-06-29 16:22:26
+Extensions:
+   .mkv       10
+   .csv       8
+   .txt       3
+   .json      2
+   .md        1
+
+====================================================================================================
+SUMMARY
+====================================================================================================
+❓ Review: 2
+🟡 Small Folder: 2
+❓ Review (contains Python): 1

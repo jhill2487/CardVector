@@ -1,0 +1,13 @@
+Putnam OS v2.3.1 - New Listing Price Auditor
+Generated: 2026-06-26 12:39:24.895090
+Source: C:\Users\JaredHill\Downloads\pokemon-english_ebay_ungraded_fixed-price_2026-06-26_1150.csv
+
+Rows detected: 13
+Changed: 0
+Flagged for review: 0
+Invalid: 0
+
+Notes:
+- Original CardUploader columns are preserved.
+- Only *StartPrice values are changed.
+- Upload candidate is the EBAY_UPLOAD_CardUploader_price_audited file.

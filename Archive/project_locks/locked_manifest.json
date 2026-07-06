@@ -1,0 +1,37 @@
+{
+  "lock_name": "Putnam Scanner geometry + Studio layout lock",
+  "created_at": "20260608_124624",
+  "purpose": "Protect known-good v0.7 geometry and current Studio HTML layout from accidental patch drift.",
+  "locked_files": [
+    {
+      "path": "known_good/template_region_warp_matcher_v0_7.py",
+      "sha256": "10b77b37f369ea67cc8c8e8bd897fa06c51c940d089ffb44f81b25129f66db60",
+      "backup": "project_locks\\locked_backups\\20260608_124624__known_good__template_region_warp_matcher_v0_7.py",
+      "locked_at": "20260608_124624"
+    },
+    {
+      "path": "known_good/IMG_7505.json",
+      "sha256": "8d4b34f859160680f664acc94fd2da326c55f7fb921c0fde437009fd57564397",
+      "backup": "project_locks\\locked_backups\\20260608_124624__known_good__IMG_7505.json",
+      "locked_at": "20260608_124624"
+    },
+    {
+      "path": "known_good/IMG_7507.json",
+      "sha256": "6377539d70e816e037eaba79a37ed38f1c51a3bbf182781d2c51277d45134ec9",
+      "backup": "project_locks\\locked_backups\\20260608_124624__known_good__IMG_7507.json",
+      "locked_at": "20260608_124624"
+    },
+    {
+      "path": "scanner_studio.html",
+      "sha256": "1025d43ff6a6fada6a1fb4fbca529fb7794849f1f711f7153e0d93d9a764b3b0",
+      "backup": "project_locks\\locked_backups\\20260608_124624__scanner_studio.html",
+      "locked_at": "20260608_124624"
+    }
+  ],
+  "rules": [
+    "Do not modify known_good/template_region_warp_matcher_v0_7.py unless deliberately creating a new geometry baseline.",
+    "Do not replace scanner_studio.html in OCR/server patches unless the user explicitly asks for UI/layout changes.",
+    "Run verify_project_locks.py after applying any patch.",
+    "Use unlock_locked_files.py only for deliberate geometry/layout changes, then relock_project_files.py after verification."
+  ]
+}

@@ -1,0 +1,17 @@
+================================================================================
+CARDVECTOR PRODUCTION PATH REPORT
+================================================================================
+
+Launcher:
+    Platform\Putnam_OS\Run CardVector OS Production.vbs
+
+Launcher references:
+    \Platform\Putnam_OS\System\app\putnam_os.py
+
+Production Import Tree
+--------------------------------------------------------------------------------
+Platform\Putnam_OS\System_Archive\acquisition_intake_20260701_081544\putnam_os.py
+    Platform\Putnam_OS\System_Archive\shared_obs_manager_pre_patch_20260701_221634\capture_studio.py
+    Platform\Putnam_Platform\Decision_Engine\decision_engine.py
+    Platform\Putnam_OS\System\app\inventory_locations.py
+    Platform\Putnam_OS\System\app\orders_fulfillment.py

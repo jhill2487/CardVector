@@ -1,0 +1,31 @@
+{
+  "provider": "composite",
+  "notes": "CardUploader evidence is preferred for eBay repricing. TCGtracking is kept reference-only unless explicitly configured otherwise.",
+  "providers": [
+    {
+      "provider": "carduploader_inventory",
+      "files": [
+        "Data/Imports/CardUploader_Inventory/*.csv",
+        "Data/Imports/Processed/*.csv",
+        "Business/Inventory/Pricing_Revisions/Completed Jobs/*/source_backup/*.csv",
+        "Business/Inventory/Pricing_Revisions/Completed Jobs/*/EBAY_UPLOAD_CardUploader_price_audited_*.csv"
+      ]
+    },
+    {
+      "provider": "carduploader_sales_cache",
+      "cache_dirs": [
+        "Platform/Putnam_OS/System/data/market_cache",
+        "Platform/Putnam_OS/System/cache"
+      ],
+      "minimum_accepted_comps": 3,
+      "minimum_confidence": 65
+    },
+    {
+      "provider": "tcgtracking",
+      "mode": "local_export",
+      "price_file": "examples/tcgtracking_prices_sample.json",
+      "actionable": false,
+      "notes": "Reference-only by default so TCGplayer-style values do not directly revise eBay listings."
+    }
+  ]
+}

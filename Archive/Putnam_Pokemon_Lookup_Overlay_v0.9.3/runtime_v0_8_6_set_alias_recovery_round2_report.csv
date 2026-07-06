@@ -1,0 +1,998 @@
+putnam_card_id,catalog_set,card_name,printed_number,product_id,product_name,status,score
+pkm-scarlet-and-violet-energies-1-8-e4602d39cd,Scarlet and Violet Energies,Basic Grass Energy,1/8,475425,Basic Grass Energy - 001,SKIP_NAME_MISMATCH,0.75
+pkm-scarlet-and-violet-energies-1-8-e4602d39cd,Scarlet and Violet Energies,Basic Grass Energy,1/8,517177,Basic Grass Energy (Cosmos Holo),LINKED,1.00
+pkm-scarlet-and-violet-energies-2-8-ed2981ad3e,Scarlet and Violet Energies,Basic Fire Energy,2/8,475426,Basic Fire Energy - 002,SKIP_NAME_MISMATCH,0.75
+pkm-scarlet-and-violet-energies-2-8-ed2981ad3e,Scarlet and Violet Energies,Basic Fire Energy,2/8,517178,Basic Fire Energy (Cosmos Holo),LINKED,1.00
+pkm-scarlet-and-violet-energies-3-8-0ac636116c,Scarlet and Violet Energies,Basic Water Energy,3/8,475427,Basic Water Energy - 003,SKIP_NAME_MISMATCH,0.75
+pkm-scarlet-and-violet-energies-3-8-0ac636116c,Scarlet and Violet Energies,Basic Water Energy,3/8,517179,Basic Water Energy (Cosmos Holo),LINKED,1.00
+pkm-scarlet-and-violet-energies-4-8-23e6dccda6,Scarlet and Violet Energies,Basic Lightning Energy,4/8,475428,Basic Lightning Energy - 004,SKIP_NAME_MISMATCH,0.75
+pkm-scarlet-and-violet-energies-4-8-23e6dccda6,Scarlet and Violet Energies,Basic Lightning Energy,4/8,517180,Basic Lightning Energy (Cosmos Holo),LINKED,1.00
+pkm-scarlet-and-violet-energies-5-8-64aa2e0ae9,Scarlet and Violet Energies,Basic Psychic Energy,5/8,475429,Basic Psychic Energy - 005,SKIP_NAME_MISMATCH,0.75
+pkm-scarlet-and-violet-energies-5-8-64aa2e0ae9,Scarlet and Violet Energies,Basic Psychic Energy,5/8,517181,Basic Psychic Energy (Cosmos Holo),LINKED,1.00
+pkm-scarlet-and-violet-energies-6-8-428e04661c,Scarlet and Violet Energies,Basic Fighting Energy,6/8,,,NO_CANDIDATE,
+pkm-scarlet-and-violet-energies-7-8-ade3609a70,Scarlet and Violet Energies,Basic Darkness Energy,7/8,475431,Basic Darkness Energy - 007,SKIP_NAME_MISMATCH,0.75
+pkm-scarlet-and-violet-energies-7-8-ade3609a70,Scarlet and Violet Energies,Basic Darkness Energy,7/8,517183,Basic Darkness Energy (Cosmos Holo),LINKED,1.00
+pkm-scarlet-and-violet-energies-8-8-e214ec26c4,Scarlet and Violet Energies,Basic Metal Energy,8/8,475432,Basic Metal Energy - 008,SKIP_NAME_MISMATCH,0.75
+pkm-scarlet-and-violet-energies-8-8-e214ec26c4,Scarlet and Violet Energies,Basic Metal Energy,8/8,517184,Basic Metal Energy (Cosmos Holo),LINKED,1.00
+pkm-scarlet-and-violet-energies-9-8-9bb536ecb2,Scarlet and Violet Energies,Basic Grass Energy,9/8,578864,Basic Grass Energy - 009,SKIP_NAME_MISMATCH,0.75
+pkm-scarlet-and-violet-energies-9-8-9bb536ecb2,Scarlet and Violet Energies,Basic Grass Energy,9/8,599740,Basic Grass Energy (Cracked Ice Holo),SKIP_NAME_MISMATCH,0.50
+pkm-scarlet-and-violet-energies-10-8-22775c0b5c,Scarlet and Violet Energies,Basic Fire Energy,10/8,578863,Basic Fire Energy - 010,SKIP_NAME_MISMATCH,0.75
+pkm-scarlet-and-violet-energies-10-8-22775c0b5c,Scarlet and Violet Energies,Basic Fire Energy,10/8,599738,Basic Fire Energy (Cracked Ice Holo),SKIP_NAME_MISMATCH,0.50
+pkm-scarlet-and-violet-energies-11-8-eb2f9424a0,Scarlet and Violet Energies,Basic Water Energy,11/8,578862,Basic Water Energy - 011,SKIP_NAME_MISMATCH,0.75
+pkm-scarlet-and-violet-energies-11-8-eb2f9424a0,Scarlet and Violet Energies,Basic Water Energy,11/8,599745,Basic Water Energy (Cracked Ice Holo),SKIP_NAME_MISMATCH,0.50
+pkm-scarlet-and-violet-energies-12-8-e0dfca052d,Scarlet and Violet Energies,Basic Lightning Energy,12/8,578866,Basic Lightning Energy - 012,SKIP_NAME_MISMATCH,0.75
+pkm-scarlet-and-violet-energies-12-8-e0dfca052d,Scarlet and Violet Energies,Basic Lightning Energy,12/8,599741,Basic Lightning Energy (Cracked Ice Holo),SKIP_NAME_MISMATCH,0.50
+pkm-scarlet-and-violet-energies-13-8-767e23bc84,Scarlet and Violet Energies,Basic Psychic Energy,13/8,578865,Basic Psychic Energy - 013,SKIP_NAME_MISMATCH,0.75
+pkm-scarlet-and-violet-energies-13-8-767e23bc84,Scarlet and Violet Energies,Basic Psychic Energy,13/8,599743,Basic Psychic Energy (Cracked Ice Holo),SKIP_NAME_MISMATCH,0.50
+pkm-scarlet-and-violet-energies-14-8-ff2ccdc1fb,Scarlet and Violet Energies,Basic Fighting Energy,14/8,,,NO_CANDIDATE,
+pkm-scarlet-and-violet-energies-15-8-aa09691548,Scarlet and Violet Energies,Basic Darkness Energy,15/8,578868,Basic Darkness Energy - 015,SKIP_NAME_MISMATCH,0.75
+pkm-scarlet-and-violet-energies-15-8-aa09691548,Scarlet and Violet Energies,Basic Darkness Energy,15/8,599747,Basic Darkness Energy (Cracked Ice Holo),SKIP_NAME_MISMATCH,0.50
+pkm-scarlet-and-violet-energies-16-8-bc9497f292,Scarlet and Violet Energies,Basic Metal Energy,16/8,578869,Basic Metal Energy - 016,SKIP_NAME_MISMATCH,0.75
+pkm-scarlet-and-violet-energies-16-8-bc9497f292,Scarlet and Violet Energies,Basic Metal Energy,16/8,599742,Basic Metal Energy (Cracked Ice Holo),SKIP_NAME_MISMATCH,0.50
+pkm-base-1-102-769caa7fdc,Base,Alakazam,1/102,42346,Alakazam,LINKED,1.00
+pkm-base-2-102-630337911d,Base,Blastoise,2/102,42360,Blastoise,LINKED,1.00
+pkm-base-3-102-c24abb077f,Base,Chansey,3/102,42371,Chansey,LINKED,1.00
+pkm-base-4-102-c940fd1372,Base,Charizard,4/102,42382,Charizard,LINKED,1.00
+pkm-base-4-102-c940fd1372,Base,Charizard,4/102,657516,Charizard (Black Dot Error),SKIP_NAME_MISMATCH,0.25
+pkm-base-5-102-2c688ca9d7,Base,Clefairy,5/102,42393,Clefairy,LINKED,1.00
+pkm-base-6-102-759365cd96,Base,Gyarados,6/102,42404,Gyarados,LINKED,1.00
+pkm-base-7-102-3a50ac8942,Base,Hitmonchan,7/102,42415,Hitmonchan,LINKED,1.00
+pkm-base-8-102-12f0b40d25,Base,Machamp,8/102,,,NO_CANDIDATE,
+pkm-base-9-102-be17f69202,Base,Magneton,9/102,42433,Magneton,LINKED,1.00
+pkm-base-10-102-e3a7767584,Base,Mewtwo,10/102,42347,Mewtwo,LINKED,1.00
+pkm-base-11-102-226b0f0efd,Base,Nidoking,11/102,42351,Nidoking,LINKED,1.00
+pkm-base-12-102-e9632081eb,Base,Ninetales,12/102,42352,Ninetales,LINKED,1.00
+pkm-base-13-102-85584c2d36,Base,Poliwrath,13/102,42353,Poliwrath,LINKED,1.00
+pkm-base-14-102-29e7d225f4,Base,Raichu,14/102,42354,Raichu,LINKED,1.00
+pkm-base-15-102-d9f838467d,Base,Venusaur,15/102,42355,Venusaur,LINKED,1.00
+pkm-base-16-102-dbafa62800,Base,Zapdos,16/102,42356,Zapdos,LINKED,1.00
+pkm-base-17-102-75971c095a,Base,Beedrill,17/102,42357,Beedrill,LINKED,1.00
+pkm-base-18-102-e85f95e4a5,Base,Dragonair,18/102,42358,Dragonair,LINKED,1.00
+pkm-base-19-102-9db53ccada,Base,Dugtrio,19/102,42359,Dugtrio,LINKED,1.00
+pkm-base-20-102-080f1ac48a,Base,Electabuzz,20/102,42361,Electabuzz,LINKED,1.00
+pkm-base-21-102-ff65f24280,Base,Electrode,21/102,42362,Electrode,LINKED,1.00
+pkm-base-22-102-9430cb5660,Base,Pidgeotto,22/102,42363,Pidgeotto,LINKED,1.00
+pkm-base-23-102-5db2c92826,Base,Arcanine,23/102,42364,Arcanine,LINKED,1.00
+pkm-base-24-102-57c15ff2cf,Base,Charmeleon,24/102,42365,Charmeleon,LINKED,1.00
+pkm-base-25-102-f4960d12f8,Base,Dewgong,25/102,42366,Dewgong,LINKED,1.00
+pkm-base-26-102-f83fb9911b,Base,Dratini,26/102,,,NO_CANDIDATE,
+pkm-base-27-102-8bea98ba81,Base,Farfetch'd,27/102,42368,Farfetch'd,LINKED,1.00
+pkm-base-28-102-2c52b6088c,Base,Growlithe,28/102,42369,Growlithe,LINKED,1.00
+pkm-base-29-102-78eebd3e66,Base,Haunter,29/102,42370,Haunter,LINKED,1.00
+pkm-base-30-102-c7e68161a1,Base,Ivysaur,30/102,42372,Ivysaur,LINKED,1.00
+pkm-base-31-102-8ffdd99203,Base,Jynx,31/102,42373,Jynx,LINKED,1.00
+pkm-base-32-102-6119585ab2,Base,Kadabra,32/102,42374,Kadabra,LINKED,1.00
+pkm-base-33-102-923e7f86ff,Base,Kakuna,33/102,42375,Kakuna,LINKED,1.00
+pkm-base-34-102-a8d4afbf2f,Base,Machoke,34/102,42376,Machoke,LINKED,1.00
+pkm-base-35-102-06e12bf0b2,Base,Magikarp,35/102,42377,Magikarp,LINKED,1.00
+pkm-base-36-102-e3d5e376c2,Base,Magmar,36/102,42378,Magmar,LINKED,1.00
+pkm-base-37-102-495b34f8e0,Base,Nidorino,37/102,42379,Nidorino,LINKED,1.00
+pkm-base-38-102-27fc13f63f,Base,Poliwhirl,38/102,42380,Poliwhirl,LINKED,1.00
+pkm-base-39-102-b21b9fdd2c,Base,Porygon,39/102,42381,Porygon,LINKED,1.00
+pkm-base-40-102-a9dc409694,Base,Raticate,40/102,42383,Raticate,LINKED,1.00
+pkm-base-41-102-5b9021933a,Base,Seel,41/102,42384,Seel,LINKED,1.00
+pkm-base-42-102-2f3a81d0ab,Base,Wartortle,42/102,42385,Wartortle,LINKED,1.00
+pkm-base-43-102-53857139de,Base,Abra,43/102,42386,Abra,LINKED,1.00
+pkm-base-44-102-3ebd488979,Base,Bulbasaur,44/102,42387,Bulbasaur,LINKED,1.00
+pkm-base-45-102-e22ae85e04,Base,Caterpie,45/102,42388,Caterpie,LINKED,1.00
+pkm-base-46-102-e69556723e,Base,Charmander,46/102,42389,Charmander,LINKED,1.00
+pkm-base-47-102-fff40d21b4,Base,Diglett,47/102,42390,Diglett,LINKED,1.00
+pkm-base-48-102-2d753990b4,Base,Doduo,48/102,42391,Doduo,LINKED,1.00
+pkm-base-49-102-1fe12bf2cd,Base,Drowzee,49/102,42392,Drowzee,LINKED,1.00
+pkm-base-50-102-f97cc17cac,Base,Gastly,50/102,42394,Gastly,LINKED,1.00
+pkm-base-51-102-b4b90bfdd9,Base,Koffing,51/102,42395,Koffing,LINKED,1.00
+pkm-base-52-102-1d8e7a203f,Base,Machop,52/102,42396,Machop,LINKED,1.00
+pkm-base-53-102-245661a732,Base,Magnemite,53/102,42397,Magnemite,LINKED,1.00
+pkm-base-54-102-6dbb3c69da,Base,Metapod,54/102,42398,Metapod,LINKED,1.00
+pkm-base-55-102-bbaa978f0f,Base,Nidoran ♂,55/102,42399,Nidoran M,SKIP_NAME_MISMATCH,0.50
+pkm-base-56-102-eee358e22a,Base,Onix,56/102,42400,Onix,LINKED,1.00
+pkm-base-57-102-6331df9656,Base,Pidgey,57/102,42401,Pidgey,LINKED,1.00
+pkm-base-58-102-92e4a6a893,Base,Pikachu,58/102,42402,Pikachu,LINKED,1.00
+pkm-base-59-102-d817b4c4a6,Base,Poliwag,59/102,42403,Poliwag,LINKED,1.00
+pkm-base-60-102-64d7dd4ba3,Base,Ponyta,60/102,42405,Ponyta,LINKED,1.00
+pkm-base-61-102-9ef37c19f6,Base,Rattata,61/102,42406,Rattata,LINKED,1.00
+pkm-base-62-102-91092ead86,Base,Sandshrew,62/102,42407,Sandshrew,LINKED,1.00
+pkm-base-63-102-1181a53ef9,Base,Squirtle,63/102,42408,Squirtle,LINKED,1.00
+pkm-base-64-102-909f13a019,Base,Starmie,64/102,42409,Starmie,LINKED,1.00
+pkm-base-65-102-219b62b056,Base,Staryu,65/102,42410,Staryu,LINKED,1.00
+pkm-base-66-102-af476f6d3d,Base,Tangela,66/102,42411,Tangela,LINKED,1.00
+pkm-base-67-102-497b3ffe66,Base,Voltorb,67/102,42412,Voltorb,LINKED,1.00
+pkm-base-68-102-4341982fd8,Base,Vulpix,68/102,42413,Vulpix,LINKED,1.00
+pkm-base-69-102-5ab483016c,Base,Weedle,69/102,42414,Weedle,LINKED,1.00
+pkm-base-70-102-fafd53f7a7,Base,Clefairy Doll,70/102,42416,Clefairy Doll,LINKED,1.00
+pkm-base-71-102-08eb199435,Base,Computer Search,71/102,42417,Computer Search,LINKED,1.00
+pkm-base-72-102-75c9f24df7,Base,Devolution Spray,72/102,42418,Devolution Spray,LINKED,1.00
+pkm-base-73-102-bf3418c58a,Base,Impostor Professor Oak,73/102,,,NO_CANDIDATE,
+pkm-base-74-102-547d808816,Base,Item Finder,74/102,42420,Item Finder,LINKED,1.00
+pkm-base-75-102-c0ffe2a9fa,Base,Lass,75/102,42421,Lass,LINKED,1.00
+pkm-base-76-102-74e43c0483,Base,Pokémon Breeder,76/102,42422,Pokemon Breeder,LINKED,1.00
+pkm-base-77-102-5dc6da1dfc,Base,Pokémon Trader,77/102,108648,Pokemon Trader,LINKED,1.00
+pkm-base-78-102-45990eab43,Base,Scoop Up,78/102,42423,Scoop Up,LINKED,1.00
+pkm-base-79-102-03156b25a3,Base,Super Energy Removal,79/102,42424,Super Energy Removal,LINKED,1.00
+pkm-base-80-102-70f0b2ad0c,Base,Defender,80/102,42426,Defender,LINKED,1.00
+pkm-base-81-102-4ff4718fde,Base,Energy Retrieval,81/102,42427,Energy Retrieval,LINKED,1.00
+pkm-base-82-102-a50339cae9,Base,Full Heal,82/102,42428,Full Heal,LINKED,1.00
+pkm-base-83-102-01eecede66,Base,Maintenance,83/102,42429,Maintenance,LINKED,1.00
+pkm-base-84-102-a6d416c0aa,Base,PlusPower,84/102,42430,PlusPower,LINKED,1.00
+pkm-base-85-102-7d569bccf9,Base,Pokémon Center,85/102,108646,Pokemon Center,LINKED,1.00
+pkm-base-86-102-46f7e6060c,Base,Pokémon Flute,86/102,108647,Pokemon Flute,LINKED,1.00
+pkm-base-87-102-b45809934b,Base,Pokédex,87/102,108645,Pokedex,LINKED,1.00
+pkm-base-88-102-98d604bcc8,Base,Professor Oak,88/102,42431,Professor Oak,LINKED,1.00
+pkm-base-89-102-210eae8d39,Base,Revive,89/102,42432,Revive,LINKED,1.00
+pkm-base-90-102-842d4b0dc0,Base,Super Potion,90/102,42434,Super Potion,LINKED,1.00
+pkm-base-91-102-19232452fe,Base,Bill,91/102,42435,Bill,LINKED,1.00
+pkm-base-92-102-acadda4323,Base,Energy Removal,92/102,42436,Energy Removal,LINKED,1.00
+pkm-base-93-102-75de1b67b6,Base,Gust of Wind,93/102,42437,Gust of Wind,LINKED,1.00
+pkm-base-94-102-8270ed5b41,Base,Potion,94/102,42438,Potion,LINKED,1.00
+pkm-base-95-102-190a136058,Base,Switch,95/102,42439,Switch,LINKED,1.00
+pkm-base-96-102-9564f30dd7,Base,Double Colorless Energy,96/102,42440,Double Colorless Energy,LINKED,1.00
+pkm-base-97-102-bcd32aafb6,Base,Fighting Energy,97/102,,,NO_CANDIDATE,
+pkm-base-98-102-1c06b3260a,Base,Fire Energy,98/102,42442,Fire Energy,LINKED,1.00
+pkm-base-99-102-165dd4b033,Base,Grass Energy,99/102,42443,Grass Energy,LINKED,1.00
+pkm-base-100-102-8a1e31161f,Base,Lightning Energy,100/102,42348,Lightning Energy,LINKED,1.00
+pkm-base-101-102-2c42e10191,Base,Psychic Energy,101/102,42349,Psychic Energy,LINKED,1.00
+pkm-base-102-102-d4f85592e7,Base,Water Energy,102/102,42350,Water Energy,LINKED,1.00
+pkm-expedition-base-set-1-165-a8675ebfb3,Expedition Base Set,Alakazam,1/165,83497,Alakazam (1),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-2-165-fcf97aa7d1,Expedition Base Set,Ampharos,2/165,83538,Ampharos (2),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-3-165-91c13b746a,Expedition Base Set,Arbok,3/165,83566,Arbok (3),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-4-165-c9fadffd62,Expedition Base Set,Blastoise,4/165,83888,Blastoise (4),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-5-165-760c43f18f,Expedition Base Set,Butterfree,5/165,84059,Butterfree (5),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-6-165-86e25ef0d3,Expedition Base Set,Charizard,6/165,84183,Charizard (6),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-7-165-d257b98cd7,Expedition Base Set,Clefable,7/165,84342,Clefable (7),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-8-165-abf534a22f,Expedition Base Set,Cloyster,8/165,84370,Cloyster (8),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-9-165-c74b8f6021,Expedition Base Set,Dragonite,9/165,84910,Dragonite (9),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-10-165-9c4e8799d6,Expedition Base Set,Dugtrio,10/165,84996,Dugtrio (10),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-11-165-f6eae3f00d,Expedition Base Set,Fearow,11/165,85392,Fearow (11),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-12-165-76799011e1,Expedition Base Set,Feraligatr,12/165,85414,Feraligatr (12),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-13-165-ff20355371,Expedition Base Set,Gengar,13/165,85671,Gengar (13),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-14-165-0fd6d90acf,Expedition Base Set,Golem,14/165,85821,Golem (14),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-15-165-3187f5c97e,Expedition Base Set,Kingler,15/165,86453,Kingler (15),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-16-165-5fa47603c0,Expedition Base Set,Machamp,16/165,86960,Machamp (16),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-17-165-d4764fa89c,Expedition Base Set,Magby,17/165,87000,Magby (17),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-18-165-5da114140e,Expedition Base Set,Meganium,18/165,87288,Meganium (18),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-19-165-9ea0fb8e0f,Expedition Base Set,Mew,19/165,87396,Mew (19),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-20-165-2f0fbb9b1f,Expedition Base Set,Mewtwo,20/165,87418,Mewtwo (20),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-21-165-73d2afd250,Expedition Base Set,Ninetales,21/165,87765,Ninetales (21),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-22-165-bd85e726ae,Expedition Base Set,Pichu,22/165,88013,Pichu (22),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-23-165-13341df2fc,Expedition Base Set,Pidgeot,23/165,88027,Pidgeot (23),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-24-165-a88a4c32a0,Expedition Base Set,Poliwrath,24/165,88271,Poliwrath (24),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-25-165-ffd2931108,Expedition Base Set,Raichu,25/165,88501,Raichu (25),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-26-165-4d3f3d2306,Expedition Base Set,Rapidash,26/165,88576,Rapidash (26),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-27-165-27dde9b78b,Expedition Base Set,Skarmory,27/165,89234,Skarmory (27),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-28-165-31f07ea75b,Expedition Base Set,Typhlosion,28/165,90100,Typhlosion (28),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-29-165-568c63ec13,Expedition Base Set,Tyranitar,29/165,90115,Tyranitar (29),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-30-165-8991f97931,Expedition Base Set,Venusaur,30/165,90314,Venusaur (30),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-31-165-5e71d14907,Expedition Base Set,Vileplume,31/165,90376,Vileplume (31),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-32-165-d93879eb5d,Expedition Base Set,Weezing,32/165,90557,Weezing (32),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-33-165-74e3e46b85,Expedition Base Set,Alakazam,33/165,83500,Alakazam (33),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-34-165-2bf5b1366a,Expedition Base Set,Ampharos,34/165,83539,Ampharos (34),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-35-165-c255f63e71,Expedition Base Set,Arbok,35/165,83569,Arbok (35),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-36-165-8bf302d1eb,Expedition Base Set,Blastoise,36/165,83889,Blastoise (36),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-37-165-45bb7aa641,Expedition Base Set,Blastoise,37/165,83890,Blastoise (37),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-38-165-77b2bd6609,Expedition Base Set,Butterfree,38/165,84064,Butterfree (38),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-39-165-9d644d568d,Expedition Base Set,Charizard,39/165,84184,Charizard (39),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-40-165-c211773fc1,Expedition Base Set,Charizard,40/165,84185,Charizard (40),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-41-165-49691b4dc5,Expedition Base Set,Clefable,41/165,84344,Clefable (41),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-42-165-8250313b32,Expedition Base Set,Cloyster,42/165,84372,Cloyster (42),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-43-165-24a1c3f889,Expedition Base Set,Dragonite,43/165,84912,Dragonite (43),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-44-165-50e35ef266,Expedition Base Set,Dugtrio,44/165,84998,Dugtrio (44),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-45-165-c518dfbc20,Expedition Base Set,Fearow,45/165,85396,Fearow (45),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-46-165-63b2e3a3c7,Expedition Base Set,Feraligatr,46/165,85415,Feraligatr (46),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-47-165-418fbf5431,Expedition Base Set,Feraligatr,47/165,85416,Feraligatr (47),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-48-165-5ea5869874,Expedition Base Set,Gengar,48/165,85673,Gengar (48),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-49-165-a05de3d2dd,Expedition Base Set,Golem,49/165,85824,Golem (49),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-50-165-410a0579ac,Expedition Base Set,Kingler,50/165,86455,Kingler (50),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-51-165-11c12badb4,Expedition Base Set,Machamp,51/165,86962,Machamp (51),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-52-165-bd098aea86,Expedition Base Set,Magby,52/165,87002,Magby (52),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-53-165-c3a57b89a7,Expedition Base Set,Meganium,53/165,87289,Meganium (53),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-54-165-93342c2811,Expedition Base Set,Meganium,54/165,87290,Meganium (54),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-55-165-222bea2e43,Expedition Base Set,Mew,55/165,87398,Mew (55),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-56-165-0cce7a59ae,Expedition Base Set,Mewtwo,56/165,87420,Mewtwo (56),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-57-165-56802b5d89,Expedition Base Set,Ninetales,57/165,87766,Ninetales (57),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-58-165-380f54ca41,Expedition Base Set,Pichu,58/165,88015,Pichu (58),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-59-165-defb74e94a,Expedition Base Set,Pidgeot,59/165,88029,Pidgeot (59),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-60-165-98c0d54e27,Expedition Base Set,Poliwrath,60/165,88275,Poliwrath (60),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-61-165-dda24f2155,Expedition Base Set,Raichu,61/165,88505,Raichu (61),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-62-165-a597cc26b0,Expedition Base Set,Rapidash,62/165,88580,Rapidash (62),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-63-165-72ea7d320b,Expedition Base Set,Skarmory,63/165,89235,Skarmory (63),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-64-165-2cbab67ac5,Expedition Base Set,Typhlosion,64/165,90101,Typhlosion (64),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-65-165-44c63d731f,Expedition Base Set,Typhlosion,65/165,90102,Typhlosion (65),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-66-165-9503fb2d81,Expedition Base Set,Tyranitar,66/165,90118,Tyranitar (66),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-67-165-3dc9fc57e4,Expedition Base Set,Venusaur,67/165,90315,Venusaur (67),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-68-165-10025935d3,Expedition Base Set,Venusaur,68/165,90316,Venusaur (68),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-69-165-d06572b59e,Expedition Base Set,Vileplume,69/165,90379,Vileplume (69),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-70-165-ee44025bf5,Expedition Base Set,Weezing,70/165,90559,Weezing (70),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-71-165-bf3314b6d8,Expedition Base Set,Bayleef,71/165,83745,Bayleef,LINKED,1.00
+pkm-expedition-base-set-72-165-9770cd3f58,Expedition Base Set,Chansey,72/165,84172,Chansey,LINKED,1.00
+pkm-expedition-base-set-73-165-71a5aa25e6,Expedition Base Set,Charmeleon,73/165,84224,Charmeleon,LINKED,1.00
+pkm-expedition-base-set-74-165-ddb8768ff2,Expedition Base Set,Croconaw,74/165,84497,Croconaw,LINKED,1.00
+pkm-expedition-base-set-75-165-a28f1adbac,Expedition Base Set,Dragonair,75/165,84898,Dragonair,LINKED,1.00
+pkm-expedition-base-set-76-165-d8a243a462,Expedition Base Set,Electabuzz,76/165,85112,Electabuzz,LINKED,1.00
+pkm-expedition-base-set-77-165-7b9f4afaa7,Expedition Base Set,Flaaffy,77/165,85475,Flaaffy,LINKED,1.00
+pkm-expedition-base-set-78-165-a7f9d32aa3,Expedition Base Set,Gloom,78/165,85781,Gloom,LINKED,1.00
+pkm-expedition-base-set-79-165-f3080bd84b,Expedition Base Set,Graveler,79/165,85888,Graveler,LINKED,1.00
+pkm-expedition-base-set-80-165-c1d2353325,Expedition Base Set,Haunter,80/165,86024,Haunter,LINKED,1.00
+pkm-expedition-base-set-81-165-27574c7197,Expedition Base Set,Hitmonlee,81/165,86104,Hitmonlee,LINKED,1.00
+pkm-expedition-base-set-82-165-d4d9ab48ff,Expedition Base Set,Ivysaur,82/165,86296,Ivysaur,LINKED,1.00
+pkm-expedition-base-set-83-165-a4faedf4c4,Expedition Base Set,Jynx,83/165,86374,Jynx,LINKED,1.00
+pkm-expedition-base-set-84-165-4858199c86,Expedition Base Set,Kadabra,84/165,86406,Kadabra,LINKED,1.00
+pkm-expedition-base-set-85-165-a0e8bc15ed,Expedition Base Set,Machoke,85/165,86977,Machoke,LINKED,1.00
+pkm-expedition-base-set-86-165-71d38de9c3,Expedition Base Set,Magmar,86/165,87044,Magmar,LINKED,1.00
+pkm-expedition-base-set-87-165-756e5968ab,Expedition Base Set,Metapod,87/165,87388,Metapod,LINKED,1.00
+pkm-expedition-base-set-88-165-5e0d2a9031,Expedition Base Set,Pidgeotto,88/165,88039,Pidgeotto,LINKED,1.00
+pkm-expedition-base-set-89-165-60e21d4f66,Expedition Base Set,Poliwhirl,89/165,88264,Poliwhirl,LINKED,1.00
+pkm-expedition-base-set-90-165-85bd0c8343,Expedition Base Set,Pupitar,90/165,88447,Pupitar,LINKED,1.00
+pkm-expedition-base-set-91-165-e728aa3248,Expedition Base Set,Quilava,91/165,88483,Quilava,LINKED,1.00
+pkm-expedition-base-set-92-165-3018ae1f81,Expedition Base Set,Wartortle,92/165,90485,Wartortle,LINKED,1.00
+pkm-expedition-base-set-93-165-382ed5e491,Expedition Base Set,Abra,93/165,83447,Abra,LINKED,1.00
+pkm-expedition-base-set-94-165-169d70d778,Expedition Base Set,Bulbasaur,94/165,84026,Bulbasaur (94),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-95-165-4b7e883a02,Expedition Base Set,Bulbasaur,95/165,84027,Bulbasaur (95),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-96-165-3870b3aa55,Expedition Base Set,Caterpie,96/165,84135,Caterpie,LINKED,1.00
+pkm-expedition-base-set-97-165-d81084b10a,Expedition Base Set,Charmander,97/165,84206,Charmander (97),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-98-165-213275b748,Expedition Base Set,Charmander,98/165,84207,Charmander (98),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-99-165-b7a2002152,Expedition Base Set,Chikorita,99/165,84274,Chikorita (99),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-100-165-e57f50e132,Expedition Base Set,Chikorita,100/165,84275,Chikorita (100),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-101-165-615b06375b,Expedition Base Set,Clefairy,101/165,84353,Clefairy,LINKED,1.00
+pkm-expedition-base-set-102-165-8ad1b3985f,Expedition Base Set,Corsola,102/165,84438,Corsola,LINKED,1.00
+pkm-expedition-base-set-103-165-94864dbed5,Expedition Base Set,Cubone,103/165,84529,Cubone,LINKED,1.00
+pkm-expedition-base-set-104-165-cd18d3d274,Expedition Base Set,Cyndaquil,104/165,84547,Cyndaquil (104),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-105-165-90db01e97a,Expedition Base Set,Cyndaquil,105/165,84548,Cyndaquil (105),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-106-165-dd7d24e9b3,Expedition Base Set,Diglett,106/165,84820,Diglett,LINKED,1.00
+pkm-expedition-base-set-107-165-1235e09ff6,Expedition Base Set,Dratini,107/165,,,NO_CANDIDATE,
+pkm-expedition-base-set-108-165-a641d90cb5,Expedition Base Set,Ekans,108/165,85101,Ekans,LINKED,1.00
+pkm-expedition-base-set-109-165-baaaa3a35d,Expedition Base Set,Gastly,109/165,85649,Gastly,LINKED,1.00
+pkm-expedition-base-set-110-165-2f3548514f,Expedition Base Set,Geodude,110/165,85686,Geodude,LINKED,1.00
+pkm-expedition-base-set-111-165-2735d5ea57,Expedition Base Set,Goldeen,111/165,85805,Goldeen,LINKED,1.00
+pkm-expedition-base-set-112-165-714663fcb5,Expedition Base Set,Hoppip,112/165,86179,Hoppip,LINKED,1.00
+pkm-expedition-base-set-113-165-a3c319bf62,Expedition Base Set,Houndour,113/165,86223,Houndour,LINKED,1.00
+pkm-expedition-base-set-114-165-1a19c6b4b8,Expedition Base Set,Koffing,114/165,86492,Koffing,LINKED,1.00
+pkm-expedition-base-set-115-165-e91f0b1dd7,Expedition Base Set,Krabby,115/165,86523,Krabby,LINKED,1.00
+pkm-expedition-base-set-116-165-ae97dd8c1f,Expedition Base Set,Larvitar,116/165,86635,Larvitar,LINKED,1.00
+pkm-expedition-base-set-117-165-bb44cf2a98,Expedition Base Set,Machop,117/165,86991,Machop,LINKED,1.00
+pkm-expedition-base-set-118-165-ca3799b41c,Expedition Base Set,Magikarp,118/165,87024,Magikarp,LINKED,1.00
+pkm-expedition-base-set-119-165-e67ba1a5f1,Expedition Base Set,Mareep,119/165,87196,Mareep,LINKED,1.00
+pkm-expedition-base-set-120-165-2b6410701c,Expedition Base Set,Marill,120/165,87215,Marill,LINKED,1.00
+pkm-expedition-base-set-121-165-cb7339865b,Expedition Base Set,Meowth,121/165,87315,Meowth,LINKED,1.00
+pkm-expedition-base-set-122-165-bdf041143d,Expedition Base Set,Oddish,122/165,87840,Oddish,LINKED,1.00
+pkm-expedition-base-set-123-165-f6ec7b1a24,Expedition Base Set,Pidgey,123/165,88047,Pidgey,LINKED,1.00
+pkm-expedition-base-set-124-165-9bea82bb90,Expedition Base Set,Pikachu,124/165,88076,Pikachu,LINKED,1.00
+pkm-expedition-base-set-125-165-902d12103a,Expedition Base Set,Poliwag,125/165,88256,Poliwag,LINKED,1.00
+pkm-expedition-base-set-126-165-e1e3debd58,Expedition Base Set,Ponyta,126/165,88284,Ponyta,LINKED,1.00
+pkm-expedition-base-set-127-165-8253466a3e,Expedition Base Set,Qwilfish,127/165,88491,Qwilfish,LINKED,1.00
+pkm-expedition-base-set-128-165-29e5750dfa,Expedition Base Set,Rattata,128/165,88614,Rattata,LINKED,1.00
+pkm-expedition-base-set-129-165-854aea27ae,Expedition Base Set,Shellder,129/165,89136,Shellder,LINKED,1.00
+pkm-expedition-base-set-130-165-01eefb16bd,Expedition Base Set,Spearow,130/165,89438,Spearow,LINKED,1.00
+pkm-expedition-base-set-131-165-f6be0d171d,Expedition Base Set,Squirtle,131/165,89486,Squirtle (131),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-132-165-5f464527f2,Expedition Base Set,Squirtle,132/165,89487,Squirtle (132),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-133-165-b000e1f450,Expedition Base Set,Tauros,133/165,89760,Tauros,LINKED,1.00
+pkm-expedition-base-set-134-165-ded78826c9,Expedition Base Set,Totodile,134/165,89994,Totodile (134),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-135-165-bbe09b35cf,Expedition Base Set,Totodile,135/165,89995,Totodile (135),SKIP_NAME_MISMATCH,0.50
+pkm-expedition-base-set-136-165-1c1c128d8f,Expedition Base Set,Vulpix,136/165,90436,Vulpix,LINKED,1.00
+pkm-expedition-base-set-137-165-09c388b2ba,Expedition Base Set,Bill's Maintenance,137/165,83837,Bill's Maintenance,LINKED,1.00
+pkm-expedition-base-set-138-165-a183e3d11b,Expedition Base Set,Copycat,138/165,84423,Copycat,LINKED,1.00
+pkm-expedition-base-set-139-165-58f35e2737,Expedition Base Set,Dual Ball,139/165,84984,Dual Ball,LINKED,1.00
+pkm-expedition-base-set-140-165-848c005ac5,Expedition Base Set,Energy Removal 2,140/165,85221,Energy Removal 2,LINKED,1.00
+pkm-expedition-base-set-141-165-928eb74ded,Expedition Base Set,Energy Restore,141/165,85226,Energy Restore,LINKED,1.00
+pkm-expedition-base-set-142-165-06ae47b65e,Expedition Base Set,Mary's Impulse,142/165,87242,Mary's Impulse,LINKED,1.00
+pkm-expedition-base-set-143-165-97707ef896,Expedition Base Set,Master Ball,143/165,87252,Master Ball,LINKED,1.00
+pkm-expedition-base-set-144-165-d68d459b5f,Expedition Base Set,Multi Technical Machine 01,144/165,87635,Multi Technical Machine 01,LINKED,1.00
+pkm-expedition-base-set-145-165-9249bd2ce4,Expedition Base Set,Pokémon Nurse,145/165,88229,Pokemon Nurse,LINKED,1.00
+pkm-expedition-base-set-146-165-a66344608c,Expedition Base Set,Pokémon Reversal,146/165,88238,Pokemon Reversal,LINKED,1.00
+pkm-expedition-base-set-147-165-2c4e00087f,Expedition Base Set,Power Charge,147/165,88353,Power Charge,LINKED,1.00
+pkm-expedition-base-set-148-165-b5b106dd72,Expedition Base Set,Professor Elm's Training Method,148/165,88389,Professor Elm's Training Method,LINKED,1.00
+pkm-expedition-base-set-149-165-30b0cfbb92,Expedition Base Set,Professor Oak's Research,149/165,88402,Professor Oak's Research,LINKED,1.00
+pkm-expedition-base-set-150-165-ad5adaf988,Expedition Base Set,Strength Charm,150/165,89577,Strength Charm,LINKED,1.00
+pkm-expedition-base-set-151-165-595bb51d44,Expedition Base Set,Super Scoop Up,151/165,89635,Super Scoop Up,LINKED,1.00
+pkm-expedition-base-set-152-165-3a7f801be2,Expedition Base Set,Warp Point,152/165,90477,Warp Point,LINKED,1.00
+pkm-expedition-base-set-153-165-c5bd982707,Expedition Base Set,Energy Search,153/165,85238,Energy Search,LINKED,1.00
+pkm-expedition-base-set-154-165-e1d7efeef0,Expedition Base Set,Full Heal,154/165,85582,Full Heal,LINKED,1.00
+pkm-expedition-base-set-155-165-1965c74ea9,Expedition Base Set,Moo-Moo Milk,155/165,87575,Moo-Moo Milk,LINKED,1.00
+pkm-expedition-base-set-156-165-f3e80bf92a,Expedition Base Set,Potion,156/165,88333,Potion,LINKED,1.00
+pkm-expedition-base-set-157-165-87606df294,Expedition Base Set,Switch,157/165,89711,Switch,LINKED,1.00
+pkm-expedition-base-set-158-165-1909d2fee5,Expedition Base Set,Darkness Energy,158/165,84697,Darkness Energy,LINKED,1.00
+pkm-expedition-base-set-159-165-46eec10e6f,Expedition Base Set,Metal Energy,159/165,87370,Metal Energy,LINKED,1.00
+pkm-expedition-base-set-160-165-301c01f175,Expedition Base Set,Fighting Energy,160/165,,,NO_CANDIDATE,
+pkm-expedition-base-set-161-165-e994aeefc2,Expedition Base Set,Fire Energy,161/165,85456,Fire Energy,LINKED,1.00
+pkm-expedition-base-set-162-165-ff5a606516,Expedition Base Set,Grass Energy,162/165,85873,Grass Energy,LINKED,1.00
+pkm-expedition-base-set-163-165-a8e63c21ea,Expedition Base Set,Lightning Energy,163/165,86759,Lightning Energy,LINKED,1.00
+pkm-expedition-base-set-164-165-0fcd05f58b,Expedition Base Set,Psychic Energy,164/165,88417,Psychic Energy,LINKED,1.00
+pkm-expedition-base-set-165-165-c0f5b66234,Expedition Base Set,Water Energy,165/165,90505,Water Energy,LINKED,1.00
+pkm-ex-trainer-kit-2-minun-1-12-c743653047,EX Trainer Kit 2 Minun,Arcanine,1/12,83583,Arcanine,LINKED,1.00
+pkm-ex-trainer-kit-2-minun-1-12-c743653047,EX Trainer Kit 2 Minun,Arcanine,1/12,83786,Beldum,SKIP_NAME_MISMATCH,0.00
+pkm-ex-trainer-kit-2-minun-2-12-1e1ab1d7e5,EX Trainer Kit 2 Minun,Charmander,2/12,84212,Charmander,LINKED,1.00
+pkm-ex-trainer-kit-2-minun-2-12-1e1ab1d7e5,EX Trainer Kit 2 Minun,Charmander,2/12,85136,Electrike,SKIP_NAME_MISMATCH,0.00
+pkm-ex-trainer-kit-2-minun-3-12-840cdb1686,EX Trainer Kit 2 Minun,Charmeleon,3/12,84228,Charmeleon,LINKED,1.00
+pkm-ex-trainer-kit-2-minun-3-12-840cdb1686,EX Trainer Kit 2 Minun,Charmeleon,3/12,85968,Grumpig,SKIP_NAME_MISMATCH,0.00
+pkm-ex-trainer-kit-2-minun-4-12-c9e1dd209b,EX Trainer Kit 2 Minun,Growlithe,4/12,85956,Growlithe,LINKED,1.00
+pkm-ex-trainer-kit-2-minun-4-12-c9e1dd209b,EX Trainer Kit 2 Minun,Growlithe,4/12,87319,Meowth,SKIP_NAME_MISMATCH,0.00
+pkm-ex-trainer-kit-2-minun-5-12-a74a121f30,EX Trainer Kit 2 Minun,Mareep,5/12,87200,Mareep,LINKED,1.00
+pkm-ex-trainer-kit-2-minun-5-12-a74a121f30,EX Trainer Kit 2 Minun,Mareep,5/12,87376,Metang,SKIP_NAME_MISMATCH,0.00
+pkm-ex-trainer-kit-2-minun-6-12-a241d0ae92,EX Trainer Kit 2 Minun,Minun,6/12,87486,Minun,LINKED,1.00
+pkm-ex-trainer-kit-2-minun-6-12-a241d0ae92,EX Trainer Kit 2 Minun,Minun,6/12,88166,Plusle,SKIP_NAME_MISMATCH,0.00
+pkm-ex-trainer-kit-2-minun-7-12-7186cd0979,EX Trainer Kit 2 Minun,Vulpix,7/12,89475,Spoink,SKIP_NAME_MISMATCH,0.00
+pkm-ex-trainer-kit-2-minun-7-12-7186cd0979,EX Trainer Kit 2 Minun,Vulpix,7/12,90439,Vulpix,LINKED,1.00
+pkm-ex-trainer-kit-2-minun-8-12-089f7ae838,EX Trainer Kit 2 Minun,Celio's Network,8/12,84155,Celio's Network,LINKED,1.00
+pkm-ex-trainer-kit-2-minun-8-12-089f7ae838,EX Trainer Kit 2 Minun,Celio's Network,8/12,85242,Energy Search (Plusle),SKIP_NAME_MISMATCH,0.00
+pkm-ex-trainer-kit-2-minun-9-12-1dea3a16af,EX Trainer Kit 2 Minun,Energy Search,9/12,85243,Energy Search (Minun),SKIP_NAME_MISMATCH,0.67
+pkm-ex-trainer-kit-2-minun-9-12-1dea3a16af,EX Trainer Kit 2 Minun,Energy Search,9/12,88339,Potion (Plusle),SKIP_NAME_MISMATCH,0.00
+pkm-ex-trainer-kit-2-minun-10-12-4d593e40ef,EX Trainer Kit 2 Minun,Potion,10/12,88340,Potion (Minun),SKIP_NAME_MISMATCH,0.50
+pkm-ex-trainer-kit-2-minun-10-12-4d593e40ef,EX Trainer Kit 2 Minun,Potion,10/12,88385,Professor Cozmo's Discovery,SKIP_NAME_MISMATCH,0.00
+pkm-ex-trainer-kit-2-minun-11-12-368476d47c,EX Trainer Kit 2 Minun,Fire Energy,11/12,85460,Fire Energy,LINKED,1.00
+pkm-ex-trainer-kit-2-minun-11-12-368476d47c,EX Trainer Kit 2 Minun,Fire Energy,11/12,86763,Lightning Energy (Plusle),SKIP_NAME_MISMATCH,0.33
+pkm-ex-trainer-kit-2-minun-12-12-340000fd10,EX Trainer Kit 2 Minun,Lightning Energy,12/12,86764,Lightning Energy (Minun),SKIP_NAME_MISMATCH,0.67
+pkm-ex-trainer-kit-2-minun-12-12-340000fd10,EX Trainer Kit 2 Minun,Lightning Energy,12/12,88420,Psychic Energy,SKIP_NAME_MISMATCH,0.50
+pkm-ex-trainer-kit-2-plusle-1-12-c221f4f7db,EX Trainer Kit 2 Plusle,Beldum,1/12,83583,Arcanine,SKIP_NAME_MISMATCH,0.00
+pkm-ex-trainer-kit-2-plusle-1-12-c221f4f7db,EX Trainer Kit 2 Plusle,Beldum,1/12,83786,Beldum,LINKED,1.00
+pkm-ex-trainer-kit-2-plusle-2-12-7eee4e6bd6,EX Trainer Kit 2 Plusle,Electrike,2/12,84212,Charmander,SKIP_NAME_MISMATCH,0.00
+pkm-ex-trainer-kit-2-plusle-2-12-7eee4e6bd6,EX Trainer Kit 2 Plusle,Electrike,2/12,85136,Electrike,LINKED,1.00
+pkm-ex-trainer-kit-2-plusle-3-12-8aaaa37b52,EX Trainer Kit 2 Plusle,Grumpig,3/12,84228,Charmeleon,SKIP_NAME_MISMATCH,0.00
+pkm-ex-trainer-kit-2-plusle-3-12-8aaaa37b52,EX Trainer Kit 2 Plusle,Grumpig,3/12,85968,Grumpig,LINKED,1.00
+pkm-ex-trainer-kit-2-plusle-4-12-513ca1b888,EX Trainer Kit 2 Plusle,Meowth,4/12,85956,Growlithe,SKIP_NAME_MISMATCH,0.00
+pkm-ex-trainer-kit-2-plusle-4-12-513ca1b888,EX Trainer Kit 2 Plusle,Meowth,4/12,87319,Meowth,LINKED,1.00
+pkm-ex-trainer-kit-2-plusle-5-12-1610dcc060,EX Trainer Kit 2 Plusle,Metang,5/12,87200,Mareep,SKIP_NAME_MISMATCH,0.00
+pkm-ex-trainer-kit-2-plusle-5-12-1610dcc060,EX Trainer Kit 2 Plusle,Metang,5/12,87376,Metang,LINKED,1.00
+pkm-ex-trainer-kit-2-plusle-6-12-431800b1d0,EX Trainer Kit 2 Plusle,Plusle,6/12,87486,Minun,SKIP_NAME_MISMATCH,0.00
+pkm-ex-trainer-kit-2-plusle-6-12-431800b1d0,EX Trainer Kit 2 Plusle,Plusle,6/12,88166,Plusle,LINKED,1.00
+pkm-ex-trainer-kit-2-plusle-7-12-a06ec60c8f,EX Trainer Kit 2 Plusle,Spoink,7/12,89475,Spoink,LINKED,1.00
+pkm-ex-trainer-kit-2-plusle-7-12-a06ec60c8f,EX Trainer Kit 2 Plusle,Spoink,7/12,90439,Vulpix,SKIP_NAME_MISMATCH,0.00
+pkm-ex-trainer-kit-2-plusle-8-12-2d0d2277a7,EX Trainer Kit 2 Plusle,Energy Search,8/12,84155,Celio's Network,SKIP_NAME_MISMATCH,0.00
+pkm-ex-trainer-kit-2-plusle-8-12-2d0d2277a7,EX Trainer Kit 2 Plusle,Energy Search,8/12,85242,Energy Search (Plusle),SKIP_NAME_MISMATCH,0.67
+pkm-ex-trainer-kit-2-plusle-9-12-4dac87be22,EX Trainer Kit 2 Plusle,Potion,9/12,85243,Energy Search (Minun),SKIP_NAME_MISMATCH,0.00
+pkm-ex-trainer-kit-2-plusle-9-12-4dac87be22,EX Trainer Kit 2 Plusle,Potion,9/12,88339,Potion (Plusle),SKIP_NAME_MISMATCH,0.50
+pkm-ex-trainer-kit-2-plusle-10-12-46d7a9cb2c,EX Trainer Kit 2 Plusle,Professor Cozmo's Discovery,10/12,88340,Potion (Minun),SKIP_NAME_MISMATCH,0.00
+pkm-ex-trainer-kit-2-plusle-10-12-46d7a9cb2c,EX Trainer Kit 2 Plusle,Professor Cozmo's Discovery,10/12,88385,Professor Cozmo's Discovery,LINKED,1.00
+pkm-ex-trainer-kit-2-plusle-11-12-1a16b90df2,EX Trainer Kit 2 Plusle,Lightning Energy,11/12,85460,Fire Energy,SKIP_NAME_MISMATCH,0.50
+pkm-ex-trainer-kit-2-plusle-11-12-1a16b90df2,EX Trainer Kit 2 Plusle,Lightning Energy,11/12,86763,Lightning Energy (Plusle),SKIP_NAME_MISMATCH,0.67
+pkm-ex-trainer-kit-2-plusle-12-12-ac5a11923a,EX Trainer Kit 2 Plusle,Psychic Energy,12/12,86764,Lightning Energy (Minun),SKIP_NAME_MISMATCH,0.33
+pkm-ex-trainer-kit-2-plusle-12-12-ac5a11923a,EX Trainer Kit 2 Plusle,Psychic Energy,12/12,88420,Psychic Energy,LINKED,1.00
+pkm-ex-trainer-kit-latias-1-10-2917b7ea47,EX Trainer Kit Latias,Bagon,1/10,83694,Bagon,LINKED,1.00
+pkm-ex-trainer-kit-latias-1-10-2917b7ea47,EX Trainer Kit Latias,Bagon,1/10,85131,Electrike,SKIP_NAME_MISMATCH,0.00
+pkm-ex-trainer-kit-latias-2-10-36178777b5,EX Trainer Kit Latias,Combusken,2/10,84403,Combusken,LINKED,1.00
+pkm-ex-trainer-kit-latias-2-10-36178777b5,EX Trainer Kit Latias,Combusken,2/10,86664,Latios,SKIP_NAME_MISMATCH,0.00
+pkm-ex-trainer-kit-latias-3-10-c8d3664e09,EX Trainer Kit Latias,Delcatty,3/10,84737,Delcatty,LINKED,1.00
+pkm-ex-trainer-kit-latias-3-10-c8d3664e09,EX Trainer Kit Latias,Delcatty,3/10,86805,Linoone,SKIP_NAME_MISMATCH,0.00
+pkm-ex-trainer-kit-latias-4-10-6e32177559,EX Trainer Kit Latias,Latias,4/10,86650,Latias,LINKED,1.00
+pkm-ex-trainer-kit-latias-4-10-6e32177559,EX Trainer Kit Latias,Latias,4/10,87076,Magnemite,SKIP_NAME_MISMATCH,0.00
+pkm-ex-trainer-kit-latias-5-10-49f0771925,EX Trainer Kit Latias,Numel,5/10,87103,Magneton,SKIP_NAME_MISMATCH,0.00
+pkm-ex-trainer-kit-latias-5-10-49f0771925,EX Trainer Kit Latias,Numel,5/10,87808,Numel,LINKED,1.00
+pkm-ex-trainer-kit-latias-6-10-c620558e3a,EX Trainer Kit Latias,Skitty,6/10,88079,Pikachu,SKIP_NAME_MISMATCH,0.00
+pkm-ex-trainer-kit-latias-6-10-c620558e3a,EX Trainer Kit Latias,Skitty,6/10,89263,Skitty,LINKED,1.00
+pkm-ex-trainer-kit-latias-7-10-bb46ae6eaf,EX Trainer Kit Latias,Torchic,7/10,89954,Torchic,LINKED,1.00
+pkm-ex-trainer-kit-latias-7-10-bb46ae6eaf,EX Trainer Kit Latias,Torchic,7/10,90746,Zigzagoon,SKIP_NAME_MISMATCH,0.00
+pkm-ex-trainer-kit-latias-8-10-f4607f20e1,EX Trainer Kit Latias,Potion,8/10,88335,Potion (Latias),SKIP_NAME_MISMATCH,0.50
+pkm-ex-trainer-kit-latias-8-10-f4607f20e1,EX Trainer Kit Latias,Potion,8/10,88336,Potion (Latios),SKIP_NAME_MISMATCH,0.50
+pkm-ex-trainer-kit-latias-9-10-bdcb12d5f0,EX Trainer Kit Latias,Energy Search,9/10,85239,Energy Search (Latias),SKIP_NAME_MISMATCH,0.67
+pkm-ex-trainer-kit-latias-9-10-bdcb12d5f0,EX Trainer Kit Latias,Energy Search,9/10,85240,Energy Search (Latios),SKIP_NAME_MISMATCH,0.67
+pkm-ex-trainer-kit-latias-10-10-017016fe2a,EX Trainer Kit Latias,Fire Energy,10/10,85457,Fire Energy,LINKED,1.00
+pkm-ex-trainer-kit-latias-10-10-017016fe2a,EX Trainer Kit Latias,Fire Energy,10/10,86760,Lightning Energy,SKIP_NAME_MISMATCH,0.50
+pkm-ex-trainer-kit-latios-1-10-015f8cab86,EX Trainer Kit Latios,Electrike,1/10,83694,Bagon,SKIP_NAME_MISMATCH,0.00
+pkm-ex-trainer-kit-latios-1-10-015f8cab86,EX Trainer Kit Latios,Electrike,1/10,85131,Electrike,LINKED,1.00
+pkm-ex-trainer-kit-latios-2-10-f6821aab27,EX Trainer Kit Latios,Latios,2/10,84403,Combusken,SKIP_NAME_MISMATCH,0.00
+pkm-ex-trainer-kit-latios-2-10-f6821aab27,EX Trainer Kit Latios,Latios,2/10,86664,Latios,LINKED,1.00
+pkm-ex-trainer-kit-latios-3-10-d85a13d5a7,EX Trainer Kit Latios,Linoone,3/10,84737,Delcatty,SKIP_NAME_MISMATCH,0.00
+pkm-ex-trainer-kit-latios-3-10-d85a13d5a7,EX Trainer Kit Latios,Linoone,3/10,86805,Linoone,LINKED,1.00
+pkm-ex-trainer-kit-latios-4-10-fd25a2c1b5,EX Trainer Kit Latios,Magnemite,4/10,86650,Latias,SKIP_NAME_MISMATCH,0.00
+pkm-ex-trainer-kit-latios-4-10-fd25a2c1b5,EX Trainer Kit Latios,Magnemite,4/10,87076,Magnemite,LINKED,1.00
+pkm-ex-trainer-kit-latios-5-10-b3add78290,EX Trainer Kit Latios,Magneton,5/10,87103,Magneton,LINKED,1.00
+pkm-ex-trainer-kit-latios-5-10-b3add78290,EX Trainer Kit Latios,Magneton,5/10,87808,Numel,SKIP_NAME_MISMATCH,0.00
+pkm-ex-trainer-kit-latios-6-10-b2723fb148,EX Trainer Kit Latios,Pikachu,6/10,88079,Pikachu,LINKED,1.00
+pkm-ex-trainer-kit-latios-6-10-b2723fb148,EX Trainer Kit Latios,Pikachu,6/10,89263,Skitty,SKIP_NAME_MISMATCH,0.00
+pkm-ex-trainer-kit-latios-7-10-6b1b274597,EX Trainer Kit Latios,Zigzagoon,7/10,89954,Torchic,SKIP_NAME_MISMATCH,0.00
+pkm-ex-trainer-kit-latios-7-10-6b1b274597,EX Trainer Kit Latios,Zigzagoon,7/10,90746,Zigzagoon,LINKED,1.00
+pkm-ex-trainer-kit-latios-8-10-59fda9c24d,EX Trainer Kit Latios,Potion,8/10,88335,Potion (Latias),SKIP_NAME_MISMATCH,0.50
+pkm-ex-trainer-kit-latios-8-10-59fda9c24d,EX Trainer Kit Latios,Potion,8/10,88336,Potion (Latios),SKIP_NAME_MISMATCH,0.50
+pkm-ex-trainer-kit-latios-9-10-742bdba4d8,EX Trainer Kit Latios,Energy Search,9/10,85239,Energy Search (Latias),SKIP_NAME_MISMATCH,0.67
+pkm-ex-trainer-kit-latios-9-10-742bdba4d8,EX Trainer Kit Latios,Energy Search,9/10,85240,Energy Search (Latios),SKIP_NAME_MISMATCH,0.67
+pkm-ex-trainer-kit-latios-10-10-78acdf9788,EX Trainer Kit Latios,Lightning Energy,10/10,85457,Fire Energy,SKIP_NAME_MISMATCH,0.50
+pkm-ex-trainer-kit-latios-10-10-78acdf9788,EX Trainer Kit Latios,Lightning Energy,10/10,86760,Lightning Energy,LINKED,1.00
+pkm-hstriumphant-1-102-30eb0cb3b3,HSTriumphant,Aggron,1/102,83480,Aggron,LINKED,1.00
+pkm-hstriumphant-2-102-713f81a7dc,HSTriumphant,Altaria,2/102,83518,Altaria,LINKED,1.00
+pkm-hstriumphant-3-102-3dc5389215,HSTriumphant,Celebi,3/102,84147,Celebi,LINKED,1.00
+pkm-hstriumphant-3-102-3dc5389215,HSTriumphant,Celebi,3/102,276387,Celebi - 3/102 (Non-Holo Movie Exclusive),SKIP_NAME_MISMATCH,0.14
+pkm-hstriumphant-4-102-309d1aa04d,HSTriumphant,Drapion,4/102,84924,Drapion,LINKED,1.00
+pkm-hstriumphant-5-102-62e655d0bf,HSTriumphant,Mamoswine,5/102,87140,Mamoswine,LINKED,1.00
+pkm-hstriumphant-6-102-e89f99d925,HSTriumphant,Nidoking,6/102,87699,Nidoking,LINKED,1.00
+pkm-hstriumphant-7-102-b0715e51c6,HSTriumphant,Porygon-Z,7/102,88317,Porygon-Z,LINKED,1.00
+pkm-hstriumphant-8-102-f33e228cec,HSTriumphant,Rapidash,8/102,88587,Rapidash,LINKED,1.00
+pkm-hstriumphant-9-102-8b0107ec37,HSTriumphant,Solrock,9/102,89430,Solrock,LINKED,1.00
+pkm-hstriumphant-10-102-8f96ebb029,HSTriumphant,Spiritomb,10/102,89467,Spiritomb,LINKED,1.00
+pkm-hstriumphant-11-102-be01dd25a7,HSTriumphant,Venomoth,11/102,90303,Venomoth,LINKED,1.00
+pkm-hstriumphant-12-102-82fced2928,HSTriumphant,Victreebel,12/102,90365,Victreebel,LINKED,1.00
+pkm-hstriumphant-13-102-ee781e3794,HSTriumphant,Ambipom,13/102,83528,Ambipom,LINKED,1.00
+pkm-hstriumphant-14-102-a1eba08c8d,HSTriumphant,Banette,14/102,83724,Banette,LINKED,1.00
+pkm-hstriumphant-15-102-d3c63ba90f,HSTriumphant,Bronzong,15/102,83997,Bronzong,LINKED,1.00
+pkm-hstriumphant-16-102-5679383e10,HSTriumphant,Carnivine,16/102,84105,Carnivine,LINKED,1.00
+pkm-hstriumphant-17-102-7a840de0c5,HSTriumphant,Ditto,17/102,84844,Ditto,LINKED,1.00
+pkm-hstriumphant-18-102-d22b54e65d,HSTriumphant,Dragonite,18/102,84914,Dragonite,LINKED,1.00
+pkm-hstriumphant-19-102-6e021f1148,HSTriumphant,Dugtrio,19/102,85004,Dugtrio,LINKED,1.00
+pkm-hstriumphant-20-102-618dd23302,HSTriumphant,Electivire,20/102,85123,Electivire,LINKED,1.00
+pkm-hstriumphant-21-102-20113c7547,HSTriumphant,Elekid,21/102,85172,Elekid,LINKED,1.00
+pkm-hstriumphant-22-102-edbefbe5c3,HSTriumphant,Golduck,22/102,85817,Golduck,LINKED,1.00
+pkm-hstriumphant-23-102-f539831f6a,HSTriumphant,Grumpig,23/102,85971,Grumpig,LINKED,1.00
+pkm-hstriumphant-24-102-30a71af7e4,HSTriumphant,Kricketune,24/102,86534,Kricketune,LINKED,1.00
+pkm-hstriumphant-25-102-0e01113e0f,HSTriumphant,Lunatone,25/102,86928,Lunatone,LINKED,1.00
+pkm-hstriumphant-26-102-31d7759476,HSTriumphant,Machamp,26/102,86967,Machamp,LINKED,1.00
+pkm-hstriumphant-27-102-17449bf9df,HSTriumphant,Magmortar,27/102,87060,Magmortar,LINKED,1.00
+pkm-hstriumphant-28-102-888347080f,HSTriumphant,Nidoqueen,28/102,87710,Nidoqueen,LINKED,1.00
+pkm-hstriumphant-29-102-c9a7882e0a,HSTriumphant,Pidgeot,29/102,88034,Pidgeot,LINKED,1.00
+pkm-hstriumphant-30-102-0d97044fbd,HSTriumphant,Sharpedo,30/102,89101,Sharpedo,LINKED,1.00
+pkm-hstriumphant-31-102-1340afc446,HSTriumphant,Wailord,31/102,90461,Wailord,LINKED,1.00
+pkm-hstriumphant-32-102-501020987d,HSTriumphant,Dragonair,32/102,84901,Dragonair,LINKED,1.00
+pkm-hstriumphant-33-102-232674b3d1,HSTriumphant,Electabuzz,33/102,85117,Electabuzz,LINKED,1.00
+pkm-hstriumphant-34-102-9ab272a3bc,HSTriumphant,Electrode,34/102,85159,Electrode,LINKED,1.00
+pkm-hstriumphant-35-102-752e2987e6,HSTriumphant,Haunter,35/102,86031,Haunter,LINKED,1.00
+pkm-hstriumphant-36-102-b84f586616,HSTriumphant,Kangaskhan,36/102,86423,Kangaskhan,LINKED,1.00
+pkm-hstriumphant-37-102-699a6027d1,HSTriumphant,Lairon,37/102,86583,Lairon,LINKED,1.00
+pkm-hstriumphant-38-102-f86ed37536,HSTriumphant,Lickilicky,38/102,86714,Lickilicky,LINKED,1.00
+pkm-hstriumphant-39-102-134c9ae919,HSTriumphant,Luvdisc,39/102,86938,Luvdisc,LINKED,1.00
+pkm-hstriumphant-40-102-797e31b9af,HSTriumphant,Machoke,40/102,86984,Machoke,LINKED,1.00
+pkm-hstriumphant-41-102-3fa42ecd85,HSTriumphant,Magby,41/102,87006,Magby,LINKED,1.00
+pkm-hstriumphant-42-102-fe8d23db14,HSTriumphant,Magmar,42/102,87051,Magmar,LINKED,1.00
+pkm-hstriumphant-43-102-813f66695e,HSTriumphant,Magneton,43/102,87110,Magneton,LINKED,1.00
+pkm-hstriumphant-44-102-47237505eb,HSTriumphant,Marowak,44/102,87228,Marowak,LINKED,1.00
+pkm-hstriumphant-45-102-24ea59a0ba,HSTriumphant,Nidorina,45/102,87738,Nidorina,LINKED,1.00
+pkm-hstriumphant-46-102-d46241c44d,HSTriumphant,Nidorino,46/102,87747,Nidorino,LINKED,1.00
+pkm-hstriumphant-47-102-062348981e,HSTriumphant,Pidgeotto,47/102,88042,Pidgeotto,LINKED,1.00
+pkm-hstriumphant-48-102-a37003d090,HSTriumphant,Piloswine,48/102,88120,Piloswine,LINKED,1.00
+pkm-hstriumphant-49-102-486addc24e,HSTriumphant,Porygon2,49/102,88327,Porygon2,LINKED,1.00
+pkm-hstriumphant-50-102-a9be7b9ae2,HSTriumphant,Tentacruel,50/102,89878,Tentacruel,LINKED,1.00
+pkm-hstriumphant-51-102-c36a834536,HSTriumphant,Unown,51/102,90165,Unown,LINKED,1.00
+pkm-hstriumphant-52-102-d74b7b1d24,HSTriumphant,Wailmer,52/102,90455,Wailmer,LINKED,1.00
+pkm-hstriumphant-53-102-3d5fb6e685,HSTriumphant,Weepinbell,53/102,90555,Weepinbell,LINKED,1.00
+pkm-hstriumphant-54-102-e7116df840,HSTriumphant,Yanmega,54/102,90693,Yanmega,LINKED,1.00
+pkm-hstriumphant-55-102-5b49d5fdfc,HSTriumphant,Aipom,55/102,83493,Aipom,LINKED,1.00
+pkm-hstriumphant-56-102-936d5eb7bb,HSTriumphant,Aron,56/102,83639,Aron,LINKED,1.00
+pkm-hstriumphant-57-102-a749cd433f,HSTriumphant,Bellsprout,57/102,83810,Bellsprout,LINKED,1.00
+pkm-hstriumphant-58-102-9d583bc2d9,HSTriumphant,Bronzor,58/102,84006,Bronzor,LINKED,1.00
+pkm-hstriumphant-59-102-c0a4699d70,HSTriumphant,Carvanha,59/102,84116,Carvanha,LINKED,1.00
+pkm-hstriumphant-60-102-4614ec0d0f,HSTriumphant,Cubone,60/102,84535,Cubone,LINKED,1.00
+pkm-hstriumphant-61-102-5190a2647c,HSTriumphant,Diglett,61/102,84826,Diglett,LINKED,1.00
+pkm-hstriumphant-62-102-d6bda4e544,HSTriumphant,Dratini,62/102,,,NO_CANDIDATE,
+pkm-hstriumphant-63-102-5a1aba1c19,HSTriumphant,Gastly,63/102,85656,Gastly,LINKED,1.00
+pkm-hstriumphant-64-102-672a724e3e,HSTriumphant,Illumise,64/102,86268,Illumise,LINKED,1.00
+pkm-hstriumphant-65-102-fcdae5a22a,HSTriumphant,Kricketot,65/102,86530,Kricketot,LINKED,1.00
+pkm-hstriumphant-66-102-bc70890ee5,HSTriumphant,Lickitung,66/102,86723,Lickitung,LINKED,1.00
+pkm-hstriumphant-67-102-a32807cc9c,HSTriumphant,Machop,67/102,86998,Machop,LINKED,1.00
+pkm-hstriumphant-68-102-487dd64a82,HSTriumphant,Magnemite,68/102,87085,Magnemite,LINKED,1.00
+pkm-hstriumphant-69-102-dc6eaa0793,HSTriumphant,Nidoran ♀,69/102,87720,Nidoran F,SKIP_NAME_MISMATCH,0.50
+pkm-hstriumphant-70-102-54b23ef6f8,HSTriumphant,Nidoran ♂,70/102,87729,Nidoran M,SKIP_NAME_MISMATCH,0.50
+pkm-hstriumphant-71-102-b0e485adf1,HSTriumphant,Pidgey,71/102,88051,Pidgey,LINKED,1.00
+pkm-hstriumphant-72-102-445e48fc50,HSTriumphant,Ponyta,72/102,88292,Ponyta,LINKED,1.00
+pkm-hstriumphant-73-102-c4f9ef2f24,HSTriumphant,Porygon,73/102,88312,Porygon,LINKED,1.00
+pkm-hstriumphant-74-102-e8deecbb44,HSTriumphant,Psyduck,74/102,88440,Psyduck,LINKED,1.00
+pkm-hstriumphant-75-102-1c126613a0,HSTriumphant,Shuppet,75/102,89202,Shuppet,LINKED,1.00
+pkm-hstriumphant-76-102-4e784ccc35,HSTriumphant,Skorupi,76/102,89276,Skorupi,LINKED,1.00
+pkm-hstriumphant-77-102-9c517f08fa,HSTriumphant,Spoink,77/102,89478,Spoink,LINKED,1.00
+pkm-hstriumphant-78-102-cfed02651f,HSTriumphant,Swablu,78/102,89660,Swablu,LINKED,1.00
+pkm-hstriumphant-79-102-a6118e13d0,HSTriumphant,Swinub,79/102,89705,Swinub,LINKED,1.00
+pkm-hstriumphant-80-102-55aca9aa9e,HSTriumphant,Tentacool,80/102,89869,Tentacool,LINKED,1.00
+pkm-hstriumphant-81-102-d3abead896,HSTriumphant,Venonat,81/102,90309,Venonat,LINKED,1.00
+pkm-hstriumphant-82-102-342cfbb65a,HSTriumphant,Volbeat,82/102,90400,Volbeat,LINKED,1.00
+pkm-hstriumphant-83-102-5f47c1ff2e,HSTriumphant,Voltorb,83/102,90422,Voltorb,LINKED,1.00
+pkm-hstriumphant-84-102-894fd3b6c2,HSTriumphant,Yanma,84/102,90688,Yanma,LINKED,1.00
+pkm-hstriumphant-85-102-2c15fe8092,HSTriumphant,Black Belt,85/102,83850,Black Belt,LINKED,1.00
+pkm-hstriumphant-86-102-9ec00f7cf3,HSTriumphant,Indigo Plateau,86/102,86273,Indigo Plateau,LINKED,1.00
+pkm-hstriumphant-87-102-e19c444ce3,HSTriumphant,Junk Arm,87/102,86369,Junk Arm,LINKED,1.00
+pkm-hstriumphant-88-102-289a094794,HSTriumphant,Seeker,88/102,89046,Seeker,LINKED,1.00
+pkm-hstriumphant-89-102-1c56171419,HSTriumphant,Twins,89/102,90086,Twins,LINKED,1.00
+pkm-hstriumphant-90-102-f4ff6f6cc7,HSTriumphant,Rescue Energy,90/102,88701,Rescue Energy,LINKED,1.00
+pkm-hstriumphant-91-102-710e26a00a,HSTriumphant,Absol,91/102,83454,Absol (Prime),SKIP_NAME_MISMATCH,0.50
+pkm-hstriumphant-92-102-3d3b7e7947,HSTriumphant,Celebi,92/102,84148,Celebi (Prime),SKIP_NAME_MISMATCH,0.50
+pkm-hstriumphant-93-102-ccffdd18e1,HSTriumphant,Electrode,93/102,85160,Electrode (Prime),SKIP_NAME_MISMATCH,0.50
+pkm-hstriumphant-94-102-3e7b9491b6,HSTriumphant,Gengar,94/102,85679,Gengar (Prime),SKIP_NAME_MISMATCH,0.50
+pkm-hstriumphant-95-102-14b5800f10,HSTriumphant,Machamp,95/102,86968,Machamp (Prime),SKIP_NAME_MISMATCH,0.50
+pkm-hstriumphant-96-102-09f68ca5d4,HSTriumphant,Magnezone,96/102,87118,Magnezone (Prime),SKIP_NAME_MISMATCH,0.50
+pkm-hstriumphant-97-102-543cb35737,HSTriumphant,Mew,97/102,87405,Mew (Prime),SKIP_NAME_MISMATCH,0.50
+pkm-hstriumphant-98-102-83ae892b8f,HSTriumphant,Yanmega,98/102,90694,Yanmega (Prime),SKIP_NAME_MISMATCH,0.50
+pkm-hstriumphant-99-102-feb32b534f,HSTriumphant,Darkrai & Cresselia LEGEND,99/102,84705,Darkrai & Cresselia Legend (Top),SKIP_NAME_MISMATCH,0.75
+pkm-hstriumphant-100-102-601ee0770b,HSTriumphant,Darkrai & Cresselia LEGEND,100/102,84704,Darkrai & Cresselia Legend (Bottom),SKIP_NAME_MISMATCH,0.75
+pkm-hstriumphant-101-102-74829dd698,HSTriumphant,Palkia & Dialga LEGEND,101/102,87914,Palkia & Dialga Legend (Top),SKIP_NAME_MISMATCH,0.75
+pkm-hstriumphant-102-102-c08324f8dc,HSTriumphant,Palkia & Dialga LEGEND,102/102,87913,Palkia & Dialga Legend (Bottom),SKIP_NAME_MISMATCH,0.75
+pkm-hstriumphant-four-102-5e4d49d528,HSTriumphant,Alph Lithograph,FOUR/102,83512,Alph Lithograph,LINKED,1.00
+pkm-hsundaunted-1-90-ce4d20813c,HSUndaunted,Bellossom,1/90,83801,Bellossom,LINKED,1.00
+pkm-hsundaunted-2-90-c35b6e24f1,HSUndaunted,Espeon,2/90,85322,Espeon,LINKED,1.00
+pkm-hsundaunted-3-90-cb9f352c36,HSUndaunted,Forretress,3/90,85551,Forretress (3),SKIP_NAME_MISMATCH,0.50
+pkm-hsundaunted-4-90-084238fa71,HSUndaunted,Gliscor,4/90,85774,Gliscor,LINKED,1.00
+pkm-hsundaunted-5-90-f22bb7415c,HSUndaunted,Houndoom,5/90,86209,Houndoom,LINKED,1.00
+pkm-hsundaunted-6-90-d9a86348fd,HSUndaunted,Magcargo,6/90,87017,Magcargo,LINKED,1.00
+pkm-hsundaunted-7-90-186ebb74eb,HSUndaunted,Scizor,7/90,88963,Scizor,LINKED,1.00
+pkm-hsundaunted-8-90-2b09f3f6fa,HSUndaunted,Smeargle,8/90,89356,Smeargle,LINKED,1.00
+pkm-hsundaunted-9-90-6680c9d1e5,HSUndaunted,Togekiss,9/90,89924,Togekiss,LINKED,1.00
+pkm-hsundaunted-10-90-046dd759dd,HSUndaunted,Umbreon,10/90,90145,Umbreon,LINKED,1.00
+pkm-hsundaunted-11-90-6b5be7b059,HSUndaunted,Dodrio,11/90,84854,Dodrio,LINKED,1.00
+pkm-hsundaunted-12-90-4c9e332c17,HSUndaunted,Drifblim,12/90,84948,Drifblim,LINKED,1.00
+pkm-hsundaunted-13-90-0caf3e10ea,HSUndaunted,Forretress,13/90,85552,Forretress (13),SKIP_NAME_MISMATCH,0.50
+pkm-hsundaunted-14-90-68459a86f6,HSUndaunted,Hariyama,14/90,86016,Hariyama,LINKED,1.00
+pkm-hsundaunted-15-90-415f205b63,HSUndaunted,Honchkrow,15/90,86161,Honchkrow (15),SKIP_NAME_MISMATCH,0.50
+pkm-hsundaunted-16-90-6c673c571d,HSUndaunted,Honchkrow,16/90,86162,Honchkrow (16),SKIP_NAME_MISMATCH,0.50
+pkm-hsundaunted-17-90-1ae3f04346,HSUndaunted,Leafeon,17/90,86680,Leafeon,LINKED,1.00
+pkm-hsundaunted-18-90-085d5ac9b4,HSUndaunted,Metagross,18/90,87341,Metagross,LINKED,1.00
+pkm-hsundaunted-19-90-f0cd9feef1,HSUndaunted,Mismagius,19/90,87518,Mismagius,LINKED,1.00
+pkm-hsundaunted-20-90-eefdacb07f,HSUndaunted,Rotom,20/90,88839,Rotom,LINKED,1.00
+pkm-hsundaunted-21-90-a1a0f7aeb1,HSUndaunted,Skarmory,21/90,89242,Skarmory,LINKED,1.00
+pkm-hsundaunted-22-90-9e99666b90,HSUndaunted,Tropius,22/90,90062,Tropius,LINKED,1.00
+pkm-hsundaunted-23-90-028dc6e6e7,HSUndaunted,Vespiquen,23/90,90329,Vespiquen,LINKED,1.00
+pkm-hsundaunted-24-90-fe264d9042,HSUndaunted,Vileplume,24/90,90381,Vileplume,LINKED,1.00
+pkm-hsundaunted-25-90-a749997730,HSUndaunted,Weavile,25/90,90533,Weavile,LINKED,1.00
+pkm-hsundaunted-26-90-544da9e80a,HSUndaunted,Flareon,26/90,85498,Flareon,LINKED,1.00
+pkm-hsundaunted-27-90-997a50ca31,HSUndaunted,Gloom,27/90,85786,Gloom,LINKED,1.00
+pkm-hsundaunted-28-90-9e091d8478,HSUndaunted,Jolteon,28/90,86345,Jolteon,LINKED,1.00
+pkm-hsundaunted-29-90-f4fa3bad7a,HSUndaunted,Lairon,29/90,86582,Lairon,LINKED,1.00
+pkm-hsundaunted-30-90-98b22076f1,HSUndaunted,Metang,30/90,87382,Metang,LINKED,1.00
+pkm-hsundaunted-31-90-dad4f9da19,HSUndaunted,Muk,31/90,87625,Muk,LINKED,1.00
+pkm-hsundaunted-32-90-130a31988c,HSUndaunted,Pinsir,32/90,88139,Pinsir,LINKED,1.00
+pkm-hsundaunted-33-90-70d7d482cf,HSUndaunted,Raichu,33/90,88518,Raichu,LINKED,1.00
+pkm-hsundaunted-34-90-7e1d72c297,HSUndaunted,Raticate,34/90,88606,Raticate,LINKED,1.00
+pkm-hsundaunted-35-90-bf1e7c1784,HSUndaunted,Sableye,35/90,88854,Sableye,LINKED,1.00
+pkm-hsundaunted-36-90-513c5eb4ad,HSUndaunted,Scyther,36/90,89003,Scyther (36),SKIP_NAME_MISMATCH,0.50
+pkm-hsundaunted-37-90-4cb333fa53,HSUndaunted,Skuntank,37/90,89282,Skuntank,LINKED,1.00
+pkm-hsundaunted-38-90-e4a59c369f,HSUndaunted,Slowbro,38/90,89308,Slowbro,LINKED,1.00
+pkm-hsundaunted-39-90-4f92ad6fc6,HSUndaunted,Togetic,39/90,89944,Togetic,LINKED,1.00
+pkm-hsundaunted-40-90-8cf7fcac00,HSUndaunted,Unown,40/90,90164,Unown,LINKED,1.00
+pkm-hsundaunted-41-90-93ff4a094b,HSUndaunted,Vaporeon,41/90,90286,Vaporeon,LINKED,1.00
+pkm-hsundaunted-42-90-d83dfd0794,HSUndaunted,Aron,42/90,83638,Aron,LINKED,1.00
+pkm-hsundaunted-43-90-507aec9010,HSUndaunted,Beldum,43/90,83792,Beldum,LINKED,1.00
+pkm-hsundaunted-44-90-ad55a406b8,HSUndaunted,Combee,44/90,84397,Combee,LINKED,1.00
+pkm-hsundaunted-45-90-16eadde402,HSUndaunted,Doduo,45/90,84865,Doduo,LINKED,1.00
+pkm-hsundaunted-46-90-4ee3211606,HSUndaunted,Drifloon,46/90,84960,Drifloon,LINKED,1.00
+pkm-hsundaunted-47-90-409bd1275b,HSUndaunted,Eevee,47/90,85087,Eevee (47),SKIP_NAME_MISMATCH,0.50
+pkm-hsundaunted-48-90-d8f0a8cb60,HSUndaunted,Eevee,48/90,85088,Eevee (48),SKIP_NAME_MISMATCH,0.50
+pkm-hsundaunted-49-90-2d2230adac,HSUndaunted,Gligar,49/90,85768,Gligar,LINKED,1.00
+pkm-hsundaunted-50-90-e2264372e9,HSUndaunted,Grimer,50/90,85913,Grimer,LINKED,1.00
+pkm-hsundaunted-51-90-6a80fd655c,HSUndaunted,Hitmonchan,51/90,86095,Hitmonchan,LINKED,1.00
+pkm-hsundaunted-52-90-aba2c460e8,HSUndaunted,Hitmonlee,52/90,86107,Hitmonlee,LINKED,1.00
+pkm-hsundaunted-53-90-06c2eb1453,HSUndaunted,Houndour,53/90,86230,Houndour (53),SKIP_NAME_MISMATCH,0.50
+pkm-hsundaunted-54-90-4c4fff1e45,HSUndaunted,Houndour,54/90,86231,Houndour (54),SKIP_NAME_MISMATCH,0.50
+pkm-hsundaunted-55-90-20e4efa6bb,HSUndaunted,Makuhita,55/90,87133,Makuhita,LINKED,1.00
+pkm-hsundaunted-56-90-5641063ce9,HSUndaunted,Mawile,56/90,87263,Mawile,LINKED,1.00
+pkm-hsundaunted-57-90-10bc8cc028,HSUndaunted,Misdreavus,57/90,87511,Misdreavus,LINKED,1.00
+pkm-hsundaunted-58-90-ea12c3d6ea,HSUndaunted,Murkrow,58/90,87655,Murkrow (58),SKIP_NAME_MISMATCH,0.50
+pkm-hsundaunted-59-90-07835608a7,HSUndaunted,Murkrow,59/90,87656,Murkrow (59),SKIP_NAME_MISMATCH,0.50
+pkm-hsundaunted-60-90-171df7f938,HSUndaunted,Oddish,60/90,87845,Oddish,LINKED,1.00
+pkm-hsundaunted-61-90-11f5094050,HSUndaunted,Pikachu,61/90,88097,Pikachu,LINKED,1.00
+pkm-hsundaunted-62-90-2ea82897fe,HSUndaunted,Pineco,62/90,88129,Pineco (62),SKIP_NAME_MISMATCH,0.50
+pkm-hsundaunted-63-90-f66119d7fa,HSUndaunted,Pineco,63/90,88130,Pineco (63),SKIP_NAME_MISMATCH,0.50
+pkm-hsundaunted-64-90-2e588fa1ce,HSUndaunted,Rattata,64/90,88621,Rattata,LINKED,1.00
+pkm-hsundaunted-65-90-358cad2eb9,HSUndaunted,Scyther,65/90,89004,Scyther (65),SKIP_NAME_MISMATCH,0.50
+pkm-hsundaunted-66-90-afc65d970c,HSUndaunted,Slowpoke,66/90,89333,Slowpoke,LINKED,1.00
+pkm-hsundaunted-67-90-095295dfce,HSUndaunted,Slugma,67/90,89346,Slugma,LINKED,1.00
+pkm-hsundaunted-68-90-344a9584ae,HSUndaunted,Sneasel,68/90,89371,Sneasel,LINKED,1.00
+pkm-hsundaunted-69-90-8379361da0,HSUndaunted,Stunky,69/90,89587,Stunky,LINKED,1.00
+pkm-hsundaunted-70-90-22890ad907,HSUndaunted,Togepi,70/90,89935,Togepi,LINKED,1.00
+pkm-hsundaunted-71-90-56fdf43940,HSUndaunted,Burned Tower,71/90,84058,Burned Tower,LINKED,1.00
+pkm-hsundaunted-72-90-d7433921c5,HSUndaunted,Defender,72/90,84727,Defender,LINKED,1.00
+pkm-hsundaunted-73-90-2031c857c8,HSUndaunted,Energy Exchanger,73/90,85212,Energy Exchanger,LINKED,1.00
+pkm-hsundaunted-74-90-4b89c52414,HSUndaunted,Flower Shop Lady,74/90,85519,Flower Shop Lady,LINKED,1.00
+pkm-hsundaunted-75-90-253b9fd16f,HSUndaunted,Legend Box,75/90,,,NO_CANDIDATE,
+pkm-hsundaunted-76-90-4d3c74211a,HSUndaunted,Ruins of Alph,76/90,88846,Ruins Of Alph,LINKED,1.00
+pkm-hsundaunted-77-90-1881c52729,HSUndaunted,Sage's Training,77/90,88893,Sage's Training,LINKED,1.00
+pkm-hsundaunted-78-90-e7e06a46fb,HSUndaunted,Team Rocket's Trickery,78/90,89852,Team Rocket's Trickery,LINKED,1.00
+pkm-hsundaunted-79-90-f90b8a20b7,HSUndaunted,Darkness Energy,79/90,84693,Darkness Energy (Special),SKIP_NAME_MISMATCH,0.67
+pkm-hsundaunted-80-90-0e85e57830,HSUndaunted,Metal Energy,80/90,87366,Metal Energy (Special),SKIP_NAME_MISMATCH,0.67
+pkm-hsundaunted-81-90-a4e5c3b3b8,HSUndaunted,Espeon,81/90,85323,Espeon (Prime),SKIP_NAME_MISMATCH,0.50
+pkm-hsundaunted-82-90-44ff4ea048,HSUndaunted,Houndoom,82/90,86210,Houndoom (Prime),SKIP_NAME_MISMATCH,0.50
+pkm-hsundaunted-83-90-1c77f9840c,HSUndaunted,Raichu,83/90,88519,Raichu (Prime),SKIP_NAME_MISMATCH,0.50
+pkm-hsundaunted-84-90-e65bc6f7c1,HSUndaunted,Scizor,84/90,88964,Scizor (Prime),SKIP_NAME_MISMATCH,0.50
+pkm-hsundaunted-85-90-86a357155d,HSUndaunted,Slowking,85/90,89318,Slowking (Prime),SKIP_NAME_MISMATCH,0.50
+pkm-hsundaunted-86-90-5eec985170,HSUndaunted,Umbreon,86/90,90146,Umbreon (Prime),SKIP_NAME_MISMATCH,0.50
+pkm-hsundaunted-87-90-dcb0749bde,HSUndaunted,Kyogre & Groudon LEGEND,87/90,86554,Kyogre & Groudon Legend (Top),SKIP_NAME_MISMATCH,0.75
+pkm-hsundaunted-88-90-f18f2871d9,HSUndaunted,Kyogre & Groudon LEGEND,88/90,86553,Kyogre & Groudon Legend (Bottom),SKIP_NAME_MISMATCH,0.75
+pkm-hsundaunted-89-90-18222ba758,HSUndaunted,Rayquaza & Deoxys LEGEND,89/90,88638,Rayquaza & Deoxys Legend (Top),SKIP_NAME_MISMATCH,0.75
+pkm-hsundaunted-90-90-ac177e0608,HSUndaunted,Rayquaza & Deoxys LEGEND,90/90,88637,Rayquaza & Deoxys Legend (Bottom),SKIP_NAME_MISMATCH,0.75
+pkm-hsundaunted-three-90-83697eb1ba,HSUndaunted,Alph Lithograph,THREE/90,83511,Alph Lithograph,LINKED,1.00
+pkm-hsunleashed-1-95-27b4822122,HSUnleashed,Jirachi,1/95,86330,Jirachi,LINKED,1.00
+pkm-hsunleashed-2-95-bf54c710fa,HSUnleashed,Magmortar,2/95,87059,Magmortar,LINKED,1.00
+pkm-hsunleashed-3-95-d9b79ef53e,HSUnleashed,Manaphy,3/95,87148,Manaphy,LINKED,1.00
+pkm-hsunleashed-4-95-772d1f8568,HSUnleashed,Metagross,4/95,87340,Metagross,LINKED,1.00
+pkm-hsunleashed-5-95-a68a689c5c,HSUnleashed,Mismagius,5/95,87517,Mismagius,LINKED,1.00
+pkm-hsunleashed-6-95-81a7d3ab89,HSUnleashed,Octillery,6/95,87834,Octillery,LINKED,1.00
+pkm-hsunleashed-7-95-c330cc63a5,HSUnleashed,Politoed,7/95,88251,Politoed,LINKED,1.00
+pkm-hsunleashed-8-95-37cc2b0707,HSUnleashed,Shaymin,8/95,89109,Shaymin,LINKED,1.00
+pkm-hsunleashed-9-95-e599f985c4,HSUnleashed,Sudowoodo,9/95,89596,Sudowoodo,LINKED,1.00
+pkm-hsunleashed-10-95-1114a53593,HSUnleashed,Torterra,10/95,89987,Torterra,LINKED,1.00
+pkm-hsunleashed-11-95-db106a4c8a,HSUnleashed,Xatu,11/95,90666,Xatu,LINKED,1.00
+pkm-hsunleashed-12-95-d8c4f41625,HSUnleashed,Beedrill,12/95,83772,Beedrill,LINKED,1.00
+pkm-hsunleashed-13-95-d421f9a808,HSUnleashed,Blastoise,13/95,83895,Blastoise,LINKED,1.00
+pkm-hsunleashed-14-95-37c0a33023,HSUnleashed,Crobat,14/95,84488,Crobat,LINKED,1.00
+pkm-hsunleashed-15-95-6e891f3c46,HSUnleashed,Fearow,15/95,85399,Fearow,LINKED,1.00
+pkm-hsunleashed-16-95-1676b550df,HSUnleashed,Floatzel,16/95,85515,Floatzel,LINKED,1.00
+pkm-hsunleashed-17-95-d50203cbac,HSUnleashed,Kingdra,17/95,86447,Kingdra,LINKED,1.00
+pkm-hsunleashed-18-95-32c1cecd35,HSUnleashed,Lanturn,18/95,86610,Lanturn,LINKED,1.00
+pkm-hsunleashed-19-95-495a5e6e31,HSUnleashed,Lucario,19/95,86880,Lucario,LINKED,1.00
+pkm-hsunleashed-20-95-3c77e723d7,HSUnleashed,Ninetales,20/95,87776,Ninetales,LINKED,1.00
+pkm-hsunleashed-21-95-f368117661,HSUnleashed,Poliwrath,21/95,88279,Poliwrath,LINKED,1.00
+pkm-hsunleashed-22-95-1f67e40bfb,HSUnleashed,Primeape,22/95,88365,Primeape,LINKED,1.00
+pkm-hsunleashed-23-95-048b99225f,HSUnleashed,Roserade,23/95,88830,Roserade,LINKED,1.00
+pkm-hsunleashed-24-95-4c38a5ec8e,HSUnleashed,Steelix,24/95,89563,Steelix,LINKED,1.00
+pkm-hsunleashed-25-95-aadc7d604c,HSUnleashed,Torkoal,25/95,89972,Torkoal,LINKED,1.00
+pkm-hsunleashed-26-95-f0e41975f9,HSUnleashed,Tyranitar,26/95,90121,Tyranitar,LINKED,1.00
+pkm-hsunleashed-27-95-0f048548ea,HSUnleashed,Ursaring,27/95,90254,Ursaring,LINKED,1.00
+pkm-hsunleashed-28-95-b397ce5670,HSUnleashed,Cherrim,28/95,84257,Cherrim,LINKED,1.00
+pkm-hsunleashed-29-95-df919803b5,HSUnleashed,Dunsparce,29/95,85013,Dunsparce,LINKED,1.00
+pkm-hsunleashed-30-95-b8880efc8e,HSUnleashed,Golbat,30/95,85797,Golbat,LINKED,1.00
+pkm-hsunleashed-31-95-0c72d228d9,HSUnleashed,Grotle,31/95,85919,Grotle,LINKED,1.00
+pkm-hsunleashed-32-95-48bfbfe8df,HSUnleashed,Kakuna,32/95,86415,Kakuna,LINKED,1.00
+pkm-hsunleashed-33-95-1fec38fb62,HSUnleashed,Metang,33/95,87381,Metang,LINKED,1.00
+pkm-hsunleashed-34-95-d1abf2569b,HSUnleashed,Minun,34/95,87491,Minun,LINKED,1.00
+pkm-hsunleashed-35-95-73de98b494,HSUnleashed,Numel,35/95,87816,Numel,LINKED,1.00
+pkm-hsunleashed-36-95-ffd8bda052,HSUnleashed,Plusle,36/95,88171,Plusle,LINKED,1.00
+pkm-hsunleashed-37-95-9d839c8ac1,HSUnleashed,Poliwhirl,37/95,88268,Poliwhirl,LINKED,1.00
+pkm-hsunleashed-38-95-58ba3352b4,HSUnleashed,Pupitar,38/95,88453,Pupitar (38),SKIP_NAME_MISMATCH,0.50
+pkm-hsunleashed-39-95-71d4b7f652,HSUnleashed,Pupitar,39/95,88454,Pupitar (39),SKIP_NAME_MISMATCH,0.50
+pkm-hsunleashed-40-95-73481ffc5e,HSUnleashed,Seadra,40/95,89016,Seadra,LINKED,1.00
+pkm-hsunleashed-41-95-f3c43931ee,HSUnleashed,Tauros,41/95,89766,Tauros,LINKED,1.00
+pkm-hsunleashed-42-95-468f4ffa18,HSUnleashed,Wartortle,42/95,90491,Wartortle,LINKED,1.00
+pkm-hsunleashed-43-95-c81169aaa0,HSUnleashed,Aipom,43/95,83492,Aipom,LINKED,1.00
+pkm-hsunleashed-44-95-3b5da152e2,HSUnleashed,Beldum,44/95,83791,Beldum,LINKED,1.00
+pkm-hsunleashed-45-95-a7c74d9c5f,HSUnleashed,Buizel,45/95,84022,Buizel,LINKED,1.00
+pkm-hsunleashed-46-95-8eb618ac57,HSUnleashed,Carnivine,46/95,84104,Carnivine,LINKED,1.00
+pkm-hsunleashed-47-95-e162ac3077,HSUnleashed,Cherubi,47/95,84264,Cherubi,LINKED,1.00
+pkm-hsunleashed-48-95-dd1d609afa,HSUnleashed,Chinchou,48/95,84310,Chinchou,LINKED,1.00
+pkm-hsunleashed-49-95-c9aa8bbce8,HSUnleashed,Horsea,49/95,86192,Horsea,LINKED,1.00
+pkm-hsunleashed-50-95-a5859c6af0,HSUnleashed,Larvitar,50/95,86644,Larvitar (50),SKIP_NAME_MISMATCH,0.50
+pkm-hsunleashed-51-95-4cc1c45783,HSUnleashed,Larvitar,51/95,86645,Larvitar (51),SKIP_NAME_MISMATCH,0.50
+pkm-hsunleashed-52-95-fab4e036d8,HSUnleashed,Magmar,52/95,87050,Magmar,LINKED,1.00
+pkm-hsunleashed-53-95-d007d27481,HSUnleashed,Mankey,53/95,87176,Mankey,LINKED,1.00
+pkm-hsunleashed-54-95-a831ed66f3,HSUnleashed,Misdreavus,54/95,87510,Misdreavus,LINKED,1.00
+pkm-hsunleashed-55-95-b976aa19ab,HSUnleashed,Natu,55/95,87687,Natu,LINKED,1.00
+pkm-hsunleashed-56-95-69c20446ed,HSUnleashed,Onix,56/95,87884,Onix (56),SKIP_NAME_MISMATCH,0.50
+pkm-hsunleashed-57-95-1e4ae5b024,HSUnleashed,Onix,57/95,87885,Onix (57),SKIP_NAME_MISMATCH,0.50
+pkm-hsunleashed-58-95-31fd7fd0f0,HSUnleashed,Poliwag,58/95,88260,Poliwag,LINKED,1.00
+pkm-hsunleashed-59-95-a3bc1f1cdc,HSUnleashed,Remoraid,59/95,88699,Remoraid,LINKED,1.00
+pkm-hsunleashed-60-95-0add6f4082,HSUnleashed,Riolu,60/95,88757,Riolu,LINKED,1.00
+pkm-hsunleashed-61-95-4a4943955a,HSUnleashed,Roselia,61/95,88823,Roselia,LINKED,1.00
+pkm-hsunleashed-62-95-2d9534e234,HSUnleashed,Spearow,62/95,89442,Spearow,LINKED,1.00
+pkm-hsunleashed-63-95-ce66b2f2fd,HSUnleashed,Squirtle,63/95,89496,Squirtle,LINKED,1.00
+pkm-hsunleashed-64-95-2bb510205f,HSUnleashed,Stantler,64/95,89506,Stantler,LINKED,1.00
+pkm-hsunleashed-65-95-75191ff77f,HSUnleashed,Teddiursa,65/95,89859,Teddiursa,LINKED,1.00
+pkm-hsunleashed-66-95-64d6d38ef9,HSUnleashed,Tropius,66/95,90061,Tropius,LINKED,1.00
+pkm-hsunleashed-67-95-4f06b58084,HSUnleashed,Turtwig,67/95,90080,Turtwig,LINKED,1.00
+pkm-hsunleashed-68-95-d8f37ea99c,HSUnleashed,Vulpix,68/95,90445,Vulpix,LINKED,1.00
+pkm-hsunleashed-69-95-c4b864a3ac,HSUnleashed,Weedle,69/95,90546,Weedle,LINKED,1.00
+pkm-hsunleashed-70-95-198de1f317,HSUnleashed,Zubat,70/95,90776,Zubat,LINKED,1.00
+pkm-hsunleashed-71-95-660d17ba99,HSUnleashed,Cheerleader's Cheer,71/95,84246,Cheerleader's Cheer,LINKED,1.00
+pkm-hsunleashed-72-95-3626d247ed,HSUnleashed,Dual Ball,72/95,84988,Dual Ball,LINKED,1.00
+pkm-hsunleashed-73-95-37913ebda0,HSUnleashed,Emcee's Chatter,73/95,85187,Emcee's Chatter,LINKED,1.00
+pkm-hsunleashed-74-95-3348439f71,HSUnleashed,Energy Returner,74/95,85234,Energy Returner,LINKED,1.00
+pkm-hsunleashed-75-95-63835f292e,HSUnleashed,Engineer's Adjustments,75/95,85264,Engineer's Adjustments,LINKED,1.00
+pkm-hsunleashed-76-95-de2c6a70b2,HSUnleashed,Good Rod,76/95,85840,Good Rod,LINKED,1.00
+pkm-hsunleashed-77-95-41ecf3080a,HSUnleashed,Interviewer's Questions,77/95,86286,Interviewer's Questions,LINKED,1.00
+pkm-hsunleashed-78-95-9b66f8a8bf,HSUnleashed,Judge,78/95,86359,Judge,LINKED,1.00
+pkm-hsunleashed-79-95-a7f78182f9,HSUnleashed,Life Herb,79/95,86733,Life Herb,LINKED,1.00
+pkm-hsunleashed-80-95-eb9cb8cf77,HSUnleashed,PlusPower,80/95,88179,PlusPower,LINKED,1.00
+pkm-hsunleashed-81-95-d595675fc5,HSUnleashed,Pokémon Circulator,81/95,88216,Pokemon Circulator,LINKED,1.00
+pkm-hsunleashed-82-95-63d40ee21f,HSUnleashed,Rare Candy,82/95,88595,Rare Candy,LINKED,1.00
+pkm-hsunleashed-83-95-623d550fe7,HSUnleashed,Super Scoop Up,83/95,89640,Super Scoop Up,LINKED,1.00
+pkm-hsunleashed-84-95-5843257b7d,HSUnleashed,Crobat,84/95,84489,Crobat (Prime),SKIP_NAME_MISMATCH,0.50
+pkm-hsunleashed-85-95-5d757ce3a1,HSUnleashed,Kingdra,85/95,86448,Kingdra (Prime),SKIP_NAME_MISMATCH,0.50
+pkm-hsunleashed-86-95-37cc7a1822,HSUnleashed,Lanturn,86/95,86611,Lanturn (Prime),SKIP_NAME_MISMATCH,0.50
+pkm-hsunleashed-87-95-d699bef9a7,HSUnleashed,Steelix,87/95,89564,Steelix (Prime),SKIP_NAME_MISMATCH,0.50
+pkm-hsunleashed-88-95-842d031616,HSUnleashed,Tyranitar,88/95,90122,Tyranitar (Prime),SKIP_NAME_MISMATCH,0.50
+pkm-hsunleashed-89-95-da7a56da7b,HSUnleashed,Ursaring,89/95,90255,Ursaring (Prime),SKIP_NAME_MISMATCH,0.50
+pkm-hsunleashed-90-95-6696c9052e,HSUnleashed,Entei & Raikou LEGEND,90/95,85277,Entei & Raikou Legend (top),SKIP_NAME_MISMATCH,0.75
+pkm-hsunleashed-91-95-db8226e915,HSUnleashed,Entei & Raikou LEGEND,91/95,85276,Entei & Raikou Legend (bottom),SKIP_NAME_MISMATCH,0.75
+pkm-hsunleashed-92-95-fa0708d0f2,HSUnleashed,Raikou & Suicune LEGEND,92/95,88539,Raikou & Suicune Legend (Top),SKIP_NAME_MISMATCH,0.75
+pkm-hsunleashed-93-95-6d8bc13167,HSUnleashed,Raikou & Suicune LEGEND,93/95,88538,Raikou & Suicune Legend (Bottom),SKIP_NAME_MISMATCH,0.75
+pkm-hsunleashed-94-95-9920f2acfa,HSUnleashed,Suicune & Entei LEGEND,94/95,89610,Suicune & Entei Legend (Top),SKIP_NAME_MISMATCH,0.75
+pkm-hsunleashed-95-95-c43b79ea00,HSUnleashed,Suicune & Entei LEGEND,95/95,89609,Suicune & Entei Legend (Bottom),SKIP_NAME_MISMATCH,0.75
+pkm-hsunleashed-two-95-f9a44ecef4,HSUnleashed,Alph Lithograph,TWO/95,83510,Alph Lithograph,LINKED,1.00
+pkm-sun-and-moon-1-149-c5a537f8b1,Sun and Moon,Caterpie,1/149,126872,Caterpie,LINKED,1.00
+pkm-sun-and-moon-2-149-60544eb0f2,Sun and Moon,Metapod,2/149,126873,Metapod,LINKED,1.00
+pkm-sun-and-moon-3-149-1b5caee5a0,Sun and Moon,Butterfree,3/149,126874,Butterfree,LINKED,1.00
+pkm-sun-and-moon-4-149-ec1a7ee192,Sun and Moon,Paras,4/149,126875,Paras,LINKED,1.00
+pkm-sun-and-moon-5-149-4d942e4e75,Sun and Moon,Parasect,5/149,126876,Parasect,LINKED,1.00
+pkm-sun-and-moon-6-149-aa8adae5bb,Sun and Moon,Pinsir,6/149,126877,Pinsir,LINKED,1.00
+pkm-sun-and-moon-7-149-9afc555d7e,Sun and Moon,Surskit,7/149,126878,Surskit,LINKED,1.00
+pkm-sun-and-moon-8-149-6ded8d54d2,Sun and Moon,Masquerain,8/149,126879,Masquerain,LINKED,1.00
+pkm-sun-and-moon-9-149-e0e492d5b4,Sun and Moon,Rowlet,9/149,126880,Rowlet,LINKED,1.00
+pkm-sun-and-moon-10-149-3abd41d32f,Sun and Moon,Dartrix,10/149,126881,Dartrix,LINKED,1.00
+pkm-sun-and-moon-11-149-cc15bad391,Sun and Moon,Decidueye,11/149,126882,Decidueye,LINKED,1.00
+pkm-sun-and-moon-12-149-7b3b882190,Sun and Moon,Decidueye-GX,12/149,126883,Decidueye GX,LINKED,1.00
+pkm-sun-and-moon-13-149-a4bb67af43,Sun and Moon,Grubbin,13/149,126884,Grubbin,LINKED,1.00
+pkm-sun-and-moon-14-149-5192444d8d,Sun and Moon,Fomantis,14/149,126885,Fomantis,LINKED,1.00
+pkm-sun-and-moon-15-149-11836d55bc,Sun and Moon,Lurantis-GX,15/149,126886,Lurantis GX,LINKED,1.00
+pkm-sun-and-moon-16-149-c545a1eb02,Sun and Moon,Morelull,16/149,126887,Morelull,LINKED,1.00
+pkm-sun-and-moon-17-149-2e8cc8479e,Sun and Moon,Shiinotic,17/149,126888,Shiinotic,LINKED,1.00
+pkm-sun-and-moon-18-149-017a2b6916,Sun and Moon,Bounsweet,18/149,126889,Bounsweet,LINKED,1.00
+pkm-sun-and-moon-19-149-c5b4bfca25,Sun and Moon,Steenee,19/149,126890,Steenee,LINKED,1.00
+pkm-sun-and-moon-20-149-05817f2859,Sun and Moon,Tsareena,20/149,126891,Tsareena,LINKED,1.00
+pkm-sun-and-moon-21-149-8dc791066c,Sun and Moon,Growlithe,21/149,126892,Growlithe,LINKED,1.00
+pkm-sun-and-moon-22-149-15530f4c30,Sun and Moon,Arcanine,22/149,126893,Arcanine,LINKED,1.00
+pkm-sun-and-moon-23-149-e1a9dbfe04,Sun and Moon,Torkoal,23/149,126894,Torkoal,LINKED,1.00
+pkm-sun-and-moon-24-149-f5f33abee7,Sun and Moon,Litten,24/149,126895,Litten,LINKED,1.00
+pkm-sun-and-moon-25-149-68f18a542a,Sun and Moon,Torracat,25/149,126896,Torracat,LINKED,1.00
+pkm-sun-and-moon-26-149-0b421dc085,Sun and Moon,Incineroar,26/149,126897,Incineroar,LINKED,1.00
+pkm-sun-and-moon-27-149-1d9ace4cb1,Sun and Moon,Incineroar-GX,27/149,126898,Incineroar GX,LINKED,1.00
+pkm-sun-and-moon-28-149-44ba898615,Sun and Moon,Psyduck,28/149,126899,Psyduck,LINKED,1.00
+pkm-sun-and-moon-29-149-b3d7288d67,Sun and Moon,Golduck,29/149,126900,Golduck,LINKED,1.00
+pkm-sun-and-moon-30-149-c886091898,Sun and Moon,Poliwag,30/149,126901,Poliwag,LINKED,1.00
+pkm-sun-and-moon-31-149-10891df790,Sun and Moon,Poliwhirl,31/149,126902,Poliwhirl,LINKED,1.00
+pkm-sun-and-moon-32-149-de72d77468,Sun and Moon,Poliwrath,32/149,126903,Poliwrath,LINKED,1.00
+pkm-sun-and-moon-33-149-31c8322884,Sun and Moon,Shellder,33/149,126904,Shellder,LINKED,1.00
+pkm-sun-and-moon-34-149-5ea08ca25c,Sun and Moon,Cloyster,34/149,126905,Cloyster,LINKED,1.00
+pkm-sun-and-moon-35-149-def46eaf8a,Sun and Moon,Lapras-GX,35/149,126906,Lapras GX,LINKED,1.00
+pkm-sun-and-moon-36-149-3a9f541192,Sun and Moon,Corsola,36/149,126907,Corsola,LINKED,1.00
+pkm-sun-and-moon-37-149-4700e4e9ca,Sun and Moon,Wingull,37/149,126908,Wingull,LINKED,1.00
+pkm-sun-and-moon-38-149-f4c8f5b382,Sun and Moon,Pelipper,38/149,126909,Pelipper,LINKED,1.00
+pkm-sun-and-moon-39-149-8ec7ccb76b,Sun and Moon,Popplio,39/149,126910,Popplio,LINKED,1.00
+pkm-sun-and-moon-40-149-2b22da1a64,Sun and Moon,Brionne,40/149,126911,Brionne,LINKED,1.00
+pkm-sun-and-moon-41-149-f4a6d7d21e,Sun and Moon,Primarina,41/149,126912,Primarina,LINKED,1.00
+pkm-sun-and-moon-42-149-089d3f1684,Sun and Moon,Primarina-GX,42/149,126913,Primarina GX,LINKED,1.00
+pkm-sun-and-moon-43-149-ebf1733644,Sun and Moon,Crabominable,43/149,126914,Crabominable,LINKED,1.00
+pkm-sun-and-moon-44-149-22686ebaad,Sun and Moon,Wishiwashi,44/149,126915,Wishiwashi,LINKED,1.00
+pkm-sun-and-moon-45-149-fc1cef55a7,Sun and Moon,Dewpider,45/149,126916,Dewpider,LINKED,1.00
+pkm-sun-and-moon-46-149-20dca47bdf,Sun and Moon,Araquanid,46/149,126917,Araquanid,LINKED,1.00
+pkm-sun-and-moon-47-149-6fd94b62f0,Sun and Moon,Pyukumuku,47/149,126918,Pyukumuku,LINKED,1.00
+pkm-sun-and-moon-48-149-4540aca025,Sun and Moon,Bruxish,48/149,126919,Bruxish,LINKED,1.00
+pkm-sun-and-moon-49-149-76ab54d412,Sun and Moon,Chinchou,49/149,126920,Chinchou,LINKED,1.00
+pkm-sun-and-moon-50-149-99a765b5ca,Sun and Moon,Lanturn,50/149,126921,Lanturn,LINKED,1.00
+pkm-sun-and-moon-51-149-6610c10b0e,Sun and Moon,Charjabug,51/149,126922,Charjabug,LINKED,1.00
+pkm-sun-and-moon-52-149-c5e590c6e5,Sun and Moon,Vikavolt,52/149,126923,Vikavolt,LINKED,1.00
+pkm-sun-and-moon-53-149-f29bc9f97d,Sun and Moon,Togedemaru,53/149,126924,Togedemaru,LINKED,1.00
+pkm-sun-and-moon-54-149-d586906c11,Sun and Moon,Zubat,54/149,126925,Zubat,LINKED,1.00
+pkm-sun-and-moon-55-149-f39755387e,Sun and Moon,Golbat,55/149,126926,Golbat,LINKED,1.00
+pkm-sun-and-moon-56-149-3f9dfe9ebd,Sun and Moon,Crobat,56/149,126927,Crobat,LINKED,1.00
+pkm-sun-and-moon-57-149-89b87e761f,Sun and Moon,Alolan Grimer,57/149,126928,Alolan Grimer,LINKED,1.00
+pkm-sun-and-moon-58-149-2346695ef4,Sun and Moon,Alolan Muk,58/149,126929,Alolan Muk,LINKED,1.00
+pkm-sun-and-moon-59-149-e5249330a8,Sun and Moon,Drowzee,59/149,126930,Drowzee,LINKED,1.00
+pkm-sun-and-moon-60-149-16016b6bef,Sun and Moon,Hypno,60/149,126931,Hypno,LINKED,1.00
+pkm-sun-and-moon-61-149-1ab22439bf,Sun and Moon,Espeon-GX,61/149,126932,Espeon GX,LINKED,1.00
+pkm-sun-and-moon-62-149-a8db541052,Sun and Moon,Mareanie,62/149,126933,Mareanie,LINKED,1.00
+pkm-sun-and-moon-63-149-8e9fa953ac,Sun and Moon,Toxapex,63/149,126934,Toxapex,LINKED,1.00
+pkm-sun-and-moon-64-149-d25f17623d,Sun and Moon,Cosmog,64/149,126935,Cosmog,LINKED,1.00
+pkm-sun-and-moon-65-149-0df92c8ac9,Sun and Moon,Cosmoem,65/149,126936,Cosmoem,LINKED,1.00
+pkm-sun-and-moon-66-149-96a9879826,Sun and Moon,Lunala-GX,66/149,126937,Lunala GX,LINKED,1.00
+pkm-sun-and-moon-67-149-f8bd5f2145,Sun and Moon,Makuhita,67/149,126938,Makuhita,LINKED,1.00
+pkm-sun-and-moon-68-149-b4507ad8fe,Sun and Moon,Hariyama,68/149,126939,Hariyama,LINKED,1.00
+pkm-sun-and-moon-69-149-8313162c87,Sun and Moon,Roggenrola,69/149,126940,Roggenrola,LINKED,1.00
+pkm-sun-and-moon-70-149-6a9bbdd730,Sun and Moon,Boldore,70/149,126941,Boldore,LINKED,1.00
+pkm-sun-and-moon-71-149-99a98fe255,Sun and Moon,Gigalith,71/149,126942,Gigalith,LINKED,1.00
+pkm-sun-and-moon-72-149-92bba5efe8,Sun and Moon,Crabrawler,72/149,126943,Crabrawler,LINKED,1.00
+pkm-sun-and-moon-73-149-6f133fb2fb,Sun and Moon,Passimian,73/149,126945,Passimian,LINKED,1.00
+pkm-sun-and-moon-74-149-ee50024c30,Sun and Moon,Sandygast,74/149,126946,Sandygast,LINKED,1.00
+pkm-sun-and-moon-75-149-25822136a4,Sun and Moon,Palossand,75/149,126947,Palossand,LINKED,1.00
+pkm-sun-and-moon-76-149-cfb05a8aa5,Sun and Moon,Alolan Rattata,76/149,126948,Alolan Rattata,LINKED,1.00
+pkm-sun-and-moon-77-149-005077174d,Sun and Moon,Alolan Raticate,77/149,126949,Alolan Raticate,LINKED,1.00
+pkm-sun-and-moon-78-149-77f46c8472,Sun and Moon,Alolan Meowth,78/149,126950,Alolan Meowth,LINKED,1.00
+pkm-sun-and-moon-79-149-b930ae5e03,Sun and Moon,Alolan Persian,79/149,126951,Alolan Persian,LINKED,1.00
+pkm-sun-and-moon-80-149-d1ffa22910,Sun and Moon,Umbreon-GX,80/149,126952,Umbreon GX,LINKED,1.00
+pkm-sun-and-moon-81-149-b50950fd2c,Sun and Moon,Carvanha,81/149,126953,Carvanha,LINKED,1.00
+pkm-sun-and-moon-82-149-b3334c5c4c,Sun and Moon,Sharpedo,82/149,126954,Sharpedo,LINKED,1.00
+pkm-sun-and-moon-83-149-ded4816a30,Sun and Moon,Sandile,83/149,126955,Sandile,LINKED,1.00
+pkm-sun-and-moon-84-149-31c9dceb36,Sun and Moon,Krokorok,84/149,126956,Krokorok,LINKED,1.00
+pkm-sun-and-moon-85-149-46125ca8d4,Sun and Moon,Krookodile,85/149,126957,Krookodile,LINKED,1.00
+pkm-sun-and-moon-86-149-b84b576047,Sun and Moon,Alolan Diglett,86/149,126958,Alolan Diglett,LINKED,1.00
+pkm-sun-and-moon-87-149-7988ea67ec,Sun and Moon,Alolan Dugtrio,87/149,126959,Alolan Dugtrio,LINKED,1.00
+pkm-sun-and-moon-88-149-7624a537ae,Sun and Moon,Skarmory,88/149,126960,Skarmory,LINKED,1.00
+pkm-sun-and-moon-89-149-2445b3cce3,Sun and Moon,Solgaleo-GX,89/149,126961,Solgaleo GX,LINKED,1.00
+pkm-sun-and-moon-90-149-d6e3435fce,Sun and Moon,Snubbull,90/149,126962,Snubbull,LINKED,1.00
+pkm-sun-and-moon-91-149-23ae99077a,Sun and Moon,Granbull,91/149,126963,Granbull,LINKED,1.00
+pkm-sun-and-moon-92-149-62c94cd75d,Sun and Moon,Cutiefly,92/149,126964,Cutiefly,LINKED,1.00
+pkm-sun-and-moon-93-149-2bbdf20c8b,Sun and Moon,Ribombee,93/149,126965,Ribombee,LINKED,1.00
+pkm-sun-and-moon-94-149-e07526b2ad,Sun and Moon,Dratini,94/149,,,NO_CANDIDATE,
+pkm-sun-and-moon-95-149-2591a166b0,Sun and Moon,Dragonair,95/149,126967,Dragonair,LINKED,1.00
+pkm-sun-and-moon-96-149-b78bd789bd,Sun and Moon,Dragonite,96/149,126968,Dragonite,LINKED,1.00
+pkm-sun-and-moon-97-149-3d61e46d21,Sun and Moon,Spearow,97/149,126969,Spearow,LINKED,1.00
+pkm-sun-and-moon-98-149-2d0036db44,Sun and Moon,Fearow,98/149,126970,Fearow,LINKED,1.00
+pkm-sun-and-moon-99-149-7cb327fba7,Sun and Moon,Kangaskhan,99/149,126971,Kangaskhan,LINKED,1.00
+pkm-sun-and-moon-100-149-a379af4624,Sun and Moon,Tauros-GX,100/149,126972,Tauros GX,LINKED,1.00
+pkm-sun-and-moon-101-149-4fe13bcdd0,Sun and Moon,Eevee,101/149,126973,Eevee,LINKED,1.00
+pkm-sun-and-moon-101a-149-29cf874cd2,Sun and Moon,Eevee,101a/149,,,NO_CANDIDATE,
+pkm-sun-and-moon-102-149-746629334e,Sun and Moon,Spinda,102/149,126974,Spinda,LINKED,1.00
+pkm-sun-and-moon-103-149-0239c83f18,Sun and Moon,Lillipup,103/149,126975,Lillipup,LINKED,1.00
+pkm-sun-and-moon-104-149-eab2a91710,Sun and Moon,Herdier,104/149,126976,Herdier,LINKED,1.00
+pkm-sun-and-moon-105-149-3b771196e5,Sun and Moon,Stoutland,105/149,126977,Stoutland,LINKED,1.00
+pkm-sun-and-moon-106-149-12f9136ff5,Sun and Moon,Pikipek,106/149,126978,Pikipek,LINKED,1.00
+pkm-sun-and-moon-107-149-6ad111d229,Sun and Moon,Trumbeak,107/149,126979,Trumbeak,LINKED,1.00
+pkm-sun-and-moon-108-149-fa6b906960,Sun and Moon,Toucannon,108/149,126980,Toucannon,LINKED,1.00
+pkm-sun-and-moon-109-149-906fc73909,Sun and Moon,Yungoos,109/149,126981,Yungoos,LINKED,1.00
+pkm-sun-and-moon-110-149-bb8e0a4c5d,Sun and Moon,Gumshoos-GX,110/149,126982,Gumshoos GX,LINKED,1.00
+pkm-sun-and-moon-111-149-954ef22c59,Sun and Moon,Stufful,111/149,126983,Stufful,LINKED,1.00
+pkm-sun-and-moon-112-149-ba8001a4e4,Sun and Moon,Bewear,112/149,126984,Bewear,LINKED,1.00
+pkm-sun-and-moon-113-149-8c4b6ce787,Sun and Moon,Oranguru,113/149,126985,Oranguru,LINKED,1.00
+pkm-sun-and-moon-114-149-36027c6293,Sun and Moon,Big Malasada,114/149,126986,Big Malasada,LINKED,1.00
+pkm-sun-and-moon-115-149-c713bfb140,Sun and Moon,Crushing Hammer,115/149,126987,Crushing Hammer,LINKED,1.00
+pkm-sun-and-moon-116-149-f4dc732174,Sun and Moon,Energy Retrieval,116/149,126988,Energy Retrieval,LINKED,1.00
+pkm-sun-and-moon-117-149-a6f8d6c7d8,Sun and Moon,Energy Switch,117/149,126989,Energy Switch,LINKED,1.00
+pkm-sun-and-moon-118-149-afb90ce772,Sun and Moon,Exp. Share,118/149,126990,Exp. Share,LINKED,1.00
+pkm-sun-and-moon-119-149-28ee8aafc3,Sun and Moon,Great Ball,119/149,126991,Great Ball,LINKED,1.00
+pkm-sun-and-moon-120-149-f62644c131,Sun and Moon,Hau,120/149,126992,Hau,LINKED,1.00
+pkm-sun-and-moon-121-149-a2575e6302,Sun and Moon,Ilima,121/149,126993,Ilima,LINKED,1.00
+pkm-sun-and-moon-122-149-0d671a9e65,Sun and Moon,Lillie,122/149,126994,Lillie,LINKED,1.00
+pkm-sun-and-moon-123-149-04def26a58,Sun and Moon,Nest Ball,123/149,126995,Nest Ball,LINKED,1.00
+pkm-sun-and-moon-124-149-257e9cd054,Sun and Moon,Poison Barb,124/149,126996,Poison Barb,LINKED,1.00
+pkm-sun-and-moon-125-149-cb4ef82922,Sun and Moon,Poké Ball,125/149,126997,Poke Ball,LINKED,1.00
+pkm-sun-and-moon-126-149-b507217489,Sun and Moon,Pokémon Catcher,126/149,126998,Pokemon Catcher,LINKED,1.00
+pkm-sun-and-moon-127-149-af9f05ae1e,Sun and Moon,Potion,127/149,126999,Potion,LINKED,1.00
+pkm-sun-and-moon-128-149-5a2f86373d,Sun and Moon,Professor Kukui,128/149,127000,Professor Kukui,LINKED,1.00
+pkm-sun-and-moon-129-149-ae4accb382,Sun and Moon,Rare Candy,129/149,127001,Rare Candy,LINKED,1.00
+pkm-sun-and-moon-130-149-d757254dce,Sun and Moon,Repel,130/149,127002,Repel,LINKED,1.00
+pkm-sun-and-moon-131-149-a85d58c244,Sun and Moon,Rotom Dex,131/149,127003,Rotom Dex,LINKED,1.00
+pkm-sun-and-moon-132-149-8f29614605,Sun and Moon,Switch,132/149,127004,Switch,LINKED,1.00
+pkm-sun-and-moon-133-149-3f7741b291,Sun and Moon,Team Skull Grunt,133/149,127005,Team Skull Grunt,LINKED,1.00
+pkm-sun-and-moon-134-149-691055fb25,Sun and Moon,Timer Ball,134/149,127006,Timer Ball,LINKED,1.00
+pkm-sun-and-moon-135-149-e9c1db269a,Sun and Moon,Ultra Ball,135/149,127007,Ultra Ball,LINKED,1.00
+pkm-sun-and-moon-136-149-b846047420,Sun and Moon,Double Colorless Energy,136/149,127008,Double Colorless Energy,LINKED,1.00
+pkm-sun-and-moon-137-149-b3706d1117,Sun and Moon,Rainbow Energy,137/149,127009,Rainbow Energy,LINKED,1.00
+pkm-sun-and-moon-138-149-0b2a5993b0,Sun and Moon,Lurantis-GX,138/149,127010,Lurantis GX (Full Art),LINKED,1.00
+pkm-sun-and-moon-139-149-aae8daf1bb,Sun and Moon,Lapras-GX,139/149,127011,Lapras GX (Full Art),LINKED,1.00
+pkm-sun-and-moon-140-149-cad851f2ac,Sun and Moon,Espeon-GX,140/149,127012,Espeon GX (Full Art),LINKED,1.00
+pkm-sun-and-moon-141-149-8d4bea74d9,Sun and Moon,Lunala-GX,141/149,127013,Lunala GX (Full Art),LINKED,1.00
+pkm-sun-and-moon-142-149-000c688d15,Sun and Moon,Umbreon-GX,142/149,127014,Umbreon GX (Full Art),LINKED,1.00
+pkm-sun-and-moon-143-149-f16c60d594,Sun and Moon,Solgaleo-GX,143/149,127015,Solgaleo GX (Full Art),LINKED,1.00
+pkm-sun-and-moon-144-149-bbe1ef8e83,Sun and Moon,Tauros-GX,144/149,127016,Tauros GX (Full Art),LINKED,1.00
+pkm-sun-and-moon-145-149-2137176299,Sun and Moon,Gumshoos-GX,145/149,127017,Gumshoos GX (Full Art),LINKED,1.00
+pkm-sun-and-moon-146-149-b38ec9de88,Sun and Moon,Ilima,146/149,127018,Ilima (Full Art),LINKED,1.00
+pkm-sun-and-moon-147-149-6f2f9f5cbe,Sun and Moon,Lillie,147/149,127019,Lillie (Full Art),LINKED,1.00
+pkm-sun-and-moon-148-149-8f05600c3f,Sun and Moon,Professor Kukui,148/149,127020,Professor Kukui (Full Art),LINKED,1.00
+pkm-sun-and-moon-149-149-03e79dbb71,Sun and Moon,Team Skull Grunt,149/149,127021,Team Skull Grunt (Full Art),LINKED,1.00
+pkm-sun-and-moon-150-149-66e2acbe8e,Sun and Moon,Lurantis-GX,150/149,127189,Lurantis GX (Secret),LINKED,1.00
+pkm-sun-and-moon-151-149-6326d576ad,Sun and Moon,Lapras-GX,151/149,127190,Lapras GX (Secret),LINKED,1.00
+pkm-sun-and-moon-152-149-fbf6c174e3,Sun and Moon,Espeon-GX,152/149,127191,Espeon GX (Secret),LINKED,1.00
+pkm-sun-and-moon-153-149-abdf1545b9,Sun and Moon,Lunala-GX,153/149,127192,Lunala GX (Secret),LINKED,1.00
+pkm-sun-and-moon-154-149-1e167ff2b8,Sun and Moon,Umbreon-GX,154/149,127193,Umbreon GX (Secret),LINKED,1.00
+pkm-sun-and-moon-155-149-b0653ff35d,Sun and Moon,Solgaleo-GX,155/149,127194,Solgaleo GX (Secret),LINKED,1.00
+pkm-sun-and-moon-156-149-38e00f9ecc,Sun and Moon,Tauros-GX,156/149,127195,Tauros GX (Secret),LINKED,1.00
+pkm-sun-and-moon-157-149-469901cf98,Sun and Moon,Gumshoos-GX,157/149,127196,Gumshoos GX (Secret),LINKED,1.00
+pkm-sun-and-moon-158-149-5de3d9259a,Sun and Moon,Nest Ball,158/149,127197,Nest Ball (Secret),LINKED,1.00
+pkm-sun-and-moon-159-149-258cda3cc1,Sun and Moon,Rotom Dex,159/149,127198,Rotom Dex (Secret),LINKED,1.00
+pkm-sun-and-moon-160-149-5bddddcd0f,Sun and Moon,Switch,160/149,127199,Switch (Secret),LINKED,1.00
+pkm-sun-and-moon-161-149-aeb2e83ed2,Sun and Moon,Ultra Ball,161/149,127200,Ultra Ball (Secret),LINKED,1.00
+pkm-sun-and-moon-162-149-0129f48d97,Sun and Moon,Psychic Energy,162/149,127201,Psychic Energy (Secret),LINKED,1.00
+pkm-sun-and-moon-163-149-c6b0e5c643,Sun and Moon,Metal Energy,163/149,127202,Metal Energy (Secret),LINKED,1.00
+pkm-sun-and-moon-164-149-18ba04e7ca,Sun and Moon,Grass Energy,164/149,,,NO_CANDIDATE,
+pkm-sun-and-moon-165-149-b3f6e2db93,Sun and Moon,Fire Energy,165/149,,,NO_CANDIDATE,
+pkm-sun-and-moon-166-149-198cfc836a,Sun and Moon,Water Energy,166/149,,,NO_CANDIDATE,
+pkm-sun-and-moon-167-149-5f834b6133,Sun and Moon,Lightning Energy,167/149,,,NO_CANDIDATE,
+pkm-sun-and-moon-168-149-d558bf3e10,Sun and Moon,Psychic Energy,168/149,,,NO_CANDIDATE,
+pkm-sun-and-moon-169-149-f2a3d77abc,Sun and Moon,Fighting Energy,169/149,,,NO_CANDIDATE,
+pkm-sun-and-moon-170-149-6d9b0d5980,Sun and Moon,Darkness Energy,170/149,,,NO_CANDIDATE,
+pkm-sun-and-moon-171-149-a72ba19533,Sun and Moon,Metal Energy,171/149,,,NO_CANDIDATE,
+pkm-sun-and-moon-172-149-ab358e2938,Sun and Moon,Fairy Energy,172/149,,,NO_CANDIDATE,
+pkm-xy-1-146-a9c37b6cfb,XY,Venusaur-EX,1/146,90324,Venusaur EX,LINKED,1.00
+pkm-xy-2-146-a341b5bbdf,XY,M Venusaur-EX,2/146,86955,M Venusaur EX,LINKED,1.00
+pkm-xy-3-146-c42fb5b81f,XY,Weedle,3/146,90548,Weedle,LINKED,1.00
+pkm-xy-4-146-dafadebc62,XY,Kakuna,4/146,86417,Kakuna,LINKED,1.00
+pkm-xy-5-146-2165d7f3d5,XY,Beedrill,5/146,83774,Beedrill,LINKED,1.00
+pkm-xy-6-146-db4f839cb7,XY,Ledyba,6/146,86706,Ledyba,LINKED,1.00
+pkm-xy-7-146-deea0f9b45,XY,Ledian,7/146,86696,Ledian,LINKED,1.00
+pkm-xy-8-146-c033fef1ba,XY,Volbeat,8/146,90401,Volbeat,LINKED,1.00
+pkm-xy-9-146-793795540c,XY,Illumise,9/146,86269,Illumise,LINKED,1.00
+pkm-xy-10-146-398dd23306,XY,Pansage,10/146,87938,Pansage,LINKED,1.00
+pkm-xy-11-146-abeb922c99,XY,Simisage,11/146,89224,Simisage,LINKED,1.00
+pkm-xy-12-146-8b1ad59092,XY,Chespin,12/146,84269,Chespin,LINKED,1.00
+pkm-xy-13-146-64f21338f2,XY,Quilladin,13/146,88489,Quilladin,LINKED,1.00
+pkm-xy-14-146-c8e113fded,XY,Chesnaught,14/146,84267,Chesnaught,LINKED,1.00
+pkm-xy-15-146-004de4b70e,XY,Scatterbug,15/146,88943,Scatterbug,LINKED,1.00
+pkm-xy-16-146-2cb5f4fec5,XY,Spewpa,16/146,89444,Spewpa,LINKED,1.00
+pkm-xy-17-146-88931fa0c3,XY,Vivillon,17/146,90395,Vivillon (High Plains [Orange]),SKIP_NAME_MISMATCH,0.25
+pkm-xy-17-146-88931fa0c3,XY,Vivillon,17/146,91249,Vivillon (Meadow [Pink]),SKIP_NAME_MISMATCH,0.33
+pkm-xy-18-146-28118cc84e,XY,Skiddo,18/146,89251,Skiddo,LINKED,1.00
+pkm-xy-19-146-abc9e9ca12,XY,Gogoat,19/146,85789,Gogoat,LINKED,1.00
+pkm-xy-20-146-64794ef47c,XY,Slugma,20/146,89347,Slugma,LINKED,1.00
+pkm-xy-21-146-2018fcf13a,XY,Magcargo,21/146,87018,Magcargo,LINKED,1.00
+pkm-xy-22-146-0a2a38dae3,XY,Pansear,22/146,87945,Pansear,LINKED,1.00
+pkm-xy-23-146-eb806bd181,XY,Simisear,23/146,89230,Simisear,LINKED,1.00
+pkm-xy-24-146-e7a692e6e1,XY,Fennekin,24/146,85409,Fennekin,LINKED,1.00
+pkm-xy-25-146-7808e590ea,XY,Braixen,25/146,83948,Braixen,LINKED,1.00
+pkm-xy-26-146-fd98aa1e9d,XY,Delphox,26/146,84752,Delphox,LINKED,1.00
+pkm-xy-27-146-1c3243aa20,XY,Fletchinder,27/146,85506,Fletchinder,LINKED,1.00
+pkm-xy-28-146-50b6b4c480,XY,Talonflame,28/146,89739,Talonflame,LINKED,1.00
+pkm-xy-29-146-3dd6c5184a,XY,Blastoise-EX,29/146,83901,Blastoise EX,LINKED,1.00
+pkm-xy-30-146-4b936dc579,XY,M Blastoise-EX,30/146,86954,M Blastoise EX,LINKED,1.00
+pkm-xy-31-146-6464821c78,XY,Shellder,31/146,89139,Shellder,LINKED,1.00
+pkm-xy-32-146-7351f6ce72,XY,Cloyster,32/146,84375,Cloyster,LINKED,1.00
+pkm-xy-33-146-ce4f058c5a,XY,Staryu,33/146,89554,Staryu,LINKED,1.00
+pkm-xy-34-146-d07b454dc9,XY,Starmie,34/146,89539,Starmie,LINKED,1.00
+pkm-xy-35-146-ed10388fc5,XY,Lapras,35/146,86625,Lapras,LINKED,1.00
+pkm-xy-36-146-a12278ca87,XY,Corsola,36/146,84444,Corsola,LINKED,1.00
+pkm-xy-37-146-6c3802eeb4,XY,Panpour,37/146,87930,Panpour,LINKED,1.00
+pkm-xy-38-146-689b8f4ca6,XY,Simipour,38/146,89220,Simipour,LINKED,1.00
+pkm-xy-39-146-a8fc57408b,XY,Froakie,39/146,85567,Froakie,LINKED,1.00
+pkm-xy-40-146-5a773f7c5b,XY,Frogadier,40/146,85570,Frogadier,LINKED,1.00
+pkm-xy-41-146-537b082ac0,XY,Greninja,41/146,85902,Greninja,LINKED,1.00
+pkm-xy-42-146-7e33ec1c18,XY,Pikachu,42/146,88106,Pikachu,LINKED,1.00
+pkm-xy-43-146-308e7922e3,XY,Raichu,43/146,88523,Raichu,LINKED,1.00
+pkm-xy-44-146-e17a19a764,XY,Voltorb,44/146,90425,Voltorb,LINKED,1.00
+pkm-xy-45-146-56562ec8a6,XY,Electrode,45/146,85163,Electrode,LINKED,1.00
+pkm-xy-46-146-606a29e5c6,XY,Emolga-EX,46/146,85195,Emolga EX,LINKED,1.00
+pkm-xy-47-146-41f56e9943,XY,Ekans,47/146,85104,Ekans,LINKED,1.00
+pkm-xy-48-146-9c78a9d4b1,XY,Arbok,48/146,83571,Arbok,LINKED,1.00
+pkm-xy-49-146-7b6bf519ee,XY,Spoink,49/146,89480,Spoink,LINKED,1.00
+pkm-xy-50-146-c23cdf5aa8,XY,Grumpig,50/146,85973,Grumpig,LINKED,1.00
+pkm-xy-51-146-704dac5162,XY,Venipede,51/146,90297,Venipede,LINKED,1.00
+pkm-xy-52-146-c68a48e425,XY,Whirlipede,52/146,90573,Whirlipede,LINKED,1.00
+pkm-xy-53-146-1f0630ba93,XY,Scolipede,53/146,88971,Scolipede,LINKED,1.00
+pkm-xy-54-146-038d6d1bcb,XY,Phantump,54/146,88006,Phantump,LINKED,1.00
+pkm-xy-55-146-351aa3c982,XY,Trevenant,55/146,90047,Trevenant,LINKED,1.00
+pkm-xy-56-146-d529e5d033,XY,Pumpkaboo,56/146,88444,Pumpkaboo,LINKED,1.00
+pkm-xy-57-146-f1bbe03c21,XY,Gourgeist,57/146,85860,Gourgeist,LINKED,1.00
+pkm-xy-58-146-8d7cf3dfee,XY,Diglett,58/146,84827,Diglett,LINKED,1.00
+pkm-xy-59-146-38c038a6a6,XY,Dugtrio,59/146,85005,Dugtrio,LINKED,1.00
+pkm-xy-60-146-d04f1e32d6,XY,Rhyhorn,60/146,88744,Rhyhorn,LINKED,1.00
+pkm-xy-61-146-72ceeb765f,XY,Rhydon,61/146,88736,Rhydon,LINKED,1.00
+pkm-xy-62-146-9c987543fd,XY,Rhyperior,62/146,88747,Rhyperior,LINKED,1.00
+pkm-xy-63-146-36eee20749,XY,Lunatone,63/146,86930,Lunatone,LINKED,1.00
+pkm-xy-64-146-bf3f0da6fb,XY,Solrock,64/146,89432,Solrock,LINKED,1.00
+pkm-xy-65-146-b5aff7eed7,XY,Timburr,65/146,89917,Timburr,LINKED,1.00
+pkm-xy-66-146-39f7830b2d,XY,Gurdurr,66/146,85984,Gurdurr,LINKED,1.00
+pkm-xy-67-146-06210089c3,XY,Conkeldurr,67/146,84421,Conkeldurr,LINKED,1.00
+pkm-xy-68-146-29494f53c4,XY,Sableye,68/146,88857,Sableye,LINKED,1.00
+pkm-xy-69-146-f5239bab65,XY,Sandile,69/146,88917,Sandile,LINKED,1.00
+pkm-xy-70-146-57165356c3,XY,Krokorok,70/146,86540,Krokorok,LINKED,1.00
+pkm-xy-71-146-75e8abb9a9,XY,Krookodile,71/146,86545,Krookodile,LINKED,1.00
+pkm-xy-72-146-89449bceb7,XY,Zorua,72/146,90764,Zorua,LINKED,1.00
+pkm-xy-73-146-29bfa5b8b5,XY,Zoroark,73/146,90756,Zoroark,LINKED,1.00
+pkm-xy-74-146-d79c0c5510,XY,Inkay,74/146,86283,Inkay (74),SKIP_NAME_MISMATCH,0.50
+pkm-xy-75-146-03b96fb375,XY,Inkay,75/146,86284,Inkay (75),SKIP_NAME_MISMATCH,0.50
+pkm-xy-76-146-904508b454,XY,Malamar,76/146,87136,Malamar (76),SKIP_NAME_MISMATCH,0.50
+pkm-xy-77-146-24bd49cba5,XY,Malamar,77/146,87137,Malamar (77),SKIP_NAME_MISMATCH,0.50
+pkm-xy-78-146-f75e8a2aa0,XY,Yveltal,78/146,90697,Yveltal,LINKED,1.00
+pkm-xy-79-146-8f917a31c0,XY,Yveltal-EX,79/146,90699,Yveltal EX,LINKED,1.00
+pkm-xy-80-146-d1d8124096,XY,Skarmory-EX,80/146,89248,Skarmory EX,LINKED,1.00
+pkm-xy-81-146-3e6fa8560c,XY,Pawniard,81/146,87972,Pawniard,LINKED,1.00
+pkm-xy-82-146-aba5a38aea,XY,Bisharp,82/146,83846,Bisharp,LINKED,1.00
+pkm-xy-83-146-9a296dc671,XY,Honedge,83/146,86166,Honedge,LINKED,1.00
+pkm-xy-84-146-2c151463e5,XY,Doublade,84/146,84881,Doublade,LINKED,1.00
+pkm-xy-85-146-12615238e6,XY,Aegislash,85/146,83462,Aegislash (85),SKIP_NAME_MISMATCH,0.50
+pkm-xy-86-146-d7bacc75e4,XY,Aegislash,86/146,83463,Aegislash (86),SKIP_NAME_MISMATCH,0.50
+pkm-xy-87-146-b4bb07c317,XY,Jigglypuff,87/146,86322,Jigglypuff (87),SKIP_NAME_MISMATCH,0.50
+pkm-xy-88-146-6e0a1457f9,XY,Jigglypuff,88/146,86323,Jigglypuff (88),SKIP_NAME_MISMATCH,0.50
+pkm-xy-89-146-fbb51ba143,XY,Wigglytuff,89/146,90601,Wigglytuff (89),SKIP_NAME_MISMATCH,0.50
+pkm-xy-90-146-309c06a5fb,XY,Wigglytuff,90/146,90602,Wigglytuff (90),SKIP_NAME_MISMATCH,0.50
+pkm-xy-91-146-5cc5007704,XY,Mr. Mime,91/146,87596,Mr. Mime,LINKED,1.00
+pkm-xy-92-146-2dcc0beae6,XY,Spritzee,92/146,89481,Spritzee,LINKED,1.00
+pkm-xy-93-146-1eeab8b0f9,XY,Aromatisse,93/146,83627,Aromatisse,LINKED,1.00
+pkm-xy-94-146-44a9cbb753,XY,Swirlix,94/146,89707,Swirlix,LINKED,1.00
+pkm-xy-95-146-7c97221e8a,XY,Slurpuff,95/146,89349,Slurpuff,LINKED,1.00
+pkm-xy-96-146-6ae6f73f4a,XY,Xerneas,96/146,90669,Xerneas,LINKED,1.00
+pkm-xy-97-146-0da0bda7d6,XY,Xerneas-EX,97/146,90671,Xerneas EX,LINKED,1.00
+pkm-xy-98-146-f770057785,XY,Doduo,98/146,84867,Doduo,LINKED,1.00
+pkm-xy-99-146-71b5ab0ea6,XY,Dodrio,99/146,84856,Dodrio,LINKED,1.00
+pkm-xy-100-146-414342f888,XY,Tauros,100/146,89767,Tauros,LINKED,1.00
+pkm-xy-101-146-d2df9df206,XY,Dunsparce,101/146,85015,Dunsparce,LINKED,1.00
+pkm-xy-102-146-48a878dcf4,XY,Taillow,102/146,89737,Taillow,LINKED,1.00
+pkm-xy-103-146-039fd4f935,XY,Swellow,103/146,89695,Swellow,LINKED,1.00
+pkm-xy-104-146-8a3df0b4b6,XY,Skitty,104/146,89271,Skitty,LINKED,1.00
+pkm-xy-105-146-108a9b57d2,XY,Delcatty,105/146,84743,Delcatty,LINKED,1.00
+pkm-xy-106-146-383e783d1d,XY,Bidoof,106/146,83830,Bidoof,LINKED,1.00
+pkm-xy-107-146-00c4ea2573,XY,Bibarel,107/146,83822,Bibarel,LINKED,1.00
+pkm-xy-108-146-6ceb4c3f05,XY,Lillipup,108/146,86802,Lillipup,LINKED,1.00
+pkm-xy-109-146-df52ae6dc7,XY,Herdier,109/146,86072,Herdier,LINKED,1.00
+pkm-xy-110-146-76c16f494e,XY,Stoutland,110/146,89573,Stoutland,LINKED,1.00
+pkm-xy-111-146-aa9747ec1b,XY,Bunnelby,111/146,84046,Bunnelby,LINKED,1.00
+pkm-xy-112-146-a73ee8f982,XY,Diggersby,112/146,84816,Diggersby,LINKED,1.00
+pkm-xy-113-146-ee9134b7b5,XY,Fletchling,113/146,85507,Fletchling,LINKED,1.00
+pkm-xy-114-146-4bc95680fc,XY,Furfrou,114/146,85586,Furfrou,LINKED,1.00
+pkm-xy-115-146-b03fcff4c1,XY,Cassius,115/146,84124,Cassius,LINKED,1.00
+pkm-xy-116-146-f6c437f996,XY,Evosoda,116/146,85335,Evosoda,LINKED,1.00
+pkm-xy-117-146-529f701545,XY,Fairy Garden,117/146,85379,Fairy Garden,LINKED,1.00
+pkm-xy-118-146-4b3db9df43,XY,Great Ball,118/146,85901,Great Ball,LINKED,1.00
+pkm-xy-119-146-fe8de45379,XY,Hard Charm,119/146,86009,Hard Charm,LINKED,1.00
+pkm-xy-120-146-95724b75fc,XY,Max Revive,120/146,87269,Max Revive,LINKED,1.00
+pkm-xy-121-146-75021cae36,XY,Muscle Band,121/146,87658,Muscle Band,LINKED,1.00
+pkm-xy-122-146-f38cffac13,XY,Professor Sycamore,122/146,88409,Professor Sycamore,LINKED,1.00
+pkm-xy-123-146-498eeb3956,XY,Professor's Letter,123/146,88410,Professor's Letter,LINKED,1.00
+pkm-xy-124-146-118b61e12c,XY,Red Card,124/146,88655,Red Card,LINKED,1.00
+pkm-xy-125-146-968af38e30,XY,Roller Skates,125/146,88808,Roller Skates,LINKED,1.00
+pkm-xy-126-146-97792b333d,XY,Shadow Circle,126/146,89095,Shadow Circle,LINKED,1.00
+pkm-xy-127-146-5ef60d2b78,XY,Shauna,127/146,89105,Shauna,LINKED,1.00
+pkm-xy-128-146-6fee782673,XY,Super Potion,128/146,89630,Super Potion,LINKED,1.00
+pkm-xy-129-146-f9cafbabe7,XY,Team Flare Grunt,129/146,89804,Team Flare Grunt,LINKED,1.00
+pkm-xy-130-146-c75080b62a,XY,Double Colorless Energy,130/146,84886,Double Colorless Energy,LINKED,1.00
+pkm-xy-131-146-bab75b3296,XY,Rainbow Energy,131/146,88549,Rainbow Energy,LINKED,1.00
+pkm-xy-132-146-2a333cebee,XY,Grass Energy,132/146,85883,Grass Energy,LINKED,1.00
+pkm-xy-133-146-0bd9dd73df,XY,Fire Energy,133/146,85468,Fire Energy,LINKED,1.00
+pkm-xy-134-146-68538b517c,XY,Water Energy,134/146,90528,Water Energy,LINKED,1.00
+pkm-xy-135-146-99bda4a1a4,XY,Lightning Energy,135/146,86784,Lightning Energy,LINKED,1.00
+pkm-xy-136-146-9a996fd6af,XY,Psychic Energy,136/146,88428,Psychic Energy,LINKED,1.00
+pkm-xy-137-146-a6cfc32e35,XY,Fighting Energy,137/146,,,NO_CANDIDATE,
+pkm-xy-138-146-23d5ecd15a,XY,Darkness Energy,138/146,84681,Darkness Energy (Basic),SKIP_NAME_MISMATCH,0.67
+pkm-xy-139-146-8827fab427,XY,Metal Energy,139/146,87354,Metal Energy (Basic),SKIP_NAME_MISMATCH,0.67
+pkm-xy-140-146-3bb1a78e36,XY,Fairy Energy,140/146,85377,Fairy Energy,LINKED,1.00
+pkm-xy-141-146-4d42b9537e,XY,Venusaur-EX,141/146,90325,Venusaur EX (141 Full Art),SKIP_NAME_MISMATCH,0.67
+pkm-xy-142-146-a2462b1883,XY,Blastoise-EX,142/146,83902,Blastoise EX (142 Full Art),SKIP_NAME_MISMATCH,0.67
+pkm-xy-143-146-feea8e1552,XY,Emolga-EX,143/146,85196,Emolga EX (143 Full Art),SKIP_NAME_MISMATCH,0.67
+pkm-xy-144-146-a8a33ca2a6,XY,Yveltal-EX,144/146,90700,Yveltal EX (144 Full Art),SKIP_NAME_MISMATCH,0.67
+pkm-xy-145-146-76ee3ec4e6,XY,Skarmory-EX,145/146,89249,Skarmory EX (145 Full Art),SKIP_NAME_MISMATCH,0.67
+pkm-xy-146-146-9c7b2ab644,XY,Xerneas-EX,146/146,90672,Xerneas EX (146 Full Art),SKIP_NAME_MISMATCH,0.67

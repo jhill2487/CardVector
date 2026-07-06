@@ -1,0 +1,2 @@
+file,ocr_name,ocr_number,ocr_setcode,match_name,match_set,match_number,confidence,reason
+IMG_7507.JPG,Yamask. 2,039/086,WHTE,Yamask,White Flare,39,0.99,unique match from template OCR regions

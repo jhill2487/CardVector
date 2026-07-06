@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Putnam Scanner Workbench</title>
+<style>
+  body{font-family:Arial,system-ui,sans-serif;margin:0;background:#101418;color:#eef2f7}
+  header{padding:16px 20px;background:#17202a;border-bottom:1px solid #2c3a46}
+  h1{font-size:20px;margin:0 0 4px} .sub{color:#9fb0c0;font-size:13px}
+  main{display:grid;grid-template-columns:360px 1fr;gap:16px;padding:16px}
+  .card{background:#17202a;border:1px solid #2c3a46;border-radius:12px;padding:14px;margin-bottom:14px}
+  label{display:block;font-size:12px;color:#aebdca;margin:10px 0 4px}
+  input,select,button{width:100%;box-sizing:border-box;border-radius:8px;border:1px solid #3b4c59;background:#0f151b;color:#fff;padding:9px}
+  button{cursor:pointer;background:#275d9f;border-color:#3974bd;font-weight:bold;margin-top:10px}
+  button.secondary{background:#25313b;border-color:#3b4c59}
+  button.danger{background:#6c2630;border-color:#9e3543}
+  pre{white-space:pre-wrap;background:#0b1015;border:1px solid #293744;border-radius:10px;padding:12px;max-height:260px;overflow:auto}
+  table{width:100%;border-collapse:collapse;font-size:13px;background:#17202a;border-radius:12px;overflow:hidden}
+  th,td{border-bottom:1px solid #2c3a46;padding:8px;text-align:left;vertical-align:top}
+  th{background:#202b36;color:#b9c8d6;position:sticky;top:0}
+  .status-Auto{color:#68d391;font-weight:bold}.status-Needs{color:#f6c177;font-weight:bold}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}.small{font-size:12px;color:#a9b7c5}
+</style>
+</head>
+<body>
+<header><h1>Putnam Scanner Workbench</h1><div class="sub">Run region OCR tests from the browser using one stable local Python server.</div></header>
+<main>
+<section>
+  <div class="card">
+    <h3>Config</h3>
+    <label>Template label</label><input id="template_label">
+    <label>Target labels folder</label><input id="target_labels">
+    <label>Images folder</label><input id="images">
+    <label>SQLite database</label><input id="sqlite">
+    <label>Output folder</label><input id="output">
+    <div class="grid2">
+      <label><input id="skip_template_source" type="checkbox" style="width:auto"> Skip template source</label>
+      <label><input id="save_ocr_text" type="checkbox" style="width:auto"> Save OCR text</label>
+    </div>
+    <button onclick="saveConfig()">Save Config</button>
+    <button class="secondary" onclick="reloadAll()">Reload Lists</button>
+  </div>
+  <div class="card">
+    <h3>Run Test</h3>
+    <label>Run one target label</label><select id="target_one"></select>
+    <button onclick="runOne()">Run Selected Card</button>
+    <button onclick="runAll()">Run All Labels</button>
+    <p class="small">The workbench calls <code>scanner_core_region_ocr.py</code>. To patch scanner behavior later, replace/edit that one file or config.</p>
+  </div>
+  <div class="card">
+    <h3>Console</h3>
+    <pre id="console">Ready.</pre>
+  </div>
+</section>
+<section>
+  <div class="card">
+    <h3>Results</h3>
+    <div class="small" id="csvpath"></div>
+    <div style="max-height:70vh;overflow:auto"><table id="results"></table></div>
+  </div>
+</section>
+</main>
+<script>
+async function api(path, opts={}){ const r=await fetch(path, opts); const j=await r.json(); if(!r.ok) throw new Error(j.error||r.statusText); return j; }
+function setConsole(x){ document.getElementById('console').textContent = typeof x==='string'?x:JSON.stringify(x,null,2); }
+function cfgFromForm(){ return {
+ template_label:template_label.value, target_labels:target_labels.value, images:images.value, sqlite:sqlite.value, output:output.value,
+ skip_template_source:skip_template_source.checked, save_ocr_text:save_ocr_text.checked
+};}
+function fillForm(c){ template_label.value=c.template_label||''; target_labels.value=c.target_labels||''; images.value=c.images||''; sqlite.value=c.sqlite||''; output.value=c.output||''; skip_template_source.checked=!!c.skip_template_source; save_ocr_text.checked=!!c.save_ocr_text; }
+async function saveConfig(){ const c=await api('/api/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(cfgFromForm())}); fillForm(c); setConsole('Config saved.'); await reloadAll(); }
+async function reloadAll(){ const data=await api('/api/list'); fillForm(data.config); const sel=target_one; sel.innerHTML=''; data.labels.forEach(x=>{let o=document.createElement('option');o.value=x;o.textContent=x;sel.appendChild(o)}); await loadResults(); }
+async function runOne(){ setConsole('Running selected card...'); const target_label=target_one.value; const res=await api('/api/run',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({target_label})}); setConsole((res.stdout||'')+(res.stderr?('\nSTDERR:\n'+res.stderr):'')); renderResults(res.results); }
+async function runAll(){ setConsole('Running all labels...'); const res=await api('/api/run',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({})}); setConsole((res.stdout||'')+(res.stderr?('\nSTDERR:\n'+res.stderr):'')); renderResults(res.results); }
+async function loadResults(){ const r=await api('/api/results'); renderResults(r); }
+function esc(s){return String(s??'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
+function renderResults(res){ document.getElementById('csvpath').textContent = res.csv ? ('CSV: '+res.csv) : ''; const rows=res.rows||[]; const tbl=document.getElementById('results'); if(!rows.length){tbl.innerHTML='<tr><td>No results yet.</td></tr>';return;} const cols=['filename','status','ocr_name','ocr_number','ocr_setcode','match_name','match_set','match_number','confidence','reason','candidates']; tbl.innerHTML='<thead><tr>'+cols.map(c=>'<th>'+c+'</th>').join('')+'</tr></thead><tbody>'+rows.map(r=>'<tr>'+cols.map(c=>{let v=esc(r[c]); if(c==='status') return `<td class="status-${v.split(' ')[0]}">${v}</td>`; return '<td>'+v+'</td>';}).join('')+'</tr>').join('')+'</tbody>'; }
+reloadAll().catch(e=>setConsole('ERROR: '+e.message));
+</script>
+</body>
+</html>

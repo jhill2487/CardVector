@@ -1,0 +1,105 @@
+{
+  "version": 1,
+  "updated_at": "2026-07-03T15:29:00",
+  "default_capacity": 100,
+  "locations": [
+    {
+      "location_code": "ETB-001",
+      "status": "Full",
+      "estimated_capacity": 100,
+      "estimated_assigned_count": 0,
+      "created_at": "2026-06-29T23:14:19",
+      "updated_at": "2026-06-30T13:29:24"
+    },
+    {
+      "location_code": "ETB-002",
+      "status": "Available",
+      "estimated_capacity": 100,
+      "estimated_assigned_count": 0,
+      "created_at": "2026-06-29T23:14:19",
+      "updated_at": "2026-06-29T23:14:19"
+    },
+    {
+      "location_code": "ETB-003",
+      "status": "Available",
+      "estimated_capacity": 100,
+      "estimated_assigned_count": 0,
+      "created_at": "2026-07-03T00:30:04",
+      "updated_at": "2026-07-03T00:30:04"
+    },
+    {
+      "location_code": "ETB-004",
+      "status": "Available",
+      "estimated_capacity": 100,
+      "estimated_assigned_count": 0,
+      "created_at": "2026-07-03T15:28:55",
+      "updated_at": "2026-07-03T15:28:55"
+    },
+    {
+      "location_code": "ETB-005",
+      "status": "Available",
+      "estimated_capacity": 100,
+      "estimated_assigned_count": 0,
+      "created_at": "2026-07-03T15:28:56",
+      "updated_at": "2026-07-03T15:28:56"
+    },
+    {
+      "location_code": "ETB-006",
+      "status": "Available",
+      "estimated_capacity": 100,
+      "estimated_assigned_count": 0,
+      "created_at": "2026-07-03T15:29:00",
+      "updated_at": "2026-07-03T15:29:00"
+    }
+  ],
+  "history": [
+    {
+      "timestamp": "2026-06-29T23:14:19",
+      "location_code": "ETB-001",
+      "action": "created",
+      "status": "Available"
+    },
+    {
+      "timestamp": "2026-06-29T23:14:19",
+      "location_code": "ETB-002",
+      "action": "created",
+      "status": "Available"
+    },
+    {
+      "timestamp": "2026-06-29T23:14:19",
+      "location_code": "ETB-001",
+      "action": "status_updated",
+      "status": "Full"
+    },
+    {
+      "timestamp": "2026-06-30T13:29:24",
+      "location_code": "ETB-001",
+      "action": "status_updated",
+      "status": "Full"
+    },
+    {
+      "timestamp": "2026-07-03T00:30:04",
+      "location_code": "ETB-003",
+      "action": "created",
+      "status": "Available"
+    },
+    {
+      "timestamp": "2026-07-03T15:28:55",
+      "location_code": "ETB-004",
+      "action": "created",
+      "status": "Available"
+    },
+    {
+      "timestamp": "2026-07-03T15:28:56",
+      "location_code": "ETB-005",
+      "action": "created",
+      "status": "Available"
+    },
+    {
+      "timestamp": "2026-07-03T15:29:00",
+      "location_code": "ETB-006",
+      "action": "created",
+      "status": "Available"
+    }
+  ]
+}

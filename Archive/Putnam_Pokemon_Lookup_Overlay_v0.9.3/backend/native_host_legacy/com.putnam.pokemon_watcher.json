@@ -1,0 +1,10 @@
+﻿{
+  "name": "com.putnam.pokemon_watcher",
+  "description": "Putnam Pokemon Watcher Native Messaging Host",
+  "path": "C:\\Users\\JaredHill\\Documents\\Codex\\2026-06-09\\do-you-have-record-of-all\\outputs\\whatnot-pokemon-watcher\\companion\\run_native_host.bat",
+  "type": "stdio",
+  "allowed_origins": [
+    "chrome-extension://bncppfhgmclblempojhfnghhdmdloifc/"
+  ]
+}
+

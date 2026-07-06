@@ -1,0 +1,68 @@
+{
+  "acquisition_id": "ACQ-20260701_083129",
+  "acquisition_name": "xPokemaniax",
+  "purchase_date": "2026-07-01",
+  "purchase_price": "43.95",
+  "source": "whatnot",
+  "seller_name": "",
+  "platform": "",
+  "notes": "Purchased binder, with various Silver tempest cards.",
+  "created_at": "2026-07-01T08:31:29",
+  "updated_at": "2026-07-02T15:48:44",
+  "status": "processing",
+  "gross_revenue_collected": "0.00",
+  "net_revenue_collected": "0.00",
+  "remaining_to_break_even": "43.95",
+  "break_even_date": "",
+  "remaining_inventory_value": "0.00",
+  "work_sessions": [
+    {
+      "session_id": "20260629_162226",
+      "folder": "C:\\Users\\user\\OneDrive\\PutnamCollectibles\\Work_Sessions\\Work_Session_20260629_162226",
+      "batch_location": "ETB-02-A",
+      "attached_at": "2026-07-01T08:31:29"
+    }
+  ],
+  "imports": [
+    {
+      "session_id": "20260629_162226",
+      "acquisition_id": "ACQ-20260701_083129",
+      "acquisition_name": "xPokemaniax",
+      "purchase_price_snapshot": "43.95",
+      "source_file": "C:/Users/JaredHill/Downloads/pokemon-english_ebay_ungraded_fixed-price_2026-07-01_0852.csv",
+      "row_count": 45,
+      "estimated_listing_value": "44.55",
+      "estimated_market_value": "0.00",
+      "estimated_bulk_value": "0.00",
+      "batch_location": "ETB-02-A",
+      "imported_at": "2026-07-01T08:52:33"
+    },
+    {
+      "session_id": "20260629_162226",
+      "acquisition_id": "ACQ-20260701_083129",
+      "acquisition_name": "xPokemaniax",
+      "purchase_price_snapshot": "43.95",
+      "source_file": "C:/Users/JaredHill/Downloads/pokemon-english_ebay_ungraded_fixed-price_2026-07-02_1547.csv",
+      "row_count": 43,
+      "estimated_listing_value": "88.27",
+      "estimated_market_value": "0.00",
+      "estimated_bulk_value": "0.00",
+      "batch_location": "ETB-02-A",
+      "imported_at": "2026-07-02T15:48:25"
+    },
+    {
+      "session_id": "20260629_162226",
+      "acquisition_id": "ACQ-20260701_083129",
+      "acquisition_name": "xPokemaniax",
+      "purchase_price_snapshot": "43.95",
+      "source_file": "C:/Users/JaredHill/Downloads/pokemon-english_ebay_ungraded_fixed-price_2026-07-02_1547.csv",
+      "row_count": 43,
+      "estimated_listing_value": "88.27",
+      "estimated_market_value": "0.00",
+      "estimated_bulk_value": "0.00",
+      "batch_location": "ETB-02-A",
+      "imported_at": "2026-07-02T15:48:44"
+    }
+  ],
+  "pricing_jobs": []
+}

@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Putnam Border + OCR Region Trainer v0.6</title>
+<style>
+  body { margin:0; font-family: Arial, sans-serif; background:#151515; color:#eee; }
+  #topbar { padding:10px; display:flex; flex-wrap:wrap; gap:8px; align-items:center; background:#222; border-bottom:1px solid #444; }
+  button, select { padding:7px 10px; border-radius:6px; border:1px solid #666; background:#333; color:#eee; }
+  button:hover { background:#444; cursor:pointer; }
+  #status { font-size:13px; opacity:.9; margin-left:auto; }
+  #wrap { display:flex; height:calc(100vh - 58px); }
+  #left { flex:1; position:relative; overflow:hidden; background:#111; }
+  #right { width:340px; overflow:auto; padding:12px; background:#1d1d1d; border-left:1px solid #444; font-size:13px; line-height:1.35; }
+  canvas { display:block; width:100%; height:100%; cursor:crosshair; }
+  .hint { color:#ccc; margin-bottom:10px; }
+  .mode { font-weight:bold; }
+  .card { background:#252525; border:1px solid #444; border-radius:8px; padding:10px; margin:10px 0; }
+  .small { font-size:12px; color:#bbb; }
+  code { background:#333; padding:2px 4px; border-radius:4px; }
+</style>
+</head>
+<body>
+<div id="topbar">
+  <button id="chooseLabel">Choose Label Folder</button>
+  <button id="chooseCrop">Choose Crop Folder</button>
+  <button id="loadBtn">Load Image</button>
+  <input id="fileInput" type="file" accept="image/*" style="display:none" />
+  <select id="regionSelect">
+    <option value="card">Card Border</option>
+    <option value="name">Name Region</option>
+    <option value="number">Number Region</option>
+    <option value="setcode">Set Code Region</option>
+  </select>
+  <button id="resetRegion">Reset Selected Region</button>
+  <button id="fitBtn">Fit</button>
+  <button id="acceptBtn">Accept + Auto-Save</button>
+  <span id="status">Drop image here or paste with Ctrl+V</span>
+</div>
+<div id="wrap">
+  <div id="left"><canvas id="canvas"></canvas></div>
+  <div id="right">
+    <h3>Putnam Border Trainer v0.6</h3>
+    <div class="hint">New in v0.6: every crop is an independent 4-point polygon. Drag a corner to fine-tune that point, or drag inside the polygon to move the whole crop.</div>
+    <div class="card">
+      <div><b>Active Region:</b> <span id="activeName" class="mode">Card Border</span></div>
+      <div class="small">Regions: card, name, number, set code.</div>
+    </div>
+    <div class="card">
+      <b>Controls</b><br>
+      Mouse wheel = zoom<br>
+      Space + drag or middle mouse = pan<br>
+      Drag corner dot = move one point<br>
+      Drag inside selected polygon = move whole region<br>
+      Arrow keys = nudge selected point/region<br>
+      Shift + Arrow = nudge 10px<br>
+      Ctrl+V = paste image<br>
+    </div>
+    <div class="card">
+      <b>Save Output</b><br>
+      Choose folders once in Chrome/Edge, then Accept auto-saves:<br>
+      <code>IMG_7492.json</code><br>
+      <code>IMG_7492_card_crop.jpg</code><br>
+      <code>IMG_7492_name_crop.jpg</code><br>
+      <code>IMG_7492_number_crop.jpg</code><br>
+      <code>IMG_7492_setcode_crop.jpg</code>
+    </div>
+    <div id="coords" class="card small"></div>
+  </div>
+</div>
+<script>
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+const statusEl = document.getElementById('status');
+const regionSelect = document.getElementById('regionSelect');
+const activeName = document.getElementById('activeName');
+const coordsEl = document.getElementById('coords');
+let img = new Image();
+let imgFileName = 'image.jpg';
+let imgLoaded = false;
+let scale=1, offX=0, offY=0;
+let activeRegion='card';
+let selectedPoint=null;
+let draggingRegion=false;
+let panning=false;
+let last={x:0,y:0};
+let labelDir=null, cropDir=null;
+const colors = { card:'#00ff66', name:'#00b7ff', number:'#ffcc00', setcode:'#ff66ff' };
+const labels = { card:'Card Border', name:'Name Region', number:'Number Region', setcode:'Set Code Region' };
+let regions = { card:[], name:[], number:[], setcode:[] };
+function resize(){ canvas.width=canvas.clientWidth; canvas.height=canvas.clientHeight; draw(); }
+window.addEventListener('resize', resize); resize();
+function imgToScreen(p){ return {x:p.x*scale+offX, y:p.y*scale+offY}; }
+function screenToImg(x,y){ return {x:(x-offX)/scale, y:(y-offY)/scale}; }
+function defaultRegions(){
+  const w=img.naturalWidth, h=img.naturalHeight;
+  regions.card=[{x:w*.08,y:h*.04},{x:w*.92,y:h*.04},{x:w*.92,y:h*.96},{x:w*.08,y:h*.96}];
+  regions.name=[{x:w*.08,y:h*.035},{x:w*.78,y:h*.035},{x:w*.78,y:h*.16},{x:w*.08,y:h*.16}];
+  regions.number=[{x:w*.03,y:h*.84},{x:w*.32,y:h*.84},{x:w*.32,y:h*.97},{x:w*.03,y:h*.97}];
+  regions.setcode=[{x:w*.62,y:h*.84},{x:w*.93,y:h*.84},{x:w*.93,y:h*.98},{x:w*.62,y:h*.98}];
+}
+function fit(){ if(!imgLoaded)return; const sx=canvas.width/img.naturalWidth, sy=canvas.height/img.naturalHeight; scale=Math.min(sx,sy)*.92; offX=(canvas.width-img.naturalWidth*scale)/2; offY=(canvas.height-img.naturalHeight*scale)/2; draw(); }
+function draw(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle='#111'; ctx.fillRect(0,0,canvas.width,canvas.height);
+  if(!imgLoaded){ ctx.fillStyle='#aaa'; ctx.font='22px Arial'; ctx.fillText('Drop or paste a card photo', 30, 50); return; }
+  ctx.drawImage(img, offX, offY, img.naturalWidth*scale, img.naturalHeight*scale);
+  for(const key of ['card','name','number','setcode']) drawPoly(key);
+  updateCoords();
+}
+function drawPoly(key){
+  const pts=regions[key]; if(!pts||pts.length!==4)return;
+  const c=colors[key];
+  ctx.lineWidth = key===activeRegion ? 3 : 2;
+  ctx.strokeStyle=c; ctx.fillStyle=c+'22';
+  ctx.beginPath(); pts.forEach((p,i)=>{const s=imgToScreen(p); if(i===0)ctx.moveTo(s.x,s.y); else ctx.lineTo(s.x,s.y);}); ctx.closePath(); ctx.fill(); ctx.stroke();
+  ctx.font='14px Arial'; ctx.fillStyle=c; const s0=imgToScreen(pts[0]); ctx.fillText(labels[key], s0.x+6, s0.y-8);
+  pts.forEach((p,i)=>{const s=imgToScreen(p); ctx.beginPath(); ctx.arc(s.x,s.y,key===activeRegion?7:5,0,Math.PI*2); ctx.fillStyle=c; ctx.fill(); ctx.strokeStyle='#000'; ctx.lineWidth=2; ctx.stroke(); ctx.fillStyle='#000'; ctx.font='10px Arial'; ctx.fillText(String(i+1),s.x-3,s.y+3);});
+}
+function dist(a,b){ return Math.hypot(a.x-b.x,a.y-b.y); }
+function pointInPoly(pt, poly){
+  let inside=false; for(let i=0,j=poly.length-1;i<poly.length;j=i++) { const xi=poly[i].x, yi=poly[i].y, xj=poly[j].x, yj=poly[j].y; const intersect=((yi>pt.y)!=(yj>pt.y)) && (pt.x<(xj-xi)*(pt.y-yi)/(yj-yi)+xi); if(intersect) inside=!inside; } return inside;
+}
+function mousePos(e){ const r=canvas.getBoundingClientRect(); return {x:e.clientX-r.left, y:e.clientY-r.top}; }
+canvas.addEventListener('mousedown', e=>{
+  if(!imgLoaded)return; const m=mousePos(e); last=m;
+  if(e.button===1 || e.spaceKey || spaceDown){ panning=true; return; }
+  selectedPoint=null; draggingRegion=false;
+  const pts=regions[activeRegion];
+  for(let i=0;i<4;i++){ if(dist(m,imgToScreen(pts[i]))<14){ selectedPoint=i; return; } }
+  const im=screenToImg(m.x,m.y); if(pointInPoly(im, pts)) draggingRegion=true;
+});
+canvas.addEventListener('mousemove', e=>{
+  if(!imgLoaded)return; const m=mousePos(e); const dx=(m.x-last.x)/scale, dy=(m.y-last.y)/scale;
+  if(panning){ offX+=m.x-last.x; offY+=m.y-last.y; last=m; draw(); return; }
+  if(selectedPoint!==null){ regions[activeRegion][selectedPoint].x+=dx; regions[activeRegion][selectedPoint].y+=dy; last=m; draw(); return; }
+  if(draggingRegion){ regions[activeRegion].forEach(p=>{p.x+=dx;p.y+=dy;}); last=m; draw(); return; }
+});
+window.addEventListener('mouseup',()=>{selectedPoint=null; draggingRegion=false; panning=false;});
+canvas.addEventListener('wheel', e=>{ if(!imgLoaded)return; e.preventDefault(); const m=mousePos(e); const before=screenToImg(m.x,m.y); const factor=e.deltaY<0?1.12:0.89; scale*=factor; const after=screenToImg(m.x,m.y); offX+=(after.x-before.x)*scale; offY+=(after.y-before.y)*scale; draw(); }, {passive:false});
+let spaceDown=false; window.addEventListener('keydown', e=>{ if(e.code==='Space'){spaceDown=true; e.preventDefault();} if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code)){ e.preventDefault(); const step=e.shiftKey?10:1; let dx=0,dy=0; if(e.code==='ArrowLeft')dx=-step; if(e.code==='ArrowRight')dx=step; if(e.code==='ArrowUp')dy=-step; if(e.code==='ArrowDown')dy=step; if(selectedPoint!==null) { regions[activeRegion][selectedPoint].x+=dx; regions[activeRegion][selectedPoint].y+=dy; } else regions[activeRegion].forEach(p=>{p.x+=dx;p.y+=dy;}); draw(); }});
+window.addEventListener('keyup', e=>{ if(e.code==='Space')spaceDown=false; });
+regionSelect.addEventListener('change',()=>{ activeRegion=regionSelect.value; activeName.textContent=labels[activeRegion]; draw(); });
+document.getElementById('fitBtn').onclick=fit;
+document.getElementById('resetRegion').onclick=()=>{ if(!imgLoaded)return; const old=JSON.parse(JSON.stringify(regions)); defaultRegions(); regions[activeRegion]=regions[activeRegion]; for(const k of Object.keys(regions)){ if(k!==activeRegion) regions[k]=old[k]; } draw(); };
+document.getElementById('loadBtn').onclick=()=>document.getElementById('fileInput').click();
+document.getElementById('fileInput').onchange=e=>{ if(e.target.files[0]) loadFile(e.target.files[0]); };
+document.addEventListener('dragover', e=>{ e.preventDefault(); });
+document.addEventListener('drop', e=>{ e.preventDefault(); const f=e.dataTransfer.files[0]; if(f) loadFile(f); });
+document.addEventListener('paste', e=>{ const items=e.clipboardData.items; for(const it of items){ if(it.type.startsWith('image/')){ loadFile(it.getAsFile()); break; } } });
+function loadFile(file){ imgFileName=file.name||'pasted_image.jpg'; const url=URL.createObjectURL(file); img.onload=()=>{ imgLoaded=true; defaultRegions(); fit(); statusEl.textContent='Loaded '+imgFileName; }; img.src=url; }
+document.getElementById('chooseLabel').onclick=async()=>{ if(!window.showDirectoryPicker){ alert('Use Chrome or Edge for automatic folder saving.'); return;} labelDir=await window.showDirectoryPicker({mode:'readwrite'}); statusEl.textContent='Label folder selected'; };
+document.getElementById('chooseCrop').onclick=async()=>{ if(!window.showDirectoryPicker){ alert('Use Chrome or Edge for automatic folder saving.'); return;} cropDir=await window.showDirectoryPicker({mode:'readwrite'}); statusEl.textContent='Crop folder selected'; };
+function baseName(){ return imgFileName.replace(/\.[^.]+$/,''); }
+function orderedQuad(pts){ return pts.map(p=>({x:Math.round(p.x), y:Math.round(p.y)})); }
+function makeCrop(regionKey){
+  const pts=regions[regionKey];
+  const xs=pts.map(p=>p.x), ys=pts.map(p=>p.y);
+  const minX=Math.max(0,Math.floor(Math.min(...xs))), minY=Math.max(0,Math.floor(Math.min(...ys)));
+  const maxX=Math.min(img.naturalWidth,Math.ceil(Math.max(...xs))), maxY=Math.min(img.naturalHeight,Math.ceil(Math.max(...ys)));
+  const c=document.createElement('canvas'); c.width=Math.max(1,maxX-minX); c.height=Math.max(1,maxY-minY);
+  const g=c.getContext('2d'); g.drawImage(img,minX,minY,c.width,c.height,0,0,c.width,c.height);
+  return new Promise(res=>c.toBlob(res,'image/jpeg',0.92));
+}
+async function writeFile(dir,name,blob){ const h=await dir.getFileHandle(name,{create:true}); const w=await h.createWritable(); await w.write(blob); await w.close(); }
+document.getElementById('acceptBtn').onclick=async()=>{
+  if(!imgLoaded){ alert('Load an image first.'); return; }
+  const data={ filename:imgFileName, trainer_version:'0.6', timestamp:new Date().toISOString(), image_size:{width:img.naturalWidth,height:img.naturalHeight}, regions:{} };
+  for(const k of Object.keys(regions)) data.regions[k]=orderedQuad(regions[k]);
+  const jsonBlob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  if(labelDir) await writeFile(labelDir,baseName()+'.json',jsonBlob); else downloadBlob(jsonBlob,baseName()+'.json');
+  for(const k of ['card','name','number','setcode']){ const b=await makeCrop(k); const fname=baseName()+'_'+(k==='card'?'card_crop':k+'_crop')+'.jpg'; if(cropDir) await writeFile(cropDir,fname,b); else downloadBlob(b,fname); }
+  statusEl.textContent='Saved labels and crops for '+imgFileName;
+};
+function downloadBlob(blob,name){ const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),1000); }
+function updateCoords(){ if(!imgLoaded){coordsEl.textContent='';return;} let html='<b>Coordinates</b><br>'; for(const k of ['card','name','number','setcode']){ html+=`<br><b style="color:${colors[k]}">${labels[k]}</b><br>`; regions[k].forEach((p,i)=>html+=`${i+1}: ${Math.round(p.x)}, ${Math.round(p.y)}<br>`); } coordsEl.innerHTML=html; }
+</script>
+</body>
+</html>

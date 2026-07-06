@@ -1,0 +1,24 @@
+@echo off
+setlocal
+
+if "%USERENVIRONMENT%"=="" (
+    set "USERENVIRONMENT=%USERPROFILE%\OneDrive\PutnamCollectibles"
+)
+
+set "APP=%USERENVIRONMENT%\Putnam_OS\System\app\putnam_os.py"
+set "LOGDIR=%USERENVIRONMENT%\Putnam_OS\System\logs"
+if not exist "%LOGDIR%" mkdir "%LOGDIR%"
+
+if not exist "%APP%" (
+    echo ERROR: Putnam OS app not found:
+    echo %APP%
+    echo.
+    echo Check USERENVIRONMENT. It should point to your PutnamCollectibles root.
+    echo Current USERENVIRONMENT=%USERENVIRONMENT%
+    echo.
+    pause
+    exit /b 1
+)
+
+py "%APP%"
+pause

@@ -1,0 +1,327 @@
+putnam_card_id,catalog_set,card_name,printed_number,product_id,product_name,status,score,catalog_norm,product_norm
+pkm-paldean-fates-1-91-7c26a771f7,Paldean Fates,Pineco,1/91,534132,Pineco - 001/091,LINKED,1.00,pineco,pineco
+pkm-paldean-fates-2-91-a627c83977,Paldean Fates,Forretress ex,2/91,534133,Forretress ex - 002/091,LINKED,1.00,forretress ex,forretress ex
+pkm-paldean-fates-4-91-80bdab189e,Paldean Fates,Toedscool,4/91,534137,Toedscool - 004/091,LINKED,1.00,toedscool,toedscool
+pkm-paldean-fates-5-91-4faba8d710,Paldean Fates,Toedscruel ex,5/91,534139,Toedscruel ex - 005/091,LINKED,1.00,toedscruel ex,toedscruel ex
+pkm-paldean-fates-6-91-87e6fac393,Paldean Fates,Espathra ex,6/91,534140,Espathra ex - 006/091,LINKED,1.00,espathra ex,espathra ex
+pkm-paldean-fates-7-91-44e620ce55,Paldean Fates,Charmander,7/91,534142,Charmander - 007/091,LINKED,1.00,charmander,charmander
+pkm-paldean-fates-8-91-399f2f5733,Paldean Fates,Charmeleon,8/91,534143,Charmeleon - 008/091,LINKED,1.00,charmeleon,charmeleon
+pkm-paldean-fates-14-91-8193c95374,Paldean Fates,Charcadet,14/91,534155,Charcadet - 014/091,LINKED,1.00,charcadet,charcadet
+pkm-paldean-fates-15-91-e4188b2412,Paldean Fates,Armarouge,15/91,534156,Armarouge - 015/091,LINKED,1.00,armarouge,armarouge
+pkm-paldean-fates-17-91-5efb416c38,Paldean Fates,Frigibax,17/91,534161,Frigibax - 017/091,LINKED,1.00,frigibax,frigibax
+pkm-paldean-fates-18-91-42b5ab9d5c,Paldean Fates,Pikachu,18/91,534163,Pikachu - 018/091,LINKED,1.00,pikachu,pikachu
+pkm-paldean-fates-19-91-4b23356aa6,Paldean Fates,Raichu,19/91,534165,Raichu - 019/091,LINKED,1.00,raichu,raichu
+pkm-paldean-fates-22-91-f40ce8639e,Paldean Fates,Kilowattrel,22/91,534168,Kilowattrel - 022/091,LINKED,1.00,kilowattrel,kilowattrel
+pkm-paldean-fates-25-91-4d27fa7e95,Paldean Fates,Natu,25/91,535993,Natu - 025/091,LINKED,1.00,natu,natu
+pkm-paldean-fates-26-91-435d262b16,Paldean Fates,Xatu,26/91,534171,Xatu - 026/091,LINKED,1.00,xatu,xatu
+pkm-paldean-fates-27-91-741b5db038,Paldean Fates,Ralts,27/91,534173,Ralts - 027/091,LINKED,1.00,ralts,ralts
+pkm-paldean-fates-28-91-05cfeed51e,Paldean Fates,Kirlia,28/91,534174,Kirlia - 028/091,LINKED,1.00,kirlia,kirlia
+pkm-paldean-fates-29-91-78948de542,Paldean Fates,Gardevoir ex,29/91,534175,Gardevoir ex - 029/091,LINKED,1.00,gardevoir ex,gardevoir ex
+pkm-paldean-fates-31-91-fb82ae589a,Paldean Fates,Mime Jr.,31/91,534177,Mime Jr. - 031/091,LINKED,1.00,mime jr,mime jr
+pkm-paldean-fates-37-91-421b9fe1d5,Paldean Fates,Mimikyu,37/91,534183,Mimikyu - 037/091,LINKED,1.00,mimikyu,mimikyu
+pkm-paldean-fates-39-91-f56d4b6f0c,Paldean Fates,Dachsbun,39/91,534185,Dachsbun - 039/091,LINKED,1.00,dachsbun,dachsbun
+pkm-paldean-fates-40-91-30669fa848,Paldean Fates,Ceruledge,40/91,534186,Ceruledge - 040/091,LINKED,1.00,ceruledge,ceruledge
+pkm-paldean-fates-41-91-ac949895fd,Paldean Fates,Flittle,41/91,534187,Flittle - 041/091,LINKED,1.00,flittle,flittle
+pkm-paldean-fates-43-91-a7ad4ccbd9,Paldean Fates,Houndstone,43/91,534190,Houndstone - 043/091,LINKED,1.00,houndstone,houndstone
+pkm-paldean-fates-45-91-783169055d,Paldean Fates,Mankey,45/91,534192,Mankey - 045/091,LINKED,1.00,mankey,mankey
+pkm-paldean-fates-46-91-bed3520f58,Paldean Fates,Primeape,46/91,534194,Primeape - 046/091,LINKED,1.00,primeape,primeape
+pkm-paldean-fates-47-91-4477f0e75c,Paldean Fates,Annihilape,47/91,534197,Annihilape - 047/091,LINKED,1.00,annihilape,annihilape
+pkm-paldean-fates-54-91-722482636e,Paldean Fates,Charizard ex,54/91,534416,Charizard ex - 054/091,LINKED,1.00,charizard ex,charizard ex
+pkm-paldean-fates-58-91-f2d6a61bc1,Paldean Fates,Paldean Wooper,58/91,534420,Paldean Wooper - 058/091,LINKED,1.00,paldean wooper,paldean wooper
+pkm-paldean-fates-59-91-bcce78ff50,Paldean Fates,Paldean Clodsire ex,59/91,534421,Paldean Clodsire ex - 059/091,LINKED,1.00,paldean clodsire ex,paldean clodsire ex
+pkm-paldean-fates-63-91-5fcdf6f715,Paldean Fates,Mabosstiff,63/91,534425,Mabosstiff - 063/091,LINKED,1.00,mabosstiff,mabosstiff
+pkm-paldean-fates-64-91-2978eada97,Paldean Fates,Varoom,64/91,534426,Varoom - 064/091,LINKED,1.00,varoom,varoom
+pkm-paldean-fates-65-91-7e6e333c9f,Paldean Fates,Revavroom,65/91,534427,Revavroom - 065/091,LINKED,1.00,revavroom,revavroom
+pkm-paldean-fates-68-91-315fb011e5,Paldean Fates,Noibat,68/91,534430,Noibat - 068/091,LINKED,1.00,noibat,noibat
+pkm-paldean-fates-69-91-583187a244,Paldean Fates,Noivern ex,69/91,534431,Noivern ex - 069/091,LINKED,1.00,noivern ex,noivern ex
+pkm-paldean-fates-70-91-15f29f7943,Paldean Fates,Cyclizar,70/91,534432,Cyclizar - 070/091,LINKED,1.00,cyclizar,cyclizar
+pkm-paldean-fates-71-91-d1bfe2edc2,Paldean Fates,Lechonk,71/91,534433,Lechonk - 071/091,LINKED,1.00,lechonk,lechonk
+pkm-paldean-fates-73-91-4b2ee5a61b,Paldean Fates,Tandemaus,73/91,534435,Tandemaus - 073/091,LINKED,1.00,tandemaus,tandemaus
+pkm-paldean-fates-74-91-0b2ff58e60,Paldean Fates,Maushold,74/91,534436,Maushold - 074/091,LINKED,1.00,maushold,maushold
+pkm-paldean-fates-75-91-790687144c,Paldean Fates,Squawkabilly ex,75/91,534437,Squawkabilly ex - 075/091,LINKED,1.00,squawkabilly ex,squawkabilly ex
+pkm-paldean-fates-78-91-59d7565553,Paldean Fates,Clive,78/91,534440,Clive - 078/091,LINKED,1.00,clive,clive
+pkm-paldean-fates-80-91-3485dd279b,Paldean Fates,Iono,80/91,534442,Iono - 080/091,LINKED,1.00,iono,iono
+pkm-paldean-fates-82-91-3a036dbac6,Paldean Fates,Nemona,82/91,534444,Nemona - 082/091,LINKED,1.00,nemona,nemona
+pkm-paldean-fates-83-91-a1024b5855,Paldean Fates,Nemona's Backpack,83/91,,,NO_CANDIDATE,
+pkm-paldean-fates-85-91-dbf1d9cb18,Paldean Fates,Paldean Student,85/91,534447,Paldean Student - 085/091,LINKED,1.00,paldean student,paldean student
+pkm-paldean-fates-86-91-e4afa3bf2d,Paldean Fates,Paldean Student,86/91,534448,Paldean Student - 086/091,LINKED,1.00,paldean student,paldean student
+pkm-paldean-fates-87-91-4c06418efc,Paldean Fates,Professor's Research,87/91,534449,Professor's Research - 087/091,LINKED,1.00,professor s research,professor s research
+pkm-paldean-fates-88-91-80c6856788,Paldean Fates,Professor's Research,88/91,534450,Professor's Research - 088/091,LINKED,1.00,professor s research,professor s research
+pkm-paldean-fates-99-91-786184d261,Paldean Fates,Pineco,99/91,534470,Pineco - 099/091,LINKED,1.00,pineco,pineco
+pkm-paldean-fates-105-91-26db98b421,Paldean Fates,Toedscool,105/91,534478,Toedscool - 105/091,LINKED,1.00,toedscool,toedscool
+pkm-paldean-fates-109-91-e4dc516066,Paldean Fates,Charmander,109/91,534483,Charmander - 109/091,LINKED,1.00,charmander,charmander
+pkm-paldean-fates-110-91-5483a47a3a,Paldean Fates,Charmeleon,110/91,534484,Charmeleon - 110/091,LINKED,1.00,charmeleon,charmeleon
+pkm-paldean-fates-111-91-3da051b750,Paldean Fates,Paldean Tauros,111/91,534485,Paldean Tauros - 111/091,LINKED,1.00,paldean tauros,paldean tauros
+pkm-paldean-fates-114-91-ef0872f7e7,Paldean Fates,Charcadet,114/91,534496,Charcadet - 114/091,LINKED,1.00,charcadet,charcadet
+pkm-paldean-fates-115-91-dcffae283e,Paldean Fates,Armarouge,115/91,534497,Armarouge - 115/091,LINKED,1.00,armarouge,armarouge
+pkm-paldean-fates-120-91-d87e5c73aa,Paldean Fates,Paldean Tauros,120/91,534511,Paldean Tauros - 120/091,LINKED,1.00,paldean tauros,paldean tauros
+pkm-paldean-fates-121-91-60f6a12e0e,Paldean Fates,Wiglett,121/91,534512,Wiglett - 121/091,LINKED,1.00,wiglett,wiglett
+pkm-paldean-fates-122-91-a232de60f7,Paldean Fates,Wugtrio,122/91,534513,Wugtrio - 122/091,LINKED,1.00,wugtrio,wugtrio
+pkm-paldean-fates-124-91-987dbdab86,Paldean Fates,Palafin,124/91,534515,Palafin - 124/091,LINKED,1.00,palafin,palafin
+pkm-paldean-fates-125-91-78e0cfede4,Paldean Fates,Veluza,125/91,534516,Veluza - 125/091,LINKED,1.00,veluza,veluza
+pkm-paldean-fates-128-91-83168709ba,Paldean Fates,Frigibax,128/91,534519,Frigibax - 128/091,LINKED,1.00,frigibax,frigibax
+pkm-paldean-fates-131-91-342f41e621,Paldean Fates,Pikachu,131/91,534522,Pikachu - 131/091,LINKED,1.00,pikachu,pikachu
+pkm-paldean-fates-132-91-6d91cc81cc,Paldean Fates,Raichu,132/91,534523,Raichu - 132/091,LINKED,1.00,raichu,raichu
+pkm-paldean-fates-142-91-415f90697c,Paldean Fates,Pawmi,142/91,534577,Pawmi - 142/091,LINKED,1.00,pawmi,pawmi
+pkm-paldean-fates-146-91-cfc0a587a0,Paldean Fates,Kilowattrel,146/91,534584,Kilowattrel - 146/091,LINKED,1.00,kilowattrel,kilowattrel
+pkm-paldean-fates-151-91-db21ced1ce,Paldean Fates,Natu,151/91,534642,Natu - 151/091,LINKED,1.00,natu,natu
+pkm-paldean-fates-152-91-8e1a582d4e,Paldean Fates,Xatu,152/91,534646,Xatu - 152/091,LINKED,1.00,xatu,xatu
+pkm-paldean-fates-153-91-0ddfca9c74,Paldean Fates,Ralts,153/91,534650,Ralts - 153/091,LINKED,1.00,ralts,ralts
+pkm-paldean-fates-154-91-e43df30804,Paldean Fates,Kirlia,154/91,534659,Kirlia - 154/091,LINKED,1.00,kirlia,kirlia
+pkm-paldean-fates-157-91-c2251894af,Paldean Fates,Mime Jr.,157/91,534671,Mime Jr. - 157/091,LINKED,1.00,mime jr,mime jr
+pkm-paldean-fates-160-91-c7abaf7ab8,Paldean Fates,Mimikyu,160/91,534683,Mimikyu -160/091,LINKED,1.00,mimikyu,mimikyu
+pkm-paldean-fates-161-91-3f21c8d80b,Paldean Fates,Dachsbun,161/91,534685,Dachsbun - 161/091,LINKED,1.00,dachsbun,dachsbun
+pkm-paldean-fates-162-91-e82e223245,Paldean Fates,Ceruledge,162/91,534687,Ceruledge - 162/091,LINKED,1.00,ceruledge,ceruledge
+pkm-paldean-fates-164-91-04f73aa561,Paldean Fates,Flittle,164/91,534694,Flittle - 164/091,LINKED,1.00,flittle,flittle
+pkm-paldean-fates-165-91-8e57cc2d11,Paldean Fates,Tinkatink,165/91,,,NO_CANDIDATE,
+pkm-paldean-fates-166-91-ef739cc778,Paldean Fates,Tinkatuff,166/91,,,NO_CANDIDATE,
+pkm-paldean-fates-167-91-b91c030a4e,Paldean Fates,Tinkaton,167/91,,,NO_CANDIDATE,
+pkm-paldean-fates-168-91-5930ad64a5,Paldean Fates,Houndstone,168/91,534724,Houndstone - 168/091,LINKED,1.00,houndstone,houndstone
+pkm-paldean-fates-169-91-2b799b0853,Paldean Fates,Mankey,169/91,534728,Mankey - 169/091,LINKED,1.00,mankey,mankey
+pkm-paldean-fates-170-91-6854bcf1aa,Paldean Fates,Primeape,170/91,534730,Primeape - 170/091,LINKED,1.00,primeape,primeape
+pkm-paldean-fates-171-91-263cb19f02,Paldean Fates,Annihilape,171/91,534733,Annihilape - 171/091,LINKED,1.00,annihilape,annihilape
+pkm-paldean-fates-172-91-cae8a66c66,Paldean Fates,Paldean Tauros,172/91,535956,Paldean Tauros - 172/091,LINKED,1.00,paldean tauros,paldean tauros
+pkm-paldean-fates-176-91-51451ea5d8,Paldean Fates,Nacli,176/91,534762,Nacli - 176/091,LINKED,1.00,nacli,nacli
+pkm-paldean-fates-180-91-31d5935a05,Paldean Fates,Paldean Wooper,180/91,535093,Paldean Wooper - 180/091,LINKED,1.00,paldean wooper,paldean wooper
+pkm-paldean-fates-188-91-7ef2572b53,Paldean Fates,Mabosstiff,188/91,535135,Mabosstiff - 188/091,LINKED,1.00,mabosstiff,mabosstiff
+pkm-paldean-fates-189-91-3a2301ff59,Paldean Fates,Shroodle,189/91,535143,Shroodle - 189/091,LINKED,1.00,shroodle,shroodle
+pkm-paldean-fates-192-91-677708387b,Paldean Fates,Varoom,192/91,535151,Varoom - 192/091,LINKED,1.00,varoom,varoom
+pkm-paldean-fates-193-91-87fee61d49,Paldean Fates,Revavroom,193/91,535153,Revavroom - 193/091,LINKED,1.00,revavroom,revavroom
+pkm-paldean-fates-194-91-a7e87fcdb8,Paldean Fates,Noibat,194/91,535155,Noibat - 194/091,LINKED,1.00,noibat,noibat
+pkm-paldean-fates-195-91-1cebdf68d7,Paldean Fates,Cyclizar,195/91,535157,Cyclizar - 195/091,LINKED,1.00,cyclizar,cyclizar
+pkm-paldean-fates-207-91-25578f4ded,Paldean Fates,Lechonk,207/91,535213,Lechonk - 207/091,LINKED,1.00,lechonk,lechonk
+pkm-paldean-fates-208-91-553858ea76,Paldean Fates,Oinkologne,208/91,535955,Oinkologne - 208/091,LINKED,1.00,oinkologne,oinkologne
+pkm-paldean-fates-209-91-6ea0cbfcaf,Paldean Fates,Tandemaus,209/91,535214,Tandemaus - 209/091,LINKED,1.00,tandemaus,tandemaus
+pkm-paldean-fates-210-91-a1c8d6a62b,Paldean Fates,Maushold,210/91,535215,Maushold - 210/091,LINKED,1.00,maushold,maushold
+pkm-paldean-fates-212-91-4666e6366e,Paldean Fates,Forretress ex,212/91,535297,Forretress ex - 212/091,LINKED,1.00,forretress ex,forretress ex
+pkm-paldean-fates-213-91-1b39b9cdd0,Paldean Fates,Toedscruel ex,213/91,535299,Toedscruel ex - 213/091,LINKED,1.00,toedscruel ex,toedscruel ex
+pkm-paldean-fates-214-91-c322f9a495,Paldean Fates,Espathra ex,214/91,535303,Espathra ex - 214/091,LINKED,1.00,espathra ex,espathra ex
+pkm-paldean-fates-216-91-4042f6bb14,Paldean Fates,Mew ex,216/91,535527,Mew ex - 216/091,LINKED,1.00,mew ex,mew ex
+pkm-paldean-fates-217-91-f6b4d333e3,Paldean Fates,Gardevoir ex,217/91,535530,Gardevoir ex - 217/091,LINKED,1.00,gardevoir ex,gardevoir ex
+pkm-paldean-fates-219-91-3908e23fd7,Paldean Fates,Paldean Clodsire ex,219/91,535537,Paldean Clodsire ex - 219/091,LINKED,1.00,paldean clodsire ex,paldean clodsire ex
+pkm-paldean-fates-220-91-57f69c4341,Paldean Fates,Noivern ex,220/91,535541,Noivern ex - 220/091,LINKED,1.00,noivern ex,noivern ex
+pkm-paldean-fates-223-91-544e13d697,Paldean Fates,Squawkabilly ex,223/91,535654,Squawkabilly ex - 223/091,LINKED,1.00,squawkabilly ex,squawkabilly ex
+pkm-paldean-fates-224-91-0d3c743298,Paldean Fates,Wugtrio,224/91,534731,Wugtrio - 224/091,LINKED,1.00,wugtrio,wugtrio
+pkm-paldean-fates-225-91-15641c75b4,Paldean Fates,Palafin,225/91,534736,Palafin - 225/091,LINKED,1.00,palafin,palafin
+pkm-paldean-fates-226-91-6ffb88efb3,Paldean Fates,Pawmi,226/91,534739,Pawmi - 226/091,LINKED,1.00,pawmi,pawmi
+pkm-paldean-fates-227-91-2d12c36d04,Paldean Fates,Clive,227/91,534743,Clive - 227/091,LINKED,1.00,clive,clive
+pkm-paldean-fates-229-91-f3b8625050,Paldean Fates,Nemona,229/91,534754,Nemona - 229/091,LINKED,1.00,nemona,nemona
+pkm-paldean-fates-230-91-0e4db01e8e,Paldean Fates,Paldean Student,230/91,534757,Paldean Student - 230/091,LINKED,1.00,paldean student,paldean student
+pkm-paldean-fates-231-91-425a1c119b,Paldean Fates,Paldean Student,231/91,534758,Paldean Student - 231/091,LINKED,1.00,paldean student,paldean student
+pkm-paldean-fates-232-91-e30896a997,Paldean Fates,Mew ex,232/91,534919,Mew ex - 232/091,LINKED,1.00,mew ex,mew ex
+pkm-paldean-fates-233-91-233d29e108,Paldean Fates,Gardevoir ex,233/91,535085,Gardevoir ex - 233/091,LINKED,1.00,gardevoir ex,gardevoir ex
+pkm-paldean-fates-234-91-67901c527c,Paldean Fates,Charizard ex,234/91,535090,Charizard ex - 234/091,LINKED,1.00,charizard ex,charizard ex
+pkm-paldean-fates-236-91-c201895d02,Paldean Fates,Clive,236/91,535098,Clive - 236/091,LINKED,1.00,clive,clive
+pkm-paldean-fates-237-91-47bbdcce04,Paldean Fates,Iono,237/91,535101,Iono - 237/091,LINKED,1.00,iono,iono
+pkm-paldean-fates-238-91-2117158193,Paldean Fates,Nemona,238/91,535104,Nemona - 238/091,LINKED,1.00,nemona,nemona
+pkm-paldean-fates-244-91-200cc586af,Paldean Fates,Ting-Lu ex,244/91,,,NO_CANDIDATE,
+pkm-temporal-forces-5-162-d13941c454,Temporal Forces,Shiftry,5/162,542650,Shiftry - 005/162,LINKED,1.00,shiftry,shiftry
+pkm-temporal-forces-11-162-fe9e9f178a,Temporal Forces,Grotle,11/162,542669,Grotle - 011/162,LINKED,1.00,grotle,grotle
+pkm-temporal-forces-12-162-012c34f978,Temporal Forces,Torterra ex,12/162,542658,Torterra ex - 012/162,LINKED,1.00,torterra ex,torterra ex
+pkm-temporal-forces-16-162-1731ae803e,Temporal Forces,Deerling,16/162,542678,Deerling - 016/162,LINKED,1.00,deerling,deerling
+pkm-temporal-forces-17-162-aa51a33b73,Temporal Forces,Sawsbuck,17/162,542762,Sawsbuck - 017/162,LINKED,1.00,sawsbuck,sawsbuck
+pkm-temporal-forces-25-162-6211c00b05,Temporal Forces,Iron Leaves ex,25/162,542769,Iron Leaves ex - 025/162,LINKED,1.00,iron leaves ex,iron leaves ex
+pkm-temporal-forces-30-162-5ed8bca909,Temporal Forces,Victini,30/162,,,NO_CANDIDATE,
+pkm-temporal-forces-32-162-fe2c42a40f,Temporal Forces,Litten,32/162,542776,Litten - 032/162,LINKED,1.00,litten,litten
+pkm-temporal-forces-34-162-acb943b993,Temporal Forces,Incineroar ex,34/162,542778,Incineroar ex - 034/162,LINKED,1.00,incineroar ex,incineroar ex
+pkm-temporal-forces-38-162-6a19cefe07,Temporal Forces,Gouging Fire ex,38/162,542782,Gouging Fire ex - 038/162,LINKED,1.00,gouging fire ex,gouging fire ex
+pkm-temporal-forces-45-162-db8bf6f7f9,Temporal Forces,Snom,45/162,542789,Snom - 045/162,LINKED,1.00,snom,snom
+pkm-temporal-forces-50-162-f010b5c882,Temporal Forces,Walking Wake ex,50/162,542794,Walking Wake ex - 050/162,LINKED,1.00,walking wake ex,walking wake ex
+pkm-temporal-forces-55-162-9a38851899,Temporal Forces,Charjabug,55/162,542799,Charjabug - 055/162,LINKED,1.00,charjabug,charjabug
+pkm-temporal-forces-60-162-2cd02d6839,Temporal Forces,Wugtrio ex,60/162,542804,Wugtrio ex - 060/162,LINKED,1.00,wugtrio ex,wugtrio ex
+pkm-temporal-forces-68-162-d900920c66,Temporal Forces,Bronzor,68/162,542812,Bronzor - 068/162,LINKED,1.00,bronzor,bronzor
+pkm-temporal-forces-72-162-83c381961d,Temporal Forces,Reuniclus,72/162,542816,Reuniclus - 072/162,LINKED,1.00,reuniclus,reuniclus
+pkm-temporal-forces-75-162-4f6378de50,Temporal Forces,Cutiefly,75/162,542819,Cutiefly - 075/162,LINKED,1.00,cutiefly,cutiefly
+pkm-temporal-forces-79-162-f099e7a47b,Temporal Forces,Iron Valiant,79/162,542823,Iron Valiant - 079/162,LINKED,1.00,iron valiant,iron valiant
+pkm-temporal-forces-80-162-3af18c6ae3,Temporal Forces,Iron Valiant,80/162,542824,Iron Valiant - 080/162,LINKED,1.00,iron valiant,iron valiant
+pkm-temporal-forces-81-162-4eca2b0c86,Temporal Forces,Iron Crown ex,81/162,542825,Iron Crown ex - 081/162,LINKED,1.00,iron crown ex,iron crown ex
+pkm-temporal-forces-84-162-fb60b87835,Temporal Forces,Relicanth,84/162,542828,Relicanth - 084/162,LINKED,1.00,relicanth,relicanth
+pkm-temporal-forces-86-162-1c3423f81a,Temporal Forces,Excadrill,86/162,542830,Excadrill - 086/162,LINKED,1.00,excadrill,excadrill
+pkm-temporal-forces-92-162-5f93a84da4,Temporal Forces,Mudsdale,92/162,542836,Mudsdale - 092/162,LINKED,1.00,mudsdale,mudsdale
+pkm-temporal-forces-96-162-e5ef619963,Temporal Forces,Great Tusk,96/162,542840,Great Tusk - 096/162,LINKED,1.00,great tusk,great tusk
+pkm-temporal-forces-97-162-2cbac9fd3f,Temporal Forces,Great Tusk,97/162,542841,Great Tusk - 097/162,LINKED,1.00,great tusk,great tusk
+pkm-temporal-forces-99-162-73502225a5,Temporal Forces,Iron Boulder ex,99/162,542843,Iron Boulder ex - 099/162,LINKED,1.00,iron boulder ex,iron boulder ex
+pkm-temporal-forces-101-162-470feb253e,Temporal Forces,Arbok,101/162,542845,Arbok - 101/162,LINKED,1.00,arbok,arbok
+pkm-temporal-forces-102-162-b880ffa3e2,Temporal Forces,Gastly,102/162,542846,Gastly - 102/162,LINKED,1.00,gastly,gastly
+pkm-temporal-forces-104-162-812cc3340e,Temporal Forces,Gengar ex,104/162,542848,Gengar ex - 104/162,LINKED,1.00,gengar ex,gengar ex
+pkm-temporal-forces-108-162-3e4faee700,Temporal Forces,Farigiraf ex,108/162,542852,Farigiraf ex - 108/162,LINKED,1.00,farigiraf ex,farigiraf ex
+pkm-temporal-forces-111-162-260dce5f34,Temporal Forces,Scizor ex,111/162,542855,Scizor ex - 111/162,LINKED,1.00,scizor ex,scizor ex
+pkm-temporal-forces-115-162-2af05d1246,Temporal Forces,Metagross,115/162,542859,Metagross - 115/162,LINKED,1.00,metagross,metagross
+pkm-temporal-forces-116-162-c9505abbe1,Temporal Forces,Meltan,116/162,542860,Meltan - 116/162,LINKED,1.00,meltan,meltan
+pkm-temporal-forces-123-162-6583da19e2,Temporal Forces,Raging Bolt ex,123/162,542867,Raging Bolt ex - 123/162,LINKED,1.00,raging bolt ex,raging bolt ex
+pkm-temporal-forces-124-162-948eaa55c0,Temporal Forces,Lickitung,124/162,542868,Lickitung - 124/162,LINKED,1.00,lickitung,lickitung
+pkm-temporal-forces-132-162-9b4b41e699,Temporal Forces,Chatot,132/162,542876,Chatot - 132/162,LINKED,1.00,chatot,chatot
+pkm-temporal-forces-136-162-0468ecaf43,Temporal Forces,Minccino,136/162,542880,Minccino - 136/162,LINKED,1.00,minccino,minccino
+pkm-temporal-forces-137-162-d6150a2dd5,Temporal Forces,Cinccino,137/162,542881,Cinccino - 137/162,LINKED,1.00,cinccino,cinccino
+pkm-temporal-forces-138-162-38eea1375b,Temporal Forces,Drampa,138/162,542882,Drampa - 138/162,LINKED,1.00,drampa,drampa
+pkm-temporal-forces-140-162-4ebf1e01e1,Temporal Forces,Ancient Booster Energy Capsule,140/162,,,NO_CANDIDATE,
+pkm-temporal-forces-142-162-bc5fc987d0,Temporal Forces,Bianca's Devotion,142/162,542656,Bianca's Devotion - 142/162,LINKED,1.00,bianca s devotion,bianca s devotion
+pkm-temporal-forces-143-162-753351129a,Temporal Forces,Boxed Order,143/162,542657,Boxed Order,LINKED,1.00,boxed order,boxed order
+pkm-temporal-forces-145-162-289387e5b0,Temporal Forces,Ciphermaniac's Codebreaking,145/162,542660,Ciphermaniac's Codebreaking - 145/162,LINKED,1.00,ciphermaniac s codebreaking,ciphermaniac s codebreaking
+pkm-temporal-forces-146-162-f1aee08ad8,Temporal Forces,Eri,146/162,542661,Eri - 146/162,LINKED,1.00,eri,eri
+pkm-temporal-forces-147-162-6d3ca260ee,Temporal Forces,Explorer's Guidance,147/162,542662,Explorer's Guidance - 147/162,LINKED,1.00,explorer s guidance,explorer s guidance
+pkm-temporal-forces-149-162-6e16064301,Temporal Forces,Future Booster Energy Capsule,149/162,,,NO_CANDIDATE,
+pkm-temporal-forces-155-162-f1b99d6328,Temporal Forces,Morty's Conviction,155/162,542671,Morty's Conviction - 155/162,LINKED,1.00,morty s conviction,morty s conviction
+pkm-temporal-forces-160-162-c2f1f53b39,Temporal Forces,Salvatore,160/162,542679,Salvatore - 160/162,LINKED,1.00,salvatore,salvatore
+pkm-temporal-forces-163-162-377692dacc,Temporal Forces,Shiftry,163/162,542884,Shiftry - 163/162,LINKED,1.00,shiftry,shiftry
+pkm-temporal-forces-164-162-17ae144cb6,Temporal Forces,Grotle,164/162,542885,Grotle - 164/162,LINKED,1.00,grotle,grotle
+pkm-temporal-forces-165-162-4864e51e7c,Temporal Forces,Deerling,165/162,542886,Deerling - 165/162,LINKED,1.00,deerling,deerling
+pkm-temporal-forces-166-162-172910ab2d,Temporal Forces,Sawsbuck,166/162,542887,Sawsbuck - 166/162,LINKED,1.00,sawsbuck,sawsbuck
+pkm-temporal-forces-167-162-f5c484c95d,Temporal Forces,Litten,167/162,542888,Litten - 167/162,LINKED,1.00,litten,litten
+pkm-temporal-forces-168-162-b69f1d58cb,Temporal Forces,Snom,168/162,542889,Snom - 168/162,LINKED,1.00,snom,snom
+pkm-temporal-forces-169-162-6667719b08,Temporal Forces,Charjabug,169/162,542890,Charjabug - 169/162,LINKED,1.00,charjabug,charjabug
+pkm-temporal-forces-170-162-dd6bf5661b,Temporal Forces,Bronzor,170/162,542891,Bronzor - 170/162,LINKED,1.00,bronzor,bronzor
+pkm-temporal-forces-171-162-f0606c2eb7,Temporal Forces,Reuniclus,171/162,542892,Reuniclus - 171/162,LINKED,1.00,reuniclus,reuniclus
+pkm-temporal-forces-172-162-0e06f464f0,Temporal Forces,Cutiefly,172/162,542893,Cutiefly - 172/162,LINKED,1.00,cutiefly,cutiefly
+pkm-temporal-forces-173-162-f8f1bac2b7,Temporal Forces,Relicanth,173/162,542894,Relicanth - 173/162,LINKED,1.00,relicanth,relicanth
+pkm-temporal-forces-174-162-1695b89f4c,Temporal Forces,Excadrill,174/162,542895,Excadrill - 174/162,LINKED,1.00,excadrill,excadrill
+pkm-temporal-forces-175-162-422d2dd64a,Temporal Forces,Mudsdale,175/162,542896,Mudsdale - 175/162,LINKED,1.00,mudsdale,mudsdale
+pkm-temporal-forces-176-162-7a12cd7218,Temporal Forces,Arbok,176/162,542897,Arbok - 176/162,LINKED,1.00,arbok,arbok
+pkm-temporal-forces-177-162-474ce1fd5d,Temporal Forces,Gastly,177/162,542898,Gastly - 177/162,LINKED,1.00,gastly,gastly
+pkm-temporal-forces-178-162-b89feafd9d,Temporal Forces,Metagross,178/162,542899,Metagross - 178/162,LINKED,1.00,metagross,metagross
+pkm-temporal-forces-179-162-dfc3e4f3fc,Temporal Forces,Meltan,179/162,542900,Meltan - 179/162,LINKED,1.00,meltan,meltan
+pkm-temporal-forces-180-162-d7ba16b728,Temporal Forces,Lickitung,180/162,542901,Lickitung - 180/162,LINKED,1.00,lickitung,lickitung
+pkm-temporal-forces-181-162-8366164e08,Temporal Forces,Chatot,181/162,542902,Chatot - 181/162,LINKED,1.00,chatot,chatot
+pkm-temporal-forces-182-162-1f6f82193b,Temporal Forces,Minccino,182/162,542903,Minccino - 182/162,LINKED,1.00,minccino,minccino
+pkm-temporal-forces-183-162-bf00134a5b,Temporal Forces,Cinccino,183/162,542904,Cinccino - 183/162,LINKED,1.00,cinccino,cinccino
+pkm-temporal-forces-184-162-33ee3b162c,Temporal Forces,Drampa,184/162,542905,Drampa - 184/162,LINKED,1.00,drampa,drampa
+pkm-temporal-forces-185-162-060c080c60,Temporal Forces,Torterra ex,185/162,542906,Torterra ex - 185/162,LINKED,1.00,torterra ex,torterra ex
+pkm-temporal-forces-186-162-cb7b3db157,Temporal Forces,Iron Leaves ex,186/162,542907,Iron Leaves ex - 186/162,LINKED,1.00,iron leaves ex,iron leaves ex
+pkm-temporal-forces-187-162-d4905daafb,Temporal Forces,Incineroar ex,187/162,542908,Incineroar ex - 187/162,LINKED,1.00,incineroar ex,incineroar ex
+pkm-temporal-forces-188-162-f23875b58f,Temporal Forces,Gouging Fire ex,188/162,542909,Gouging Fire ex - 188/162,LINKED,1.00,gouging fire ex,gouging fire ex
+pkm-temporal-forces-189-162-a110b36215,Temporal Forces,Walking Wake ex,189/162,542910,Walking Wake ex - 189/162,LINKED,1.00,walking wake ex,walking wake ex
+pkm-temporal-forces-190-162-d286a09653,Temporal Forces,Wugtrio ex,190/162,542911,Wugtrio ex - 190/162,LINKED,1.00,wugtrio ex,wugtrio ex
+pkm-temporal-forces-191-162-a22961d4dc,Temporal Forces,Iron Crown ex,191/162,542912,Iron Crown ex - 191/162,LINKED,1.00,iron crown ex,iron crown ex
+pkm-temporal-forces-192-162-ff8c5ef689,Temporal Forces,Iron Boulder ex,192/162,542913,Iron Boulder ex - 192/162,LINKED,1.00,iron boulder ex,iron boulder ex
+pkm-temporal-forces-193-162-6724b497fc,Temporal Forces,Gengar ex,193/162,542914,Gengar ex - 193/162,LINKED,1.00,gengar ex,gengar ex
+pkm-temporal-forces-194-162-f557916f18,Temporal Forces,Farigiraf ex,194/162,542915,Farigiraf ex - 194/162,LINKED,1.00,farigiraf ex,farigiraf ex
+pkm-temporal-forces-195-162-eb5b22e640,Temporal Forces,Scizor ex,195/162,542916,Scizor ex - 195/162,LINKED,1.00,scizor ex,scizor ex
+pkm-temporal-forces-196-162-01a41c522b,Temporal Forces,Raging Bolt ex,196/162,542917,Raging Bolt ex - 196/162,LINKED,1.00,raging bolt ex,raging bolt ex
+pkm-temporal-forces-197-162-2857f9ee0d,Temporal Forces,Bianca's Devotion,197/162,542918,Bianca's Devotion - 197/162,LINKED,1.00,bianca s devotion,bianca s devotion
+pkm-temporal-forces-198-162-7adcbcc796,Temporal Forces,Ciphermaniac's Codebreaking,198/162,542919,Ciphermaniac's Codebreaking - 198/162,LINKED,1.00,ciphermaniac s codebreaking,ciphermaniac s codebreaking
+pkm-temporal-forces-199-162-7ab61d1ab1,Temporal Forces,Eri,199/162,542920,Eri - 199/162,LINKED,1.00,eri,eri
+pkm-temporal-forces-200-162-25de644402,Temporal Forces,Explorer's Guidance,200/162,542921,Explorer's Guidance - 200/162,LINKED,1.00,explorer s guidance,explorer s guidance
+pkm-temporal-forces-201-162-cbaae40130,Temporal Forces,Morty's Conviction,201/162,542922,Morty's Conviction - 201/162,LINKED,1.00,morty s conviction,morty s conviction
+pkm-temporal-forces-202-162-25cd1a5913,Temporal Forces,Salvatore,202/162,542923,Salvatore - 202/162,LINKED,1.00,salvatore,salvatore
+pkm-temporal-forces-203-162-b434980ed2,Temporal Forces,Iron Leaves ex,203/162,542924,Iron Leaves ex - 203/162,LINKED,1.00,iron leaves ex,iron leaves ex
+pkm-temporal-forces-204-162-5b1fa3801d,Temporal Forces,Gouging Fire ex,204/162,542925,Gouging Fire ex - 204/162,LINKED,1.00,gouging fire ex,gouging fire ex
+pkm-temporal-forces-205-162-75d0981469,Temporal Forces,Walking Wake ex,205/162,542926,Walking Wake ex - 205/162,LINKED,1.00,walking wake ex,walking wake ex
+pkm-temporal-forces-206-162-179e8ee9f7,Temporal Forces,Iron Crown ex,206/162,542927,Iron Crown ex - 206/162,LINKED,1.00,iron crown ex,iron crown ex
+pkm-temporal-forces-207-162-f788005777,Temporal Forces,Iron Boulder ex,207/162,542928,Iron Boulder ex - 207/162,LINKED,1.00,iron boulder ex,iron boulder ex
+pkm-temporal-forces-208-162-9c4b9613a6,Temporal Forces,Raging Bolt ex,208/162,542929,Raging Bolt ex - 208/162,LINKED,1.00,raging bolt ex,raging bolt ex
+pkm-temporal-forces-209-162-9b6b94f1b7,Temporal Forces,Bianca's Devotion,209/162,542930,Bianca's Devotion - 209/162,LINKED,1.00,bianca s devotion,bianca s devotion
+pkm-temporal-forces-210-162-186695af88,Temporal Forces,Eri,210/162,542931,Eri - 210/162,LINKED,1.00,eri,eri
+pkm-temporal-forces-211-162-f4a3becb82,Temporal Forces,Morty's Conviction,211/162,542932,Morty's Conviction - 211/162,LINKED,1.00,morty s conviction,morty s conviction
+pkm-temporal-forces-212-162-f937e78b07,Temporal Forces,Salvatore,212/162,542933,Salvatore - 212/162,LINKED,1.00,salvatore,salvatore
+pkm-temporal-forces-213-162-5d9b54a94d,Temporal Forces,Iron Leaves ex,213/162,542934,Iron Leaves ex - 213/162,LINKED,1.00,iron leaves ex,iron leaves ex
+pkm-temporal-forces-214-162-e9c1b551b6,Temporal Forces,Gouging Fire ex,214/162,542935,Gouging Fire ex - 214/162,LINKED,1.00,gouging fire ex,gouging fire ex
+pkm-temporal-forces-215-162-ab1ab6138f,Temporal Forces,Walking Wake ex,215/162,542936,Walking Wake ex - 215/162,LINKED,1.00,walking wake ex,walking wake ex
+pkm-temporal-forces-216-162-ea5946e84a,Temporal Forces,Iron Crown ex,216/162,542937,Iron Crown ex - 216/162,LINKED,1.00,iron crown ex,iron crown ex
+pkm-temporal-forces-217-162-89240bf7ce,Temporal Forces,Iron Boulder ex,217/162,542938,Iron Boulder ex - 217/162,LINKED,1.00,iron boulder ex,iron boulder ex
+pkm-temporal-forces-218-162-624e2c0c30,Temporal Forces,Raging Bolt ex,218/162,542939,Raging Bolt ex - 218/162,LINKED,1.00,raging bolt ex,raging bolt ex
+pkm-twilight-masquerade-3-167-c5a0252b40,Twilight Masquerade,Pinsir,3/167,550047,Pinsir - 003/167,LINKED,1.00,pinsir,pinsir
+pkm-twilight-masquerade-7-167-12c227b8fb,Twilight Masquerade,Sunflora,7/167,550051,Sunflora - 007/167,LINKED,1.00,sunflora,sunflora
+pkm-twilight-masquerade-17-167-9e1409480d,Twilight Masquerade,Applin,17/167,550061,Applin - 017/167,LINKED,1.00,applin,applin
+pkm-twilight-masquerade-18-167-6c1cb7128f,Twilight Masquerade,Dipplin,18/167,550062,Dipplin - 018/167,LINKED,1.00,dipplin,dipplin
+pkm-twilight-masquerade-20-167-d24c417923,Twilight Masquerade,Poltchageist,20/167,550064,Poltchageist - 020/167,LINKED,1.00,poltchageist,poltchageist
+pkm-twilight-masquerade-21-167-5319a7d52f,Twilight Masquerade,Poltchageist,21/167,550065,Poltchageist - 021/167,LINKED,1.00,poltchageist,poltchageist
+pkm-twilight-masquerade-23-167-b5016c3f40,Twilight Masquerade,Sinistcha ex,23/167,550067,Sinistcha ex - 023/167,LINKED,1.00,sinistcha ex,sinistcha ex
+pkm-twilight-masquerade-25-167-f8a1f69574,Twilight Masquerade,Teal Mask Ogerpon ex,25/167,550069,Teal Mask Ogerpon ex - 025/167,LINKED,1.00,teal mask ogerpon ex,teal mask ogerpon ex
+pkm-twilight-masquerade-29-167-146af8f325,Twilight Masquerade,Magcargo ex,29/167,550073,Magcargo ex - 029/167,LINKED,1.00,magcargo ex,magcargo ex
+pkm-twilight-masquerade-30-167-4a440ba929,Twilight Masquerade,Torkoal,30/167,550074,Torkoal - 030/167,LINKED,1.00,torkoal,torkoal
+pkm-twilight-masquerade-33-167-5d9f1b3597,Twilight Masquerade,Infernape,33/167,550077,Infernape - 033/167,LINKED,1.00,infernape,infernape
+pkm-twilight-masquerade-40-167-7fca775179,Twilight Masquerade,Hearthflame Mask Ogerpon ex,40/167,550084,Hearthflame Mask Ogerpon ex - 040/167,LINKED,1.00,hearthflame mask ogerpon ex,hearthflame mask ogerpon ex
+pkm-twilight-masquerade-53-167-a1c8b3587a,Twilight Masquerade,Froslass,53/167,550097,Froslass - 053/167,LINKED,1.00,froslass,froslass
+pkm-twilight-masquerade-55-167-cd73b34f94,Twilight Masquerade,Phione,55/167,550099,Phione - 055/167,LINKED,1.00,phione,phione
+pkm-twilight-masquerade-58-167-96785a2725,Twilight Masquerade,Cramorant,58/167,550102,Cramorant - 058/167,LINKED,1.00,cramorant,cramorant
+pkm-twilight-masquerade-61-167-11d2b0ae05,Twilight Masquerade,Palafin ex,61/167,550105,Palafin ex - 061/167,LINKED,1.00,palafin ex,palafin ex
+pkm-twilight-masquerade-62-167-ed7db7f20c,Twilight Masquerade,Iron Bundle,62/167,,,NO_CANDIDATE,
+pkm-twilight-masquerade-64-167-838129220b,Twilight Masquerade,Wellspring Mask Ogerpon ex,64/167,550108,Wellspring Mask Ogerpon ex - 064/167,LINKED,1.00,wellspring mask ogerpon ex,wellspring mask ogerpon ex
+pkm-twilight-masquerade-68-167-3643282240,Twilight Masquerade,Luxray ex,68/167,550112,Luxray ex - 068/167,LINKED,1.00,luxray ex,luxray ex
+pkm-twilight-masquerade-71-167-50cbb52f73,Twilight Masquerade,Heliolisk,71/167,550115,Heliolisk - 071/167,LINKED,1.00,heliolisk,heliolisk
+pkm-twilight-masquerade-75-167-1db1c21634,Twilight Masquerade,Wattrel,75/167,550119,Wattrel - 075/167,LINKED,1.00,wattrel,wattrel
+pkm-twilight-masquerade-77-167-150eb4abf1,Twilight Masquerade,Iron Thorns ex,77/167,550121,Iron Thorns ex - 077/167,LINKED,1.00,iron thorns ex,iron thorns ex
+pkm-twilight-masquerade-85-167-0b1bf61532,Twilight Masquerade,Chimecho,85/167,550129,Chimecho - 085/167,LINKED,1.00,chimecho,chimecho
+pkm-twilight-masquerade-86-167-f2d12b3262,Twilight Masquerade,Flabébé,86/167,550130,Flabebe,SKIP_NAME_MISMATCH,0.00,flab b,flabebe
+pkm-twilight-masquerade-93-167-5a75eab167,Twilight Masquerade,Enamorus,93/167,550137,Enamorus - 093/167,LINKED,1.00,enamorus,enamorus
+pkm-twilight-masquerade-94-167-ef663464d7,Twilight Masquerade,Scream Tail ex,94/167,550138,Scream Tail ex - 094/167,LINKED,1.00,scream tail ex,scream tail ex
+pkm-twilight-masquerade-99-167-a6e18081cd,Twilight Masquerade,Hisuian Growlithe,99/167,550143,Hisuian Growlithe - 099/167,LINKED,1.00,hisuian growlithe,hisuian growlithe
+pkm-twilight-masquerade-102-167-9336d387cd,Twilight Masquerade,Probopass,102/167,550146,Probopass - 102/167,LINKED,1.00,probopass,probopass
+pkm-twilight-masquerade-103-167-c02e37c8f5,Twilight Masquerade,Timburr,103/167,550147,Timburr - 103/167,LINKED,1.00,timburr,timburr
+pkm-twilight-masquerade-106-167-ff6b1c93ab,Twilight Masquerade,Greninja ex,106/167,550150,Greninja ex - 106/167,LINKED,1.00,greninja ex,greninja ex
+pkm-twilight-masquerade-110-167-cbc12b0f62,Twilight Masquerade,Ting-Lu,110/167,,,NO_CANDIDATE,
+pkm-twilight-masquerade-112-167-d289ad41ab,Twilight Masquerade,Cornerstone Mask Ogerpon ex,112/167,550156,Cornerstone Mask Ogerpon ex - 112/167,LINKED,1.00,cornerstone mask ogerpon ex,cornerstone mask ogerpon ex
+pkm-twilight-masquerade-121-167-2b843b66d3,Twilight Masquerade,Lairon,121/167,550165,Lairon - 121/167,LINKED,1.00,lairon,lairon
+pkm-twilight-masquerade-126-167-3240480228,Twilight Masquerade,Applin,126/167,550170,Applin - 126/167,LINKED,1.00,applin,applin
+pkm-twilight-masquerade-127-167-2b16a469a2,Twilight Masquerade,Dipplin,127/167,550171,Dipplin - 127/167,LINKED,1.00,dipplin,dipplin
+pkm-twilight-masquerade-130-167-5ebebf3d20,Twilight Masquerade,Dragapult ex,130/167,550174,Dragapult ex - 130/167,LINKED,1.00,dragapult ex,dragapult ex
+pkm-twilight-masquerade-131-167-cecae1741a,Twilight Masquerade,Tatsugiri,131/167,550175,Tatsugiri - 131/167,LINKED,1.00,tatsugiri,tatsugiri
+pkm-twilight-masquerade-133-167-95de90e887,Twilight Masquerade,Chansey,133/167,550177,Chansey - 133/167,LINKED,1.00,chansey,chansey
+pkm-twilight-masquerade-134-167-e01c9bb58c,Twilight Masquerade,Blissey ex,134/167,550178,Blissey ex - 134/167,LINKED,1.00,blissey ex,blissey ex
+pkm-twilight-masquerade-135-167-d6bebe0c30,Twilight Masquerade,Eevee,135/167,550179,Eevee - 135/167,LINKED,1.00,eevee,eevee
+pkm-twilight-masquerade-141-167-30d4c76599,Twilight Masquerade,Bloodmoon Ursaluna ex,141/167,550185,Bloodmoon Ursaluna ex - 141/167,LINKED,1.00,bloodmoon ursaluna ex,bloodmoon ursaluna ex
+pkm-twilight-masquerade-144-167-d29d8b0cd7,Twilight Masquerade,Caretaker,144/167,550188,Caretaker - 144/167,LINKED,1.00,caretaker,caretaker
+pkm-twilight-masquerade-145-167-4915e31f76,Twilight Masquerade,Carmine,145/167,550189,Carmine - 145/167,LINKED,1.00,carmine,carmine
+pkm-twilight-masquerade-148-167-78c9cc63ed,Twilight Masquerade,Enhanced Hammer,148/167,550192,Enhanced Hammer - 148/167,LINKED,1.00,enhanced hammer,enhanced hammer
+pkm-twilight-masquerade-151-167-4a32ea5194,Twilight Masquerade,Hassel,151/167,550195,Hassel - 151/167,LINKED,1.00,hassel,hassel
+pkm-twilight-masquerade-154-167-e9d4def992,Twilight Masquerade,Kieran,154/167,550198,Kieran - 154/167,LINKED,1.00,kieran,kieran
+pkm-twilight-masquerade-155-167-c22857cabe,Twilight Masquerade,Lana's Aid,155/167,550199,Lana's Aid - 155/167,LINKED,1.00,lana s aid,lana s aid
+pkm-twilight-masquerade-157-167-f294edd0c9,Twilight Masquerade,Lucian,157/167,550201,Lucian - 157/167,LINKED,1.00,lucian,lucian
+pkm-twilight-masquerade-160-167-17541438dc,Twilight Masquerade,Perrin,160/167,550204,Perrin - 160/167,LINKED,1.00,perrin,perrin
+pkm-twilight-masquerade-163-167-2a28359ea6,Twilight Masquerade,Secret Box,163/167,550207,Secret Box,LINKED,1.00,box,box
+pkm-twilight-masquerade-168-167-c03bc475ac,Twilight Masquerade,Pinsir,168/167,550212,Pinsir - 168/167,LINKED,1.00,pinsir,pinsir
+pkm-twilight-masquerade-169-167-8320c41f42,Twilight Masquerade,Sunflora,169/167,550213,Sunflora - 169/167,LINKED,1.00,sunflora,sunflora
+pkm-twilight-masquerade-170-167-4c3bd02291,Twilight Masquerade,Dipplin,170/167,550214,Dipplin - 170/167,LINKED,1.00,dipplin,dipplin
+pkm-twilight-masquerade-171-167-87cac23446,Twilight Masquerade,Poltchageist,171/167,550215,Poltchageist - 171/167,LINKED,1.00,poltchageist,poltchageist
+pkm-twilight-masquerade-172-167-19508138cd,Twilight Masquerade,Torkoal,172/167,550216,Torkoal - 172/167,LINKED,1.00,torkoal,torkoal
+pkm-twilight-masquerade-173-167-d79d3de8e3,Twilight Masquerade,Infernape,173/167,550217,Infernape - 173/167,LINKED,1.00,infernape,infernape
+pkm-twilight-masquerade-174-167-47659ac83a,Twilight Masquerade,Froslass,174/167,550218,Froslass - 174/167,LINKED,1.00,froslass,froslass
+pkm-twilight-masquerade-175-167-b3e8e6e1a1,Twilight Masquerade,Phione,175/167,550219,Phione - 175/167,LINKED,1.00,phione,phione
+pkm-twilight-masquerade-176-167-3b67e703b1,Twilight Masquerade,Cramorant,176/167,550220,Cramorant - 176/167,LINKED,1.00,cramorant,cramorant
+pkm-twilight-masquerade-177-167-9a6c90de6a,Twilight Masquerade,Heliolisk,177/167,550221,Heliolisk - 177/167,LINKED,1.00,heliolisk,heliolisk
+pkm-twilight-masquerade-178-167-67276d858b,Twilight Masquerade,Wattrel,178/167,550222,Wattrel - 178/167,LINKED,1.00,wattrel,wattrel
+pkm-twilight-masquerade-179-167-041c983d4f,Twilight Masquerade,Chimecho,179/167,550223,Chimecho - 179/167,LINKED,1.00,chimecho,chimecho
+pkm-twilight-masquerade-180-167-6172300721,Twilight Masquerade,Enamorus,180/167,550224,Enamorus - 180/167,LINKED,1.00,enamorus,enamorus
+pkm-twilight-masquerade-181-167-e74a2983c8,Twilight Masquerade,Hisuian Growlithe,181/167,550225,Hisuian Growlithe - 181/167,LINKED,1.00,hisuian growlithe,hisuian growlithe
+pkm-twilight-masquerade-182-167-48e2869944,Twilight Masquerade,Probopass,182/167,550226,Probopass - 182/167,LINKED,1.00,probopass,probopass
+pkm-twilight-masquerade-183-167-9ba5695429,Twilight Masquerade,Timburr,183/167,550227,Timburr - 183/167,LINKED,1.00,timburr,timburr
+pkm-twilight-masquerade-184-167-630e16b1d5,Twilight Masquerade,Lairon,184/167,550228,Lairon - 184/167,LINKED,1.00,lairon,lairon
+pkm-twilight-masquerade-185-167-262ed5b7f0,Twilight Masquerade,Applin,185/167,550229,Applin - 185/167,LINKED,1.00,applin,applin
+pkm-twilight-masquerade-186-167-6a2bbb8dac,Twilight Masquerade,Tatsugiri,186/167,550230,Tatsugiri - 186/167,LINKED,1.00,tatsugiri,tatsugiri
+pkm-twilight-masquerade-187-167-66e0fff7c0,Twilight Masquerade,Chansey,187/167,550231,Chansey - 187/167,LINKED,1.00,chansey,chansey
+pkm-twilight-masquerade-188-167-addb482096,Twilight Masquerade,Eevee,188/167,550232,Eevee - 188/167,LINKED,1.00,eevee,eevee
+pkm-twilight-masquerade-189-167-4bde1925d0,Twilight Masquerade,Sinistcha ex,189/167,550233,Sinistcha ex - 189/167,LINKED,1.00,sinistcha ex,sinistcha ex
+pkm-twilight-masquerade-190-167-8ea0ad30a4,Twilight Masquerade,Teal Mask Ogerpon ex,190/167,550234,Teal Mask Ogerpon ex - 190/167,LINKED,1.00,teal mask ogerpon ex,teal mask ogerpon ex
+pkm-twilight-masquerade-191-167-1e882be066,Twilight Masquerade,Magcargo ex,191/167,550235,Magcargo ex - 191/167,LINKED,1.00,magcargo ex,magcargo ex
+pkm-twilight-masquerade-192-167-be2cb09f5a,Twilight Masquerade,Hearthflame Mask Ogerpon ex,192/167,550236,Hearthflame Mask Ogerpon ex - 192/167,LINKED,1.00,hearthflame mask ogerpon ex,hearthflame mask ogerpon ex
+pkm-twilight-masquerade-193-167-e64ed6cc59,Twilight Masquerade,Palafin ex,193/167,550237,Palafin ex - 193/167,LINKED,1.00,palafin ex,palafin ex
+pkm-twilight-masquerade-194-167-7fe015c12f,Twilight Masquerade,Wellspring Mask Ogerpon ex,194/167,550238,Wellspring Mask Ogerpon ex - 194/167,LINKED,1.00,wellspring mask ogerpon ex,wellspring mask ogerpon ex
+pkm-twilight-masquerade-195-167-3be23453d7,Twilight Masquerade,Luxray ex,195/167,550239,Luxray ex - 195/167,LINKED,1.00,luxray ex,luxray ex
+pkm-twilight-masquerade-196-167-7546726bde,Twilight Masquerade,Iron Thorns ex,196/167,550240,Iron Thorns ex - 196/167,LINKED,1.00,iron thorns ex,iron thorns ex
+pkm-twilight-masquerade-197-167-9b60e01919,Twilight Masquerade,Scream Tail ex,197/167,550241,Scream Tail ex - 197/167,LINKED,1.00,scream tail ex,scream tail ex
+pkm-twilight-masquerade-198-167-0a41848f79,Twilight Masquerade,Greninja ex,198/167,550242,Greninja ex - 198/167,LINKED,1.00,greninja ex,greninja ex
+pkm-twilight-masquerade-199-167-a1e568a52b,Twilight Masquerade,Cornerstone Mask Ogerpon ex,199/167,550243,Cornerstone Mask Ogerpon ex - 199/167,LINKED,1.00,cornerstone mask ogerpon ex,cornerstone mask ogerpon ex
+pkm-twilight-masquerade-200-167-b89c3ddfb1,Twilight Masquerade,Dragapult ex,200/167,550244,Dragapult ex - 200/167,LINKED,1.00,dragapult ex,dragapult ex
+pkm-twilight-masquerade-201-167-a8bcbf50b6,Twilight Masquerade,Blissey ex,201/167,550245,Blissey ex - 201/167,LINKED,1.00,blissey ex,blissey ex
+pkm-twilight-masquerade-202-167-d187a7c06b,Twilight Masquerade,Bloodmoon Ursaluna ex,202/167,550246,Bloodmoon Ursaluna ex - 202/167,LINKED,1.00,bloodmoon ursaluna ex,bloodmoon ursaluna ex
+pkm-twilight-masquerade-203-167-aebd969044,Twilight Masquerade,Caretaker,203/167,550247,Caretaker - 203/167,LINKED,1.00,caretaker,caretaker
+pkm-twilight-masquerade-204-167-e83bbc5974,Twilight Masquerade,Carmine,204/167,550248,Carmine - 204/167,LINKED,1.00,carmine,carmine
+pkm-twilight-masquerade-205-167-b51ae50cde,Twilight Masquerade,Hassel,205/167,550249,Hassel - 205/167,LINKED,1.00,hassel,hassel
+pkm-twilight-masquerade-206-167-c96f018132,Twilight Masquerade,Kieran,206/167,550250,Kieran - 206/167,LINKED,1.00,kieran,kieran
+pkm-twilight-masquerade-207-167-a518c2fe44,Twilight Masquerade,Lana's Aid,207/167,550251,Lana's Aid - 207/167,LINKED,1.00,lana s aid,lana s aid
+pkm-twilight-masquerade-208-167-73e1a3af6e,Twilight Masquerade,Lucian,208/167,550252,Lucian - 208/167,LINKED,1.00,lucian,lucian
+pkm-twilight-masquerade-209-167-8e028b12ac,Twilight Masquerade,Perrin,209/167,550253,Perrin - 209/167,LINKED,1.00,perrin,perrin
+pkm-twilight-masquerade-210-167-5d40ce85d1,Twilight Masquerade,Sinistcha ex,210/167,550254,Sinistcha ex - 210/167,LINKED,1.00,sinistcha ex,sinistcha ex
+pkm-twilight-masquerade-211-167-5afb8112d2,Twilight Masquerade,Teal Mask Ogerpon ex,211/167,550255,Teal Mask Ogerpon ex - 211/167,LINKED,1.00,teal mask ogerpon ex,teal mask ogerpon ex
+pkm-twilight-masquerade-212-167-5efbc67636,Twilight Masquerade,Hearthflame Mask Ogerpon ex,212/167,550256,Hearthflame Mask Ogerpon ex - 212/167,LINKED,1.00,hearthflame mask ogerpon ex,hearthflame mask ogerpon ex
+pkm-twilight-masquerade-213-167-fd3cb8e7f4,Twilight Masquerade,Wellspring Mask Ogerpon ex,213/167,550257,Wellspring Mask Ogerpon ex - 213/167,LINKED,1.00,wellspring mask ogerpon ex,wellspring mask ogerpon ex
+pkm-twilight-masquerade-214-167-d69cb475d1,Twilight Masquerade,Greninja ex,214/167,550258,Greninja ex - 214/167,LINKED,1.00,greninja ex,greninja ex
+pkm-twilight-masquerade-215-167-d923f49b41,Twilight Masquerade,Cornerstone Mask Ogerpon ex,215/167,550259,Cornerstone Mask Ogerpon ex - 215/167,LINKED,1.00,cornerstone mask ogerpon ex,cornerstone mask ogerpon ex
+pkm-twilight-masquerade-216-167-933c789c14,Twilight Masquerade,Bloodmoon Ursaluna ex,216/167,550260,Bloodmoon Ursaluna ex - 216/167,LINKED,1.00,bloodmoon ursaluna ex,bloodmoon ursaluna ex
+pkm-twilight-masquerade-217-167-0e4304ad5b,Twilight Masquerade,Carmine,217/167,550261,Carmine - 217/167,LINKED,1.00,carmine,carmine
+pkm-twilight-masquerade-218-167-9f8e80cf37,Twilight Masquerade,Kieran,218/167,550262,Kieran - 218/167,LINKED,1.00,kieran,kieran
+pkm-twilight-masquerade-219-167-2ad5382f82,Twilight Masquerade,Lana's Aid,219/167,550263,Lana's Aid - 219/167,LINKED,1.00,lana s aid,lana s aid
+pkm-twilight-masquerade-220-167-70f88b9a1e,Twilight Masquerade,Perrin,220/167,550264,Perrin - 220/167,LINKED,1.00,perrin,perrin
+pkm-twilight-masquerade-221-167-762e4fd446,Twilight Masquerade,Teal Mask Ogerpon ex,221/167,550265,Teal Mask Ogerpon ex - 221/167,LINKED,1.00,teal mask ogerpon ex,teal mask ogerpon ex
+pkm-twilight-masquerade-222-167-3703c87d2b,Twilight Masquerade,Bloodmoon Ursaluna ex,222/167,550266,Bloodmoon Ursaluna ex - 222/167,LINKED,1.00,bloodmoon ursaluna ex,bloodmoon ursaluna ex
+pkm-twilight-masquerade-224-167-c0f00c2ade,Twilight Masquerade,Enhanced Hammer,224/167,550268,Enhanced Hammer - 224/167,LINKED,1.00,enhanced hammer,enhanced hammer

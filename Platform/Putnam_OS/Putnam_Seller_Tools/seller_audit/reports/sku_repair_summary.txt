@@ -1,0 +1,24 @@
+Putnam Seller Tools - SKU Repair Planner v1.1
+Timestamp: 2026-06-28T13:23:27
+Audit reports folder: C:\Users\user\OneDrive\PutnamCollectibles\Putnam_Seller_Tools\seller_audit\reports
+Default location prefix: ETB-01-A
+
+Rows in repair plan: 687
+Safe repair rows: 211
+Manual review rows: 476
+Missing SKU rows: 185
+Date-style batch label rows: 26
+Possible card-specific identifier rows preserved: 476
+Duplicate item ID rows: 10
+Duplicate proposed SKU rows: 0
+eBay bulk revise rows written: 211
+
+Outputs:
+- sku_repair_plan.csv
+- sku_repair_summary.txt
+- ebay_bulk_revise_sku_repair.csv
+
+Recommended next actions:
+- Review all manual_review rows before any eBay bulk upload.
+- Spot-check generated ETB sequence values against physical inventory location.
+- Upload ebay_bulk_revise_sku_repair.csv only after review.

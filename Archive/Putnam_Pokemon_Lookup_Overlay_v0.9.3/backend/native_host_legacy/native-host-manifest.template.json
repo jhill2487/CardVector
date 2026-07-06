@@ -1,0 +1,9 @@
+{
+  "name": "com.putnam.pokemon_watcher",
+  "description": "Putnam Pokemon Watcher Native Messaging Host",
+  "path": "__HOST_BAT_PATH__",
+  "type": "stdio",
+  "allowed_origins": [
+    "chrome-extension://__EXTENSION_ID__/"
+  ]
+}

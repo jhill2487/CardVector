@@ -1,0 +1,37 @@
+v0.7.1 Generic Multi-Variant Auto-Linker
+
+Major Features
+--------------
+- Multi-product card linking architecture
+- Ascended Heroes variant support
+- Generic set+number+base-name linker
+- Variant-aware price cards
+- Friend Ball support
+- Energy Symbol Pattern support
+- Poke Ball support
+- Multiple TCGplayer products per Putnam card
+
+UI Improvements
+---------------
+- NM / LP / MP compact pricing
+- Live price loading queue
+- Enter closes autocomplete
+- Search button closes autocomplete
+- Arrow-key suggestion navigation
+- ESC closes suggestions
+- Improved compact price card layout
+
+Bug Fixes
+---------
+- visual_index_rows config bug
+- multi-product match table support
+- variant label rendering
+- Ascended Heroes missing image/price links
+
+Validation
+----------
+✓ Pikachu 55/217
+✓ Erika's Oddish 1/217
+✓ Multiple variant rows rendering
+✓ Live pricing
+✓ Thumbnail loading

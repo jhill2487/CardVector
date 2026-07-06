@@ -1,0 +1,436 @@
+from __future__ import annotations
+
+import argparse
+import os
+import re
+from datetime import datetime
+from pathlib import Path
+
+import pandas as pd
+
+
+APP_NAME = "Putnam Seller Audit"
+VERSION = "1.0"
+
+SHIPPING_COLUMN_HINTS = [
+    "shipping",
+    "shipping policy",
+    "domestic shipping",
+    "shipping service",
+    "shipping cost",
+]
+FREE_SHIPPING_PATTERN = re.compile(
+    r"\b(free|seller\s+pays|seller\s+paid|no\s+shipping\s+charge)\b",
+    re.IGNORECASE,
+)
+WAREHOUSE_RE = re.compile(r"^ETB-\d{2}-[A-Za-z]$")
+
+
+def project_root() -> Path:
+    user_profile = os.environ.get("USERPROFILE")
+    if user_profile:
+        return Path(user_profile) / "OneDrive" / "PutnamCollectibles"
+    return Path.cwd()
+
+
+def default_input_folder() -> Path:
+    return project_root() / "eBay Store Items"
+
+
+def default_output_folder() -> Path:
+    return project_root() / "Putnam_Seller_Tools" / "seller_audit" / "reports"
+
+
+def normalize_name(value: str) -> str:
+    return "".join(ch for ch in str(value).lower().strip() if ch.isalnum())
+
+
+def latest_csv(folder: Path) -> Path:
+    csvs = [p for p in folder.glob("*.csv") if p.is_file()]
+    if not csvs:
+        raise FileNotFoundError(f"No CSV files found in: {folder}")
+    return max(csvs, key=lambda p: p.stat().st_mtime)
+
+
+def read_csv(path: Path) -> pd.DataFrame:
+    for encoding in ("utf-8-sig", "utf-8", "cp1252"):
+        try:
+            return pd.read_csv(path, dtype=str, keep_default_na=False, encoding=encoding)
+        except UnicodeDecodeError:
+            continue
+    return pd.read_csv(path, dtype=str, keep_default_na=False, encoding="utf-8-sig", encoding_errors="replace")
+
+
+def write_report(path: Path, df: pd.DataFrame) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    df.to_csv(path, index=False, encoding="utf-8-sig")
+
+
+def available_columns_note(df: pd.DataFrame) -> str:
+    return ", ".join(str(c) for c in df.columns)
+
+
+def columns_containing(df: pd.DataFrame, hints: list[str]) -> list[str]:
+    out: list[str] = []
+    lowered_hints = [hint.lower() for hint in hints]
+    for col in df.columns:
+        low = str(col).lower()
+        if any(hint in low for hint in lowered_hints):
+            out.append(str(col))
+    return out
+
+
+def find_title_column(df: pd.DataFrame) -> str | None:
+    exact = {normalize_name(c): str(c) for c in df.columns}
+    for candidate in ("title", "itemtitle", "listingtitle"):
+        if candidate in exact:
+            return exact[candidate]
+    for col in df.columns:
+        if "title" in str(col).lower():
+            return str(col)
+    return None
+
+
+def find_price_column(df: pd.DataFrame) -> str | None:
+    exact = {normalize_name(c): str(c) for c in df.columns}
+    for candidate in ("currentprice", "startprice", "price", "buyitnowprice", "auctionbuyitnowprice"):
+        if candidate in exact:
+            return exact[candidate]
+    for col in df.columns:
+        if "price" in str(col).lower():
+            return str(col)
+    return None
+
+
+def find_sku_column(df: pd.DataFrame) -> str | None:
+    exact = {normalize_name(c): str(c) for c in df.columns}
+    for candidate in ("usersku", "customsku", "customlabelsku", "customlabel", "sku", "label"):
+        if candidate in exact:
+            return exact[candidate]
+    for col in df.columns:
+        low = str(col).lower()
+        if "sku" in low or "label" in low:
+            return str(col)
+    return None
+
+
+def find_set_column(df: pd.DataFrame) -> str | None:
+    exact = {normalize_name(c): str(c) for c in df.columns}
+    for candidate in ("set", "setname", "ccgset", "cardset"):
+        if candidate in exact:
+            return exact[candidate]
+    for col in df.columns:
+        low = str(col).lower()
+        if "set" in low and "setting" not in low:
+            return str(col)
+    return None
+
+
+def is_zero_money(value: str) -> bool:
+    raw = str(value or "").strip().replace("$", "").replace(",", "")
+    if raw in {"", "-"}:
+        return False
+    try:
+        return float(raw) == 0.0
+    except ValueError:
+        return False
+
+
+def shipping_audit(df: pd.DataFrame, shipping_cols: list[str]) -> tuple[pd.DataFrame, int]:
+    if not shipping_cols:
+        return pd.DataFrame({"note": ["No shipping-related columns found."]}), 0
+
+    mask = pd.Series(False, index=df.index)
+    reasons = []
+    for _, row in df.iterrows():
+        row_reasons = []
+        for col in shipping_cols:
+            value = str(row.get(col, "")).strip()
+            if not value:
+                continue
+            if FREE_SHIPPING_PATTERN.search(value) or is_zero_money(value):
+                row_reasons.append(f"{col}={value}")
+        reasons.append("; ".join(row_reasons))
+        if row_reasons:
+            mask.loc[row.name] = True
+    flagged = df.loc[mask].copy()
+    if flagged.empty:
+        return pd.DataFrame(columns=list(df.columns) + ["audit_reason"]), 0
+    flagged["audit_reason"] = [reason for reason in reasons if reason]
+    return flagged, int(mask.sum())
+
+
+def shipping_policy_summary(df: pd.DataFrame, shipping_cols: list[str]) -> pd.DataFrame:
+    if not shipping_cols:
+        return pd.DataFrame({"note": ["No shipping-related columns found."]})
+    rows = []
+    for col in shipping_cols:
+        counts = df[col].fillna("").astype(str).str.strip().replace("", "(blank)").value_counts(dropna=False)
+        for value, count in counts.items():
+            rows.append({"column": col, "value": value, "count": int(count)})
+    return pd.DataFrame(rows)
+
+
+def sku_audit(df: pd.DataFrame, sku_col: str | None) -> tuple[pd.DataFrame, int, int]:
+    if not sku_col:
+        return pd.DataFrame({"note": ["No User SKU / Custom SKU / Label column found."]}), 0, 0
+    values = df[sku_col].fillna("").astype(str).str.strip()
+    missing = values == ""
+    invalid = (~missing) & (~values.str.match(WAREHOUSE_RE))
+    flagged = df.loc[missing | invalid].copy()
+    flagged["audit_sku_column"] = sku_col
+    flagged["audit_sku_value"] = values.loc[missing | invalid]
+    flagged["sku_issue"] = ["missing" if m else "invalid_format" for m in missing.loc[missing | invalid]]
+    return flagged, int(missing.sum()), int(invalid.sum())
+
+
+def title_audit(df: pd.DataFrame, title_col: str | None, set_col: str | None) -> tuple[pd.DataFrame, pd.DataFrame, dict[str, int]]:
+    counts = {"over_80": 0, "starts_pokemon_tcg": 0, "starts_set_name": 0, "duplicate_title_rows": 0}
+    if not title_col:
+        note = pd.DataFrame({"note": ["No title column found."]})
+        return note, note.copy(), counts
+
+    titles = df[title_col].fillna("").astype(str)
+    issue_rows = []
+    for idx, title in titles.items():
+        issues = []
+        if len(title) > 80:
+            issues.append("over_80_characters")
+            counts["over_80"] += 1
+        if title.lower().startswith("pokemon tcg"):
+            issues.append("starts_with_pokemon_tcg")
+            counts["starts_pokemon_tcg"] += 1
+        if set_col:
+            set_name = str(df.at[idx, set_col]).strip()
+            if set_name and title.lower().startswith(set_name.lower()):
+                issues.append("starts_with_set_name")
+                counts["starts_set_name"] += 1
+        if issues:
+            row = df.loc[idx].to_dict()
+            row["audit_title_column"] = title_col
+            row["title_length"] = len(title)
+            row["title_issue"] = "; ".join(issues)
+            issue_rows.append(row)
+
+    duplicated = titles.duplicated(keep=False) & (titles.str.strip() != "")
+    duplicate_df = df.loc[duplicated].copy()
+    counts["duplicate_title_rows"] = int(duplicated.sum())
+    if not duplicate_df.empty:
+        duplicate_df["duplicate_title"] = titles.loc[duplicated]
+        duplicate_df["duplicate_count"] = duplicate_df["duplicate_title"].map(duplicate_df["duplicate_title"].value_counts())
+
+    title_df = pd.DataFrame(issue_rows) if issue_rows else pd.DataFrame(columns=list(df.columns) + ["audit_title_column", "title_length", "title_issue"])
+    return title_df, duplicate_df, counts
+
+
+def money_series(series: pd.Series) -> pd.Series:
+    cleaned = series.fillna("").astype(str).str.replace("$", "", regex=False).str.replace(",", "", regex=False).str.strip()
+    return pd.to_numeric(cleaned, errors="coerce")
+
+
+def pricing_audit(df: pd.DataFrame, price_col: str | None) -> tuple[pd.DataFrame, dict[str, int]]:
+    counts = {"under_0_99": 0, "at_0_99": 0, "under_1_49": 0, "over_100": 0}
+    if not price_col:
+        return pd.DataFrame({"note": ["No price column found."]}), counts
+    prices = money_series(df[price_col])
+    flags = pd.DataFrame(index=df.index)
+    flags["price_under_0_99"] = prices < 0.99
+    flags["price_equal_0_99"] = prices == 0.99
+    flags["price_under_1_49"] = prices < 1.49
+    flags["price_over_100"] = prices > 100
+    counts["under_0_99"] = int(flags["price_under_0_99"].sum())
+    counts["at_0_99"] = int(flags["price_equal_0_99"].sum())
+    counts["under_1_49"] = int(flags["price_under_1_49"].sum())
+    counts["over_100"] = int(flags["price_over_100"].sum())
+    mask = flags.any(axis=1)
+    flagged = df.loc[mask].copy()
+    flagged["audit_price_column"] = price_col
+    flagged["audit_price"] = prices.loc[mask]
+    for col in flags.columns:
+        flagged[col] = flags.loc[mask, col]
+    return flagged, counts
+
+
+def recommended_actions(
+    free_shipping_count: int,
+    missing_sku_count: int,
+    invalid_sku_count: int,
+    title_counts: dict[str, int],
+    price_counts: dict[str, int],
+    missing_notes: list[str],
+) -> list[str]:
+    actions = []
+    if missing_notes:
+        actions.append("Export a fuller eBay active listings report if needed columns are absent.")
+    if free_shipping_count:
+        actions.append("Review suspected free-shipping listings and move them to buyer-paid shipping where appropriate.")
+    if missing_sku_count or invalid_sku_count:
+        actions.append("Backfill User SKU / Custom Label values using ETB-##-Letter location labels.")
+    if title_counts["over_80"] or title_counts["starts_pokemon_tcg"] or title_counts["starts_set_name"]:
+        actions.append("Clean title issues before the next bulk revision.")
+    if title_counts["duplicate_title_rows"]:
+        actions.append("Review duplicate titles for duplicate listings or title-quality drift.")
+    if price_counts["under_0_99"] or price_counts["at_0_99"] or price_counts["under_1_49"]:
+        actions.append("Review low-price listings against the current cart-sweetener strategy.")
+    if price_counts["over_100"]:
+        actions.append("Manually review high-price listings over $100.")
+    if not actions:
+        actions.append("No urgent audit issues detected. Continue with inventory analytics.")
+    return actions
+
+
+def write_summary(
+    path: Path,
+    input_file: Path,
+    total_rows: int,
+    free_shipping_count: int,
+    non_free_count: int | None,
+    missing_sku_count: int,
+    invalid_sku_count: int,
+    title_counts: dict[str, int],
+    price_counts: dict[str, int],
+    shipping_summary: pd.DataFrame,
+    missing_notes: list[str],
+    actions: list[str],
+) -> None:
+    lines = [
+        f"{APP_NAME} v{VERSION}",
+        f"Timestamp: {datetime.now().isoformat(timespec='seconds')}",
+        f"Input file path: {input_file}",
+        f"Total active listings: {total_rows}",
+        "",
+        f"Free shipping suspected: {free_shipping_count}",
+        f"Buyer-paid / non-free count if detectable: {non_free_count if non_free_count is not None else 'not detectable'}",
+        f"Missing User SKU count: {missing_sku_count}",
+        f"Invalid User SKU count: {invalid_sku_count}",
+        f"Titles over 80 characters: {title_counts['over_80']}",
+        f"Duplicate title rows: {title_counts['duplicate_title_rows']}",
+        f"Listings under $0.99: {price_counts['under_0_99']}",
+        f"Listings at $0.99: {price_counts['at_0_99']}",
+        f"Listings under $1.49: {price_counts['under_1_49']}",
+        f"High price manual review count: {price_counts['over_100']}",
+        "",
+        "Top 10 detected shipping policies:",
+    ]
+    if "count" in shipping_summary.columns:
+        for _, row in shipping_summary.sort_values("count", ascending=False).head(10).iterrows():
+            lines.append(f"- {row.get('column')}: {row.get('value')} ({row.get('count')})")
+    else:
+        lines.append("- Not detectable from available columns.")
+    if missing_notes:
+        lines.extend(["", "Notes:"])
+        lines.extend(f"- {note}" for note in missing_notes)
+    lines.extend(["", "Recommended next actions:"])
+    lines.extend(f"- {action}" for action in actions)
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+def run(args: argparse.Namespace) -> dict[str, object]:
+    input_file = Path(args.input).expanduser() if args.input else latest_csv(Path(args.folder).expanduser())
+    output_dir = Path(args.output).expanduser()
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    df = read_csv(input_file)
+    shipping_cols = columns_containing(df, SHIPPING_COLUMN_HINTS)
+    sku_col = find_sku_column(df)
+    title_col = find_title_column(df)
+    set_col = find_set_column(df)
+    price_col = find_price_column(df)
+
+    missing_notes = []
+    if not shipping_cols:
+        missing_notes.append("No shipping-related columns found. Available columns: " + available_columns_note(df))
+    if not sku_col:
+        missing_notes.append("No User SKU / Custom SKU / Label column found. Available columns: " + available_columns_note(df))
+    if not title_col:
+        missing_notes.append("No title column found. Available columns: " + available_columns_note(df))
+    if not price_col:
+        missing_notes.append("No price column found. Available columns: " + available_columns_note(df))
+
+    free_shipping_df, free_shipping_count = shipping_audit(df, shipping_cols)
+    shipping_summary_df = shipping_policy_summary(df, shipping_cols)
+    sku_df, missing_sku_count, invalid_sku_count = sku_audit(df, sku_col)
+    title_df, duplicate_df, title_counts = title_audit(df, title_col, set_col)
+    price_df, price_counts = pricing_audit(df, price_col)
+
+    write_report(output_dir / "free_shipping_listings.csv", free_shipping_df)
+    write_report(output_dir / "shipping_policy_summary.csv", shipping_summary_df)
+    write_report(output_dir / "missing_or_invalid_user_sku.csv", sku_df)
+    write_report(output_dir / "title_audit.csv", title_df)
+    write_report(output_dir / "duplicate_titles.csv", duplicate_df)
+    write_report(output_dir / "pricing_audit.csv", price_df)
+
+    non_free_count = None if not shipping_cols else len(df) - free_shipping_count
+    actions = recommended_actions(
+        free_shipping_count,
+        missing_sku_count,
+        invalid_sku_count,
+        title_counts,
+        price_counts,
+        missing_notes,
+    )
+    summary_path = output_dir / "putnam_seller_audit_summary.txt"
+    write_summary(
+        summary_path,
+        input_file,
+        len(df),
+        free_shipping_count,
+        non_free_count,
+        missing_sku_count,
+        invalid_sku_count,
+        title_counts,
+        price_counts,
+        shipping_summary_df,
+        missing_notes,
+        actions,
+    )
+
+    if args.open_report:
+        try:
+            os.startfile(summary_path)  # type: ignore[attr-defined]
+        except Exception as exc:
+            print(f"Could not open summary report automatically: {exc}")
+
+    return {
+        "input_file": input_file,
+        "output_dir": output_dir,
+        "total_rows": len(df),
+        "free_shipping_count": free_shipping_count,
+        "missing_sku_count": missing_sku_count,
+        "invalid_sku_count": invalid_sku_count,
+        "title_issues": len(title_df) if "note" not in title_df.columns else 0,
+        "duplicate_title_rows": title_counts["duplicate_title_rows"],
+        "summary_path": summary_path,
+    }
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description=f"{APP_NAME} v{VERSION}")
+    parser.add_argument("--input", help="Path to a specific eBay Active Listings Report CSV.")
+    parser.add_argument("--folder", default=str(default_input_folder()), help="Folder containing eBay Active Listings Report CSVs.")
+    parser.add_argument("--output", default=str(default_output_folder()), help="Folder where audit reports will be written.")
+    parser.add_argument("--open-report", action="store_true", help="Open the summary text report after completion.")
+    return parser.parse_args()
+
+
+def main() -> int:
+    args = parse_args()
+    print(f"{APP_NAME} v{VERSION}")
+    try:
+        result = run(args)
+    except Exception as exc:
+        print(f"Audit failed: {exc}")
+        return 1
+    print(f"Input file: {result['input_file']}")
+    print(f"Active listings: {result['total_rows']}")
+    print(f"Free shipping suspected: {result['free_shipping_count']}")
+    print(f"Missing User SKU: {result['missing_sku_count']}")
+    print(f"Invalid User SKU: {result['invalid_sku_count']}")
+    print(f"Title issues: {result['title_issues']}")
+    print(f"Duplicate title rows: {result['duplicate_title_rows']}")
+    print(f"Reports saved to: {result['output_dir']}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

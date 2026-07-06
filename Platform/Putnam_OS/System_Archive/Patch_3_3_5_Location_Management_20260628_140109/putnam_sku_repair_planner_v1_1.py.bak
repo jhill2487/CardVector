@@ -1,0 +1,388 @@
+from __future__ import annotations
+
+import argparse
+import os
+import re
+from datetime import datetime
+from pathlib import Path
+
+import pandas as pd
+
+
+APP_NAME = "Putnam Seller Tools - SKU Repair Planner"
+VERSION = "1.1.1"
+WAREHOUSE_PREFIX_RE = re.compile(r"^ETB-\d{2}-[A-Za-z]$")
+VALID_WAREHOUSE_RE = re.compile(r"^ETB-\d{2}-[A-Za-z](?:-\d{3,5})?$")
+DATE_LIKE_RE = re.compile(r"^\d{1,2}[./-]\d{1,2}[./-]\d{2,4}$")
+
+GAME_ALIASES = {
+    "magic": "magic",
+    "mtg": "magic",
+    "magic the gathering": "magic",
+    "one piece": "one_piece",
+    "onepiece": "one_piece",
+    "op": "one_piece",
+    "pokemon": "pokemon",
+    "pokémon": "pokemon",
+}
+PLAN_COLUMNS = [
+    "item_id",
+    "title",
+    "current_sku",
+    "proposed_sku",
+    "reason",
+    "action",
+    "manual_review",
+    "duplicate_item_id",
+]
+
+
+def project_root() -> Path:
+    user_profile = os.environ.get("USERPROFILE")
+    if user_profile:
+        return Path(user_profile) / "OneDrive" / "PutnamCollectibles"
+    return Path.cwd()
+
+
+def default_reports_folder() -> Path:
+    return project_root() / "Putnam_Seller_Tools" / "seller_audit" / "reports"
+
+
+def normalize_name(value: str) -> str:
+    return "".join(ch for ch in str(value).lower().strip() if ch.isalnum())
+
+
+def slug(value: str) -> str:
+    cleaned = re.sub(r"[^a-z0-9]+", "_", str(value).lower()).strip("_")
+    return cleaned or "filtered"
+
+
+def read_csv(path: Path) -> pd.DataFrame:
+    for encoding in ("utf-8-sig", "utf-8", "cp1252"):
+        try:
+            return pd.read_csv(path, dtype=str, keep_default_na=False, encoding=encoding)
+        except UnicodeDecodeError:
+            continue
+    return pd.read_csv(path, dtype=str, keep_default_na=False, encoding="utf-8-sig", encoding_errors="replace")
+
+
+def find_column(df: pd.DataFrame, candidates: list[str]) -> str | None:
+    by_norm = {normalize_name(col): str(col) for col in df.columns}
+    for candidate in candidates:
+        found = by_norm.get(normalize_name(candidate))
+        if found:
+            return found
+    return None
+
+
+def canonical_game(value: str | None) -> str | None:
+    if not value:
+        return None
+    normalized = str(value).lower().strip()
+    return GAME_ALIASES.get(normalized, normalized.replace(" ", "_"))
+
+
+def row_matches_game(row: pd.Series, game: str, title_col: str | None, category_col: str | None) -> bool:
+    title = str(row.get(title_col, "") if title_col else "").lower()
+    category = str(row.get(category_col, "") if category_col else "").lower()
+    is_ccg = "ccg" in category
+
+    if game == "one_piece":
+        return "one piece" in title or bool(re.search(r"\bop[- ]?\d{2}[- ]?\d{3}\b", title))
+    if game == "magic":
+        # Location repairs are game/category based. Requiring a CCG category
+        # prevents false positives like sports teams with "Magic" in the title.
+        magic_title = (
+            "magic: the gathering" in title
+            or "magic the gathering" in title
+            or bool(re.search(r"\bmtg\b", title))
+            or ("magic" in title and is_ccg)
+        )
+        return magic_title
+    if game == "pokemon":
+        return "pokemon" in title or "pokémon" in title
+    return game.replace("_", " ") in title
+
+
+def filter_by_game(flagged: pd.DataFrame, game_value: str | None) -> tuple[pd.DataFrame, str | None]:
+    game = canonical_game(game_value)
+    if not game:
+        return flagged.copy(), None
+
+    title_col = find_column(flagged, ["Title", "Item title", "Listing title"])
+    category_col = find_column(flagged, ["eBay category 1 name", "Category", "Category name"])
+    if not title_col:
+        raise ValueError("Could not apply --game because no title column was found.")
+
+    mask = flagged.apply(lambda row: row_matches_game(row, game, title_col, category_col), axis=1)
+    filtered = flagged[mask].copy()
+    return filtered, game
+
+
+def prompt_location_prefix(configured: str | None) -> str:
+    value = (configured or "").strip()
+    if not value:
+        value = input("Default location prefix [ETB-01-A]: ").strip() or "ETB-01-A"
+    value = value.upper()
+    if not WAREHOUSE_PREFIX_RE.match(value):
+        raise ValueError("Location prefix must use ETB-##-Letter format, example ETB-01-A.")
+    return value
+
+
+def looks_card_specific(current_sku: str) -> bool:
+    sku = str(current_sku or "").strip()
+    if not sku:
+        return False
+    if VALID_WAREHOUSE_RE.match(sku):
+        return False
+    if DATE_LIKE_RE.match(sku):
+        return False
+    # Existing CS-* and similar values may be card/source identifiers. Do not
+    # overwrite them automatically; preserve them for human review.
+    if re.search(r"[A-Za-z]", sku) and re.search(r"\d", sku):
+        return True
+    if sku.upper().startswith(("CS-", "SKU-", "CARD-", "TCG", "OP", "SV", "SWSH", "SM")):
+        return True
+    return True
+
+
+def classify_row(sku_issue: str, current_sku: str) -> tuple[str, bool]:
+    value = str(current_sku or "").strip()
+    issue = str(sku_issue or "").strip()
+    if VALID_WAREHOUSE_RE.match(value):
+        return "already_valid_preserved", False
+    if issue == "missing" or not value:
+        return "missing_sku", True
+    if DATE_LIKE_RE.match(value):
+        return "date_style_batch_label", True
+    if looks_card_specific(value):
+        return "possible_card_specific_identifier_manual_review", False
+    return "invalid_sku_manual_review", False
+
+
+def existing_valid_skus(df: pd.DataFrame, sku_col: str | None) -> set[str]:
+    if not sku_col or sku_col not in df.columns:
+        return set()
+    values = df[sku_col].fillna("").astype(str).str.strip()
+    return {value for value in values if VALID_WAREHOUSE_RE.match(value)}
+
+
+def build_plan(
+    flagged: pd.DataFrame,
+    prefix: str,
+    excluded_item_ids: set[str] | None = None,
+) -> pd.DataFrame:
+    item_col = find_column(flagged, ["Item number", "Item ID", "ItemID"])
+    title_col = find_column(flagged, ["Title", "Item title", "Listing title"])
+    current_sku_col = find_column(flagged, ["audit_sku_value", "Custom label (SKU)", "User SKU", "Custom SKU", "Custom Label", "SKU"])
+    issue_col = find_column(flagged, ["sku_issue"])
+
+    if not item_col:
+        raise ValueError("Could not find eBay item ID column in missing_or_invalid_user_sku.csv.")
+    if not current_sku_col:
+        raise ValueError("Could not find current SKU column in missing_or_invalid_user_sku.csv.")
+
+    rows = []
+    excluded_item_ids = excluded_item_ids or set()
+    for _, row in flagged.iterrows():
+        item_id = str(row.get(item_col, "")).strip()
+        current_sku = str(row.get(current_sku_col, "")).strip()
+        issue = str(row.get(issue_col, "")).strip() if issue_col else ""
+        reason, auto_repair = classify_row(issue, current_sku)
+        proposed_sku = ""
+        action = "manual_review"
+        if auto_repair:
+            # Putnam uses User SKU / Custom Label as a physical location, not a
+            # unique card identifier. Multiple listings can intentionally share
+            # the same ETB batch/location value.
+            proposed_sku = prefix
+            action = "repair"
+        if item_id in excluded_item_ids:
+            action = "manual_review"
+            reason = reason + "; excluded_item_id"
+        rows.append(
+            {
+                "item_id": item_id,
+                "title": str(row.get(title_col, "")).strip() if title_col else "",
+                "current_sku": current_sku,
+                "proposed_sku": proposed_sku,
+                "reason": reason,
+                "action": action,
+                "manual_review": action != "repair",
+            }
+    )
+    plan = pd.DataFrame(rows)
+    if plan.empty:
+        return pd.DataFrame(columns=PLAN_COLUMNS)
+
+    duplicate_items = plan["item_id"].duplicated(keep=False) & (plan["item_id"].astype(str).str.strip() != "")
+    plan["duplicate_item_id"] = duplicate_items
+    # Duplicate item IDs often come from multi-variation listings. They still
+    # need ETB batch/location identifiers, so keep otherwise safe repairs active.
+    plan.loc[duplicate_items, "reason"] = plan.loc[duplicate_items, "reason"] + "; duplicate_item_id_batch_assigned"
+    plan.loc[plan["reason"].str.contains("excluded_item_id", na=False), "manual_review"] = True
+    return plan
+
+
+def count_repairs(plan: pd.DataFrame) -> int:
+    if plan.empty or "action" not in plan.columns:
+        return 0
+    return int((plan["action"] == "repair").sum())
+
+
+def count_manual_review(plan: pd.DataFrame) -> int:
+    if plan.empty or "manual_review" not in plan.columns:
+        return 0
+    return int(plan["manual_review"].sum())
+
+
+def write_bulk_revise_csv(plan: pd.DataFrame, path: Path) -> int:
+    if plan.empty:
+        pd.DataFrame(columns=["Action", "ItemID", "CustomLabel"]).to_csv(path, index=False, encoding="utf-8-sig")
+        return 0
+    safe = plan[(plan["action"] == "repair") & (~plan["manual_review"])].copy()
+    if safe.empty:
+        pd.DataFrame(columns=["Action", "ItemID", "CustomLabel"]).to_csv(path, index=False, encoding="utf-8-sig")
+        return 0
+    bulk = pd.DataFrame(
+        {
+            "Action": "Revise",
+            "ItemID": safe["item_id"],
+            "CustomLabel": safe["proposed_sku"],
+        }
+    )
+    bulk.to_csv(path, index=False, encoding="utf-8-sig")
+    return len(bulk)
+
+
+def write_summary(
+    path: Path,
+    prefix: str,
+    plan: pd.DataFrame,
+    bulk_count: int,
+    reports_folder: Path,
+    game_filter: str | None,
+) -> None:
+    total = len(plan)
+    repair = int((plan["action"] == "repair").sum()) if not plan.empty else 0
+    manual = int(plan["manual_review"].sum()) if not plan.empty else 0
+    missing = int((plan["reason"].str.contains("missing_sku", na=False)).sum()) if not plan.empty else 0
+    date_style = int((plan["reason"].str.contains("date_style_batch_label", na=False)).sum()) if not plan.empty else 0
+    card_specific = int((plan["reason"].str.contains("possible_card_specific_identifier", na=False)).sum()) if not plan.empty else 0
+    duplicate_items = int(plan.get("duplicate_item_id", pd.Series(dtype=bool)).sum()) if not plan.empty else 0
+    excluded = int((plan["reason"].str.contains("excluded_item_id", na=False)).sum()) if not plan.empty else 0
+    lines = [
+        f"{APP_NAME} v{VERSION}",
+        f"Timestamp: {datetime.now().isoformat(timespec='seconds')}",
+        f"Audit reports folder: {reports_folder}",
+        f"Default location prefix: {prefix}",
+        f"Game filter: {game_filter or 'none'}",
+        "Card-specific/non-location labels: preserved for manual review",
+        "",
+        f"Rows in repair plan: {total}",
+        f"Safe repair rows: {repair}",
+        f"Manual review rows: {manual}",
+        f"Missing SKU rows: {missing}",
+        f"Date-style batch label rows: {date_style}",
+        f"Possible card-specific identifier rows preserved: {card_specific}",
+        f"Duplicate item ID rows: {duplicate_items}",
+        f"Excluded item ID rows: {excluded}",
+        f"eBay bulk revise rows written: {bulk_count}",
+        "",
+        "Outputs:",
+        "- sku_repair_plan.csv",
+        "- sku_repair_summary.txt",
+        "- ebay_bulk_revise_sku_repair.csv",
+        "",
+        "Recommended next actions:",
+        "- Review all manual_review rows before any eBay bulk upload.",
+        "- Confirm the selected game/category is physically stored in the chosen ETB location.",
+        "- Upload ebay_bulk_revise_sku_repair.csv only after review.",
+    ]
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+def run(args: argparse.Namespace) -> dict[str, object]:
+    reports_folder = Path(args.reports).expanduser()
+    flagged_path = reports_folder / "missing_or_invalid_user_sku.csv"
+    if not flagged_path.exists():
+        raise FileNotFoundError(f"Missing latest seller audit report: {flagged_path}")
+    prefix = prompt_location_prefix(args.location_prefix)
+    output_dir = Path(args.output).expanduser() if args.output else reports_folder
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    flagged = read_csv(flagged_path)
+    flagged, game_filter = filter_by_game(flagged, args.game)
+    if args.game and not args.output:
+        output_dir = reports_folder / f"sku_repair_{slug(game_filter or args.game)}"
+        output_dir.mkdir(parents=True, exist_ok=True)
+
+    excluded_item_ids = {str(item).strip() for item in (args.exclude_item_id or []) if str(item).strip()}
+    plan = build_plan(
+        flagged,
+        prefix,
+        excluded_item_ids=excluded_item_ids,
+    )
+    plan_path = output_dir / "sku_repair_plan.csv"
+    summary_path = output_dir / "sku_repair_summary.txt"
+    bulk_path = output_dir / "ebay_bulk_revise_sku_repair.csv"
+
+    plan.to_csv(plan_path, index=False, encoding="utf-8-sig")
+    bulk_count = write_bulk_revise_csv(plan, bulk_path)
+    write_summary(
+        summary_path,
+        prefix,
+        plan,
+        bulk_count,
+        reports_folder,
+        game_filter,
+    )
+
+    return {
+        "reports_folder": reports_folder,
+        "output_dir": output_dir,
+        "plan_path": plan_path,
+        "summary_path": summary_path,
+        "bulk_path": bulk_path,
+        "game_filter": game_filter,
+        "total": len(plan),
+        "safe": count_repairs(plan),
+        "manual": count_manual_review(plan),
+        "bulk_count": bulk_count,
+    }
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description=f"{APP_NAME} v{VERSION}")
+    parser.add_argument("--reports", default=str(default_reports_folder()), help="Folder containing latest seller audit reports.")
+    parser.add_argument("--output", help="Folder where SKU repair outputs should be written. Defaults to reports folder.")
+    parser.add_argument("--location-prefix", help="Default ETB-style location prefix, example ETB-01-A.")
+    parser.add_argument("--game", help="Optional game/category filter, examples: Magic, MTG, One Piece, Pokemon.")
+    parser.add_argument(
+        "--exclude-item-id",
+        action="append",
+        help="Exclude an eBay item ID from the bulk revise file while keeping it in the repair plan.",
+    )
+    return parser.parse_args()
+
+
+def main() -> int:
+    args = parse_args()
+    print(f"{APP_NAME} v{VERSION}")
+    try:
+        result = run(args)
+    except Exception as exc:
+        print(f"SKU repair planning failed: {exc}")
+        return 1
+    print(f"Audit reports: {result['reports_folder']}")
+    print(f"Game filter: {result['game_filter'] or 'none'}")
+    print(f"Rows in plan: {result['total']}")
+    print(f"Safe repairs: {result['safe']}")
+    print(f"Manual review: {result['manual']}")
+    print(f"eBay bulk revise rows: {result['bulk_count']}")
+    print(f"Reports saved to: {result['output_dir']}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

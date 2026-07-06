@@ -1,0 +1,13 @@
+v0.7.3 UI Polish + Coverage Audit
+
+Included:
+- Image hover preview on card thumbnails
+- Progressive loading stability/min-height polish
+- Missing link coverage audit tool
+- No price card redesign
+- UI freeze preserved
+
+Validation targets:
+- pikachu 55/217
+- erika's oddish
+- broad searches like pikachu/charizard

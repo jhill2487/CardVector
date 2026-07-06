@@ -1,0 +1,7 @@
+{
+  "auto_capture_enabled": false,
+  "stability_delay_seconds": 1.0,
+  "duplicate_lockout_seconds": 2.0,
+  "frame_poll_interval_ms": 200,
+  "sensitivity": "Low"
+}

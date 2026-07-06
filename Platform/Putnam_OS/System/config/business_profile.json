@@ -1,0 +1,7 @@
+﻿{
+    "primary_goal":  "cash_flow",
+    "secondary_goal":  "profit",
+    "risk_tolerance":  "low",
+    "minimum_profit":  0.25,
+    "default_marketplace":  "ebay"
+}

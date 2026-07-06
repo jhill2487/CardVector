@@ -1,0 +1,21 @@
+{
+  "name": "carduploader_export",
+  "source_type": "carduploader_export",
+  "mapping": {
+    "title": "Title",
+    "sku": "User SKU",
+    "catalog_sku": "Catalog SKU",
+    "tcgplayer_sku": "TCGplayer SKU",
+    "tcgplayer_product_id": "TCGplayer Product ID",
+    "tcg": "TCG",
+    "set_name": "Set",
+    "card_number": "Card Number",
+    "rarity": "Rarity",
+    "condition": "Condition",
+    "variant": "Variant",
+    "finish": "Finish",
+    "current_price": "Price",
+    "quantity": "Qty",
+    "status": "Status"
+  }
+}

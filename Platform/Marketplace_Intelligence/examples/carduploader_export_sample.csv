@@ -1,0 +1,4 @@
+Title,User SKU,Catalog SKU,TCGplayer SKU,TCGplayer Product ID,TCG,Set,Card Number,Rarity,Condition,Variant,Finish,Price,Qty,Status
+Pokemon TCG Test Card Alpha 001,PKM-001,PKM-001,SKU-001,PROD-001,Pokemon,Test Set,001,Rare,Near Mint,Standard,Normal,0.99,1,Ready
+Pokemon TCG Test Card Beta 002,PKM-002,PKM-002,SKU-002,PROD-002,Pokemon,Test Set,002,Rare,Near Mint,Standard,Holo,2.99,1,Ready
+Magic The Gathering Test Spell 003,MTG-001,MTG-001,SKU-003,PROD-003,Magic,Test Set,003,Uncommon,Lightly Played,Standard,Foil,1.49,1,Ready

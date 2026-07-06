@@ -1,0 +1,198 @@
+====================================================================================================
+CARDVECTOR PRODUCTION REFERENCE REPORT
+====================================================================================================
+Generated: 2026-07-02 08:32:33.716055
+
+Production App Root:
+  Platform\Putnam_OS\System\app
+
+Launcher:
+  Platform\Putnam_OS\Run CardVector OS Production.vbs
+
+Resolved Entry Point:
+  Platform\Putnam_OS\System\app\putnam_os.py
+
+FILE CLASSIFICATION
+----------------------------------------------------------------------------------------------------
+
+bulk_price_engine.py
+Status: 🟢 Imported by Production
+Path: Platform\Putnam_OS\System\app\bulk_price_engine.py
+Modified: 2026-07-01 10:55:48.066542
+Size: 14,284 bytes
+Referenced by:
+  - run_pricing_cli.py
+
+capture_studio.py
+Status: 🟢 Imported by Production
+Path: Platform\Putnam_OS\System\app\capture_studio.py
+Modified: 2026-07-01 22:17:59
+Size: 14,955 bytes
+Referenced by:
+  - putnam_os.py
+  - test_auto_capture_v2_1.py
+  - test_capture_studio_v1.py
+
+inventory_locations.py
+Status: 🟢 Imported by Production
+Path: Platform\Putnam_OS\System\app\inventory_locations.py
+Modified: 2026-06-29 23:12:03
+Size: 7,089 bytes
+Referenced by:
+  - putnam_os.py
+
+main.py
+Status: ❓ Unreferenced
+Path: Platform\Putnam_OS\System\app\main.py
+Modified: 2026-06-29 08:13:31.514339
+Size: 30,814 bytes
+Referenced by: none detected
+
+obs_connection_manager.py
+Status: 🟢 Imported by Production
+Path: Platform\Putnam_OS\System\app\obs_connection_manager.py
+Modified: 2026-07-01 22:17:22
+Size: 10,063 bytes
+Referenced by:
+  - capture_studio.py
+  - test_obs_connection_manager_v1.py
+
+orders_fulfillment.py
+Status: 🟢 Imported by Production
+Path: Platform\Putnam_OS\System\app\orders_fulfillment.py
+Modified: 2026-07-01 10:55:48.052638
+Size: 11,928 bytes
+Referenced by:
+  - putnam_os.py
+  - test_orders_v1.py
+
+putnam_os.py
+Status: 🟢 Production Entry Point
+Path: Platform\Putnam_OS\System\app\putnam_os.py
+Modified: 2026-07-01 23:58:12
+Size: 276,823 bytes
+Referenced by:
+  - test_auto_capture_v2_1.py
+  - test_ebay_policy_config.py
+  - test_inventory_audit_mode_v1_0.py
+  - test_listing_optimizer_v1_2.py
+
+putnam_os_capture_v1_backup_20260629_212812.py
+Status: 📦 Backup
+Path: Platform\Putnam_OS\System\app\putnam_os_capture_v1_backup_20260629_212812.py
+Modified: 2026-06-29 15:47:17
+Size: 142,041 bytes
+Referenced by: none detected
+
+putnam_os_comp_engine_v1_1_backup_20260629.py
+Status: 📦 Backup
+Path: Platform\Putnam_OS\System\app\putnam_os_comp_engine_v1_1_backup_20260629.py
+Modified: 2026-06-29 09:29:34.731216
+Size: 107,501 bytes
+Referenced by: none detected
+
+putnam_os_comp_ui_v1_2_0_backup_20260629.py
+Status: 📦 Backup
+Path: Platform\Putnam_OS\System\app\putnam_os_comp_ui_v1_2_0_backup_20260629.py
+Modified: 2026-06-29 09:41:58.820956
+Size: 116,655 bytes
+Referenced by: none detected
+
+putnam_os_import_v1_backup_20260629_222132.py
+Status: 📦 Backup
+Path: Platform\Putnam_OS\System\app\putnam_os_import_v1_backup_20260629_222132.py
+Modified: 2026-06-29 22:02:40
+Size: 156,315 bytes
+Referenced by: none detected
+
+putnam_os_inventory_location_foundation_backup_20260629_231122.py
+Status: 📦 Backup
+Path: Platform\Putnam_OS\System\app\putnam_os_inventory_location_foundation_backup_20260629_231122.py
+Modified: 2026-06-29 22:23:02
+Size: 164,358 bytes
+Referenced by: none detected
+
+putnam_os_listing_workflow_backup_20260629_214810.py
+Status: 📦 Backup
+Path: Platform\Putnam_OS\System\app\putnam_os_listing_workflow_backup_20260629_214810.py
+Modified: 2026-06-29 21:30:22
+Size: 149,353 bytes
+Referenced by: none detected
+
+putnam_os_orders_v1_backup_20260629_220044.py
+Status: 📦 Backup
+Path: Platform\Putnam_OS\System\app\putnam_os_orders_v1_backup_20260629_220044.py
+Modified: 2026-06-29 21:49:48
+Size: 152,012 bytes
+Referenced by: none detected
+
+run_pricing_cli.py
+Status: 🟡 Standalone Tool
+Path: Platform\Putnam_OS\System\app\run_pricing_cli.py
+Modified: 2026-06-29 08:13:36.902489
+Size: 869 bytes
+Referenced by: none detected
+
+test_auto_capture_v2_1.py
+Status: 🟢 Test Utility
+Path: Platform\Putnam_OS\System\app\test_auto_capture_v2_1.py
+Modified: 2026-07-01 17:53:05
+Size: 2,280 bytes
+Referenced by: none detected
+
+test_capture_studio_v1.py
+Status: 🟢 Test Utility
+Path: Platform\Putnam_OS\System\app\test_capture_studio_v1.py
+Modified: 2026-07-01 22:18:21
+Size: 12,651 bytes
+Referenced by: none detected
+
+test_ebay_policy_config.py
+Status: 🟢 Test Utility
+Path: Platform\Putnam_OS\System\app\test_ebay_policy_config.py
+Modified: 2026-06-30 08:47:01.386413
+Size: 1,703 bytes
+Referenced by: none detected
+
+test_inventory_audit_mode_v1_0.py
+Status: 🟢 Test Utility
+Path: Platform\Putnam_OS\System\app\test_inventory_audit_mode_v1_0.py
+Modified: 2026-06-28 23:45:07
+Size: 4,344 bytes
+Referenced by: none detected
+
+test_listing_optimizer_v1_2.py
+Status: 🟢 Test Utility
+Path: Platform\Putnam_OS\System\app\test_listing_optimizer_v1_2.py
+Modified: 2026-06-29 15:36:31.000525
+Size: 4,089 bytes
+Referenced by: none detected
+
+test_obs_connection_manager_v1.py
+Status: 🟢 Test Utility
+Path: Platform\Putnam_OS\System\app\test_obs_connection_manager_v1.py
+Modified: 2026-07-01 22:18:56
+Size: 2,910 bytes
+Referenced by: none detected
+
+test_orders_v1.py
+Status: 🟢 Test Utility
+Path: Platform\Putnam_OS\System\app\test_orders_v1.py
+Modified: 2026-06-29 22:02:00
+Size: 2,746 bytes
+Referenced by: none detected
+
+SUMMARY
+----------------------------------------------------------------------------------------------------
+🟢 Imported by Production: 5
+❓ Unreferenced: 1
+🟢 Production Entry Point: 1
+📦 Backup: 7
+🟡 Standalone Tool: 1
+🟢 Test Utility: 7
+
+NOTE
+----------------------------------------------------------------------------------------------------
+This report detects direct static imports inside System/app.
+Dynamic imports or subprocess calls may require manual review.
+Do not delete files based only on this report. Archive first.

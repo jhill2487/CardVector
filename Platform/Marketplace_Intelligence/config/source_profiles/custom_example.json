@@ -1,0 +1,13 @@
+{
+  "name": "custom_example",
+  "mapping": {
+    "title": "Listing Name",
+    "sku": "My SKU",
+    "current_price": "My Price",
+    "quantity": "Count",
+    "condition": "Grade",
+    "set_name": "Expansion",
+    "card_number": "Number",
+    "finish": "Foil Type"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "acquisition_id": "ACQ-20260703_010121",
+  "acquisition_name": "CharCHarShop",
+  "purchase_date": "2026-07-03",
+  "purchase_price": "7.53",
+  "source": "whatnot",
+  "seller_name": "",
+  "platform": "",
+  "notes": "Japanese pokeball lot, some Japanese 151 errors",
+  "created_at": "2026-07-03T01:01:21",
+  "updated_at": "2026-07-03T01:01:25",
+  "status": "processing",
+  "gross_revenue_collected": "0.00",
+  "net_revenue_collected": "0.00",
+  "remaining_to_break_even": "7.53",
+  "break_even_date": "",
+  "remaining_inventory_value": "0.00",
+  "work_sessions": [
+    {
+      "session_id": "20260629_162226",
+      "folder": "C:\\Users\\user\\OneDrive\\PutnamCollectibles\\Work_Sessions\\Work_Session_20260629_162226",
+      "batch_location": "ETB-02-A",
+      "attached_at": "2026-07-03T01:01:21"
+    }
+  ],
+  "imports": [],
+  "pricing_jobs": []
+}

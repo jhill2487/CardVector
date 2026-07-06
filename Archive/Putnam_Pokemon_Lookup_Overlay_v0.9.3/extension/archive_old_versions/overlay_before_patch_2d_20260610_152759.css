@@ -1,0 +1,394 @@
+#putnam-pokemon-overlay {
+  position: fixed;
+  top: 76px;
+  right: 16px;
+  z-index: 2147483647;
+  width: 430px;
+  max-width: calc(100vw - 24px);
+  max-height: calc(100vh - 96px);
+  overflow: hidden;
+  border: 1px solid #d9d9d2;
+  border-radius: 8px;
+  background: #fbfbf8;
+  color: #171717;
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.24);
+  font-family: Arial, sans-serif;
+  font-size: 13px;
+}
+
+#putnam-pokemon-overlay * {
+  box-sizing: border-box;
+}
+
+.ppo-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 10px;
+  border-bottom: 1px solid #e5e5df;
+  background: #ffffff;
+}
+
+.ppo-header strong {
+  font-size: 14px;
+}
+
+.ppo-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.ppo-actions button,
+#ppo-search-form button {
+  border: 0;
+  border-radius: 6px;
+  background: #1f6feb;
+  color: white;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.ppo-actions button {
+  width: 26px;
+  height: 26px;
+  padding: 0;
+}
+
+#ppo-close {
+  background: #9f1d1d;
+}
+
+.ppo-body {
+  display: grid;
+  gap: 9px;
+  padding: 10px;
+}
+
+#ppo-search-form {
+  display: grid;
+  gap: 8px;
+}
+
+#ppo-search-form input {
+  width: 100%;
+  min-height: 34px;
+  padding: 8px 9px;
+  border: 1px solid #cecec7;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #171717;
+  font: inherit;
+}
+
+.ppo-filter-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 74px;
+  gap: 8px;
+}
+
+#ppo-search-form button {
+  min-height: 34px;
+}
+
+#ppo-status {
+  min-height: 18px;
+  color: #666;
+  font-size: 12px;
+}
+
+#ppo-results {
+  display: grid;
+  gap: 8px;
+  max-height: 420px;
+  overflow: auto;
+  padding-right: 2px;
+}
+
+.ppo-result {
+  display: grid;
+  grid-template-columns: 108px minmax(0, 1fr);
+  gap: 14px;
+  align-items: center;
+  padding: 8px;
+  border: 1px solid #e2e2dc;
+  border-radius: 6px;
+  background: #ffffff;
+}
+
+.ppo-media {
+  display: grid;
+  gap: 6px;
+}
+
+.ppo-thumb {
+  width: 108px;
+  height: 150px;
+  border-radius: 4px;
+  background: #e8e8e4;
+  object-fit: contain;
+}
+
+.ppo-thumb:not([src]),
+.ppo-thumb[src=""] {
+  display: none;
+}
+
+.ppo-price-badge {
+  width: 108px;
+  padding: 5px 4px;
+  border-radius: 5px;
+  background: #e8f4ec;
+  color: #17633a;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.ppo-muted-price {
+  background: #eeeeea;
+  color: #777;
+  font-weight: 400;
+}
+
+.ppo-result-details {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.ppo-result-details strong {
+  overflow: hidden;
+  font-size: 14px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ppo-result-details span {
+  color: #666;
+  font-size: 12px;
+}
+
+.ppo-price-source {
+  color: #5b6b5f;
+  font-size: 12px;
+}
+
+.ppo-collapsed {
+  width: 220px;
+}
+
+@media (max-width: 640px) {
+  #putnam-pokemon-overlay {
+    top: auto;
+    right: 8px;
+    bottom: 8px;
+    left: 8px;
+    width: auto;
+    max-height: 58vh;
+  }
+
+  .ppo-result {
+    grid-template-columns: 84px minmax(0, 1fr);
+  }
+
+  .ppo-thumb {
+    width: 84px;
+    height: 116px;
+  }
+
+  .ppo-price-badge {
+    width: 84px;
+  }
+}
+
+.ppo-result-details span:empty {
+  display: none;
+}
+
+
+/* Variant-aware pricing UI patch */
+.ppo-result {
+  align-items: start;
+}
+
+.ppo-variant-wrap {
+  display: grid;
+  gap: 7px;
+  margin-top: 7px;
+}
+
+.ppo-variant-title {
+  color: #333;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.ppo-variant-row {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  gap: 8px;
+  padding: 7px;
+  border: 1px solid #e3e7df;
+  border-radius: 6px;
+  background: #fbfdfb;
+}
+
+.ppo-variant-thumb {
+  width: 42px;
+  height: 58px;
+  border-radius: 3px;
+  background: #ecece7;
+  object-fit: contain;
+}
+
+.ppo-variant-main {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+}
+
+.ppo-variant-name {
+  color: #222;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.ppo-price-grid {
+  display: grid;
+  grid-template-columns: 28px 1fr 24px 1fr 24px 1fr;
+  gap: 4px;
+  align-items: center;
+  font-size: 12px;
+}
+
+.ppo-price-grid span {
+  color: #6a6a62;
+}
+
+.ppo-price-grid strong {
+  color: #17633a;
+  font-size: 12px;
+}
+
+.ppo-tcg-link {
+  color: #1f6feb;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.ppo-tcg-link:hover {
+  text-decoration: underline;
+}
+
+/* Patch 2B - Live Price Display UI */
+.ppo-live-price-card {
+  margin-top: 8px;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  border-radius: 10px;
+  padding: 9px;
+  background: rgba(15, 23, 42, 0.55);
+}
+
+.ppo-live-title {
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 1.25;
+  margin-bottom: 2px;
+}
+
+.ppo-live-subtitle {
+  font-size: 10px;
+  color: #94a3b8;
+  margin-bottom: 7px;
+}
+
+.ppo-live-price-table {
+  display: grid;
+  grid-template-columns: minmax(88px, 1.2fr) minmax(58px, 0.8fr) minmax(58px, 0.8fr);
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-top: 6px;
+}
+
+.ppo-live-cell {
+  padding: 6px 7px;
+  border-right: 1px solid rgba(148, 163, 184, 0.22);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.22);
+  font-size: 11px;
+}
+
+.ppo-live-cell:nth-child(3n) {
+  border-right: none;
+}
+
+.ppo-live-cell:nth-last-child(-n + 3) {
+  border-bottom: none;
+}
+
+.ppo-live-head {
+  font-weight: 700;
+  color: #cbd5e1;
+  background: rgba(30, 41, 59, 0.75);
+}
+
+.ppo-live-finish {
+  color: #e5e7eb;
+  font-weight: 600;
+}
+
+.ppo-live-price {
+  text-align: right;
+  font-weight: 800;
+}
+
+.ppo-live-price a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.ppo-live-price a:hover {
+  text-decoration: underline;
+}
+
+.ppo-live-source {
+  color: #86efac;
+}
+
+.ppo-cache-source {
+  color: #fde68a;
+}
+
+.ppo-live-meta {
+  margin-top: 6px;
+  font-size: 10px;
+  color: #94a3b8;
+}
+
+.ppo-live-link {
+  display: inline-flex;
+  margin-top: 7px;
+  padding: 5px 8px;
+  border-radius: 999px;
+  background: rgba(37, 99, 235, 0.95);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.ppo-live-link:hover {
+  background: rgba(59, 130, 246, 1);
+}
+
+.ppo-live-alternates {
+  margin-top: 6px;
+  font-size: 10px;
+  color: #64748b;
+}
+

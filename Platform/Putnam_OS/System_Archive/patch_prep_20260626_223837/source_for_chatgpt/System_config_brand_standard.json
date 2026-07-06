@@ -1,0 +1,26 @@
+﻿{
+  "standard": "Putnam OS Brand System v1",
+  "source": "Putnam Collectibles eBay / Whatnot visual branding",
+  "colors": {
+    "background_black": "#080A0F",
+    "panel_navy": "#0B1426",
+    "panel_navy_2": "#101B33",
+    "electric_blue": "#0077FF",
+    "lightning_blue": "#20A4FF",
+    "metallic_gold": "#D8A72E",
+    "gold_dark": "#8A6418",
+    "text_primary": "#F5F7FB",
+    "text_secondary": "#B9C4D8",
+    "success": "#22C55E",
+    "warning": "#FACC15",
+    "danger": "#EF4444"
+  },
+  "ui_rules": [
+    "Use Putnam Collectibles colors across Putnam OS.",
+    "Dark navy/black application shell.",
+    "Electric blue for active states and progress.",
+    "Gold for premium accent lines, section headers, and important highlights.",
+    "Do not change unrelated workflows when applying visual updates.",
+    "Business actions should be emphasized over internal engine names."
+  ]
+}

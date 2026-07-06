@@ -1,0 +1,22 @@
+﻿{
+  "version": "v1.1.0",
+  "description": "Buyer-paid shipping pricing ladder for current inventory monetization phase.",
+  "mode": "exact_price_map",
+  "price_map": {
+    "1.49": "0.99",
+    "1.59": "1.09",
+    "1.69": "1.19",
+    "1.79": "1.29",
+    "1.99": "1.49",
+    "2.49": "1.99",
+    "2.99": "2.49"
+  },
+  "do_not_change_prices_above": "2.99",
+  "minimum_price": "0.99",
+  "notes": [
+    "This version only changes exact price points listed in price_map.",
+    "Higher-priced cards are intentionally left unchanged.",
+    "Current inventory card acquisition cost is treated as sunk.",
+    "Labor is measured later, not assigned yet."
+  ]
+}

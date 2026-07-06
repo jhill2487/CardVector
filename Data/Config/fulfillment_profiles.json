@@ -1,0 +1,24 @@
+{
+  "version": "0.1",
+  "status": "foundation_only",
+  "profiles": {
+    "Standard Envelope": {
+      "Shipping Shield": 0.07,
+      "Thermal Labels 2x": 0.02,
+      "Team Bag": 0.03,
+      "Envelope": 0.03,
+      "Total Packaging Cost": 0.15
+    },
+    "Ground Advantage": {
+      "Shipping Shield": 0.07,
+      "Thermal Labels 2x": 0.02,
+      "Team Bag": 0.03,
+      "Bubble Mailer": 0.18,
+      "Total Packaging Cost": 0.30
+    }
+  },
+  "notes": [
+    "Foundation config only.",
+    "Do not connect to live profit calculations until Profit Dashboard work begins."
+  ]
+}

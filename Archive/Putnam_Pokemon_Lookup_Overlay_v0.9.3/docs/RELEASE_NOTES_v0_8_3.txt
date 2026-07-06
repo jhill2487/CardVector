@@ -1,0 +1,18 @@
+v0.8.3 Coverage Analytics
+
+Adds:
+- Coverage analytics builder
+- HTML dashboard
+- By-set coverage CSV
+- Unresolved cards CSV
+
+Metrics:
+- Total cards
+- Linked cards
+- Priced cards
+- Linked-image cards
+- Multi-variant cards
+- Unresolved cards
+- Best/worst set coverage
+
+No extension UI behavior changes.

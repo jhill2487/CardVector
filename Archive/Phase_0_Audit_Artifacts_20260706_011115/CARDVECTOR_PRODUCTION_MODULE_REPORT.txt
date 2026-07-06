@@ -1,0 +1,845 @@
+====================================================================================================
+CARDVECTOR PRODUCTION MODULE REPORT
+====================================================================================================
+Generated: 2026-07-02 08:29:36.125111
+
+Production Root: Platform\Putnam_OS\System\app
+Python Modules: 22
+
+----------------------------------------------------------------------------------------------------
+bulk_price_engine.py
+Role: OBS Integration
+Modified: 2026-07-01 10:55:48.066542
+Size: 14,284 bytes
+Keywords:
+   - Inventory
+   - Labels
+   - OBS
+   - Pricing
+Imports:
+   - Platform.putnam_paths
+   - __future__
+   - collections
+   - csv
+   - datetime
+   - decimal
+   - json
+   - os
+   - pathlib
+   - shutil
+   - sys
+Functions (21):
+   - _bootstrap_repo_import_path
+   - find_root
+   - ts
+   - money
+   - money_str
+   - load_ladder
+   - read_csv_rows
+   - detect_file
+   - col
+   - normalize_active
+   - normalize_bulk
+   - apply_ladder
+   - category_string
+   - choose_template
+   - write_review
+   - write_upload
+   - summarize
+   - preview_file
+   - run_revision
+   - get
+   - get
+
+----------------------------------------------------------------------------------------------------
+capture_studio.py
+Role: Capture Module
+Modified: 2026-07-01 22:17:59
+Size: 14,955 bytes
+Keywords:
+   - Capture
+   - OBS
+Imports:
+   - Platform.putnam_paths
+   - __future__
+   - base64
+   - dataclasses
+   - datetime
+   - json
+   - obs_connection_manager
+   - obsws_python
+   - os
+   - pathlib
+   - shutil
+   - subprocess
+   - sys
+   - typing
+Classes (3):
+   - CaptureStudioError
+   - CaptureResult
+   - CaptureStudioService
+Functions (30):
+   - _bootstrap_repo_import_path
+   - _response_value
+   - _decode_image_data
+   - load_capture_settings
+   - load_obs_config
+   - save_obs_config
+   - obs_password
+   - _obs_error_text
+   - _obs_status_from_error
+   - _load_obs_module
+   - get_shared_obs_manager
+   - _today_folder_name
+   - next_session_folder
+   - _iso_now
+   - __init__
+   - start_session
+   - capture
+   - capture_bytes
+   - next_capture_side
+   - capture_next
+   - retake_last
+   - finish_session
+   - obs_status
+   - launch_obs
+   - capture_obs_jpeg
+   - _obs_connection_settings
+   - _obs_client
+   - _current_program_scene
+   - _obs_module
+   - _save_session
+
+----------------------------------------------------------------------------------------------------
+inventory_locations.py
+Role: Label Center
+Modified: 2026-06-29 23:12:03
+Size: 7,089 bytes
+Keywords:
+   - Inventory
+   - Labels
+   - Orders
+Imports:
+   - Platform.putnam_paths
+   - __future__
+   - datetime
+   - html
+   - json
+   - pathlib
+   - re
+   - typing
+Functions (13):
+   - timestamp
+   - normalize_etb_code
+   - normalize_status
+   - _default_registry
+   - load_etb_registry
+   - save_etb_registry
+   - location_sort_key
+   - etb_location_rows
+   - next_etb_code
+   - create_etb_location
+   - update_etb_status
+   - _label_html
+   - generate_etb_label_files
+
+----------------------------------------------------------------------------------------------------
+main.py
+Role: OBS Integration
+Modified: 2026-06-29 08:13:31.514339
+Size: 30,814 bytes
+Keywords:
+   - Inventory
+   - Labels
+   - OBS
+   - Pricing
+Imports:
+   - Platform.putnam_paths
+   - __future__
+   - collections
+   - csv
+   - datetime
+   - decimal
+   - json
+   - os
+   - pathlib
+   - shutil
+   - subprocess
+   - sys
+   - tkinter
+   - traceback
+Classes (1):
+   - PutnamOS
+Functions (39):
+   - _bootstrap_repo_import_path
+   - money
+   - money_str
+   - find_root
+   - ensure_dirs
+   - now_stamp
+   - load_rules
+   - normalized_ladder
+   - open_folder
+   - sniff_rows
+   - detect_file
+   - find_col
+   - get_cell
+   - build_category
+   - choose_template_rows
+   - normalize_existing_records
+   - apply_existing_ladder
+   - write_dict_csv
+   - write_existing_upload_csv
+   - existing_price_revision
+   - log_run
+   - review_new_listing_prices
+   - main
+   - __init__
+   - _build_ui
+   - clear_main
+   - show
+   - header
+   - card
+   - dashboard
+   - pricing
+   - file_row
+   - _existing_tab
+   - _new_listing_tab
+   - placeholder
+   - settings
+   - browse
+   - run
+   - run
+
+----------------------------------------------------------------------------------------------------
+obs_connection_manager.py
+Role: Capture Module
+Modified: 2026-07-01 22:17:22
+Size: 10,063 bytes
+Keywords:
+   - Capture
+   - OBS
+Imports:
+   - __future__
+   - dataclasses
+   - datetime
+   - typing
+Classes (2):
+   - OBSConnectionStatus
+   - OBSConnectionManager
+Functions (14):
+   - _response_value
+   - connected
+   - __init__
+   - status
+   - status_text
+   - connection_values
+   - get_client
+   - request
+   - current_program_scene
+   - source_screenshot
+   - reset
+   - _classify_error
+   - _set_status
+   - _now
+
+----------------------------------------------------------------------------------------------------
+orders_fulfillment.py
+Role: Label Center
+Modified: 2026-07-01 10:55:48.052638
+Size: 11,928 bytes
+Keywords:
+   - Inventory
+   - Labels
+   - Orders
+   - Pricing
+Imports:
+   - Platform.putnam_paths
+   - __future__
+   - csv
+   - dataclasses
+   - datetime
+   - html
+   - pathlib
+   - re
+   - sys
+   - typing
+Classes (2):
+   - OrderLine
+   - Order
+Functions (14):
+   - _bootstrap_repo_import_path
+   - read_csv_rows
+   - _norm
+   - find_column
+   - detect_order_columns
+   - _clean
+   - _first_present
+   - shipping_paid_indicator
+   - parse_orders
+   - safe_filename
+   - render_pick_slip_txt
+   - render_pick_slip_html
+   - write_summary_csv
+   - generate_pick_slips
+
+----------------------------------------------------------------------------------------------------
+putnam_os.py
+Role: Capture Module
+Modified: 2026-07-01 23:58:12
+Size: 276,823 bytes
+Keywords:
+   - Capture
+   - Inventory
+   - Labels
+   - OBS
+   - Orders
+   - Pricing
+Imports:
+   - PIL
+   - Platform.putnam_paths
+   - Putnam_Seller_Tools.location_registry
+   - capture_studio
+   - csv
+   - datetime
+   - decimal
+   - decision_engine.engine
+   - importlib.util
+   - inventory_locations
+   - io
+   - json
+   - orders_fulfillment
+   - os
+   - pathlib
+   - re
+   - shutil
+   - statistics
+   - subprocess
+   - sys
+   - time
+   - tkinter
+   - tkinterdnd2
+   - traceback
+   - urllib.parse
+   - urllib.request
+   - webbrowser
+Classes (2):
+   - ExportCancelled
+   - PutnamOS
+Functions (296):
+   - _bootstrap_repo_import_path
+   - nowstamp
+   - today_id
+   - append_activity
+   - recent_activity
+   - decision_engine_unavailable
+   - run_decision_engine_check
+   - decision_engine_summary_text
+   - latest_decision_log
+   - load_app_config
+   - save_app_config
+   - money
+   - read_csv
+   - write_csv
+   - decimal_money
+   - format_decimal_money
+   - normalize_column_name
+   - find_column
+   - find_columns
+   - price_column
+   - batch_location_columns
+   - shipping_policy_column
+   - payment_policy_column
+   - return_policy_column
+   - promotion_policy_column
+   - load_ebay_business_policies
+   - save_ebay_business_policies
+   - validate_ebay_business_policies
+   - ensure_policy_column
+   - optimized_export_price
+   - summarize_final_prices
+   - validate_export_price_floor
+   - prepare_listing_export_rows
+   - export_summary_text
+   - append_export_history
+   - format_seconds
+   - elapsed_display
+   - append_pricing_performance_log
+   - pricing_performance_record
+   - append_ui_bugfix_log
+   - count_files
+   - todays_jobs_count
+   - latest_completed_job
+   - unique_path
+   - copy_to_folder
+   - latest_carduploader_export
+   - current_workflow_stage
+   - next_recommended_action
+   - latest_capture_session
+   - resolve_capture_path
+   - load_capture_session_file
+   - capture_session_summary
+   - capture_pair_rows
+   - build_capture_thumbnail_image
+   - capture_pair_status
+   - capture_cards_completed
+   - obs_status_is_connected
+   - icon_text
+   - nav_text
+   - status_state_from_text
+   - load_inventory_label_generator
+   - append_label_generation_log
+   - ensure_label_dependencies
+   - generate_inventory_label_pdf
+   - load_auto_capture_settings
+   - normalize_auto_capture_settings
+   - save_auto_capture_settings
+   - capture_frame_signature
+   - signature_difference
+   - auto_capture_thresholds
+   - etb_parent_from_batch
+   - completed_session_etb_rollups
+   - require_carduploader_inventory_columns
+   - normalize_carduploader_inventory_row
+   - write_counter_csv
+   - import_carduploader_inventory
+   - detect_type
+   - load_import_module_state
+   - save_import_module_state
+   - import_last_folder
+   - display_import_format
+   - missing_carduploader_import_fields
+   - build_carduploader_import_summary
+   - format_carduploader_import_summary
+   - infer_game_from_rows
+   - infer_game_from_text
+   - parse_quantity
+   - normalize_inventory_source_type
+   - inventory_price_column
+   - inventory_sku_column
+   - normalize_inventory_rows
+   - latest_ebay_active_listings_report
+   - inventory_audit_paths
+   - inventory_audit_session_id
+   - inventory_record_identifier
+   - inventory_audit_session_path
+   - save_inventory_audit_session
+   - load_inventory_audit_session
+   - load_inventory_audit_session_file
+   - unfinished_inventory_audit_sessions
+   - inventory_audit_stats
+   - batch_size_warning
+   - create_inventory_audit_session
+   - latest_capture_image
+   - attach_inventory_audit_image
+   - append_inventory_audit_history
+   - append_location_update_log
+   - append_inventory_audit_event_log
+   - apply_inventory_audit_action
+   - update_inventory_audit_location
+   - save_inventory_audit_progress
+   - move_inventory_audit_index
+   - inventory_audit_report_rows
+   - generate_inventory_audit_reports
+   - card_fields
+   - build_query
+   - cache_file
+   - fetch_carduploader_sales
+   - normalize_match_text
+   - match_tokens
+   - token_match_score
+   - normalized_card_number
+   - find_card_number
+   - excluded_terms_found
+   - build_rejection_details
+   - comp_match_diagnostics
+   - comparable_reason
+   - analytics_bucket
+   - write_comp_search_analytics_summary
+   - market_analyze
+   - audit_new_listing
+   - acquisition_record_path
+   - acquisition_money_text
+   - acquisition_statuses
+   - default_acquisition_record
+   - load_acquisition
+   - save_acquisition
+   - create_acquisition
+   - acquisition_sort_key
+   - list_acquisitions
+   - open_acquisitions
+   - set_current_acquisition
+   - current_acquisition
+   - acquisition_snapshot
+   - acquisition_display_text
+   - attach_work_session_to_acquisition
+   - attach_current_session_to_current_acquisition
+   - estimated_listing_value
+   - record_import_acquisition_metadata
+   - write_acquisition_job_metadata
+   - current_session_path
+   - load_current_session
+   - save_current_session
+   - create_work_session
+   - end_work_session
+   - attach_job_to_session
+   - latest_sessions
+   - __init__
+   - build_styles
+   - ui_font
+   - text_label
+   - style_button
+   - status_indicator
+   - set_indicator_state
+   - on_global_status_change
+   - build_ui
+   - clear
+   - show_page
+   - header
+   - card
+   - label
+   - metric_card
+   - make_drop_zone
+   - refresh_acquisition_state
+   - acquisition_options
+   - selected_acquisition_id_from_var
+   - build_acquisition_panel
+   - create_acquisition_ui
+   - select_acquisition_ui
+   - clear_acquisition_ui
+   - attach_current_session_acquisition_ui
+   - home_page
+   - action_button
+   - primary_button
+   - quiet_button
+   - ui_button
+   - button_bar
+   - style_treeview
+   - tree_insert
+   - sortable_heading
+   - open_latest_decision_log
+   - open_carduploader
+   - import_latest_carduploader_export_ui
+   - import_page
+   - import_carduploader_csv_ui
+   - import_carduploader_csv_path
+   - proceed_import_to_listings
+   - capture_page
+   - refresh_capture_status
+   - schedule_capture_thumbnail_refresh
+   - refresh_capture_preview_rail
+   - capture_pair_tile
+   - capture_thumbnail
+   - open_capture_preview
+   - update_capture_obs_indicator
+   - auto_check_obs_connection
+   - auto_status
+   - auto_log
+   - set_capture_mode
+   - save_auto_capture_settings_ui
+   - reset_auto_capture_detection
+   - start_auto_capture_ui
+   - pause_auto_capture_ui
+   - resume_auto_capture_ui
+   - stop_auto_capture_ui
+   - schedule_auto_capture_poll
+   - auto_capture_poll
+   - process_auto_capture_frame
+   - perform_auto_capture
+   - start_capture_session_ui
+   - capture_next_card_ui
+   - capture_side_ui
+   - capture_next_photo_ui
+   - retake_last_capture_ui
+   - finish_capture_session_ui
+   - open_capture_folder_ui
+   - open_latest_capture_session_folder
+   - launch_obs_ui
+   - check_obs_status_ui
+   - orders_page
+   - import_orders_csv_ui
+   - open_pick_slip_folder_ui
+   - open_printable_pick_slips_ui
+   - run_decision_engine_check_ui
+   - inventory_location_registry_panel
+   - inventory_label_center_panel
+   - inventory_selected_etb_code
+   - inventory_refresh_etb_locations
+   - inventory_create_next_etb
+   - inventory_mark_etb_status
+   - inventory_generate_etb_labels
+   - inventory_open_etb_label_folder
+   - inventory_page
+   - inventory_use_latest_source
+   - inventory_browse_source
+   - inventory_suggest_location
+   - inventory_start_audit
+   - inventory_resume_audit
+   - current_inventory_record
+   - inventory_update_queue_view
+   - inventory_apply_action
+   - inventory_use_last_location
+   - inventory_save_location
+   - inventory_save_progress
+   - inventory_summary_text
+   - inventory_move
+   - inventory_generate_reports
+   - launch_capture_studio
+   - browse_and_run
+   - analyze_latest_carduploader_export
+   - import_carduploader_inventory_ui
+   - open_inventory_snapshot
+   - on_drop
+   - start_work_session
+   - end_current_session_ui
+   - run_split_recording_tool
+   - sessions_page
+   - content_page
+   - settings_page
+   - save_obs_settings_ui
+   - save_ebay_policies_ui
+   - save_carduploader_settings_ui
+   - show_about_dialog
+   - placeholder_page
+   - open_recording_checklist
+   - pricing_progress_text
+   - update_pricing_progress
+   - set_pricing_busy
+   - pricing_input_messages
+   - set_current_pricing_job
+   - open_current_output_folder
+   - copy_current_output_folder
+   - open_pricing_report
+   - show_text_report
+   - show_csv_report
+   - sort_report_tree
+   - pricing_page
+   - browse
+   - load
+   - prompt_listing_export_batch
+   - confirm_listing_export_step
+   - auto_run
+   - session_mtime
+   - update_scroll
+   - on_motion
+   - on_leave
+
+----------------------------------------------------------------------------------------------------
+putnam_os_capture_v1_backup_20260629_212812.py
+Role: General
+Modified: 2026-06-29 15:47:17
+Size: 142,041 bytes
+
+----------------------------------------------------------------------------------------------------
+putnam_os_comp_engine_v1_1_backup_20260629.py
+Role: General
+Modified: 2026-06-29 09:29:34.731216
+Size: 107,501 bytes
+
+----------------------------------------------------------------------------------------------------
+putnam_os_comp_ui_v1_2_0_backup_20260629.py
+Role: General
+Modified: 2026-06-29 09:41:58.820956
+Size: 116,655 bytes
+
+----------------------------------------------------------------------------------------------------
+putnam_os_import_v1_backup_20260629_222132.py
+Role: General
+Modified: 2026-06-29 22:02:40
+Size: 156,315 bytes
+
+----------------------------------------------------------------------------------------------------
+putnam_os_inventory_location_foundation_backup_20260629_231122.py
+Role: General
+Modified: 2026-06-29 22:23:02
+Size: 164,358 bytes
+
+----------------------------------------------------------------------------------------------------
+putnam_os_listing_workflow_backup_20260629_214810.py
+Role: General
+Modified: 2026-06-29 21:30:22
+Size: 149,353 bytes
+
+----------------------------------------------------------------------------------------------------
+putnam_os_orders_v1_backup_20260629_220044.py
+Role: General
+Modified: 2026-06-29 21:49:48
+Size: 152,012 bytes
+
+----------------------------------------------------------------------------------------------------
+run_pricing_cli.py
+Role: OBS Integration
+Modified: 2026-06-29 08:13:36.902489
+Size: 869 bytes
+Keywords:
+   - OBS
+   - Pricing
+Imports:
+   - Platform.putnam_paths
+   - argparse
+   - bulk_price_engine
+   - os
+   - pathlib
+
+----------------------------------------------------------------------------------------------------
+test_auto_capture_v2_1.py
+Role: Capture Module
+Modified: 2026-07-01 17:53:05
+Size: 2,280 bytes
+Keywords:
+   - Capture
+   - OBS
+Imports:
+   - PIL
+   - __future__
+   - capture_studio
+   - io
+   - pathlib
+   - putnam_os
+   - tempfile
+Functions (2):
+   - jpeg_bytes
+   - run
+
+----------------------------------------------------------------------------------------------------
+test_capture_studio_v1.py
+Role: Capture Module
+Modified: 2026-07-01 22:18:21
+Size: 12,651 bytes
+Keywords:
+   - Capture
+   - OBS
+Imports:
+   - capture_studio
+   - datetime
+   - pathlib
+   - tempfile
+Classes (8):
+   - FakeClient
+   - FakeObs
+   - FakeClient
+   - FakeObs
+   - FakeClient
+   - FakeObs
+   - FakeClient
+   - FakeObs
+Functions (19):
+   - fake_obs_manager
+   - test_session_folder_names
+   - test_front_back_two_cards_and_retake
+   - test_capture_next_alternates_front_back_pairs
+   - test_obs_status_uses_configured_password
+   - test_obs_status_uses_local_putnam_os_obs_config
+   - test_obs_status_and_capture_use_same_obs_config
+   - test_capture_reports_actual_screenshot_exception
+   - test_obs_status_reports_missing_password
+   - __init__
+   - get_current_program_scene
+   - __init__
+   - get_current_program_scene
+   - __init__
+   - get_current_program_scene
+   - get_source_screenshot
+   - __init__
+   - get_current_program_scene
+   - get_source_screenshot
+
+----------------------------------------------------------------------------------------------------
+test_ebay_policy_config.py
+Role: Label Center
+Modified: 2026-06-30 08:47:01.386413
+Size: 1,703 bytes
+Keywords:
+   - Labels
+   - Pricing
+Imports:
+   - putnam_os
+Functions (3):
+   - sample_rows
+   - test_export_requires_all_business_policies
+   - test_export_stamps_configured_business_policies
+
+----------------------------------------------------------------------------------------------------
+test_inventory_audit_mode_v1_0.py
+Role: Capture Module
+Modified: 2026-06-28 23:45:07
+Size: 4,344 bytes
+Keywords:
+   - Capture
+   - Inventory
+   - Labels
+   - Pricing
+Imports:
+   - __future__
+   - csv
+   - pathlib
+   - putnam_os
+   - shutil
+Functions (2):
+   - write_rows
+   - main
+
+----------------------------------------------------------------------------------------------------
+test_listing_optimizer_v1_2.py
+Role: Label Center
+Modified: 2026-06-29 15:36:31.000525
+Size: 4,089 bytes
+Keywords:
+   - Inventory
+   - Labels
+   - Pricing
+Imports:
+   - __future__
+   - csv
+   - pathlib
+   - putnam_os
+Functions (4):
+   - log_row_count
+   - write_sample
+   - expect_cancel
+   - main
+
+----------------------------------------------------------------------------------------------------
+test_obs_connection_manager_v1.py
+Role: Capture Module
+Modified: 2026-07-01 22:18:56
+Size: 2,910 bytes
+Keywords:
+   - Capture
+   - OBS
+Imports:
+   - obs_connection_manager
+   - pathlib
+Classes (4):
+   - FakeClient
+   - FakeObs
+   - FakeClient
+   - FakeObs
+Functions (8):
+   - test_obs_manager_reuses_connected_client
+   - test_obs_manager_reports_missing_password_without_connecting
+   - test_obs_manager_reconnects_after_request_failure
+   - load_obs
+   - __init__
+   - get_current_program_scene
+   - __init__
+   - get_source_screenshot
+
+----------------------------------------------------------------------------------------------------
+test_orders_v1.py
+Role: Label Center
+Modified: 2026-06-29 22:02:00
+Size: 2,746 bytes
+Keywords:
+   - Labels
+   - Orders
+   - Pricing
+Imports:
+   - __future__
+   - csv
+   - orders_fulfillment
+   - pathlib
+   - tempfile
+Functions (2):
+   - build_sample
+   - test_orders_group_and_pick_slips
