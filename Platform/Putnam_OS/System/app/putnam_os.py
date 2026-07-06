@@ -1195,6 +1195,7 @@ def capture_pair_rows(folder=None, limit=24):
             "pair_number": number,
             "front": item.get("front"),
             "back": item.get("back"),
+            "session_folder": session_folder,
             "timestamp": datetime.fromtimestamp(latest_mtime).strftime("%H:%M:%S"),
             "latest_mtime": latest_mtime,
             "status": status,
@@ -1227,10 +1228,21 @@ def capture_pair_status(session):
     records = session.get("records") or []
     if not records:
         return "Ready"
-    last_side = str(records[-1].get("side", "")).lower()
-    if last_side == "front":
+    try:
+        current_number = int(session.get("current_card_number") or 1)
+    except Exception:
+        current_number = 1
+    current_sides = set()
+    for record in records:
+        try:
+            record_number = int(record.get("card_number") or 0)
+        except Exception:
+            record_number = 0
+        if record_number == current_number:
+            current_sides.add(str(record.get("side", "")).lower())
+    if "front" in current_sides and "back" not in current_sides:
         return "Waiting for Back"
-    if last_side == "back":
+    if "back" in current_sides:
         return "Ready for Next Card"
     return "Ready"
 
@@ -3247,6 +3259,8 @@ class PutnamOS(BaseTk):
         self.capture_preview_row_keys = []
         self.capture_empty_tile = None
         self.capture_rail_canvas = None
+        self.capture_selected_capture = None
+        self.capture_selected_var = None
         self.capture_obs_connected = False
         self.auto_capture_settings = load_auto_capture_settings()
         self.auto_capture_running = False
@@ -4192,6 +4206,19 @@ class PutnamOS(BaseTk):
         rail_buttons = tk.Frame(rail, bg=BRAND["panel"])
         rail_buttons.pack(fill="x", padx=14, pady=(0, 10))
         self.action_button(rail_buttons, "Open Session Folder", self.open_latest_capture_session_folder).pack(anchor="w")
+        selected_actions = tk.Frame(rail_buttons, bg=BRAND["panel"])
+        selected_actions.pack(fill="x", pady=(8, 0))
+        self.action_button(selected_actions, "Delete Selected", self.delete_selected_capture_ui).pack(side="left")
+        self.capture_selected_var = tk.StringVar(value="Selected: none")
+        tk.Label(
+            rail_buttons,
+            textvariable=self.capture_selected_var,
+            bg=BRAND["panel"],
+            fg=BRAND["muted2"],
+            font=self.ui_font("small"),
+            wraplength=260,
+            justify="left",
+        ).pack(anchor="w", pady=(6, 0))
         rail_canvas = tk.Canvas(rail, bg=BRAND["panel"], highlightthickness=0)
         rail_scroll = ttk.Scrollbar(rail, orient="vertical", command=rail_canvas.yview)
         self.capture_rail_canvas = rail_canvas
@@ -4372,8 +4399,8 @@ class PutnamOS(BaseTk):
         ).pack(side="right")
         thumbs = tk.Frame(tile, bg=BRAND["panel2"])
         thumbs.pack(fill="x", padx=10)
-        self.capture_thumbnail(thumbs, row.get("front"), "Front")
-        self.capture_thumbnail(thumbs, row.get("back"), "Back")
+        self.capture_thumbnail(thumbs, row.get("front"), "Front", row)
+        self.capture_thumbnail(thumbs, row.get("back"), "Back", row)
         tk.Label(
             tile,
             text=row["status"],
@@ -4393,7 +4420,7 @@ class PutnamOS(BaseTk):
         ).pack(anchor="w", padx=10, pady=(0, 7))
         return tile
 
-    def capture_thumbnail(self, parent, path, label):
+    def capture_thumbnail(self, parent, path, label, row):
         frame = tk.Frame(parent, bg=BRAND["panel2"])
         frame.pack(side="left", padx=(0, 8))
         image_path = resolve_capture_path(path) if path else None
@@ -4412,14 +4439,243 @@ class PutnamOS(BaseTk):
                 thumb = tk.Label(frame, image=photo, bg=BRAND["panel2"], cursor="hand2")
                 thumb.image = photo
                 thumb.pack()
-                thumb.bind("<Button-1>", lambda _e, p=image_path: self.open_capture_preview(p))
+                thumb.bind("<Button-1>", lambda _e, p=image_path, r=row, s=label.lower(): self.select_capture_thumbnail(p, r, s))
+                thumb.bind("<Double-Button-1>", lambda _e, p=image_path: self.open_capture_preview(p))
             except Exception:
                 thumb = tk.Label(frame, text=f"{label}\nUnreadable", width=12, height=4, bg=BRAND["panel"], fg=BRAND["warning"], cursor="hand2")
                 thumb.pack()
-                thumb.bind("<Button-1>", lambda _e, p=image_path: self.open_capture_preview(p))
+                thumb.bind("<Button-1>", lambda _e, p=image_path, r=row, s=label.lower(): self.select_capture_thumbnail(p, r, s))
+                thumb.bind("<Double-Button-1>", lambda _e, p=image_path: self.open_capture_preview(p))
         else:
             tk.Label(frame, text=f"{label}\nMissing", width=12, height=4, bg=BRAND["panel"], fg=BRAND["muted2"]).pack()
         tk.Label(frame, text=label, bg=BRAND["panel2"], fg=BRAND["muted"], font=self.ui_font("small")).pack(pady=(2, 0))
+        if image_path and image_path.exists():
+            self.quiet_button(
+                frame,
+                "Retake",
+                lambda p=image_path, r=row, s=label.lower(): self.retake_capture_thumbnail_ui(p, r, s),
+            ).pack(fill="x", pady=(4, 0))
+
+    def capture_thumbnail_selection(self, path, row, side):
+        image_path = resolve_capture_path(path)
+        return {
+            "path": str(image_path or path),
+            "pair_number": row.get("pair_number"),
+            "session_folder": str(row.get("session_folder") or ""),
+            "side": str(side or "").lower(),
+        }
+
+    def select_capture_thumbnail(self, path, row, side):
+        image_path = resolve_capture_path(path)
+        self.capture_selected_capture = self.capture_thumbnail_selection(path, row, side)
+        label = str(side or "").title()
+        selected_text = f"Selected: Pair #{row.get('pair_number')} {label}"
+        if image_path:
+            selected_text += f" - {Path(image_path).name}"
+        if self.capture_selected_var:
+            self.capture_selected_var.set(selected_text)
+        self.status.set(selected_text)
+
+    def selected_session_folder(self, selected=None):
+        selected = selected or self.capture_selected_capture or {}
+        folder = resolve_capture_path(selected.get("session_folder"))
+        if folder and folder.exists():
+            return folder
+        path = resolve_capture_path(selected.get("path"))
+        if path and path.exists():
+            return path.parent
+        return None
+
+    def ensure_selected_capture_session(self, selected=None):
+        folder = self.selected_session_folder(selected)
+        if not folder:
+            messagebox.showinfo("Capture Studio", "Selected capture session folder was not found.")
+            return False
+        active_folder = resolve_capture_path(self.capture_session.get("folder", "")) if self.capture_session else None
+        if active_folder and Path(active_folder) == Path(folder):
+            return True
+        session = load_capture_session_file(folder)
+        if not session:
+            messagebox.showinfo("Capture Studio", "Selected capture session metadata was not found.")
+            return False
+        session["folder"] = str(folder)
+        self.capture_session = session
+        return True
+
+    def clear_capture_selection(self):
+        self.capture_selected_capture = None
+        if self.capture_selected_var:
+            self.capture_selected_var.set("Selected: none")
+
+    def selected_capture_path(self, selected=None):
+        selected = selected or self.capture_selected_capture or {}
+        path = resolve_capture_path(selected.get("path"))
+        if path and path.exists():
+            return path
+        session_folder = self.selected_session_folder(selected)
+        if session_folder and selected.get("path"):
+            candidate = Path(session_folder) / Path(str(selected.get("path"))).name
+            if candidate.exists():
+                return candidate
+        return path
+
+    def capture_move_destination(self, session_folder, folder_name, source):
+        target_dir = Path(session_folder) / folder_name
+        target_dir.mkdir(exist_ok=True)
+        destination = target_dir / source.name
+        if not destination.exists():
+            return destination
+        timestamp = datetime.now().strftime("%H%M%S")
+        destination = target_dir / f"{source.stem}_{timestamp}{source.suffix}"
+        suffix = 1
+        while destination.exists():
+            suffix += 1
+            destination = target_dir / f"{source.stem}_{timestamp}_{suffix}{source.suffix}"
+        return destination
+
+    def remove_capture_record(self, source, selected):
+        records = self.capture_session.get("records") or []
+        pair_number = int(selected.get("pair_number") or 0)
+        side = str(selected.get("side") or "").lower()
+        removed = False
+        kept = []
+        for record in records:
+            try:
+                record_number = int(record.get("card_number") or 0)
+            except Exception:
+                record_number = 0
+            record_side = str(record.get("side", "")).lower()
+            record_name = Path(str(record.get("filename") or record.get("path") or "")).name
+            if not removed and record_number == pair_number and record_side == side and record_name == source.name:
+                removed = True
+                continue
+            kept.append(record)
+        self.capture_session["records"] = kept
+        self.capture_session["photos_captured"] = len(kept)
+        return removed
+
+    def sort_capture_session_records(self):
+        side_order = {"front": 0, "back": 1}
+        records = self.capture_session.get("records") or []
+        def sort_key(record):
+            try:
+                number = int(record.get("card_number") or 0)
+            except Exception:
+                number = 0
+            return (number, side_order.get(str(record.get("side", "")).lower(), 9), str(record.get("filename", "")))
+        self.capture_session["records"] = sorted(records, key=sort_key)
+        self.capture_session["photos_captured"] = len(self.capture_session["records"])
+
+    def sync_capture_progress_from_records(self):
+        if not self.capture_session:
+            return
+        self.sort_capture_session_records()
+        pairs = {}
+        for record in self.capture_session.get("records") or []:
+            try:
+                number = int(record.get("card_number") or 0)
+            except Exception:
+                number = 0
+            side = str(record.get("side", "")).lower()
+            if number > 0 and side in {"front", "back"}:
+                pairs.setdefault(number, set()).add(side)
+        next_number = 1
+        # Rebuild progress from the remaining records so deleted pairs can be filled again.
+        while pairs.get(next_number) == {"front", "back"}:
+            next_number += 1
+        self.capture_session["current_card_number"] = next_number
+
+    def next_capture_side_for_current(self):
+        if not self.capture_session:
+            return "front"
+        try:
+            current_number = int(self.capture_session.get("current_card_number") or 1)
+        except Exception:
+            current_number = 1
+        sides = set()
+        for record in self.capture_session.get("records") or []:
+            try:
+                record_number = int(record.get("card_number") or 0)
+            except Exception:
+                record_number = 0
+            if record_number == current_number:
+                sides.add(str(record.get("side", "")).lower())
+        return "back" if "front" in sides and "back" not in sides else "front"
+
+    def delete_selected_capture_ui(self):
+        selected = self.capture_selected_capture
+        source = self.selected_capture_path()
+        if not selected or not source or not source.exists():
+            messagebox.showinfo("Capture Studio", "Select a recent capture thumbnail first.")
+            return
+        if not self.ensure_selected_capture_session():
+            return
+        if not messagebox.askyesno("Delete Selected Capture", f"Move this capture out of the active session?\n\n{source.name}"):
+            return
+        try:
+            session_folder = Path(self.capture_session["folder"])
+            destination = self.capture_move_destination(session_folder, "_deleted", source)
+            shutil.move(str(source), str(destination))
+            removed = self.remove_capture_record(source, selected)
+            self.sync_capture_progress_from_records()
+            self.capture_service._save_session(self.capture_session)
+            append_activity(f"Moved selected capture to _deleted: {destination.name}")
+            self.status.set(f"Selected capture moved to _deleted: {destination.name}" if removed else f"Capture moved to _deleted: {destination.name}")
+            self.clear_capture_selection()
+            self.schedule_capture_thumbnail_refresh(force=True)
+        except Exception as exc:
+            messagebox.showerror("Capture Studio", str(exc))
+
+    def retake_selected_capture_ui(self):
+        selected = self.capture_selected_capture
+        self.retake_capture_selection_ui(selected)
+
+    def retake_capture_thumbnail_ui(self, path, row, side):
+        selected = self.capture_thumbnail_selection(path, row, side)
+        self.retake_capture_selection_ui(selected)
+
+    def retake_capture_selection_ui(self, selected):
+        source = self.selected_capture_path(selected)
+        if not selected or not source or not source.exists():
+            messagebox.showinfo("Capture Studio", "Select a recent capture thumbnail first.")
+            return
+        if not self.ensure_selected_capture_session(selected):
+            return
+        side = str(selected.get("side") or "").lower()
+        pair_number = int(selected.get("pair_number") or 0)
+        if side not in {"front", "back"} or pair_number <= 0:
+            messagebox.showinfo("Capture Studio", "Selected capture is missing card or side metadata.")
+            return
+        status = self.capture_service.obs_status()
+        if not self.update_capture_obs_indicator(status) and not self.capture_service.allow_placeholder:
+            self.status.set("OBS Not Connected. Retry when OBS is ready.")
+            messagebox.showwarning("Capture Studio", "OBS Not Connected.\n\nStart OBS or check the saved OBS WebSocket settings, then use Retry.")
+            return
+        previous_card_number = self.capture_session.get("current_card_number", 1)
+        try:
+            session_folder = Path(self.capture_session["folder"])
+            destination = self.capture_move_destination(session_folder, "_retakes", source)
+            shutil.move(str(source), str(destination))
+            self.remove_capture_record(source, selected)
+            self.capture_session["current_card_number"] = pair_number
+            self.capture_service._save_session(self.capture_session)
+            result = self.capture_service.capture(self.capture_session, side)
+            self.sync_capture_progress_from_records()
+            self.capture_service._save_session(self.capture_session)
+            append_activity(f"Retook selected capture {source.name} as {result.path.name}")
+            self.status.set(f"Retook selected capture: {result.path.name}")
+            self.clear_capture_selection()
+            self.schedule_capture_thumbnail_refresh(force=True)
+        except CaptureStudioError as exc:
+            self.capture_session["current_card_number"] = previous_card_number
+            self.capture_service._save_session(self.capture_session)
+            self.update_capture_obs_indicator(str(exc))
+            self.status.set("Selected retake failed; original was moved to _retakes.")
+            messagebox.showwarning("Capture Studio", str(exc))
+        except Exception as exc:
+            self.capture_session["current_card_number"] = previous_card_number
+            self.capture_service._save_session(self.capture_session)
+            messagebox.showerror("Capture Studio", str(exc))
 
     def open_capture_preview(self, path):
         path = Path(path)
@@ -4727,7 +4983,8 @@ class PutnamOS(BaseTk):
             messagebox.showwarning("Capture Studio", "OBS Not Connected.\n\nStart OBS or check the saved OBS WebSocket settings, then use Retry.")
             return
         try:
-            result = self.capture_service.capture_next(self.capture_session)
+            self.sync_capture_progress_from_records()
+            result = self.capture_service.capture(self.capture_session, self.next_capture_side_for_current())
             append_activity(f"Captured {result.path.name} with CardVector Capture Studio")
             self.status.set(f"Captured {result.path.name}")
             self.schedule_capture_thumbnail_refresh()
