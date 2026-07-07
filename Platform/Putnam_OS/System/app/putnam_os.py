@@ -168,6 +168,7 @@ BUTTON_ICONS = {
     "Finish Session": "[x]",
     "Generate Labels": "[#]",
     "Generate Reports": "[#]",
+    "Generate Review Reports": "[#]",
     "Import CardUploader CSV": "[I]",
     "Import eBay Orders CSV": "[I]",
     "Import Latest CardUploader Export": "[I]",
@@ -177,7 +178,6 @@ BUTTON_ICONS = {
     "Next": "[>]",
     "No Acquisition": "[-]",
     "Open": "[O]",
-    "Open Audit Folder": "[O]",
     "Open Capture": "[O]",
     "Open Capture Folder": "[O]",
     "Open CardUploader": "[O]",
@@ -192,11 +192,12 @@ BUTTON_ICONS = {
     "Open Pricing Output": "[O]",
     "Open Pricing Output Folder": "[O]",
     "Open Printable Pick Slips": "[O]",
+    "Open Review Folder": "[O]",
     "Open Session Folder": "[O]",
     "Open Sessions Folder": "[O]",
     "Previous": "[<]",
     "Refresh Counts": "[R]",
-    "Resume Audit": "[R]",
+    "Resume Review": "[R]",
     "Retake Last": "[R]",
     "Retry": "[R]",
     "Return Home": "[H]",
@@ -208,8 +209,9 @@ BUTTON_ICONS = {
     "Save Progress": "[S]",
     "Select Acquisition": "[+]",
     "Skip": "[>]",
+    "Start Conversion": "[+]",
     "Start Capture Session": "[+]",
-    "Start New Audit": "[+]",
+    "Start Review Session": "[+]",
     "Start Session": "[+]",
 }
 
@@ -5372,7 +5374,7 @@ class PutnamOS(BaseTk):
         self.label(panel, "PHYSICAL INVENTORY CONVERSION", 12, BRAND["gold"], True, anchor="w", padx=18, pady=(12, 4))
         self.label(
             panel,
-            "Convert physical cards into verified CardVector inventory. This sprint creates the workflow shell only; recognition and inventory creation are future steps.",
+            "Convert physical cards in ETBs/locations into trusted CardVector inventory. Recognition, CardUploader handoff, and inventory record creation are future steps.",
             9,
             BRAND["muted"],
             False,
@@ -5383,7 +5385,7 @@ class PutnamOS(BaseTk):
 
         self.inventory_conversion_dashboard_var = tk.StringVar(value="")
         self.inventory_conversion_capacity_var = tk.StringVar(value="")
-        self.inventory_conversion_status_var = tk.StringVar(value="No conversion session started.")
+        self.inventory_conversion_status_var = tk.StringVar(value="Current session status: Ready")
         self.inventory_conversion_etb_var = tk.StringVar(value="")
         self.inventory_conversion_location_var = tk.StringVar(value="")
 
@@ -5399,7 +5401,7 @@ class PutnamOS(BaseTk):
 
         wizard = tk.Frame(panel, bg=BRAND["panel"])
         wizard.pack(fill="x", padx=18, pady=(0, 8))
-        self.label(wizard, "Step 1: Select ETB", 9, BRAND["muted"], False, side="left", padx=(0, 8))
+        self.label(wizard, "Current ETB", 9, BRAND["muted"], False, side="left", padx=(0, 8))
         self.inventory_conversion_etb_combo = ttk.Combobox(
             wizard,
             textvariable=self.inventory_conversion_etb_var,
@@ -5410,7 +5412,7 @@ class PutnamOS(BaseTk):
         self.inventory_conversion_etb_combo.pack(side="left", padx=(0, 18))
         self.inventory_conversion_etb_combo.bind("<<ComboboxSelected>>", lambda _event: self.inventory_conversion_update_location_options())
 
-        self.label(wizard, "Step 2: Select Location", 9, BRAND["muted"], False, side="left", padx=(0, 8))
+        self.label(wizard, "Current Location", 9, BRAND["muted"], False, side="left", padx=(0, 8))
         self.inventory_conversion_location_combo = ttk.Combobox(
             wizard,
             textvariable=self.inventory_conversion_location_var,
@@ -5433,7 +5435,7 @@ class PutnamOS(BaseTk):
 
         actions = tk.Frame(panel, bg=BRAND["panel"])
         actions.pack(anchor="w", padx=18, pady=(0, 10))
-        self.primary_button(actions, "Start Inventory Conversion", self.inventory_start_conversion_session).pack(side="left")
+        self.primary_button(actions, "Start Conversion", self.inventory_start_conversion_session).pack(side="left")
         self.action_button(actions, "Refresh", self.inventory_conversion_refresh).pack(side="left", padx=8)
 
         tk.Label(
@@ -5495,26 +5497,37 @@ class PutnamOS(BaseTk):
         try:
             etb, location, capacity, stored, remaining = self.inventory_conversion_selected_counts()
             self.inventory_conversion_capacity_var.set(
-                f"Step 3: Capacity {capacity} cards  |  Current Count {stored}  |  Remaining Capacity {remaining}"
+                f"Location capacity: {capacity} cards  |  Converted: {stored}/{capacity}  |  Remaining capacity: {remaining}"
             )
         except Exception:
-            self.inventory_conversion_capacity_var.set("Step 3: Select an ETB and location to view capacity.")
+            self.inventory_conversion_capacity_var.set("Select an ETB and location to view conversion capacity.")
+        self.inventory_conversion_update_dashboard()
 
     def inventory_conversion_update_dashboard(self):
         if not hasattr(self, "inventory_conversion_dashboard_var"):
             return
         stats = inventory_conversion_dashboard_stats()
         current = stats.get("current_session") or {}
-        current_text = (
-            f"{current.get('session_id')} | {current.get('location_id')} | {current.get('status')}"
-            if current else "None"
-        )
+        current_etb = self.inventory_conversion_etb_var.get() or "None"
+        current_location = self.inventory_conversion_location_var.get() or "None"
+        try:
+            _etb, _location, capacity, stored, _remaining = self.inventory_conversion_selected_counts()
+        except Exception:
+            capacity = DEFAULT_ETB_LOCATION_CAPACITY
+            stored = 0
+        current_status = current.get("status") if current else "Ready"
+        current_session = current.get("session_id") if current else "None"
         self.inventory_conversion_dashboard_var.set(
-            "Today's Conversion\n"
-            f"Cards Converted: {stats['cards_converted']}  |  "
-            f"Locations Completed: {stats['locations_completed']}  |  "
-            f"Current Session: {current_text}  |  "
-            f"Next Suggested Location: {stats['next_suggested_location'] or 'None'}"
+            "Conversion Dashboard\n"
+            f"Current ETB: {current_etb}\n"
+            f"Current Location: {current_location}\n"
+            f"Location capacity: {capacity}\n"
+            f"Converted count: {stored}/{capacity}\n"
+            f"Locations completed: {stats['locations_completed']}\n"
+            f"Cards converted today: {stats['cards_converted']}\n"
+            f"Next available location: {stats['next_suggested_location'] or 'None'}\n"
+            f"Current session: {current_session}\n"
+            f"Current session status: {current_status}"
         )
 
     def inventory_start_conversion_session(self):
@@ -5526,9 +5539,9 @@ class PutnamOS(BaseTk):
             session = create_inventory_conversion_session(etb["location_code"], location["location_code"])
             self.inventory_conversion_session = session
             self.inventory_conversion_status_var.set(
-                "Waiting for Capture...\n"
+                "Current session status: Waiting for Capture...\n"
                 f"Session: {session['session_id']}  |  Location: {session['location_id']}  |  "
-                f"Cards Captured: {session['cards_captured']}/{session['expected_capacity']}"
+                f"Converted: {session['cards_captured']}/{session['expected_capacity']}"
             )
             self.inventory_conversion_update_dashboard()
             append_activity(f"Inventory conversion session started: {session['location_id']}")
@@ -5816,18 +5829,20 @@ class PutnamOS(BaseTk):
             messagebox.showinfo("Inventory Label Center", f"Label folder:\n{LABEL_EXPORT_ROOT}\n\nCould not open automatically:\n{exc}")
 
     def inventory_page(self):
-        self.header("Inventory", "Inventory Audit verifies physical cards and trusted Batch Locations before any eBay revision.")
+        self.header("Inventory", "Physical Inventory Conversion turns ETB locations into trusted CardVector inventory.")
         wrap = self.scrollable_page()
 
         self.inventory_conversion_panel(wrap)
         self.inventory_location_registry_panel(wrap)
         self.inventory_label_center_panel(wrap)
 
+        # Physical Inventory Conversion creates trusted inventory from cards in hand.
+        # Inventory Review preserves the future audit workflow for inventory records that already exist.
         setup = self.card(wrap, fill="x", pady=(0, 12), ipady=10)
-        self.label(setup, "INVENTORY AUDIT MODE v2", 12, BRAND["gold"], True, anchor="w", padx=18, pady=(12, 4))
+        self.label(setup, "VERIFIED INVENTORY REVIEW (FUTURE AUDIT)", 12, BRAND["gold"], True, anchor="w", padx=18, pady=(12, 4))
         self.label(
             setup,
-            "User SKU = Batch Location. The operator confirms the card; no OCR, scanner identification, CardUploader recognition, or eBay revision happens here.",
+            "Future workflow for verifying inventory records that already exist. The current production focus is Physical Inventory Conversion above.",
             9,
             BRAND["muted"],
             False,
@@ -5873,15 +5888,15 @@ class PutnamOS(BaseTk):
 
         setup_actions = tk.Frame(setup, bg=BRAND["panel"])
         setup_actions.pack(anchor="w", padx=18, pady=(4, 12))
-        self.primary_button(setup_actions, "Start New Audit", self.inventory_start_audit).pack(side="left")
-        self.action_button(setup_actions, "Resume Audit", self.inventory_resume_audit).pack(side="left", padx=8)
-        self.action_button(setup_actions, "Generate Reports", self.inventory_generate_reports).pack(side="left", padx=8)
+        self.primary_button(setup_actions, "Start Review Session", self.inventory_start_audit).pack(side="left")
+        self.action_button(setup_actions, "Resume Review", self.inventory_resume_audit).pack(side="left", padx=8)
+        self.action_button(setup_actions, "Generate Review Reports", self.inventory_generate_reports).pack(side="left", padx=8)
         self.action_button(setup_actions, "Launch Capture Studio", self.launch_capture_studio).pack(side="left", padx=8)
-        self.action_button(setup_actions, "Open Audit Folder", lambda: os.startfile(INVENTORY_AUDIT_DIR)).pack(side="left", padx=8)
+        self.action_button(setup_actions, "Open Review Folder", lambda: os.startfile(INVENTORY_AUDIT_DIR)).pack(side="left", padx=8)
 
         queue = self.card(wrap, fill="both", expand=True, ipady=12)
-        self.label(queue, "AUDIT QUEUE", 12, BRAND["gold"], True, anchor="w", padx=18, pady=(12, 4))
-        self.inventory_progress_var = tk.StringVar(value="No audit loaded.")
+        self.label(queue, "VERIFIED INVENTORY REVIEW", 12, BRAND["gold"], True, anchor="w", padx=18, pady=(12, 4))
+        self.inventory_progress_var = tk.StringVar(value="No review session loaded.")
         self.inventory_title_var = tk.StringVar(value="")
         self.inventory_meta_var = tk.StringVar(value="")
         self.inventory_stats_var = tk.StringVar(value="")
@@ -5925,7 +5940,7 @@ class PutnamOS(BaseTk):
 
         tk.Label(queue, textvariable=self.inventory_stats_var, bg=BRAND["panel"], fg=BRAND["muted"],
                  font=("Segoe UI", 10), justify="left", wraplength=1000).pack(anchor="w", padx=18, pady=(0, 10))
-        self.label(queue, "Audit Progress", 9, BRAND["gold"], True, anchor="w", padx=18, pady=(0, 4))
+        self.label(queue, "Review Progress", 9, BRAND["gold"], True, anchor="w", padx=18, pady=(0, 4))
         self.inventory_audit_session = load_inventory_audit_session()
         if self.inventory_audit_session:
             self.inventory_update_queue_view()
@@ -5952,7 +5967,7 @@ class PutnamOS(BaseTk):
             messagebox.showinfo("CardVector OS", "Choose an inventory source first.")
             return
         if unfinished_inventory_audit_sessions():
-            if not messagebox.askyesno("Start New Audit", "Unfinished audit sessions exist.\n\nStart a new audit anyway?"):
+            if not messagebox.askyesno("Start Review Session", "Unfinished review sessions exist.\n\nStart a new review anyway?"):
                 return
         try:
             session = create_inventory_audit_session(
@@ -5963,9 +5978,9 @@ class PutnamOS(BaseTk):
             )
             self.inventory_audit_session = session
             warning = batch_size_warning(len(session.get("records", [])))
-            self.status.set(f"Inventory audit queue loaded: {len(session.get('records', []))} cards.")
+            self.status.set(f"Inventory review session loaded: {len(session.get('records', []))} cards.")
             if warning:
-                messagebox.showwarning("Inventory Audit", warning)
+                messagebox.showwarning("Inventory Review", warning)
             self.inventory_update_queue_view()
         except Exception as exc:
             messagebox.showerror("CardVector OS", str(exc))
@@ -5986,8 +6001,8 @@ class PutnamOS(BaseTk):
                 session = sessions[0]
             else:
                 choice = simpledialog.askinteger(
-                    "Resume Audit",
-                    "Unfinished audit sessions:\n\n" + "\n".join(summary_lines) + "\n\nEnter session number to resume:",
+                    "Resume Review",
+                    "Unfinished review sessions:\n\n" + "\n".join(summary_lines) + "\n\nEnter session number to resume:",
                     minvalue=1,
                     maxvalue=len(sessions),
                 )
@@ -5997,7 +6012,7 @@ class PutnamOS(BaseTk):
         else:
             session = load_inventory_audit_session()
         if not session:
-            messagebox.showinfo("CardVector OS", "No saved inventory audit session found.")
+            messagebox.showinfo("CardVector OS", "No saved inventory review session found.")
             return
         self.inventory_audit_session = session
         self.inventory_source_var.set(session.get("source_file", ""))
@@ -6005,7 +6020,7 @@ class PutnamOS(BaseTk):
         self.inventory_location_var.set(session.get("batch_location", ""))
         self.inventory_capture_var.set(bool(session.get("capture_enabled")))
         self.inventory_update_queue_view()
-        self.status.set("Inventory audit resumed.")
+        self.status.set("Inventory review resumed.")
 
     def current_inventory_record(self):
         session = getattr(self, "inventory_audit_session", None)
@@ -6027,7 +6042,7 @@ class PutnamOS(BaseTk):
         idx = int(session.get("current_index", 0)) + 1 if total else 0
         self.inventory_progress_var.set(f"{idx} / {total}  |  {stats['completion_pct']}% complete")
         if not record:
-            self.inventory_title_var.set("No cards in this audit queue.")
+            self.inventory_title_var.set("No cards in this review session.")
             self.inventory_meta_var.set("")
             if hasattr(self, "inventory_current_location_var"):
                 self.inventory_current_location_var.set("")
@@ -6059,26 +6074,26 @@ class PutnamOS(BaseTk):
     def inventory_apply_action(self, action):
         session = getattr(self, "inventory_audit_session", None)
         if not session:
-            messagebox.showinfo("CardVector OS", "Load or resume an audit queue first.")
+            messagebox.showinfo("CardVector OS", "Load or resume an inventory review session first.")
             return
         try:
             self.inventory_audit_session = apply_inventory_audit_action(session, action, self.inventory_notes_var.get())
             self.inventory_update_queue_view()
-            self.status.set(f"Inventory audit saved: {action}.")
+            self.status.set(f"Inventory review saved: {action}.")
         except Exception as exc:
             messagebox.showerror("CardVector OS", str(exc))
 
     def inventory_use_last_location(self):
         session = getattr(self, "inventory_audit_session", None)
         if not session:
-            messagebox.showinfo("CardVector OS", "Load or resume an audit queue first.")
+            messagebox.showinfo("CardVector OS", "Load or resume an inventory review session first.")
             return
         self.inventory_new_location_var.set(session.get("last_location") or session.get("batch_location", ""))
 
     def inventory_save_location(self):
         session = getattr(self, "inventory_audit_session", None)
         if not session:
-            messagebox.showinfo("CardVector OS", "Load or resume an audit queue first.")
+            messagebox.showinfo("CardVector OS", "Load or resume an inventory review session first.")
             return
         record = self.current_inventory_record()
         if not record:
@@ -6094,21 +6109,21 @@ class PutnamOS(BaseTk):
         try:
             self.inventory_audit_session = update_inventory_audit_location(session, new_location, self.inventory_notes_var.get())
             self.inventory_update_queue_view()
-            self.status.set("Inventory audit saved: location updated.")
+            self.status.set("Inventory review saved: location updated.")
         except Exception as exc:
             messagebox.showerror("CardVector OS", str(exc))
 
     def inventory_save_progress(self):
         session = getattr(self, "inventory_audit_session", None)
         if not session:
-            messagebox.showinfo("CardVector OS", "Load or resume an audit queue first.")
+            messagebox.showinfo("CardVector OS", "Load or resume an inventory review session first.")
             return
         try:
             self.inventory_audit_session = save_inventory_audit_progress(session, self.inventory_notes_var.get())
             self.inventory_update_queue_view()
             stats = inventory_audit_stats(self.inventory_audit_session)
-            messagebox.showinfo("Audit Progress", self.inventory_summary_text(self.inventory_audit_session, stats))
-            self.status.set("Inventory audit progress saved.")
+            messagebox.showinfo("Review Progress", self.inventory_summary_text(self.inventory_audit_session, stats))
+            self.status.set("Inventory review progress saved.")
         except Exception as exc:
             messagebox.showerror("CardVector OS", str(exc))
 
@@ -6134,13 +6149,13 @@ class PutnamOS(BaseTk):
     def inventory_generate_reports(self):
         session = getattr(self, "inventory_audit_session", None) or load_inventory_audit_session()
         if not session:
-            messagebox.showinfo("CardVector OS", "No inventory audit session found.")
+            messagebox.showinfo("CardVector OS", "No inventory review session found.")
             return
         try:
             result = generate_inventory_audit_reports(session)
-            self.status.set("Inventory audit reports generated.")
+            self.status.set("Inventory review reports generated.")
             messagebox.showinfo(
-                "Inventory Audit Reports",
+                "Inventory Review Reports",
                 "Reports generated.\n\n"
                 + self.inventory_summary_text(session, result["stats"])
                 + "\n\n"
@@ -6154,7 +6169,7 @@ class PutnamOS(BaseTk):
 
     def launch_capture_studio(self):
         self.show_page("Capture")
-        append_activity("Opened CardVector Capture Studio tab for inventory audit verification")
+        append_activity("Opened CardVector Capture Studio tab for inventory review verification")
         self.status.set("CardVector Capture Studio is open. Use it to save internal verification JPEGs only.")
 
     def browse_and_run(self):
