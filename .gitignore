@@ -132,6 +132,7 @@ Tools/resources/
 # CardVector OS generated runtime output
 /Platform/Putnam_OS/System/cache/
 /Platform/Putnam_OS/System/logs/
+/Platform/Putnam_OS/System/data/inventory/etb_location_registry.json
 /Platform/Putnam_OS/System/data/inventory_conversion/
 /Platform/Putnam_OS/Completed Jobs/
 /Platform/Putnam_OS/Incoming Files/

@@ -127,7 +127,11 @@ def read_fallback_csv(path: Path) -> list[LocationLabel]:
 
 
 def read_etb_capacity_registry(root: Path) -> list[LocationLabel]:
-    path = root / "Data" / "Config" / "etb_location_registry.json"
+    paths = [
+        root / "Platform" / "Putnam_OS" / "System" / "data" / "inventory" / "etb_location_registry.json",
+        root / "Data" / "Config" / "etb_location_registry.json",
+    ]
+    path = next((candidate for candidate in paths if candidate.exists()), paths[0])
     if not path.exists():
         return []
     data = json.loads(path.read_text(encoding="utf-8-sig"))

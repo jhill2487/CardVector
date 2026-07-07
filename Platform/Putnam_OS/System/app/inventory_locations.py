@@ -7,7 +7,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from Platform.putnam_paths import DATA_CONFIG_DIR, DATA_EXPORTS_DIR
+from Platform.putnam_paths import DATA_CONFIG_DIR, DATA_EXPORTS_DIR, PUTNAM_OS_DIR
 
 
 DEFAULT_ETB_CAPACITY = 400
@@ -15,7 +15,9 @@ DEFAULT_ETB_LOCATION_CAPACITY = 40
 ETB_LOCATION_CODES = tuple("ABCDEFGHIJ")
 LOCATION_STATUSES = ["Empty", "Active", "Full", "Location Complete", "Needs Review", "Archived"]
 ETB_RE = re.compile(r"^ETB-(\d{3})$")
-ETB_LOCATION_REGISTRY = DATA_CONFIG_DIR / "etb_location_registry.json"
+ETB_OPERATIONAL_DATA_DIR = PUTNAM_OS_DIR / "System" / "data" / "inventory"
+OLD_ETB_LOCATION_REGISTRY = DATA_CONFIG_DIR / "etb_location_registry.json"
+ETB_LOCATION_REGISTRY = ETB_OPERATIONAL_DATA_DIR / "etb_location_registry.json"
 ETB_LABEL_ROOT = DATA_EXPORTS_DIR / "Inventory_Location_Labels"
 
 
@@ -73,8 +75,17 @@ def _default_registry() -> dict[str, Any]:
     }
 
 
+def migrate_etb_location_registry() -> Path:
+    if ETB_LOCATION_REGISTRY.exists():
+        return ETB_LOCATION_REGISTRY
+    if OLD_ETB_LOCATION_REGISTRY.exists():
+        ETB_LOCATION_REGISTRY.parent.mkdir(parents=True, exist_ok=True)
+        ETB_LOCATION_REGISTRY.write_bytes(OLD_ETB_LOCATION_REGISTRY.read_bytes())
+    return ETB_LOCATION_REGISTRY
+
+
 def load_etb_registry(path: Path | None = None) -> dict[str, Any]:
-    registry_path = path or ETB_LOCATION_REGISTRY
+    registry_path = path or migrate_etb_location_registry()
     if not registry_path.exists():
         return _default_registry()
     try:
@@ -95,7 +106,7 @@ def load_etb_registry(path: Path | None = None) -> dict[str, Any]:
 
 
 def save_etb_registry(registry: dict[str, Any], path: Path | None = None) -> Path:
-    registry_path = path or ETB_LOCATION_REGISTRY
+    registry_path = path or migrate_etb_location_registry()
     registry_path.parent.mkdir(parents=True, exist_ok=True)
     registry["updated_at"] = timestamp()
     registry_path.write_text(json.dumps(registry, indent=2), encoding="utf-8")
