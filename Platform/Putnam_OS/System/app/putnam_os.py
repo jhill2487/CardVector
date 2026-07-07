@@ -5462,6 +5462,10 @@ class PutnamOS(BaseTk):
         self.inventory_conversion_etb_var = tk.StringVar(value="")
         self.inventory_conversion_location_var = tk.StringVar(value="")
         self.inventory_conversion_preview_var = tk.StringVar(value="Latest capture: none")
+        self.inventory_workstation_context_var = tk.StringVar(value="")
+        self.inventory_workstation_stage_var = tk.StringVar(value="")
+        self.inventory_workstation_recognition_var = tk.StringVar(value="")
+        self.inventory_workstation_inventory_preview_var = tk.StringVar(value="")
 
         tk.Label(
             panel,
@@ -5472,6 +5476,35 @@ class PutnamOS(BaseTk):
             justify="left",
             wraplength=980,
         ).pack(anchor="w", padx=18, pady=(0, 8))
+
+        overview = tk.Frame(panel, bg=BRAND["panel"])
+        overview.pack(fill="x", padx=18, pady=(0, 10))
+
+        context = tk.Frame(overview, bg=BRAND["panel2"], highlightbackground=BRAND["border"], highlightthickness=1)
+        context.pack(side="left", fill="both", expand=True, padx=(0, 8))
+        self.label(context, "CURRENT CONTEXT", 9, BRAND["gold"], True, anchor="w", padx=12, pady=(10, 3))
+        tk.Label(
+            context,
+            textvariable=self.inventory_workstation_context_var,
+            bg=BRAND["panel2"],
+            fg=BRAND["text"],
+            font=self.ui_font("small"),
+            justify="left",
+            wraplength=440,
+        ).pack(anchor="w", padx=12, pady=(0, 10))
+
+        workflow = tk.Frame(overview, bg=BRAND["panel2"], highlightbackground=BRAND["border"], highlightthickness=1)
+        workflow.pack(side="left", fill="both", expand=True, padx=(8, 0))
+        self.label(workflow, "WORKFLOW STATUS", 9, BRAND["gold"], True, anchor="w", padx=12, pady=(10, 3))
+        tk.Label(
+            workflow,
+            textvariable=self.inventory_workstation_stage_var,
+            bg=BRAND["panel2"],
+            fg=BRAND["text"],
+            font=self.ui_font("small"),
+            justify="left",
+            wraplength=440,
+        ).pack(anchor="w", padx=12, pady=(0, 10))
 
         wizard = tk.Frame(panel, bg=BRAND["panel"])
         wizard.pack(fill="x", padx=18, pady=(0, 8))
@@ -5526,6 +5559,57 @@ class PutnamOS(BaseTk):
             wraplength=980,
         ).pack(anchor="w", padx=18, pady=(0, 10))
 
+        workstation = tk.Frame(panel, bg=BRAND["panel"])
+        workstation.pack(fill="x", padx=18, pady=(0, 10))
+
+        recognition = tk.Frame(workstation, bg=BRAND["panel2"], highlightbackground=BRAND["border"], highlightthickness=1)
+        recognition.pack(side="left", fill="both", expand=True, padx=(0, 8))
+        self.label(recognition, "RECOGNITION WORKSPACE", 9, BRAND["gold"], True, anchor="w", padx=12, pady=(10, 3))
+        tk.Label(
+            recognition,
+            textvariable=self.inventory_workstation_recognition_var,
+            bg=BRAND["panel2"],
+            fg=BRAND["text"],
+            font=self.ui_font("small"),
+            justify="left",
+            wraplength=430,
+        ).pack(anchor="w", padx=12, pady=(0, 8))
+        tk.Label(
+            recognition,
+            text="Future embedded recognition workspace",
+            bg=BRAND["bg"],
+            fg=BRAND["muted"],
+            font=self.ui_font("small"),
+            relief="flat",
+            highlightbackground=BRAND["border"],
+            highlightthickness=1,
+            width=46,
+            height=5,
+        ).pack(fill="x", padx=12, pady=(0, 12))
+
+        inventory_preview = tk.Frame(workstation, bg=BRAND["panel2"], highlightbackground=BRAND["border"], highlightthickness=1)
+        inventory_preview.pack(side="left", fill="both", expand=True, padx=(8, 0))
+        self.label(inventory_preview, "INVENTORY PREVIEW", 9, BRAND["gold"], True, anchor="w", padx=12, pady=(10, 3))
+        tk.Label(
+            inventory_preview,
+            textvariable=self.inventory_workstation_inventory_preview_var,
+            bg=BRAND["panel2"],
+            fg=BRAND["text"],
+            font=self.ui_font("small"),
+            justify="left",
+            wraplength=430,
+        ).pack(anchor="w", padx=12, pady=(0, 10))
+
+        future_actions = tk.Frame(panel, bg=BRAND["panel2"], highlightbackground=BRAND["border"], highlightthickness=1)
+        future_actions.pack(fill="x", padx=18, pady=(0, 10))
+        self.label(future_actions, "FUTURE ACTION AREA", 9, BRAND["gold"], True, anchor="w", padx=12, pady=(10, 6))
+        future_button_row = tk.Frame(future_actions, bg=BRAND["panel2"])
+        future_button_row.pack(anchor="w", padx=12, pady=(0, 12))
+        for label in ("Continue Conversion", "Review Recognition", "Create Inventory", "Print Labels", "Move Batch"):
+            button = self.action_button(future_button_row, label, lambda: None)
+            button.configure(state="disabled")
+            button.pack(side="left", padx=(0, 8))
+
         preview = tk.Frame(panel, bg=BRAND["panel"])
         preview.pack(fill="x", padx=18, pady=(0, 10))
         left = tk.Frame(preview, bg=BRAND["panel"])
@@ -5558,6 +5642,90 @@ class PutnamOS(BaseTk):
 
         self.inventory_conversion_refresh()
 
+    def inventory_conversion_workstation_data(self):
+        session = getattr(self, "inventory_conversion_session", None) or load_current_inventory_conversion_session() or {}
+        capture_session = getattr(self, "inventory_conversion_capture_session", None) or {}
+        if session and not capture_session:
+            capture_session = load_inventory_conversion_capture_session(session) or {}
+        etb_code = self.inventory_conversion_etb_var.get() if hasattr(self, "inventory_conversion_etb_var") else ""
+        location_code = self.inventory_conversion_location_var.get() if hasattr(self, "inventory_conversion_location_var") else ""
+        capacity = DEFAULT_ETB_LOCATION_CAPACITY
+        stored = 0
+        remaining = DEFAULT_ETB_LOCATION_CAPACITY
+        occupancy = "Select a location"
+        try:
+            _etb, _location, capacity, stored, remaining = self.inventory_conversion_selected_counts()
+            occupancy = f"{stored}/{capacity}"
+        except Exception:
+            pass
+        captured = inventory_conversion_capture_count(capture_session)
+        expected = int(session.get("expected_capacity", capacity) or capacity)
+        return {
+            "session": session,
+            "capture_session": capture_session,
+            "etb": etb_code or session.get("etb", ""),
+            "location": location_code or session.get("location", ""),
+            "location_id": session.get("location_id") or (f"{etb_code}-{location_code}" if etb_code and location_code else ""),
+            "capacity": capacity,
+            "stored": stored,
+            "remaining": remaining,
+            "occupancy": occupancy,
+            "captured": captured,
+            "expected": expected,
+            "status": session.get("status") or "Ready",
+            "session_id": session.get("session_id") or "None",
+            "current_batch": session.get("capture_session_id") or session.get("location_id") or "Not assigned",
+        }
+
+    def inventory_conversion_refresh_workstation(self):
+        if not hasattr(self, "inventory_workstation_context_var"):
+            return
+        data = self.inventory_conversion_workstation_data()
+        stats = inventory_conversion_dashboard_stats()
+        session = data["session"]
+        capture_started = bool(session) or data["captured"] > 0
+        recognition_pending = capture_started and data["status"] != "Location Complete"
+        complete = data["status"] == "Location Complete"
+
+        def mark(done):
+            return "[x]" if done else "[ ]"
+
+        current_marker = "[~]" if recognition_pending else "[ ]"
+        recognition_status = "Pending future CardUploader handoff" if recognition_pending else "Not started"
+        self.inventory_workstation_context_var.set(
+            f"ETB: {data['etb'] or 'None'}\n"
+            f"Location: {data['location'] or 'None'}\n"
+            f"Occupancy: {data['occupancy']}\n"
+            f"Current Conversion Session: {data['session_id']}\n"
+            f"Current Batch: {data['current_batch']}\n"
+            f"Current Status: {data['status']}"
+        )
+        self.inventory_workstation_stage_var.set(
+            f"{mark(bool(data['etb']))} ETB Selected\n"
+            f"{mark(bool(data['location']))} Location Selected\n"
+            f"{mark(capture_started)} Capture Started\n"
+            f"{current_marker} Recognition Pending{' (future)' if recognition_pending else ''}\n"
+            f"{mark(False)} Review Pending\n"
+            f"{mark(False)} Inventory Creation\n"
+            f"{mark(complete)} Complete"
+        )
+        self.inventory_workstation_recognition_var.set(
+            f"Recognition Status: {recognition_status}\n"
+            f"Batch Status: {data['current_batch']}\n"
+            "Recognition Service: CardUploader (future integration)\n"
+            "Current Recognition Job: Placeholder\n"
+            "Recognition Results: Placeholder"
+        )
+        self.inventory_workstation_inventory_preview_var.set(
+            f"Cards Expected: {data['expected']}\n"
+            f"Cards Captured: {data['captured']}/{data['expected']}\n"
+            "Cards Recognized: Placeholder\n"
+            "Cards Reviewed: Placeholder\n"
+            "Cards Imported: Placeholder\n"
+            f"Locations Completed Today: {stats['locations_completed']}\n"
+            f"Cards Converted Today: {stats['cards_converted']}"
+        )
+
     def inventory_conversion_refresh(self):
         if not hasattr(self, "inventory_conversion_etb_combo"):
             return
@@ -5572,6 +5740,7 @@ class PutnamOS(BaseTk):
         self.inventory_conversion_load_active_session()
         self.inventory_conversion_update_preview()
         self.inventory_conversion_update_dashboard()
+        self.inventory_conversion_refresh_workstation()
 
     def inventory_conversion_update_location_options(self):
         if not hasattr(self, "inventory_conversion_location_combo"):
@@ -5615,6 +5784,7 @@ class PutnamOS(BaseTk):
         except Exception:
             self.inventory_conversion_capacity_var.set("Select an ETB and location to view conversion capacity.")
         self.inventory_conversion_update_dashboard()
+        self.inventory_conversion_refresh_workstation()
 
     def inventory_conversion_update_dashboard(self):
         if not hasattr(self, "inventory_conversion_dashboard_var"):
@@ -5735,6 +5905,7 @@ class PutnamOS(BaseTk):
             self.inventory_conversion_status_var.set(self.inventory_conversion_capture_status_text(session, capture_session))
         self.inventory_conversion_update_preview(capture_session)
         self.inventory_conversion_update_capacity()
+        self.inventory_conversion_refresh_workstation()
         return session
 
     def inventory_conversion_ensure_capture_session(self):
@@ -5788,6 +5959,7 @@ class PutnamOS(BaseTk):
             self.inventory_conversion_status_var.set(self.inventory_conversion_capture_status_text(session, capture_session))
             self.inventory_conversion_update_preview(capture_session)
             self.inventory_conversion_update_dashboard()
+            self.inventory_conversion_refresh_workstation()
             append_activity(f"Inventory conversion session started: {session['location_id']}")
             self.status.set(f"Inventory conversion started for {session['location_id']}. Capture the first card front.")
         except Exception as exc:
