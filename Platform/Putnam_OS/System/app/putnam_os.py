@@ -257,6 +257,9 @@ INVENTORY_AUDIT_REPORTS = INVENTORY_AUDIT_DIR / "reports"
 INVENTORY_AUDIT_HISTORY = INVENTORY_AUDIT_DIR / "inventory_audit_history.csv"
 CURRENT_INVENTORY_AUDIT = INVENTORY_AUDIT_DIR / "current_inventory_audit.json"
 INVENTORY_AUDIT_SESSIONS_DIR = DATA_LOGS_DIR / "inventory_audit_sessions"
+INVENTORY_CONVERSION_DIR = DATA / "inventory_conversion"
+INVENTORY_CONVERSION_SESSIONS_DIR = INVENTORY_CONVERSION_DIR / "sessions"
+CURRENT_INVENTORY_CONVERSION = INVENTORY_CONVERSION_DIR / "current_inventory_conversion.json"
 LOCATION_UPDATE_LOG = DATA_LOGS_DIR / "location_update_log.csv"
 INVENTORY_AUDIT_EVENT_LOG = DATA_LOGS_DIR / "inventory_audit_event_log.csv"
 INCOMING = OS_DIR / "Incoming Files"
@@ -296,6 +299,7 @@ for p in [OS_DIR, SYSTEM, APP_DIR, CONFIG, LOGS, CACHE, DATA, ACQUISITIONS_DIR, 
           IMPORTS, CARDUPLOADER_INVENTORY_IMPORTS, EXPORTS, MEDIA, COLLECTR, ROOT_SESSIONS, ARCHIVE, DOCS, ROOT_LOGS,
           DATA_CONFIG_DIR, STARTUP_LOGS,
           INVENTORY_AUDIT_DIR, INVENTORY_AUDIT_IMAGES, INVENTORY_AUDIT_REPORTS,
+          INVENTORY_CONVERSION_DIR, INVENTORY_CONVERSION_SESSIONS_DIR,
           PLATFORM, TOOLS, UTILITIES, INSTALLERS, CONTENT, CONTENT_IDEAS, CONTENT_RECORDINGS,
           CONTENT_CLIPS, CONTENT_EPISODES]:
     p.mkdir(parents=True, exist_ok=True)
@@ -1482,6 +1486,125 @@ def completed_session_etb_rollups():
         for location in item.get("locations", {}).values():
             location["batches"] = sorted(location["batches"])
     return rollups
+
+
+CONVERSION_WORKFLOW_STATES = [
+    "Waiting for Capture",
+    "Capture Complete",
+    "Recognition Pending",
+    "Recognition Complete",
+    "Review Required",
+    "Inventory Created",
+    "Location Complete",
+]
+
+
+def inventory_conversion_session_path(session_id):
+    safe = re.sub(r"[^A-Za-z0-9_.-]+", "_", str(session_id or nowstamp()))[:80]
+    return INVENTORY_CONVERSION_SESSIONS_DIR / f"{safe}.json"
+
+
+def save_inventory_conversion_session(session):
+    session = dict(session or {})
+    session.setdefault("session_id", nowstamp())
+    session["updated_at"] = datetime.now().isoformat(timespec="seconds")
+    INVENTORY_CONVERSION_SESSIONS_DIR.mkdir(parents=True, exist_ok=True)
+    INVENTORY_CONVERSION_DIR.mkdir(parents=True, exist_ok=True)
+    path = inventory_conversion_session_path(session["session_id"])
+    path.write_text(json.dumps(session, indent=2) + "\n", encoding="utf-8")
+    CURRENT_INVENTORY_CONVERSION.write_text(json.dumps(session, indent=2) + "\n", encoding="utf-8")
+    return session
+
+
+def load_current_inventory_conversion_session():
+    if not CURRENT_INVENTORY_CONVERSION.exists():
+        return None
+    try:
+        return json.loads(CURRENT_INVENTORY_CONVERSION.read_text(encoding="utf-8-sig"))
+    except Exception:
+        return None
+
+
+def load_inventory_conversion_sessions(limit=250):
+    sessions = []
+    if not INVENTORY_CONVERSION_SESSIONS_DIR.exists():
+        return sessions
+    for path in sorted(INVENTORY_CONVERSION_SESSIONS_DIR.glob("*.json"), key=lambda p: p.stat().st_mtime, reverse=True)[:limit]:
+        try:
+            sessions.append(json.loads(path.read_text(encoding="utf-8-sig")))
+        except Exception:
+            continue
+    return sessions
+
+
+def inventory_conversion_location_record(etb_code, location_code):
+    normalized_etb = etb_parent_from_batch(etb_code)
+    normalized_location = str(location_code or "").strip().upper()
+    for etb in etb_location_rows():
+        if etb["location_code"] != normalized_etb:
+            continue
+        for location in etb.get("locations", []):
+            if str(location.get("location_code", "")).upper() == normalized_location:
+                return etb, location
+    raise ValueError(f"Location not found: {normalized_etb}-{normalized_location}")
+
+
+def create_inventory_conversion_session(etb_code, location_code, operator=""):
+    etb, location = inventory_conversion_location_record(etb_code, location_code)
+    created_at = datetime.now().isoformat(timespec="seconds")
+    session_id = f"conversion_{nowstamp()}"
+    expected_capacity = int(location.get("capacity", DEFAULT_ETB_LOCATION_CAPACITY) or DEFAULT_ETB_LOCATION_CAPACITY)
+    session = {
+        "session_id": session_id,
+        "session_type": "physical_inventory_conversion",
+        "etb": etb["location_code"],
+        "location": str(location.get("location_code", "")).upper(),
+        "location_id": f"{etb['location_code']}-{str(location.get('location_code', '')).upper()}",
+        "date": created_at[:10],
+        "created_at": created_at,
+        "updated_at": created_at,
+        "operator": operator or os.environ.get("USERNAME") or os.environ.get("COMPUTERNAME") or "",
+        "status": "Waiting for Capture",
+        "cards_captured": 0,
+        "expected_capacity": expected_capacity,
+        "starting_count": int(location.get("stored_count", 0) or 0),
+        "remaining_capacity": max(0, expected_capacity - int(location.get("stored_count", 0) or 0)),
+        "workflow_state": {
+            "current": "Waiting for Capture",
+            "future_hooks": list(CONVERSION_WORKFLOW_STATES),
+        },
+        "notes": "Foundation session only. No Capture, CardUploader, recognition, inventory creation, or marketplace integration is performed.",
+    }
+    return save_inventory_conversion_session(session)
+
+
+def next_suggested_conversion_location():
+    for etb in etb_location_rows():
+        if etb.get("status") in {"Full", "Archived"}:
+            continue
+        active = str(etb.get("current_active_location") or etb.get("active_location") or "A").upper()
+        for location in etb.get("locations", []):
+            if str(location.get("location_code", "")).upper() != active:
+                continue
+            capacity = int(location.get("capacity", DEFAULT_ETB_LOCATION_CAPACITY) or DEFAULT_ETB_LOCATION_CAPACITY)
+            stored = int(location.get("stored_count", 0) or 0)
+            if stored < capacity:
+                return f"{etb['location_code']}-{active}"
+    return ""
+
+
+def inventory_conversion_dashboard_stats():
+    today = datetime.now().date().isoformat()
+    sessions = load_inventory_conversion_sessions()
+    today_sessions = [item for item in sessions if str(item.get("date") or item.get("created_at", ""))[:10] == today]
+    current = load_current_inventory_conversion_session()
+    return {
+        "todays_conversion": len(today_sessions),
+        "cards_converted": sum(int(item.get("cards_captured", 0) or 0) for item in today_sessions),
+        "locations_completed": sum(1 for item in today_sessions if item.get("status") == "Location Complete"),
+        "current_session": current,
+        "next_suggested_location": next_suggested_conversion_location(),
+    }
 
 
 CARDUPLOADER_INVENTORY_COLUMNS = [
@@ -5220,6 +5343,175 @@ class PutnamOS(BaseTk):
             messagebox.showinfo("CardVector OS", f"Decision Engine check complete.\n\nLog:\n{log_path}")
         append_activity("Decision Engine check complete")
 
+    def inventory_conversion_panel(self, wrap):
+        panel = self.card(wrap, fill="x", pady=(0, 12), ipady=10)
+        self.label(panel, "PHYSICAL INVENTORY CONVERSION", 12, BRAND["gold"], True, anchor="w", padx=18, pady=(12, 4))
+        self.label(
+            panel,
+            "Convert physical cards into verified CardVector inventory. This sprint creates the workflow shell only; recognition and inventory creation are future steps.",
+            9,
+            BRAND["muted"],
+            False,
+            anchor="w",
+            padx=18,
+            pady=(0, 8),
+        )
+
+        self.inventory_conversion_dashboard_var = tk.StringVar(value="")
+        self.inventory_conversion_capacity_var = tk.StringVar(value="")
+        self.inventory_conversion_status_var = tk.StringVar(value="No conversion session started.")
+        self.inventory_conversion_etb_var = tk.StringVar(value="")
+        self.inventory_conversion_location_var = tk.StringVar(value="")
+
+        tk.Label(
+            panel,
+            textvariable=self.inventory_conversion_dashboard_var,
+            bg=BRAND["panel"],
+            fg=BRAND["muted"],
+            font=("Segoe UI", 9),
+            justify="left",
+            wraplength=980,
+        ).pack(anchor="w", padx=18, pady=(0, 8))
+
+        wizard = tk.Frame(panel, bg=BRAND["panel"])
+        wizard.pack(fill="x", padx=18, pady=(0, 8))
+        self.label(wizard, "Step 1: Select ETB", 9, BRAND["muted"], False, side="left", padx=(0, 8))
+        self.inventory_conversion_etb_combo = ttk.Combobox(
+            wizard,
+            textvariable=self.inventory_conversion_etb_var,
+            values=[],
+            width=16,
+            state="readonly",
+        )
+        self.inventory_conversion_etb_combo.pack(side="left", padx=(0, 18))
+        self.inventory_conversion_etb_combo.bind("<<ComboboxSelected>>", lambda _event: self.inventory_conversion_update_location_options())
+
+        self.label(wizard, "Step 2: Select Location", 9, BRAND["muted"], False, side="left", padx=(0, 8))
+        self.inventory_conversion_location_combo = ttk.Combobox(
+            wizard,
+            textvariable=self.inventory_conversion_location_var,
+            values=[],
+            width=14,
+            state="readonly",
+        )
+        self.inventory_conversion_location_combo.pack(side="left", padx=(0, 18))
+        self.inventory_conversion_location_combo.bind("<<ComboboxSelected>>", lambda _event: self.inventory_conversion_update_capacity())
+
+        tk.Label(
+            panel,
+            textvariable=self.inventory_conversion_capacity_var,
+            bg=BRAND["panel"],
+            fg=BRAND["text"],
+            font=("Segoe UI", 10, "bold"),
+            justify="left",
+            wraplength=980,
+        ).pack(anchor="w", padx=18, pady=(0, 8))
+
+        actions = tk.Frame(panel, bg=BRAND["panel"])
+        actions.pack(anchor="w", padx=18, pady=(0, 10))
+        self.primary_button(actions, "Start Inventory Conversion", self.inventory_start_conversion_session).pack(side="left")
+        self.action_button(actions, "Refresh", self.inventory_conversion_refresh).pack(side="left", padx=8)
+
+        tk.Label(
+            panel,
+            textvariable=self.inventory_conversion_status_var,
+            bg=BRAND["panel"],
+            fg=BRAND["gold"],
+            font=("Segoe UI", 10, "bold"),
+            justify="left",
+            wraplength=980,
+        ).pack(anchor="w", padx=18, pady=(0, 10))
+
+        self.inventory_conversion_refresh()
+
+    def inventory_conversion_refresh(self):
+        if not hasattr(self, "inventory_conversion_etb_combo"):
+            return
+        rows = etb_location_rows()
+        etb_codes = [row["location_code"] for row in rows]
+        self.inventory_conversion_etb_combo.configure(values=etb_codes)
+        if etb_codes and self.inventory_conversion_etb_var.get() not in etb_codes:
+            suggested = next_suggested_conversion_location()
+            suggested_etb = etb_parent_from_batch(suggested)
+            self.inventory_conversion_etb_var.set(suggested_etb if suggested_etb in etb_codes else etb_codes[0])
+        self.inventory_conversion_update_location_options()
+        self.inventory_conversion_update_dashboard()
+
+    def inventory_conversion_update_location_options(self):
+        if not hasattr(self, "inventory_conversion_location_combo"):
+            return
+        etb_code = self.inventory_conversion_etb_var.get()
+        location_codes = []
+        active_location = ""
+        for row in etb_location_rows():
+            if row["location_code"] != etb_code:
+                continue
+            active_location = str(row.get("current_active_location") or row.get("active_location") or "").upper()
+            location_codes = [str(item.get("location_code", "")).upper() for item in row.get("locations", [])]
+            break
+        self.inventory_conversion_location_combo.configure(values=location_codes)
+        if location_codes and self.inventory_conversion_location_var.get() not in location_codes:
+            self.inventory_conversion_location_var.set(active_location if active_location in location_codes else location_codes[0])
+        self.inventory_conversion_update_capacity()
+
+    def inventory_conversion_selected_counts(self):
+        etb_code = self.inventory_conversion_etb_var.get()
+        location_code = self.inventory_conversion_location_var.get()
+        etb, location = inventory_conversion_location_record(etb_code, location_code)
+        capacity = int(location.get("capacity", DEFAULT_ETB_LOCATION_CAPACITY) or DEFAULT_ETB_LOCATION_CAPACITY)
+        stored = int(location.get("stored_count", 0) or 0)
+        rollup = completed_session_etb_rollups().get(etb["location_code"], {}).get("locations", {}).get(location_code, {})
+        if rollup:
+            stored = max(stored, int(rollup.get("assigned", 0) or 0))
+        return etb, location, capacity, stored, max(0, capacity - stored)
+
+    def inventory_conversion_update_capacity(self):
+        if not hasattr(self, "inventory_conversion_capacity_var"):
+            return
+        try:
+            etb, location, capacity, stored, remaining = self.inventory_conversion_selected_counts()
+            self.inventory_conversion_capacity_var.set(
+                f"Step 3: Capacity {capacity} cards  |  Current Count {stored}  |  Remaining Capacity {remaining}"
+            )
+        except Exception:
+            self.inventory_conversion_capacity_var.set("Step 3: Select an ETB and location to view capacity.")
+
+    def inventory_conversion_update_dashboard(self):
+        if not hasattr(self, "inventory_conversion_dashboard_var"):
+            return
+        stats = inventory_conversion_dashboard_stats()
+        current = stats.get("current_session") or {}
+        current_text = (
+            f"{current.get('session_id')} | {current.get('location_id')} | {current.get('status')}"
+            if current else "None"
+        )
+        self.inventory_conversion_dashboard_var.set(
+            "Today's Conversion\n"
+            f"Cards Converted: {stats['cards_converted']}  |  "
+            f"Locations Completed: {stats['locations_completed']}  |  "
+            f"Current Session: {current_text}  |  "
+            f"Next Suggested Location: {stats['next_suggested_location'] or 'None'}"
+        )
+
+    def inventory_start_conversion_session(self):
+        try:
+            etb, location, capacity, stored, remaining = self.inventory_conversion_selected_counts()
+            if remaining <= 0:
+                messagebox.showwarning("Physical Inventory Conversion", f"{etb['location_code']}-{location['location_code']} is already full.")
+                return
+            session = create_inventory_conversion_session(etb["location_code"], location["location_code"])
+            self.inventory_conversion_session = session
+            self.inventory_conversion_status_var.set(
+                "Waiting for Capture...\n"
+                f"Session: {session['session_id']}  |  Location: {session['location_id']}  |  "
+                f"Cards Captured: {session['cards_captured']}/{session['expected_capacity']}"
+            )
+            self.inventory_conversion_update_dashboard()
+            append_activity(f"Inventory conversion session started: {session['location_id']}")
+            self.status.set(f"Inventory conversion started for {session['location_id']}.")
+        except Exception as exc:
+            messagebox.showerror("Physical Inventory Conversion", str(exc))
+
     def inventory_location_registry_panel(self, wrap):
         registry = self.card(wrap, fill="x", pady=(0, 12), ipady=10)
         self.label(registry, "ETB LOCATION REGISTRY", 12, BRAND["gold"], True, anchor="w", padx=18, pady=(12, 4))
@@ -5504,6 +5796,7 @@ class PutnamOS(BaseTk):
         wrap = tk.Frame(self.main, bg=BRAND["bg"])
         wrap.pack(fill="both", expand=True, padx=34, pady=0)
 
+        self.inventory_conversion_panel(wrap)
         self.inventory_location_registry_panel(wrap)
         self.inventory_label_center_panel(wrap)
 
