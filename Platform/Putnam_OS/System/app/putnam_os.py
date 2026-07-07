@@ -199,7 +199,11 @@ BUTTON_ICONS = {
     "Open Session Folder": "[O]",
     "Open Sessions Folder": "[O]",
     "Previous": "[<]",
+    "Print All Labels": "[#]",
     "Refresh Counts": "[R]",
+    "Reprint Selected ETB": "[#]",
+    "Reprint Selected Location": "[#]",
+    "Resolve QR": "[>]",
     "Resume Review": "[R]",
     "Retake Last": "[R]",
     "Retry": "[R]",
@@ -338,6 +342,8 @@ from inventory_locations import (
     etb_location_rows,
     mark_location_complete,
     next_etb_code,
+    qr_resolution_text,
+    resolve_cardvector_qr_payload,
     update_etb_status,
 )
 from orders_fulfillment import PICK_LIST_ROOT, generate_pick_slips
@@ -1338,13 +1344,20 @@ def ensure_label_dependencies():
         )
 
 
-def generate_inventory_label_pdf(label_type="ETB Labels", etb_code=""):
+def generate_inventory_label_pdf(label_type="ETB Labels", etb_code="", location_code="", etb_only=False):
     if label_type != "ETB Labels":
         raise ValueError(f"{label_type} templates are planned for a future Label Center release.")
     ensure_label_dependencies()
     generator = load_inventory_label_generator()
     try:
-        labels = generator.load_locations_for_etb(ROOT, etb_code) if etb_code else generator.load_locations(ROOT)
+        if etb_code and location_code:
+            labels = generator.load_location_label(ROOT, etb_code, location_code)
+        elif etb_code and etb_only:
+            labels = generator.load_etb_label(ROOT, etb_code)
+        elif etb_code:
+            labels = generator.load_locations_for_etb(ROOT, etb_code)
+        else:
+            labels = generator.load_locations(ROOT)
     except SystemExit as exc:
         raise RuntimeError(str(exc) or "Could not load inventory locations.") from exc
     if not labels:
@@ -1354,7 +1367,7 @@ def generate_inventory_label_pdf(label_type="ETB Labels", etb_code=""):
             "Platform/Putnam_OS/System/tools/sample_etb_locations.csv"
         )
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    label_scope = f"_{etb_code}" if etb_code else ""
+    label_scope = f"_{etb_code}_{location_code}" if etb_code and location_code else f"_{etb_code}_etb" if etb_code and etb_only else f"_{etb_code}" if etb_code else ""
     output_path = LABEL_EXPORT_ROOT / f"cardvector_etb_qr_labels{label_scope}_{timestamp}.pdf"
     try:
         pdf_path = generator.write_pdf(labels, output_path)
@@ -5967,10 +5980,38 @@ class PutnamOS(BaseTk):
         label_menu.configure(bg=BRAND["panel2"], fg=BRAND["text"], activebackground=BRAND["bronze_hover"], relief="flat", width=22)
         label_menu.pack(side="left")
         self.primary_button(row, "Generate Labels", self.inventory_generate_etb_labels).pack(side="left", padx=10)
-        self.action_button(row, "Open Label Folder", self.inventory_open_etb_label_folder).pack(side="left")
+        self.action_button(row, "Reprint Selected ETB", self.inventory_reprint_selected_etb_label).pack(side="left")
+        self.action_button(row, "Reprint Selected Location", self.inventory_reprint_selected_location_label).pack(side="left", padx=8)
+        self.action_button(row, "Print All Labels", self.inventory_print_all_labels).pack(side="left")
+        self.action_button(row, "Open Label Folder", self.inventory_open_etb_label_folder).pack(side="left", padx=8)
         tk.Label(
             panel,
             textvariable=self.label_center_status_var,
+            bg=BRAND["panel"],
+            fg=BRAND["muted"],
+            font=("Segoe UI", 9),
+            justify="left",
+            wraplength=980,
+        ).pack(anchor="w", padx=18, pady=(0, 10))
+
+        qr = tk.Frame(panel, bg=BRAND["panel"])
+        qr.pack(fill="x", padx=18, pady=(2, 10))
+        self.qr_lookup_payload_var = tk.StringVar(value="cardvector://etb/ETB-007")
+        self.qr_lookup_result_var = tk.StringVar(value="Scan or paste a CardVector QR payload, then resolve it.")
+        self.label(qr, "QR Lookup", 9, BRAND["gold"], True, side="left", padx=(0, 8))
+        tk.Entry(
+            qr,
+            textvariable=self.qr_lookup_payload_var,
+            bg=BRAND["panel2"],
+            fg=BRAND["text"],
+            insertbackground=BRAND["text"],
+            relief="flat",
+            width=42,
+        ).pack(side="left", fill="x", expand=True)
+        self.action_button(qr, "Resolve QR", self.inventory_resolve_qr_payload_ui).pack(side="left", padx=8)
+        tk.Label(
+            panel,
+            textvariable=self.qr_lookup_result_var,
             bg=BRAND["panel"],
             fg=BRAND["muted"],
             font=("Segoe UI", 9),
@@ -5988,6 +6029,20 @@ class PutnamOS(BaseTk):
         parent = self.etb_location_tree.parent(item)
         etb_item = parent or item
         return str(self.etb_location_tree.item(etb_item, "text") or "")
+
+    def inventory_selected_location_code(self):
+        if not hasattr(self, "etb_location_tree"):
+            return ""
+        selected = self.etb_location_tree.selection()
+        if not selected:
+            return ""
+        item = selected[0]
+        parent = self.etb_location_tree.parent(item)
+        if not parent:
+            return ""
+        text = str(self.etb_location_tree.item(item, "text") or "")
+        match = re.search(r"Location\s+([A-J])", text, re.IGNORECASE)
+        return match.group(1).upper() if match else ""
 
     def inventory_refresh_etb_locations(self, select_code=""):
         if not hasattr(self, "etb_location_tree"):
@@ -6111,15 +6166,19 @@ class PutnamOS(BaseTk):
         except Exception as exc:
             messagebox.showerror("ETB Location Registry", str(exc))
 
+    def inventory_generate_label_result_ui(self, result, action_label):
+        status = f"{action_label}: generated {result['count']} label(s).\nPDF: {result['pdf']}"
+        if hasattr(self, "label_center_status_var"):
+            self.label_center_status_var.set(status)
+        self.status.set(f"{action_label}: generated {result['count']} label(s).")
+        append_label_generation_log(f"SUCCESS | {action_label} | {result['count']} labels | {result['pdf']}")
+        return status
+
     def inventory_generate_etb_labels(self):
         label_type = self.label_center_type_var.get() if hasattr(self, "label_center_type_var") else "ETB Labels"
         try:
             result = generate_inventory_label_pdf(label_type)
-            status = f"Generated {result['count']} {label_type} label(s).\nPDF: {result['pdf']}"
-            if hasattr(self, "label_center_status_var"):
-                self.label_center_status_var.set(status)
-            self.status.set(f"Generated {result['count']} inventory label(s).")
-            append_label_generation_log(f"SUCCESS | {label_type} | {result['count']} labels | {result['pdf']}")
+            status = self.inventory_generate_label_result_ui(result, label_type)
             messagebox.showinfo(
                 "Inventory Label Center",
                 "Printable QR labels generated.\n\n"
@@ -6145,6 +6204,61 @@ class PutnamOS(BaseTk):
                 self.label_center_status_var.set(message)
             self.status.set("Inventory label generation failed.")
             messagebox.showerror("Inventory Label Center", message)
+
+    def inventory_reprint_selected_etb_label(self):
+        code = self.inventory_selected_etb_code()
+        if not code:
+            messagebox.showinfo("Inventory Label Center", "Select an ETB row first.")
+            return
+        try:
+            result = generate_inventory_label_pdf("ETB Labels", etb_code=code, etb_only=True)
+            self.inventory_generate_label_result_ui(result, f"Reprint Selected ETB {code}")
+        except Exception as exc:
+            message = str(exc) or "Selected ETB label generation failed."
+            append_label_generation_log(f"ERROR | Reprint Selected ETB | {message}", exc)
+            if hasattr(self, "label_center_status_var"):
+                self.label_center_status_var.set(message)
+            messagebox.showerror("Inventory Label Center", message)
+
+    def inventory_reprint_selected_location_label(self):
+        etb_code = self.inventory_selected_etb_code()
+        location_code = self.inventory_selected_location_code()
+        if not etb_code or not location_code:
+            messagebox.showinfo("Inventory Label Center", "Select a child Location row first.")
+            return
+        try:
+            result = generate_inventory_label_pdf("ETB Labels", etb_code=etb_code, location_code=location_code)
+            self.inventory_generate_label_result_ui(result, f"Reprint Selected Location {etb_code}-{location_code}")
+        except Exception as exc:
+            message = str(exc) or "Selected location label generation failed."
+            append_label_generation_log(f"ERROR | Reprint Selected Location | {message}", exc)
+            if hasattr(self, "label_center_status_var"):
+                self.label_center_status_var.set(message)
+            messagebox.showerror("Inventory Label Center", message)
+
+    def inventory_print_all_labels(self):
+        try:
+            result = generate_inventory_label_pdf("ETB Labels")
+            self.inventory_generate_label_result_ui(result, "Print All Labels")
+            self.inventory_open_etb_label_folder()
+        except Exception as exc:
+            message = str(exc) or "Print All Labels failed."
+            append_label_generation_log(f"ERROR | Print All Labels | {message}", exc)
+            if hasattr(self, "label_center_status_var"):
+                self.label_center_status_var.set(message)
+            messagebox.showerror("Inventory Label Center", message)
+
+    def inventory_resolve_qr_payload_ui(self):
+        payload = self.qr_lookup_payload_var.get() if hasattr(self, "qr_lookup_payload_var") else ""
+        try:
+            resolved = resolve_cardvector_qr_payload(payload)
+            text = qr_resolution_text(resolved)
+            self.qr_lookup_result_var.set(text)
+            self.status.set(f"Resolved QR payload: {resolved.get('title', '')}")
+        except Exception as exc:
+            message = str(exc) or "Could not resolve QR payload."
+            self.qr_lookup_result_var.set(message)
+            self.status.set("QR lookup failed.")
 
     def inventory_open_etb_label_folder(self):
         LABEL_EXPORT_ROOT.mkdir(parents=True, exist_ok=True)

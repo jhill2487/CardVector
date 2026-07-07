@@ -4,6 +4,7 @@ import argparse
 import csv
 import json
 import os
+import re
 import sys
 from dataclasses import dataclass
 from datetime import datetime
@@ -31,7 +32,25 @@ class LocationLabel:
     def qr_value(self) -> str:
         if self.qr_payload:
             return self.qr_payload
+        if self.is_etb:
+            return f"cardvector://etb/{self.etb_id}"
+        if self.location_code:
+            return f"cardvector://location/{self.etb_id}/{self.location_code}"
         return f"cardvector://location/{self.location_id}"
+
+    @property
+    def etb_id(self) -> str:
+        match = re.match(r"^(ETB-\d{3})(?:-([A-J]))?$", self.location_id)
+        return match.group(1) if match else self.location_id
+
+    @property
+    def location_code(self) -> str:
+        match = re.match(r"^ETB-\d{3}-([A-J])$", self.location_id)
+        return match.group(1) if match else ""
+
+    @property
+    def is_etb(self) -> bool:
+        return bool(re.match(r"^ETB-\d{3}$", self.location_id))
 
 
 def resolve_project_root() -> Path:
@@ -217,6 +236,16 @@ def load_locations_for_etb(root: Path, etb_id: str) -> list[LocationLabel]:
     ]
 
 
+def load_etb_label(root: Path, etb_id: str) -> list[LocationLabel]:
+    normalized = normalize_location(etb_id)
+    return [row for row in load_locations(root) if row.location_id == normalized]
+
+
+def load_location_label(root: Path, etb_id: str, location_code: str) -> list[LocationLabel]:
+    normalized = f"{normalize_location(etb_id)}-{normalize_location(location_code)}"
+    return [row for row in load_locations(root) if row.location_id == normalized]
+
+
 def make_qr_image(qr_value: str):
     try:
         import qrcode
@@ -236,37 +265,30 @@ def make_qr_image(qr_value: str):
 def draw_label(canvas, row: LocationLabel, x: float, y: float, width: float, height: float) -> None:
     from reportlab.lib import colors
 
-    padding = 12
+    padding = 14
     canvas.setStrokeColor(colors.black)
-    canvas.setLineWidth(1.2)
+    canvas.setLineWidth(1.4)
     canvas.rect(x, y, width, height)
 
-    qr_size = min(height - (padding * 2), 112)
+    qr_size = min(height - 64, width * 0.48)
     qr_x = x + width - qr_size - padding
-    qr_y = y + (height - qr_size) / 2
+    qr_y = y + 32
     canvas.drawImage(make_qr_image(row.qr_value), qr_x, qr_y, qr_size, qr_size, preserveAspectRatio=True)
 
     text_x = x + padding
-    text_right = qr_x - padding
     canvas.setFillColor(colors.black)
-    canvas.setFont("Helvetica-Bold", 28)
-    canvas.drawString(text_x, y + height - 42, row.location_id)
+    if row.is_etb:
+        canvas.setFont("Helvetica-Bold", 39)
+        canvas.drawString(text_x, y + height - 58, row.etb_id)
+    else:
+        canvas.setFont("Helvetica-Bold", 34)
+        canvas.drawString(text_x, y + height - 54, f"Location {row.location_code}")
+        canvas.setFont("Helvetica-Bold", 20)
+        canvas.drawString(text_x, y + height - 82, row.etb_id)
 
-    line_y = y + height - 68
-    canvas.setFont("Helvetica", 11)
-    if row.category:
-        canvas.drawString(text_x, line_y, row.category[:38])
-        line_y -= 16
-    if row.label and row.label != row.category:
-        canvas.drawString(text_x, line_y, row.label[:38])
-        line_y -= 16
-    if row.capacity:
-        canvas.drawString(text_x, line_y, f"Capacity: {row.capacity}")
-
-    canvas.setFont("Helvetica", 8)
+    canvas.setFont("Helvetica", 9)
     canvas.setFillColor(colors.darkgray)
-    canvas.drawString(text_x, y + padding, row.qr_value)
-    canvas.line(text_right, y + padding, text_right, y + height - padding)
+    canvas.drawString(text_x, y + padding, "CardVector")
 
 
 def write_pdf(labels: list[LocationLabel], output_path: Path) -> Path:
@@ -288,7 +310,7 @@ def write_pdf(labels: list[LocationLabel], output_path: Path) -> Path:
     gap_x = 18
     gap_y = 14
     columns = 2
-    rows_per_page = 5
+    rows_per_page = 4
     label_width = (page_width - (2 * margin_x) - gap_x) / columns
     label_height = (page_height - (2 * margin_y) - ((rows_per_page - 1) * gap_y)) / rows_per_page
 
@@ -324,6 +346,8 @@ def write_sample_csv(path: Path) -> Path:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=SCRIPT_VERSION)
     parser.add_argument("--csv", help="Optional fallback CSV with columns: location_id,label,capacity,category.")
+    parser.add_argument("--etb", help="Optional ETB ID to generate only that ETB and its locations, example ETB-007.")
+    parser.add_argument("--location", help="Optional location code with --etb to generate one location label, example A.")
     parser.add_argument("--output", help="Optional output PDF path or folder. Defaults to Data/Exports/Labels.")
     parser.add_argument("--sample-template", action="store_true", help="Create the sample fallback CSV template and exit.")
     return parser
@@ -339,7 +363,12 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     csv_path = Path(args.csv).expanduser() if args.csv else None
-    labels = load_locations(root, csv_path)
+    if args.etb and args.location:
+        labels = load_location_label(root, args.etb, args.location)
+    elif args.etb:
+        labels = load_locations_for_etb(root, args.etb)
+    else:
+        labels = load_locations(root, csv_path)
     if not labels:
         raise SystemExit("No locations found in registry or fallback CSV.")
 

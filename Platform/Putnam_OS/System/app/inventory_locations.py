@@ -378,6 +378,82 @@ def assign_batch_to_location(code: str, location_code: str, batch_id: str, path:
     raise ValueError(f"ETB location not found: {normalized_code}")
 
 
+def resolve_cardvector_qr_payload(payload: str, path: Path | None = None) -> dict[str, Any]:
+    value = str(payload or "").strip()
+    etb_match = re.fullmatch(r"cardvector://etb/(ETB-\d{3})", value, re.IGNORECASE)
+    location_match = re.fullmatch(r"cardvector://location/(ETB-\d{3})/([A-J])", value, re.IGNORECASE)
+    if not etb_match and not location_match:
+        raise ValueError("Unsupported CardVector QR payload.")
+
+    etb_code = normalize_etb_code((etb_match or location_match).group(1))
+    rows = etb_location_rows(path)
+    etb = next((row for row in rows if row["location_code"] == etb_code), None)
+    if not etb:
+        raise ValueError(f"ETB not found: {etb_code}")
+
+    if etb_match:
+        locations = etb.get("locations", [])
+        summary = [
+            f"{item.get('location_code')}: {int(item.get('stored_count') or 0)}/{int(item.get('capacity') or DEFAULT_ETB_LOCATION_CAPACITY)} {item.get('status', '')}".strip()
+            for item in locations
+        ]
+        return {
+            "type": "etb",
+            "payload": value,
+            "title": etb_code,
+            "etb_id": etb_code,
+            "status": etb.get("status", ""),
+            "stored": int(etb.get("stored_count", 0) or 0),
+            "capacity": int(etb.get("total_capacity", DEFAULT_ETB_CAPACITY) or DEFAULT_ETB_CAPACITY),
+            "active_location": etb.get("current_active_location") or etb.get("active_location") or "",
+            "locations_summary": summary,
+            "last_updated": etb.get("updated_at", ""),
+        }
+
+    location_code = normalize_location_code(location_match.group(2))
+    location = next(
+        (item for item in etb.get("locations", []) if normalize_location_code(item.get("location_code", "")) == location_code),
+        None,
+    )
+    if not location:
+        raise ValueError(f"Location not found: {etb_code}-{location_code}")
+    return {
+        "type": "location",
+        "payload": value,
+        "title": f"{etb_code} Location {location_code}",
+        "etb_id": etb_code,
+        "location": location_code,
+        "stored": int(location.get("stored_count", 0) or 0),
+        "capacity": int(location.get("capacity", DEFAULT_ETB_LOCATION_CAPACITY) or DEFAULT_ETB_LOCATION_CAPACITY),
+        "status": location.get("status", ""),
+        "assigned_batch": location.get("assigned_batch") or location.get("assigned_session") or "",
+        "last_updated": location.get("updated_at", ""),
+    }
+
+
+def qr_resolution_text(resolved: dict[str, Any]) -> str:
+    if resolved.get("type") == "etb":
+        lines = [
+            f"ETB ID: {resolved.get('etb_id', '')}",
+            f"Status: {resolved.get('status', '')}",
+            f"Stored: {resolved.get('stored', 0)}/{resolved.get('capacity', DEFAULT_ETB_CAPACITY)}",
+            f"Active Location: {resolved.get('active_location', '') or '(none)'}",
+            f"Last Updated: {resolved.get('last_updated', '') or '(none)'}",
+            "",
+            "Locations A-J:",
+        ]
+        lines.extend(f"- {item}" for item in resolved.get("locations_summary", []))
+        return "\n".join(lines)
+    return "\n".join([
+        f"ETB ID: {resolved.get('etb_id', '')}",
+        f"Location: {resolved.get('location', '')}",
+        f"Occupancy: {resolved.get('stored', 0)}/{resolved.get('capacity', DEFAULT_ETB_LOCATION_CAPACITY)}",
+        f"Status: {resolved.get('status', '')}",
+        f"Assigned Batch: {resolved.get('assigned_batch', '') or '(none)'}",
+        f"Last Updated: {resolved.get('last_updated', '') or '(none)'}",
+    ])
+
+
 def _label_html(code: str) -> str:
     escaped_code = html.escape(code)
     return f"""<!doctype html>
