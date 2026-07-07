@@ -1,1 +1,47 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>CardVector QR</title><link rel="stylesheet" href="/style.css"></head><body><main class="card"><div class="brand">CardVector</div><section id="content"><h1>Loading...</h1></section><footer>CardVector Inventory</footer></main><script src="/app.js"></script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CardVector</title>
+<style>
+body{margin:0;padding:30px;font-family:Arial,Helvetica,sans-serif;background:#f8fafc;color:#111827}
+.card{max-width:600px;margin:auto;background:#fff;border-radius:12px;padding:24px;box-shadow:0 2px 10px rgba(0,0,0,.15)}
+.brand{color:#2563eb;font-weight:bold;text-transform:uppercase;letter-spacing:.08em;font-size:13px}
+h1{margin-top:15px;margin-bottom:5px} h2{margin-top:0;color:#6b7280}
+.row{display:flex;justify-content:space-between;padding:10px 0;border-top:1px solid #e5e7eb}
+.label{color:#6b7280}.value{font-weight:bold}
+.notice{margin-top:20px;padding:15px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px}
+</style>
+</head>
+<body>
+<div class="card">
+<div class="brand">CardVector QR Mobile</div>
+<h1 id="title">CardVector</h1>
+<h2 id="subtitle">Inventory Lookup</h2>
+<div id="content"><div class="row"><div class="label">Status</div><div class="value">Loaded</div></div></div>
+<div class="notice">Inventory details coming soon.</div>
+</div>
+<script>
+const parts=window.location.pathname.split("/").filter(Boolean);
+const title=document.getElementById("title");
+const subtitle=document.getElementById("subtitle");
+const content=document.getElementById("content");
+if(parts.length>=2){
+ if(parts[0]=="etb"){
+  title.textContent=parts[1];
+  subtitle.textContent="Elite Trainer Box";
+  content.innerHTML='<div class="row"><div class="label">Object</div><div class="value">ETB</div></div><div class="row"><div class="label">ID</div><div class="value">'+parts[1]+'</div></div>';
+ } else if(parts[0]=="location"){
+  title.textContent=parts[1];
+  subtitle.textContent="Location "+parts[2];
+  content.innerHTML='<div class="row"><div class="label">Object</div><div class="value">Location</div></div><div class="row"><div class="label">ETB</div><div class="value">'+parts[1]+'</div></div><div class="row"><div class="label">Location</div><div class="value">'+parts[2]+'</div></div>';
+ } else if(parts[0]=="lot"){
+  title.textContent=parts[1];
+  subtitle.textContent="Acquisition Lot";
+  content.innerHTML='<div class="row"><div class="label">Object</div><div class="value">Lot</div></div><div class="row"><div class="label">Lot ID</div><div class="value">'+parts[1]+'</div></div>';
+ }
+}
+</script>
+</body>
+</html>
