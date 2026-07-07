@@ -13,7 +13,7 @@ from Platform.putnam_paths import DATA_CONFIG_DIR, DATA_EXPORTS_DIR
 DEFAULT_ETB_CAPACITY = 400
 DEFAULT_ETB_LOCATION_CAPACITY = 40
 ETB_LOCATION_CODES = tuple("ABCDEFGHIJ")
-LOCATION_STATUSES = ["Empty", "Active", "Full", "Needs Review"]
+LOCATION_STATUSES = ["Empty", "Active", "Full", "Needs Review", "Archived"]
 ETB_RE = re.compile(r"^ETB-(\d{3})$")
 ETB_LOCATION_REGISTRY = DATA_CONFIG_DIR / "etb_location_registry.json"
 ETB_LABEL_ROOT = DATA_EXPORTS_DIR / "Inventory_Location_Labels"
@@ -36,7 +36,7 @@ def normalize_status(value: str) -> str:
     if status == "Available":
         status = "Empty"
     if status not in LOCATION_STATUSES:
-        raise ValueError("ETB status must be Empty, Active, Full, or Needs Review.")
+        raise ValueError("ETB status must be Empty, Active, Full, Needs Review, or Archived.")
     return status
 
 
@@ -49,6 +49,15 @@ def normalize_location_code(value: str) -> str:
 
 def etb_location_id(etb_code: str, location_code: str) -> str:
     return f"{normalize_etb_code(etb_code)}-{normalize_location_code(location_code)}"
+
+
+def active_location_from_record(location: dict[str, Any]) -> str:
+    return normalize_location_code(
+        location.get("current_active_location")
+        or location.get("active_location")
+        or location.get("active_location_code")
+        or "A"
+    )
 
 
 def _default_registry() -> dict[str, Any]:
@@ -127,6 +136,7 @@ def ensure_etb_location_records(location: dict[str, Any], registry: dict[str, An
             "stored_count": assigned,
             "remaining_capacity": remaining,
             "status": normalize_status(status),
+            "assigned_batch": item.get("assigned_batch", item.get("assigned_session", "")),
             "created_at": item.get("created_at") or location.get("created_at") or now,
             "updated_at": item.get("updated_at") or location.get("updated_at") or now,
         })
@@ -135,6 +145,8 @@ def ensure_etb_location_records(location: dict[str, Any], registry: dict[str, An
 
 
 def etb_status_from_counts(stored_count: int, remaining: int, locations: list[dict[str, Any]]) -> str:
+    if any(item.get("status") == "Archived" for item in locations):
+        return "Archived"
     if any(item.get("status") == "Needs Review" for item in locations):
         return "Needs Review"
     if remaining <= 0:
@@ -142,6 +154,30 @@ def etb_status_from_counts(stored_count: int, remaining: int, locations: list[di
     if stored_count <= 0:
         return "Empty"
     return "Active"
+
+
+def next_available_location_code(locations: list[dict[str, Any]], preferred: str = "") -> str:
+    preferred_code = ""
+    if preferred:
+        try:
+            preferred_code = normalize_location_code(preferred)
+        except Exception:
+            preferred_code = ""
+    for location in locations:
+        code = normalize_location_code(location.get("location_code", ""))
+        remaining = int(location.get("remaining_capacity", 0) or 0)
+        status = normalize_status(location.get("status") or "Empty")
+        if preferred_code and code != preferred_code:
+            continue
+        if remaining > 0 and status not in {"Full", "Archived"}:
+            return code
+    for location in locations:
+        code = normalize_location_code(location.get("location_code", ""))
+        remaining = int(location.get("remaining_capacity", 0) or 0)
+        status = normalize_status(location.get("status") or "Empty")
+        if remaining > 0 and status not in {"Full", "Archived"}:
+            return code
+    return ETB_LOCATION_CODES[-1]
 
 
 def normalize_etb_record(location: dict[str, Any], registry: dict[str, Any] | None = None) -> dict[str, Any]:
@@ -155,10 +191,17 @@ def normalize_etb_record(location: dict[str, Any], registry: dict[str, Any] | No
     if item["total_capacity"] == 100:
         item["total_capacity"] = DEFAULT_ETB_CAPACITY
     locations = ensure_etb_location_records(item, registry)
+    try:
+        active_location = active_location_from_record(item)
+    except Exception:
+        active_location = ""
+    active_location = next_available_location_code(locations, active_location)
     stored_count = sum(int(loc.get("stored_count") or 0) for loc in locations)
     remaining = max(0, item["total_capacity"] - stored_count)
     item["stored_count"] = stored_count
     item["remaining_space"] = remaining
+    item["active_location"] = active_location
+    item["current_active_location"] = active_location
     current_status = normalize_status(item.get("status") or etb_status_from_counts(stored_count, remaining, locations))
     item["status"] = "Needs Review" if current_status == "Needs Review" else etb_status_from_counts(stored_count, remaining, locations)
     item["estimated_capacity"] = item["total_capacity"]
@@ -173,7 +216,7 @@ def etb_location_rows(path: Path | None = None) -> list[dict[str, Any]]:
     for location in registry.get("locations", []):
         row = normalize_etb_record(location, registry)
         row["location_summary"] = ", ".join(
-            f"{loc['location_code']} {loc['stored_count']}/{loc['capacity']} ({loc['remaining_capacity']} left)"
+            f"{loc['location_code']} {loc['stored_count']}/{loc['capacity']}"
             for loc in row.get("locations", [])
         )
         rows.append(row)
@@ -199,6 +242,8 @@ def create_etb_location(path: Path | None = None, capacity: int = DEFAULT_ETB_CA
         "total_capacity": int(capacity or DEFAULT_ETB_CAPACITY),
         "stored_count": 0,
         "remaining_space": int(capacity or DEFAULT_ETB_CAPACITY),
+        "active_location": "A",
+        "current_active_location": "A",
         "qr_payload": f"cardvector://etb/{code}",
         "created_at": now,
         "updated_at": now,
@@ -235,6 +280,96 @@ def update_etb_status(code: str, status: str, path: Path | None = None) -> dict[
             })
             save_etb_registry(registry, path)
             return location
+    raise ValueError(f"ETB location not found: {normalized_code}")
+
+
+def current_active_location(code: str, path: Path | None = None) -> dict[str, Any]:
+    normalized_code = normalize_etb_code(code)
+    for location in etb_location_rows(path):
+        if location["location_code"] != normalized_code:
+            continue
+        active_code = active_location_from_record(location)
+        for child in location.get("locations", []):
+            if normalize_location_code(child.get("location_code", "")) == active_code:
+                return child
+    raise ValueError(f"ETB location not found: {normalized_code}")
+
+
+def set_current_active_location(code: str, location_code: str, path: Path | None = None) -> dict[str, Any]:
+    normalized_code = normalize_etb_code(code)
+    normalized_location = normalize_location_code(location_code)
+    registry = load_etb_registry(path)
+    now = timestamp()
+    for location in registry.get("locations", []):
+        if normalize_etb_code(location.get("location_code", "")) == normalized_code:
+            ensure_etb_location_records(location, registry)
+            location["active_location"] = normalized_location
+            location["current_active_location"] = normalized_location
+            location["updated_at"] = now
+            registry.setdefault("history", []).append({
+                "timestamp": now,
+                "location_code": normalized_code,
+                "location": normalized_location,
+                "action": "active_location_updated",
+            })
+            save_etb_registry(registry, path)
+            return normalize_etb_record(location, registry)
+    raise ValueError(f"ETB location not found: {normalized_code}")
+
+
+def mark_location_complete(code: str, location_code: str, path: Path | None = None) -> dict[str, Any]:
+    normalized_code = normalize_etb_code(code)
+    normalized_location = normalize_location_code(location_code)
+    registry = load_etb_registry(path)
+    now = timestamp()
+    for location in registry.get("locations", []):
+        if normalize_etb_code(location.get("location_code", "")) != normalized_code:
+            continue
+        children = ensure_etb_location_records(location, registry)
+        for child in children:
+            if normalize_location_code(child.get("location_code", "")) == normalized_location:
+                child["status"] = "Full"
+                child["updated_at"] = now
+        location["locations"] = children
+        location["active_location"] = next_available_location_code(children)
+        location["current_active_location"] = location["active_location"]
+        location["updated_at"] = now
+        registry.setdefault("history", []).append({
+            "timestamp": now,
+            "location_code": normalized_code,
+            "location": normalized_location,
+            "action": "location_complete",
+        })
+        save_etb_registry(registry, path)
+        return normalize_etb_record(location, registry)
+    raise ValueError(f"ETB location not found: {normalized_code}")
+
+
+def assign_batch_to_location(code: str, location_code: str, batch_id: str, path: Path | None = None) -> dict[str, Any]:
+    normalized_code = normalize_etb_code(code)
+    normalized_location = normalize_location_code(location_code)
+    batch = str(batch_id or "").strip()
+    registry = load_etb_registry(path)
+    now = timestamp()
+    for location in registry.get("locations", []):
+        if normalize_etb_code(location.get("location_code", "")) != normalized_code:
+            continue
+        children = ensure_etb_location_records(location, registry)
+        for child in children:
+            if normalize_location_code(child.get("location_code", "")) == normalized_location:
+                child["assigned_batch"] = batch
+                child["updated_at"] = now
+        location["locations"] = children
+        location["updated_at"] = now
+        registry.setdefault("history", []).append({
+            "timestamp": now,
+            "location_code": normalized_code,
+            "location": normalized_location,
+            "action": "batch_assigned",
+            "batch": batch,
+        })
+        save_etb_registry(registry, path)
+        return normalize_etb_record(location, registry)
     raise ValueError(f"ETB location not found: {normalized_code}")
 
 

@@ -320,6 +320,7 @@ from capture_studio import CAPTURE_ROOT, OBS_CONFIG_PATH, CaptureStudioError, Ca
 from inventory_locations import (
     DEFAULT_ETB_CAPACITY,
     DEFAULT_ETB_LOCATION_CAPACITY,
+    ETB_LOCATION_CODES,
     ETB_LOCATION_REGISTRY,
     LOCATION_STATUSES,
     create_etb_location,
@@ -1462,16 +1463,24 @@ def completed_session_etb_rollups():
         parent = etb_parent_from_batch(batch)
         if not parent:
             continue
+        _etb, location_code = etb_location_from_batch(batch)
         try:
             cards = int(str(data.get("completed_cards") or data.get("planned_cards") or "0").strip() or "0")
         except Exception:
             cards = 0
-        item = rollups.setdefault(parent, {"assigned": 0, "batches": set()})
+        item = rollups.setdefault(parent, {"assigned": 0, "batches": set(), "locations": {}})
         item["assigned"] += max(0, cards)
         if batch:
             item["batches"].add(str(batch))
+        if location_code:
+            location = item["locations"].setdefault(location_code, {"assigned": 0, "batches": set()})
+            location["assigned"] += max(0, cards)
+            if batch:
+                location["batches"].add(str(batch))
     for item in rollups.values():
         item["batches"] = sorted(item["batches"])
+        for location in item.get("locations", {}).values():
+            location["batches"] = sorted(location["batches"])
     return rollups
 
 
@@ -3895,7 +3904,7 @@ class PutnamOS(BaseTk):
             if item == getattr(tree, "_hover_item", None):
                 return
             previous = getattr(tree, "_hover_item", None)
-            if previous and previous in tree.get_children(""):
+            if previous and tree.exists(previous):
                 tree.item(previous, tags=tree.item(previous, "values") and tree._base_tags.get(previous, ()))
             tree._hover_item = item
             if item:
@@ -3903,7 +3912,7 @@ class PutnamOS(BaseTk):
 
         def on_leave(_event):
             item = getattr(tree, "_hover_item", None)
-            if item and item in tree.get_children(""):
+            if item and tree.exists(item):
                 tree.item(item, tags=tree._base_tags.get(item, ()))
             tree._hover_item = None
 
@@ -3912,10 +3921,10 @@ class PutnamOS(BaseTk):
         tree.bind("<Leave>", on_leave, add="+")
         return tree
 
-    def tree_insert(self, tree, parent, index, values):
+    def tree_insert(self, tree, parent, index, values, text="", open=False):
         row_index = len(tree.get_children(parent))
         tag = "even" if row_index % 2 == 0 else "odd"
-        item = tree.insert(parent, index, values=values, tags=(tag,))
+        item = tree.insert(parent, index, text=text, values=values, tags=(tag,), open=open)
         if not hasattr(tree, "_base_tags"):
             tree._base_tags = {}
         tree._base_tags[item] = (tag,)
@@ -5236,28 +5245,26 @@ class PutnamOS(BaseTk):
             wraplength=980,
         ).pack(anchor="w", padx=18, pady=(0, 8))
 
-        columns = ("etb_id", "status", "stored", "remaining", "capacity", "locations", "batches")
+        columns = ("status", "stored", "active_location", "assigned_batch", "updated")
         table_frame = tk.Frame(registry, bg=BRAND["panel"])
         table_frame.pack(fill="x", padx=18, pady=(0, 8))
-        self.etb_location_tree = ttk.Treeview(table_frame, columns=columns, show="headings", height=5)
+        self.etb_location_tree = ttk.Treeview(table_frame, columns=columns, show="tree headings", height=12)
         self.style_treeview(self.etb_location_tree)
+        self.etb_location_tree.heading("#0", text="ETB / Location")
+        self.etb_location_tree.column("#0", width=180, anchor="w", stretch=True)
         headings = {
-            "etb_id": "ETB ID",
             "status": "Status",
             "stored": "Stored",
-            "remaining": "Remaining",
-            "capacity": "Total Capacity",
-            "locations": "Locations A-J",
-            "batches": "Batches Assigned",
+            "active_location": "Active Location",
+            "assigned_batch": "Assigned Batch",
+            "updated": "Last Updated",
         }
         widths = {
-            "etb_id": 110,
             "status": 120,
-            "stored": 80,
-            "remaining": 90,
-            "capacity": 110,
-            "locations": 460,
-            "batches": 220,
+            "stored": 120,
+            "active_location": 130,
+            "assigned_batch": 260,
+            "updated": 180,
         }
         for column in columns:
             self.sortable_heading(self.etb_location_tree, column, headings[column], False, show_arrow=False)
@@ -5323,8 +5330,10 @@ class PutnamOS(BaseTk):
         selected = self.etb_location_tree.selection()
         if not selected:
             return ""
-        values = self.etb_location_tree.item(selected[0], "values")
-        return str(values[0]) if values else ""
+        item = selected[0]
+        parent = self.etb_location_tree.parent(item)
+        etb_item = parent or item
+        return str(self.etb_location_tree.item(etb_item, "text") or "")
 
     def inventory_refresh_etb_locations(self, select_code=""):
         if not hasattr(self, "etb_location_tree"):
@@ -5349,7 +5358,19 @@ class PutnamOS(BaseTk):
                     "estimated_capacity": DEFAULT_ETB_CAPACITY,
                     "estimated_assigned_count": assigned,
                     "estimated_remaining_capacity": remaining,
-                    "location_summary": f"A-J: {DEFAULT_ETB_LOCATION_CAPACITY} cards each",
+                    "active_location": "A",
+                    "current_active_location": "A",
+                    "locations": [
+                        {
+                            "location_code": location_code,
+                            "capacity": DEFAULT_ETB_LOCATION_CAPACITY,
+                            "stored_count": 0,
+                            "status": "Empty",
+                            "assigned_batch": "",
+                            "updated_at": "",
+                        }
+                        for location_code in ETB_LOCATION_CODES
+                    ],
                     "created_at": "",
                     "updated_at": "",
                 })
@@ -5361,18 +5382,46 @@ class PutnamOS(BaseTk):
             if rollup:
                 assigned = max(assigned, int(rollup.get("assigned", rollup.get("cards", 0)) or 0))
             capacity = int(row.get("total_capacity", row["estimated_capacity"]) or DEFAULT_ETB_CAPACITY)
+            active_location = row.get("current_active_location") or row.get("active_location") or "A"
             values = (
-                row.get("etb_id") or row["location_code"],
                 row["status"],
-                assigned,
-                max(0, capacity - assigned),
-                capacity,
-                row.get("location_summary", ""),
+                f"{assigned}/{capacity}",
+                active_location,
                 ", ".join(rollup.get("batches", [])),
+                row.get("updated_at", ""),
             )
-            item = self.tree_insert(self.etb_location_tree, "", "end", values=values)
+            item = self.tree_insert(
+                self.etb_location_tree,
+                "",
+                "end",
+                values=values,
+                text=row.get("etb_id") or row["location_code"],
+                open=False,
+            )
             if select_code and row["location_code"] == select_code:
                 selected_item = item
+            location_rollups = rollup.get("locations", {})
+            for child in row.get("locations", []):
+                child_code = child.get("location_code", "")
+                child_rollup = location_rollups.get(child_code, {})
+                child_assigned = int(child.get("stored_count", 0) or 0)
+                if child_rollup:
+                    child_assigned = max(child_assigned, int(child_rollup.get("assigned", 0) or 0))
+                child_capacity = int(child.get("capacity", DEFAULT_ETB_LOCATION_CAPACITY) or DEFAULT_ETB_LOCATION_CAPACITY)
+                child_values = (
+                    child.get("status", "Empty"),
+                    f"{child_assigned}/{child_capacity}",
+                    "",
+                    child.get("assigned_batch") or ", ".join(child_rollup.get("batches", [])),
+                    child.get("updated_at", ""),
+                )
+                self.tree_insert(
+                    self.etb_location_tree,
+                    item,
+                    "end",
+                    values=child_values,
+                    text=f"Location {child_code}",
+                )
         if selected_item:
             self.etb_location_tree.selection_set(selected_item)
             self.etb_location_tree.see(selected_item)
