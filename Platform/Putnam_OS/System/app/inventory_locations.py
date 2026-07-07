@@ -317,7 +317,7 @@ def set_current_active_location(code: str, location_code: str, path: Path | None
     raise ValueError(f"ETB location not found: {normalized_code}")
 
 
-def mark_location_complete(code: str, location_code: str, path: Path | None = None) -> dict[str, Any]:
+def mark_location_complete(code: str, location_code: str, path: Path | None = None, captured_count: int | None = None) -> dict[str, Any]:
     normalized_code = normalize_etb_code(code)
     normalized_location = normalize_location_code(location_code)
     registry = load_etb_registry(path)
@@ -328,7 +328,11 @@ def mark_location_complete(code: str, location_code: str, path: Path | None = No
         children = ensure_etb_location_records(location, registry)
         for child in children:
             if normalize_location_code(child.get("location_code", "")) == normalized_location:
-                child["status"] = "Full"
+                capacity = int(child.get("capacity") or DEFAULT_ETB_LOCATION_CAPACITY)
+                stored_count = capacity if captured_count is None else max(0, min(capacity, int(captured_count or 0)))
+                child["stored_count"] = stored_count
+                child["remaining_capacity"] = max(0, capacity - stored_count)
+                child["status"] = "Full" if stored_count >= capacity else "Needs Review"
                 child["updated_at"] = now
         location["locations"] = children
         location["active_location"] = next_available_location_code(children)
@@ -339,6 +343,7 @@ def mark_location_complete(code: str, location_code: str, path: Path | None = No
             "location_code": normalized_code,
             "location": normalized_location,
             "action": "location_complete",
+            "captured_count": captured_count,
         })
         save_etb_registry(registry, path)
         return normalize_etb_record(location, registry)

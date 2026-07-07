@@ -50,6 +50,7 @@ tmp/
 /Capture/Temp/
 /Capture/Cache/
 /Capture/[0-9][0-9].[0-9][0-9].[0-9][0-9]*/
+/Capture/Physical_Inventory_Conversion/
 /Data/Exports/
 /Data/Logs/
 /Data/Media/

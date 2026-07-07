@@ -160,12 +160,14 @@ BUTTON_ICONS = {
     "Browse for CSV": "[...]",
     "Browse": "[...]",
     "Capture": "[C]",
+    "Capture Front": "[C]",
     "Check OBS Status": "[?]",
     "Continue to Pricing": "[>]",
     "Copy": "[#]",
     "Create Acquisition": "[+]",
     "Create Next ETB": "[+]",
     "Finish Session": "[x]",
+    "Finish Location": "[x]",
     "Generate Labels": "[#]",
     "Generate Reports": "[#]",
     "Generate Review Reports": "[#]",
@@ -193,6 +195,7 @@ BUTTON_ICONS = {
     "Open Pricing Output Folder": "[O]",
     "Open Printable Pick Slips": "[O]",
     "Open Review Folder": "[O]",
+    "Open Conversion Folder": "[O]",
     "Open Session Folder": "[O]",
     "Open Sessions Folder": "[O]",
     "Previous": "[<]",
@@ -210,6 +213,7 @@ BUTTON_ICONS = {
     "Select Acquisition": "[+]",
     "Skip": "[>]",
     "Start Conversion": "[+]",
+    "Start Location Conversion": "[+]",
     "Start Capture Session": "[+]",
     "Start Review Session": "[+]",
     "Start Session": "[+]",
@@ -262,6 +266,7 @@ INVENTORY_AUDIT_SESSIONS_DIR = DATA_LOGS_DIR / "inventory_audit_sessions"
 INVENTORY_CONVERSION_DIR = DATA / "inventory_conversion"
 INVENTORY_CONVERSION_SESSIONS_DIR = INVENTORY_CONVERSION_DIR / "sessions"
 CURRENT_INVENTORY_CONVERSION = INVENTORY_CONVERSION_DIR / "current_inventory_conversion.json"
+INVENTORY_CONVERSION_CAPTURE_ROOT = ROOT / "Capture" / "Physical_Inventory_Conversion"
 LOCATION_UPDATE_LOG = DATA_LOGS_DIR / "location_update_log.csv"
 INVENTORY_AUDIT_EVENT_LOG = DATA_LOGS_DIR / "inventory_audit_event_log.csv"
 INCOMING = OS_DIR / "Incoming Files"
@@ -331,6 +336,7 @@ from inventory_locations import (
     LOCATION_STATUSES,
     create_etb_location,
     etb_location_rows,
+    mark_location_complete,
     next_etb_code,
     update_etb_status,
 )
@@ -1506,6 +1512,56 @@ def inventory_conversion_session_path(session_id):
     return INVENTORY_CONVERSION_SESSIONS_DIR / f"{safe}.json"
 
 
+def inventory_conversion_capture_root(location_id):
+    safe_location = re.sub(r"[^A-Za-z0-9_.-]+", "_", str(location_id or "unassigned"))[:80]
+    return INVENTORY_CONVERSION_CAPTURE_ROOT / safe_location
+
+
+def inventory_conversion_capture_count(capture_session):
+    records = capture_session.get("records") if isinstance(capture_session, dict) else []
+    if not isinstance(records, list):
+        return 0
+    return sum(1 for record in records if isinstance(record, dict) and str(record.get("side", "")).lower() == "front")
+
+
+def load_inventory_conversion_capture_session(session):
+    if not isinstance(session, dict):
+        return {}
+    capture_file = str(session.get("capture_session_file") or "").strip()
+    capture_folder = str(session.get("capture_folder") or "").strip()
+    folder = Path(capture_file).parent if capture_file else Path(capture_folder) if capture_folder else None
+    if not folder:
+        return {}
+    return load_capture_session_file(folder)
+
+
+def inventory_conversion_capture_matches(session, capture_session):
+    if not isinstance(session, dict) or not isinstance(capture_session, dict):
+        return False
+    conversion_id = str(session.get("session_id") or "")
+    capture_conversion_id = str(capture_session.get("conversion_session_id") or "")
+    if conversion_id and capture_conversion_id:
+        return conversion_id == capture_conversion_id
+    return str(session.get("location_id") or "") == str(capture_session.get("location_id") or "")
+
+
+def attach_inventory_conversion_capture_session(session, capture_session):
+    session = dict(session or {})
+    capture_session = dict(capture_session or {})
+    folder = Path(capture_session.get("folder", ""))
+    session["capture_folder"] = str(folder)
+    session["capture_session_file"] = str(folder / "capture_session.json")
+    session["cards_captured"] = inventory_conversion_capture_count(capture_session)
+    location_finished = session.get("status") == "Location Complete" or bool(capture_session.get("finished_at"))
+    if location_finished or session["cards_captured"] >= int(session.get("expected_capacity", DEFAULT_ETB_LOCATION_CAPACITY) or DEFAULT_ETB_LOCATION_CAPACITY):
+        session["status"] = "Location Complete"
+        session.setdefault("workflow_state", {})["current"] = "Location Complete"
+    else:
+        session["status"] = "Ready for Capture"
+        session.setdefault("workflow_state", {})["current"] = "Waiting for Capture"
+    return save_inventory_conversion_session(session)
+
+
 def save_inventory_conversion_session(session):
     session = dict(session or {})
     session.setdefault("session_id", nowstamp())
@@ -1575,7 +1631,7 @@ def create_inventory_conversion_session(etb_code, location_code, operator=""):
             "current": "Waiting for Capture",
             "future_hooks": list(CONVERSION_WORKFLOW_STATES),
         },
-        "notes": "Foundation session only. No Capture, CardUploader, recognition, inventory creation, or marketplace integration is performed.",
+        "notes": "Physical Inventory Conversion capture session. CardUploader recognition, inventory creation, and marketplace integration are not performed here.",
     }
     return save_inventory_conversion_session(session)
 
@@ -3397,6 +3453,10 @@ class PutnamOS(BaseTk):
         self.current_pricing_reports = {}
         self.capture_service = CaptureStudioService()
         self.capture_session = None
+        self.inventory_conversion_session = load_current_inventory_conversion_session()
+        self.inventory_conversion_capture_service = None
+        self.inventory_conversion_capture_session = load_inventory_conversion_capture_session(self.inventory_conversion_session)
+        self.inventory_conversion_preview_photo = None
         self.capture_thumbnail_refs = []
         self.capture_thumbnail_cache = {}
         self.capture_pair_tile_cache = {}
@@ -5388,6 +5448,7 @@ class PutnamOS(BaseTk):
         self.inventory_conversion_status_var = tk.StringVar(value="Current session status: Ready")
         self.inventory_conversion_etb_var = tk.StringVar(value="")
         self.inventory_conversion_location_var = tk.StringVar(value="")
+        self.inventory_conversion_preview_var = tk.StringVar(value="Latest capture: none")
 
         tk.Label(
             panel,
@@ -5435,7 +5496,11 @@ class PutnamOS(BaseTk):
 
         actions = tk.Frame(panel, bg=BRAND["panel"])
         actions.pack(anchor="w", padx=18, pady=(0, 10))
-        self.primary_button(actions, "Start Conversion", self.inventory_start_conversion_session).pack(side="left")
+        self.primary_button(actions, "Start Location Conversion", self.inventory_start_conversion_session).pack(side="left")
+        self.primary_button(actions, "Capture Front", self.inventory_conversion_capture_front_ui).pack(side="left", padx=8)
+        self.action_button(actions, "Retake Last", self.inventory_conversion_retake_last_ui).pack(side="left", padx=8)
+        self.action_button(actions, "Finish Location", self.inventory_conversion_finish_location_ui).pack(side="left", padx=8)
+        self.action_button(actions, "Open Conversion Folder", self.inventory_conversion_open_folder_ui).pack(side="left", padx=8)
         self.action_button(actions, "Refresh", self.inventory_conversion_refresh).pack(side="left", padx=8)
 
         tk.Label(
@@ -5447,6 +5512,36 @@ class PutnamOS(BaseTk):
             justify="left",
             wraplength=980,
         ).pack(anchor="w", padx=18, pady=(0, 10))
+
+        preview = tk.Frame(panel, bg=BRAND["panel"])
+        preview.pack(fill="x", padx=18, pady=(0, 10))
+        left = tk.Frame(preview, bg=BRAND["panel"])
+        left.pack(side="left", anchor="n")
+        self.label(left, "Latest Capture", 9, BRAND["gold"], True, anchor="w", pady=(0, 4))
+        self.inventory_conversion_preview_label = tk.Label(
+            left,
+            text="No capture yet",
+            bg=BRAND["panel2"],
+            fg=BRAND["muted"],
+            font=self.ui_font("small"),
+            width=30,
+            height=9,
+            compound="center",
+            relief="flat",
+            highlightbackground=BRAND["border"],
+            highlightthickness=1,
+            cursor="hand2",
+        )
+        self.inventory_conversion_preview_label.pack(anchor="w")
+        tk.Label(
+            preview,
+            textvariable=self.inventory_conversion_preview_var,
+            bg=BRAND["panel"],
+            fg=BRAND["muted"],
+            font=self.ui_font("small"),
+            justify="left",
+            wraplength=620,
+        ).pack(side="left", anchor="n", padx=(14, 0), pady=(24, 0))
 
         self.inventory_conversion_refresh()
 
@@ -5461,6 +5556,8 @@ class PutnamOS(BaseTk):
             suggested_etb = etb_parent_from_batch(suggested)
             self.inventory_conversion_etb_var.set(suggested_etb if suggested_etb in etb_codes else etb_codes[0])
         self.inventory_conversion_update_location_options()
+        self.inventory_conversion_load_active_session()
+        self.inventory_conversion_update_preview()
         self.inventory_conversion_update_dashboard()
 
     def inventory_conversion_update_location_options(self):
@@ -5489,6 +5586,9 @@ class PutnamOS(BaseTk):
         rollup = completed_session_etb_rollups().get(etb["location_code"], {}).get("locations", {}).get(location_code, {})
         if rollup:
             stored = max(stored, int(rollup.get("assigned", 0) or 0))
+        current = getattr(self, "inventory_conversion_session", None) or load_current_inventory_conversion_session() or {}
+        if current.get("location_id") == f"{etb['location_code']}-{location_code}":
+            stored = max(stored, int(current.get("cards_captured", 0) or 0))
         return etb, location, capacity, stored, max(0, capacity - stored)
 
     def inventory_conversion_update_capacity(self):
@@ -5530,6 +5630,127 @@ class PutnamOS(BaseTk):
             f"Current session status: {current_status}"
         )
 
+    def inventory_conversion_capture_service_for_session(self, session):
+        capture_root = inventory_conversion_capture_root(session.get("location_id", "unassigned"))
+        service = CaptureStudioService(
+            capture_root=capture_root,
+            allow_placeholder=self.capture_service.allow_placeholder,
+            obs_manager=self.capture_service.obs_manager,
+        )
+        self.inventory_conversion_capture_service = service
+        return service
+
+    def inventory_conversion_load_active_session(self):
+        session = getattr(self, "inventory_conversion_session", None) or load_current_inventory_conversion_session()
+        if session:
+            self.inventory_conversion_session = session
+            capture_session = load_inventory_conversion_capture_session(session)
+            if capture_session and inventory_conversion_capture_matches(session, capture_session):
+                self.inventory_conversion_capture_session = capture_session
+            else:
+                self.inventory_conversion_capture_session = {}
+        return session
+
+    def inventory_conversion_capture_status_text(self, session=None, capture_session=None):
+        session = session or getattr(self, "inventory_conversion_session", None) or {}
+        capture_session = capture_session or getattr(self, "inventory_conversion_capture_session", None) or {}
+        count = inventory_conversion_capture_count(capture_session)
+        expected = int(session.get("expected_capacity", DEFAULT_ETB_LOCATION_CAPACITY) or DEFAULT_ETB_LOCATION_CAPACITY)
+        folder = capture_session.get("folder") or session.get("capture_folder") or "(not started)"
+        status = session.get("status") or "Ready"
+        return (
+            f"Current session status: {status}\n"
+            f"Location: {session.get('location_id', '(none)')}  |  Converted: {count}/{expected}\n"
+            f"Capture folder: {folder}"
+        )
+
+    def inventory_conversion_latest_capture_path(self, capture_session=None):
+        capture_session = capture_session or getattr(self, "inventory_conversion_capture_session", None) or {}
+        folder = resolve_capture_path(capture_session.get("folder", "")) if isinstance(capture_session, dict) else None
+        records = capture_session.get("records") if isinstance(capture_session, dict) else []
+        if isinstance(records, list):
+            for record in reversed(records):
+                if not isinstance(record, dict) or str(record.get("side", "")).lower() != "front":
+                    continue
+                image_path, _fallback, unresolved = resolve_capture_record_image(record, folder)
+                if image_path and not unresolved:
+                    return image_path
+        if folder and folder.exists():
+            images = sorted(folder.glob("*_front.jpg"), key=lambda path: path.stat().st_mtime, reverse=True)
+            if images:
+                return images[0]
+        return None
+
+    def inventory_conversion_update_preview(self, capture_session=None):
+        if not hasattr(self, "inventory_conversion_preview_label"):
+            return
+        capture_session = capture_session or getattr(self, "inventory_conversion_capture_session", None) or {}
+        latest = self.inventory_conversion_latest_capture_path(capture_session)
+        label = self.inventory_conversion_preview_label
+        label.unbind("<Button-1>")
+        if not latest:
+            self.inventory_conversion_preview_photo = None
+            label.configure(image="", text="No capture yet", fg=BRAND["muted"], cursor="arrow")
+            if hasattr(self, "inventory_conversion_preview_var"):
+                self.inventory_conversion_preview_var.set("Latest capture: none")
+            return
+        try:
+            from PIL import ImageTk
+
+            photo = ImageTk.PhotoImage(build_capture_thumbnail_image(latest, size=(220, 150)))
+            self.inventory_conversion_preview_photo = photo
+            label.configure(image=photo, text="", cursor="hand2")
+            label.bind("<Button-1>", lambda _event, path=latest: self.open_capture_preview(path))
+            if hasattr(self, "inventory_conversion_preview_var"):
+                self.inventory_conversion_preview_var.set(f"Latest capture:\n{latest.name}\n{latest}")
+        except Exception:
+            self.inventory_conversion_preview_photo = None
+            label.configure(image="", text="Latest capture unavailable", fg=BRAND["warning"], cursor="arrow")
+            if hasattr(self, "inventory_conversion_preview_var"):
+                self.inventory_conversion_preview_var.set(f"Latest capture could not be displayed:\n{latest}")
+
+    def inventory_conversion_sync_capture_state(self, session=None, capture_session=None):
+        session = session or getattr(self, "inventory_conversion_session", None)
+        if not session:
+            return None
+        capture_session = capture_session or getattr(self, "inventory_conversion_capture_session", None) or load_inventory_conversion_capture_session(session)
+        if capture_session:
+            session = attach_inventory_conversion_capture_session(session, capture_session)
+            self.inventory_conversion_session = session
+            self.inventory_conversion_capture_session = capture_session
+        if hasattr(self, "inventory_conversion_status_var"):
+            self.inventory_conversion_status_var.set(self.inventory_conversion_capture_status_text(session, capture_session))
+        self.inventory_conversion_update_preview(capture_session)
+        self.inventory_conversion_update_capacity()
+        return session
+
+    def inventory_conversion_ensure_capture_session(self):
+        session = self.inventory_conversion_load_active_session()
+        if not session:
+            self.inventory_start_conversion_session()
+            session = getattr(self, "inventory_conversion_session", None)
+        if not session:
+            return None, None, None
+        service = self.inventory_conversion_capture_service_for_session(session)
+        capture_session = getattr(self, "inventory_conversion_capture_session", None) or load_inventory_conversion_capture_session(session)
+        if capture_session and not inventory_conversion_capture_matches(session, capture_session):
+            capture_session = {}
+        if not capture_session:
+            capture_session = service.start_session()
+            capture_session.update({
+                "session_type": "physical_inventory_conversion_capture",
+                "conversion_session_id": session.get("session_id", ""),
+                "etb": session.get("etb", ""),
+                "location": session.get("location", ""),
+                "location_id": session.get("location_id", ""),
+                "capture_workflow": "front_only_legacy_inventory_conversion",
+            })
+            service._save_session(capture_session)
+            session = attach_inventory_conversion_capture_session(session, capture_session)
+            self.inventory_conversion_session = session
+        self.inventory_conversion_capture_session = capture_session
+        return session, capture_session, service
+
     def inventory_start_conversion_session(self):
         try:
             etb, location, capacity, stored, remaining = self.inventory_conversion_selected_counts()
@@ -5537,17 +5758,121 @@ class PutnamOS(BaseTk):
                 messagebox.showwarning("Physical Inventory Conversion", f"{etb['location_code']}-{location['location_code']} is already full.")
                 return
             session = create_inventory_conversion_session(etb["location_code"], location["location_code"])
+            service = self.inventory_conversion_capture_service_for_session(session)
+            capture_session = service.start_session()
+            capture_session.update({
+                "session_type": "physical_inventory_conversion_capture",
+                "conversion_session_id": session.get("session_id", ""),
+                "etb": session.get("etb", ""),
+                "location": session.get("location", ""),
+                "location_id": session.get("location_id", ""),
+                "capture_workflow": "front_only_legacy_inventory_conversion",
+            })
+            service._save_session(capture_session)
+            session = attach_inventory_conversion_capture_session(session, capture_session)
             self.inventory_conversion_session = session
-            self.inventory_conversion_status_var.set(
-                "Current session status: Waiting for Capture...\n"
-                f"Session: {session['session_id']}  |  Location: {session['location_id']}  |  "
-                f"Converted: {session['cards_captured']}/{session['expected_capacity']}"
-            )
+            self.inventory_conversion_capture_session = capture_session
+            self.inventory_conversion_status_var.set(self.inventory_conversion_capture_status_text(session, capture_session))
+            self.inventory_conversion_update_preview(capture_session)
             self.inventory_conversion_update_dashboard()
             append_activity(f"Inventory conversion session started: {session['location_id']}")
-            self.status.set(f"Inventory conversion started for {session['location_id']}.")
+            self.status.set(f"Inventory conversion started for {session['location_id']}. Capture the first card front.")
         except Exception as exc:
             messagebox.showerror("Physical Inventory Conversion", str(exc))
+
+    def inventory_conversion_capture_front_ui(self):
+        try:
+            session, capture_session, service = self.inventory_conversion_ensure_capture_session()
+            if not session or not capture_session or not service:
+                return
+            count = inventory_conversion_capture_count(capture_session)
+            expected = int(session.get("expected_capacity", DEFAULT_ETB_LOCATION_CAPACITY) or DEFAULT_ETB_LOCATION_CAPACITY)
+            if count >= expected:
+                messagebox.showinfo("Physical Inventory Conversion", f"{session.get('location_id', 'This location')} already has {count}/{expected} front captures.")
+                return
+            status = service.obs_status()
+            if not obs_status_is_connected(status) and not service.allow_placeholder:
+                self.status.set("OBS Not Connected. Cannot capture inventory front.")
+                messagebox.showwarning("Physical Inventory Conversion", f"OBS is not ready.\n\n{status}")
+                return
+            result = service.capture(capture_session, "front")
+            capture_session["current_card_number"] = result.card_number + 1
+            service._save_session(capture_session)
+            session = attach_inventory_conversion_capture_session(session, capture_session)
+            self.inventory_conversion_session = session
+            self.inventory_conversion_capture_session = capture_session
+            self.inventory_conversion_sync_capture_state(session, capture_session)
+            append_activity(f"Physical inventory front captured: {session.get('location_id')} {result.path.name}")
+            self.status.set(f"Captured inventory front: {result.path.name}")
+        except CaptureStudioError as exc:
+            self.status.set("Inventory conversion capture failed.")
+            messagebox.showwarning("Physical Inventory Conversion", str(exc))
+        except Exception as exc:
+            messagebox.showerror("Physical Inventory Conversion", str(exc))
+
+    def inventory_conversion_retake_last_ui(self):
+        try:
+            session, capture_session, service = self.inventory_conversion_ensure_capture_session()
+            if not session or not capture_session or not service:
+                return
+            moved = service.retake_last(capture_session)
+            session = attach_inventory_conversion_capture_session(session, capture_session)
+            self.inventory_conversion_session = session
+            self.inventory_conversion_capture_session = capture_session
+            self.inventory_conversion_sync_capture_state(session, capture_session)
+            if moved:
+                append_activity(f"Physical inventory capture retake moved: {moved.name}")
+                self.status.set(f"Last inventory capture moved to retakes: {moved.name}")
+            else:
+                self.status.set("No inventory conversion capture to retake.")
+        except Exception as exc:
+            messagebox.showerror("Physical Inventory Conversion", str(exc))
+
+    def inventory_conversion_finish_location_ui(self):
+        session = self.inventory_conversion_load_active_session()
+        if not session:
+            messagebox.showinfo("Physical Inventory Conversion", "Start a location conversion first.")
+            return
+        capture_session = getattr(self, "inventory_conversion_capture_session", None) or load_inventory_conversion_capture_session(session)
+        count = inventory_conversion_capture_count(capture_session)
+        expected = int(session.get("expected_capacity", DEFAULT_ETB_LOCATION_CAPACITY) or DEFAULT_ETB_LOCATION_CAPACITY)
+        if count < expected and not messagebox.askyesno(
+            "Finish Location",
+            f"This location has {count}/{expected} front captures.\n\nFinish the location anyway?",
+        ):
+            return
+        try:
+            if capture_session:
+                service = self.inventory_conversion_capture_service_for_session(session)
+                service.finish_session(capture_session)
+            session["status"] = "Location Complete"
+            session.setdefault("workflow_state", {})["current"] = "Location Complete"
+            session["cards_captured"] = count
+            session = save_inventory_conversion_session(session)
+            updated_etb = mark_location_complete(session["etb"], session["location"], captured_count=count)
+            self.inventory_conversion_session = session
+            self.inventory_conversion_capture_session = capture_session
+            self.inventory_conversion_sync_capture_state(session, capture_session)
+            self.inventory_refresh_etb_locations(select_code=updated_etb["location_code"])
+            self.inventory_conversion_refresh()
+            append_activity(f"Physical inventory location finished: {session.get('location_id')} {count}/{expected}")
+            self.status.set(f"Location conversion finished: {session.get('location_id')} ({count}/{expected}).")
+        except Exception as exc:
+            messagebox.showerror("Physical Inventory Conversion", str(exc))
+
+    def inventory_conversion_open_folder_ui(self):
+        session = self.inventory_conversion_load_active_session()
+        folder = None
+        if session:
+            folder_value = session.get("capture_folder") or ""
+            folder = Path(folder_value) if folder_value else inventory_conversion_capture_root(session.get("location_id", "unassigned"))
+        else:
+            folder = INVENTORY_CONVERSION_CAPTURE_ROOT
+        folder.mkdir(parents=True, exist_ok=True)
+        try:
+            os.startfile(folder)
+        except Exception as exc:
+            messagebox.showinfo("Physical Inventory Conversion", f"Conversion capture folder:\n{folder}\n\nCould not open automatically:\n{exc}")
 
     def inventory_location_registry_panel(self, wrap):
         registry = self.card(wrap, fill="x", pady=(0, 12), ipady=10)
