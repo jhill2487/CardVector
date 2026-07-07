@@ -14,10 +14,19 @@ from typing import Iterable
 
 
 SCRIPT_VERSION = "CardVector OS Inventory Label Generator v1"
-QR_PREFIX = "cardvector://"
+CARDVECTOR_WEB_BASE_URL = "https://cardvector.app"
+QR_PREFIX = CARDVECTOR_WEB_BASE_URL
 DEFAULT_CAPACITY = "400"
 DEFAULT_LOCATION_CAPACITY = "40"
 SAMPLE_CSV_NAME = "sample_etb_locations.csv"
+
+
+def make_etb_qr_payload(etb_id: str) -> str:
+    return f"{CARDVECTOR_WEB_BASE_URL}/etb/{etb_id}"
+
+
+def make_location_qr_payload(etb_id: str, location_code: str) -> str:
+    return f"{CARDVECTOR_WEB_BASE_URL}/location/{etb_id}/{location_code}"
 
 
 @dataclass
@@ -30,13 +39,16 @@ class LocationLabel:
 
     @property
     def qr_value(self) -> str:
-        if self.qr_payload:
-            return self.qr_payload
         if self.is_etb:
-            return f"cardvector://etb/{self.etb_id}"
+            return make_etb_qr_payload(self.etb_id)
+
         if self.location_code:
-            return f"cardvector://location/{self.etb_id}/{self.location_code}"
-        return f"cardvector://location/{self.location_id}"
+            return make_location_qr_payload(
+                self.etb_id,
+                self.location_code,
+            )
+
+        return f"{CARDVECTOR_WEB_BASE_URL}/location/{self.location_id}"
 
     @property
     def etb_id(self) -> str:
@@ -265,35 +277,65 @@ def make_qr_image(qr_value: str):
 def draw_label(canvas, row: LocationLabel, x: float, y: float, width: float, height: float) -> None:
     from reportlab.lib import colors
 
-    padding = 14
+    padding = 7
+    qr_margin = 5
+
     canvas.setStrokeColor(colors.black)
-    canvas.setLineWidth(1.4)
+    canvas.setLineWidth(1.0)
     canvas.rect(x, y, width, height)
 
-    qr_size = min(height - 64, width * 0.48)
-    qr_x = x + width - qr_size - padding
-    qr_y = y + 32
-    canvas.drawImage(make_qr_image(row.qr_value), qr_x, qr_y, qr_size, qr_size, preserveAspectRatio=True)
+    # QR column on right side.
+    qr_size = min(height - 14, width * 0.34)
+    qr_x = x + width - qr_size - qr_margin
+    qr_y = y + (height - qr_size) / 2
+
+    canvas.drawImage(
+        make_qr_image(row.qr_value),
+        qr_x,
+        qr_y,
+        qr_size,
+        qr_size,
+        preserveAspectRatio=True,
+    )
 
     text_x = x + padding
+    text_max_width = qr_x - text_x - 6
+
     canvas.setFillColor(colors.black)
+
+    def fit_text(text: str, font_name: str, start_size: int, min_size: int) -> int:
+        font_size = start_size
+        while canvas.stringWidth(text, font_name, font_size) > text_max_width and font_size > min_size:
+            font_size -= 1
+        return font_size
+
     if row.is_etb:
-        canvas.setFont("Helvetica-Bold", 39)
-        canvas.drawString(text_x, y + height - 58, row.etb_id)
+        text = row.etb_id
+        font_name = "Helvetica-Bold"
+        font_size = fit_text(text, font_name, 22, 13)
+
+        canvas.setFont(font_name, font_size)
+        canvas.drawString(text_x, y + height - 31, text)
+
     else:
-        canvas.setFont("Helvetica-Bold", 34)
-        canvas.drawString(text_x, y + height - 54, f"Location {row.location_code}")
-        canvas.setFont("Helvetica-Bold", 20)
-        canvas.drawString(text_x, y + height - 82, row.etb_id)
+        location_text = f"Location {row.location_code}"
+        font_name = "Helvetica-Bold"
+        location_font_size = fit_text(location_text, font_name, 18, 11)
 
-    canvas.setFont("Helvetica", 9)
-    canvas.setFillColor(colors.darkgray)
-    canvas.drawString(text_x, y + padding, "CardVector")
+        canvas.setFont(font_name, location_font_size)
+        canvas.drawString(text_x, y + height - 24, location_text)
 
+        etb_font_size = fit_text(row.etb_id, "Helvetica-Bold", 11, 8)
+        canvas.setFont("Helvetica-Bold", etb_font_size)
+        canvas.drawString(text_x, y + height - 41, row.etb_id)
 
+    canvas.setFillGray(0.45)
+    canvas.setFont("Helvetica", 7)
+    canvas.drawString(text_x, y + 6, "CardVector")
+    canvas.setFillColor(colors.black)
+    
 def write_pdf(labels: list[LocationLabel], output_path: Path) -> Path:
     try:
-        from reportlab.lib.pagesizes import letter
         from reportlab.pdfgen import canvas
     except ImportError as exc:
         raise SystemExit(
@@ -303,29 +345,42 @@ def write_pdf(labels: list[LocationLabel], output_path: Path) -> Path:
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path = unique_output_path(output_path)
-    pdf = canvas.Canvas(str(output_path), pagesize=letter)
-    page_width, page_height = letter
-    margin_x = 27
-    margin_y = 27
-    gap_x = 18
-    gap_y = 14
+
+    # 4" x 6" thermal label page.
+    page_width = 288
+    page_height = 432
+
+    pdf = canvas.Canvas(str(output_path), pagesize=(page_width, page_height))
+
+    margin_x = 6
+    margin_y = 10
+    gap_x = 4
+    gap_y = 4
+
     columns = 2
-    rows_per_page = 4
-    label_width = (page_width - (2 * margin_x) - gap_x) / columns
-    label_height = (page_height - (2 * margin_y) - ((rows_per_page - 1) * gap_y)) / rows_per_page
+    rows_per_page = 6
+
+    label_width = 136
+    label_height = 68
+
+    labels_per_page = columns * rows_per_page
 
     for index, row in enumerate(labels):
-        page_index = index % (columns * rows_per_page)
+        page_index = index % labels_per_page
+
         if index and page_index == 0:
             pdf.showPage()
+
         col = page_index % columns
         row_index = page_index // columns
+
         x = margin_x + (col * (label_width + gap_x))
         y = page_height - margin_y - label_height - (row_index * (label_height + gap_y))
+
         draw_label(pdf, row, x, y, label_width, label_height)
+
     pdf.save()
     return output_path
-
 
 def write_sample_csv(path: Path) -> Path:
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -380,7 +435,7 @@ def main(argv: list[str] | None = None) -> int:
     print(f"Project root: {root}")
     print(f"Labels generated: {len(labels)}")
     print(f"PDF: {pdf_path}")
-    print("QR format: cardvector://etb/<etb_id> and cardvector://location/<etb_id>/<location_code>")
+    print("QR format: https://cardvector.app/etb/<etb_id> and https://cardvector.app/location/<etb_id>/<location_code>")
     return 0
 
 
