@@ -15,6 +15,7 @@ DEFAULT_ETB_LOCATION_CAPACITY = 40
 ETB_LOCATION_CODES = tuple("ABCDEFGHIJ")
 LOCATION_STATUSES = ["Empty", "Active", "Full", "Location Complete", "Needs Review", "Archived"]
 ETB_RE = re.compile(r"^ETB-(\d{3})$")
+CARDVECTOR_WEB_BASE_URL = "https://cardvector.app"
 ETB_OPERATIONAL_DATA_DIR = PUTNAM_OS_DIR / "System" / "data" / "inventory"
 OLD_ETB_LOCATION_REGISTRY = DATA_CONFIG_DIR / "etb_location_registry.json"
 ETB_LOCATION_REGISTRY = ETB_OPERATIONAL_DATA_DIR / "etb_location_registry.json"
@@ -38,7 +39,7 @@ def normalize_status(value: str) -> str:
     if status == "Available":
         status = "Empty"
     if status not in LOCATION_STATUSES:
-        raise ValueError("ETB status must be Empty, Active, Full, Needs Review, or Archived.")
+        raise ValueError("ETB status must be Empty, Active, Full, Location Complete, Needs Review, or Archived.")
     return status
 
 
@@ -51,6 +52,14 @@ def normalize_location_code(value: str) -> str:
 
 def etb_location_id(etb_code: str, location_code: str) -> str:
     return f"{normalize_etb_code(etb_code)}-{normalize_location_code(location_code)}"
+
+
+def etb_qr_payload(etb_code: str) -> str:
+    return f"{CARDVECTOR_WEB_BASE_URL}/etb/{normalize_etb_code(etb_code)}"
+
+
+def location_qr_payload(etb_code: str, location_code: str) -> str:
+    return f"{CARDVECTOR_WEB_BASE_URL}/location/{normalize_etb_code(etb_code)}/{normalize_location_code(location_code)}"
 
 
 def active_location_from_record(location: dict[str, Any]) -> str:
@@ -142,7 +151,7 @@ def ensure_etb_location_records(location: dict[str, Any], registry: dict[str, An
         records.append({
             "location_code": code,
             "location_id": etb_location_id(etb_code, code),
-            "qr_payload": f"cardvector://location/{etb_code}/{code}",
+            "qr_payload": item.get("qr_payload") or location_qr_payload(etb_code, code),
             "capacity": capacity,
             "stored_count": assigned,
             "remaining_capacity": remaining,
@@ -197,7 +206,7 @@ def normalize_etb_record(location: dict[str, Any], registry: dict[str, Any] | No
     item = dict(location)
     item["location_code"] = code
     item["etb_id"] = code
-    item["qr_payload"] = f"cardvector://etb/{code}"
+    item["qr_payload"] = item.get("qr_payload") or etb_qr_payload(code)
     item["total_capacity"] = int(item.get("total_capacity", item.get("estimated_capacity", registry.get("default_etb_capacity", DEFAULT_ETB_CAPACITY))) or DEFAULT_ETB_CAPACITY)
     if item["total_capacity"] == 100:
         item["total_capacity"] = DEFAULT_ETB_CAPACITY
@@ -255,7 +264,7 @@ def create_etb_location(path: Path | None = None, capacity: int = DEFAULT_ETB_CA
         "remaining_space": int(capacity or DEFAULT_ETB_CAPACITY),
         "active_location": "A",
         "current_active_location": "A",
-        "qr_payload": f"cardvector://etb/{code}",
+        "qr_payload": etb_qr_payload(code),
         "created_at": now,
         "updated_at": now,
     }
@@ -391,8 +400,8 @@ def assign_batch_to_location(code: str, location_code: str, batch_id: str, path:
 
 def resolve_cardvector_qr_payload(payload: str, path: Path | None = None) -> dict[str, Any]:
     value = str(payload or "").strip()
-    etb_match = re.fullmatch(r"cardvector://etb/(ETB-\d{3})", value, re.IGNORECASE)
-    location_match = re.fullmatch(r"cardvector://location/(ETB-\d{3})/([A-J])", value, re.IGNORECASE)
+    etb_match = re.fullmatch(r"(?:cardvector://|https://cardvector\.app/)etb/(ETB-\d{3})", value, re.IGNORECASE)
+    location_match = re.fullmatch(r"(?:cardvector://|https://cardvector\.app/)location/(ETB-\d{3})/([A-J])", value, re.IGNORECASE)
     if not etb_match and not location_match:
         raise ValueError("Unsupported CardVector QR payload.")
 

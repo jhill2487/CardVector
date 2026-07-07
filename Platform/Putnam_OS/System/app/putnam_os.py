@@ -5503,7 +5503,7 @@ class PutnamOS(BaseTk):
         )
         self.label(
             panel,
-            "Operational data is currently stored on this workstation. Shared data sync is pending.",
+            "Operational data is stored locally until Shared Operational Data synchronization is enabled.",
             9,
             BRAND["warning"],
             False,
@@ -5513,6 +5513,7 @@ class PutnamOS(BaseTk):
         )
 
         self.inventory_conversion_dashboard_var = tk.StringVar(value="")
+        self.inventory_etb_registry_status_var = tk.StringVar(value="")
         self.inventory_conversion_capacity_var = tk.StringVar(value="")
         self.inventory_conversion_status_var = tk.StringVar(value="Current session status: Ready")
         self.inventory_conversion_etb_var = tk.StringVar(value="")
@@ -5522,6 +5523,16 @@ class PutnamOS(BaseTk):
         self.inventory_workstation_stage_var = tk.StringVar(value="")
         self.inventory_workstation_recognition_var = tk.StringVar(value="")
         self.inventory_workstation_inventory_preview_var = tk.StringVar(value="")
+
+        tk.Label(
+            panel,
+            textvariable=self.inventory_etb_registry_status_var,
+            bg=BRAND["panel"],
+            fg=BRAND["muted"],
+            font=("Segoe UI", 9),
+            justify="left",
+            wraplength=980,
+        ).pack(anchor="w", padx=18, pady=(0, 8))
 
         tk.Label(
             panel,
@@ -5698,6 +5709,20 @@ class PutnamOS(BaseTk):
 
         self.inventory_conversion_refresh()
 
+    def inventory_etb_registry_status_text(self):
+        try:
+            registry_path = ETB_LOCATION_REGISTRY.resolve()
+            display_path = registry_path.relative_to(ROOT)
+        except Exception:
+            registry_path = ETB_LOCATION_REGISTRY
+            display_path = ETB_LOCATION_REGISTRY
+        status = "Loaded" if registry_path.exists() else "Missing"
+        return f"ETB Registry:\n{display_path}\nStatus: {status}"
+
+    def inventory_update_etb_registry_status(self):
+        if hasattr(self, "inventory_etb_registry_status_var"):
+            self.inventory_etb_registry_status_var.set(self.inventory_etb_registry_status_text())
+
     def inventory_conversion_workstation_data(self):
         session = getattr(self, "inventory_conversion_session", None) or load_current_inventory_conversion_session() or {}
         capture_session = getattr(self, "inventory_conversion_capture_session", None) or {}
@@ -5786,6 +5811,7 @@ class PutnamOS(BaseTk):
         if not hasattr(self, "inventory_conversion_etb_combo"):
             return
         rows = etb_location_rows()
+        self.inventory_update_etb_registry_status()
         etb_codes = [row["location_code"] for row in rows]
         self.inventory_conversion_etb_combo.configure(values=etb_codes)
         if etb_codes and self.inventory_conversion_etb_var.get() not in etb_codes:
@@ -6224,8 +6250,8 @@ class PutnamOS(BaseTk):
 
         qr = tk.Frame(panel, bg=BRAND["panel"])
         qr.pack(fill="x", padx=18, pady=(2, 10))
-        self.qr_lookup_payload_var = tk.StringVar(value="cardvector://etb/ETB-007")
-        self.qr_lookup_result_var = tk.StringVar(value="Scan or paste a CardVector QR payload, then resolve it.")
+        self.qr_lookup_payload_var = tk.StringVar(value="https://cardvector.app/etb/ETB-007")
+        self.qr_lookup_result_var = tk.StringVar(value="Scan or paste a CardVector QR identity, then resolve it.")
         self.label(qr, "QR Lookup", 9, BRAND["gold"], True, side="left", padx=(0, 8))
         tk.Entry(
             qr,
@@ -6365,7 +6391,7 @@ class PutnamOS(BaseTk):
             self.etb_location_tree.see(selected_item)
         next_code = next_etb_code()
         self.etb_registry_summary_var.set(
-            f"Registry: {ETB_LOCATION_REGISTRY}\n"
+            f"Active ETB Registry: {ETB_LOCATION_REGISTRY}\n"
             f"ETBs: {len(rows)}  |  Next ETB: {next_code}  |  ETB capacity: {DEFAULT_ETB_CAPACITY} cards  |  Location capacity: {DEFAULT_ETB_LOCATION_CAPACITY} cards\n"
             "Each ETB has locations A-J. Counts include completed work sessions rolled up by ETB batch location."
         )

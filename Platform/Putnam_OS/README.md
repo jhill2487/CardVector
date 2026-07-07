@@ -170,10 +170,11 @@ Output PDFs are written to:
 Data/Exports/Labels/
 ```
 
-QR format:
+QR identity:
 
 ```text
-CVLOC:<location_id>
+https://cardvector.app/etb/<etb_id>
+https://cardvector.app/location/<etb_id>/<location_code>
 ```
 
 ## Inventory Audit Mode v1.0

@@ -127,11 +127,7 @@ def read_fallback_csv(path: Path) -> list[LocationLabel]:
 
 
 def read_etb_capacity_registry(root: Path) -> list[LocationLabel]:
-    paths = [
-        root / "Platform" / "Putnam_OS" / "System" / "data" / "inventory" / "etb_location_registry.json",
-        root / "Data" / "Config" / "etb_location_registry.json",
-    ]
-    path = next((candidate for candidate in paths if candidate.exists()), paths[0])
+    path = resolve_etb_registry_path(root)
     if not path.exists():
         return []
     data = json.loads(path.read_text(encoding="utf-8-sig"))
@@ -148,7 +144,7 @@ def read_etb_capacity_registry(root: Path) -> list[LocationLabel]:
                 label="ETB",
                 capacity=clean_text(item.get("total_capacity") or item.get("estimated_capacity")) or default_capacity,
                 category="ETB Storage",
-                qr_payload=clean_text(item.get("qr_payload")) or f"cardvector://etb/{etb_id}",
+                qr_payload=clean_text(item.get("qr_payload")) or make_etb_qr_payload(etb_id),
             )
         )
         child_locations = item.get("locations") or [
@@ -160,7 +156,7 @@ def read_etb_capacity_registry(root: Path) -> list[LocationLabel]:
             if not location_code:
                 continue
             location_id = normalize_location(child.get("location_id")) or f"{etb_id}-{location_code}"
-            payload = clean_text(child.get("qr_payload")) or f"cardvector://location/{etb_id}/{location_code}"
+            payload = clean_text(child.get("qr_payload")) or make_location_qr_payload(etb_id, location_code)
             rows.append(
                 LocationLabel(
                     location_id=location_id,
@@ -171,6 +167,14 @@ def read_etb_capacity_registry(root: Path) -> list[LocationLabel]:
                 )
             )
     return rows
+
+
+def resolve_etb_registry_path(root: Path) -> Path:
+    paths = [
+        root / "Platform" / "Putnam_OS" / "System" / "data" / "inventory" / "etb_location_registry.json",
+        root / "Data" / "Config" / "etb_location_registry.json",
+    ]
+    return next((candidate for candidate in paths if candidate.exists()), paths[0])
 
 
 def read_batch_location_registry(root: Path) -> list[LocationLabel]:
@@ -437,9 +441,10 @@ def main(argv: list[str] | None = None) -> int:
     pdf_path = write_pdf(labels, output_path)
     print(SCRIPT_VERSION)
     print(f"Project root: {root}")
-    print(f"Labels generated: {len(labels)}")
-    print(f"PDF: {pdf_path}")
-    print("QR format: https://cardvector.app/etb/<etb_id> and https://cardvector.app/location/<etb_id>/<location_code>")
+    print(f"QR Identity: {CARDVECTOR_WEB_BASE_URL}/")
+    print(f"Labels Generated: {len(labels)}")
+    print(f"Output PDF: {pdf_path}")
+    print(f"Registry Source: {resolve_etb_registry_path(root)}")
     return 0
 
 

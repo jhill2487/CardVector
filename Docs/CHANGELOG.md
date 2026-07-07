@@ -86,7 +86,7 @@
 ### Added
 
 - Added printable ETB/storage-location PDF label generator at `Platform/Putnam_OS/System/tools/generate_etb_qr_labels.py`.
-- Added QR encoding format `CVLOC:<location_id>`.
+- Added QR identity format using `https://cardvector.app/`.
 - Added fallback CSV template at `Platform/Putnam_OS/System/tools/sample_etb_locations.csv`.
 - Labels output to `Data/Exports/Labels/`.
 
