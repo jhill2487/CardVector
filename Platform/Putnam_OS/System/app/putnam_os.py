@@ -3714,6 +3714,34 @@ class PutnamOS(BaseTk):
         if subtitle:
             tk.Label(self.main, text=subtitle, bg=BRAND["bg"], fg=BRAND["muted"], font=self.ui_font("body")).pack(anchor="w", padx=SPACING["page_x"], pady=(0, 14))
 
+    def scrollable_page(self, padx=34, pady=0):
+        shell = tk.Frame(self.main, bg=BRAND["bg"])
+        shell.pack(fill="both", expand=True, padx=padx, pady=pady)
+        canvas = tk.Canvas(shell, bg=BRAND["bg"], highlightthickness=0, bd=0)
+        scrollbar = ttk.Scrollbar(shell, orient="vertical", command=canvas.yview)
+        canvas.configure(yscrollcommand=scrollbar.set)
+        inner = tk.Frame(canvas, bg=BRAND["bg"])
+        window_id = canvas.create_window((0, 0), window=inner, anchor="nw")
+
+        def update_scroll_region(_event=None):
+            canvas.configure(scrollregion=canvas.bbox("all"))
+
+        def update_inner_width(event):
+            canvas.itemconfigure(window_id, width=event.width)
+
+        def on_mousewheel(event):
+            delta = event.delta
+            if delta:
+                canvas.yview_scroll(int(-1 * (delta / 120)), "units")
+
+        inner.bind("<Configure>", update_scroll_region)
+        canvas.bind("<Configure>", update_inner_width)
+        canvas.bind("<Enter>", lambda _event: canvas.bind_all("<MouseWheel>", on_mousewheel))
+        canvas.bind("<Leave>", lambda _event: canvas.unbind_all("<MouseWheel>"))
+        canvas.pack(side="left", fill="both", expand=True)
+        scrollbar.pack(side="right", fill="y")
+        return inner
+
     def card(self, parent, **pack):
         f = tk.Frame(parent, bg=BRAND["panel"], highlightbackground=BRAND["border"], highlightthickness=1)
         if pack is not None:
@@ -3879,8 +3907,7 @@ class PutnamOS(BaseTk):
 
     def home_page(self):
         self.header("Home", "Mission control for Putnam Collectibles.")
-        wrap = tk.Frame(self.main, bg=BRAND["bg"])
-        wrap.pack(fill="both", expand=True, padx=34, pady=0)
+        wrap = self.scrollable_page()
 
         mission = self.card(wrap, fill="x", pady=(0, 16), ipady=14)
         self.label(mission, "TODAY'S MISSION", 13, BRAND["gold"], True, anchor="w", padx=18, pady=(14, 4))
@@ -4091,8 +4118,7 @@ class PutnamOS(BaseTk):
 
     def import_page(self):
         self.header("Import", "Unified CardUploader CSV import and validation.")
-        wrap = tk.Frame(self.main, bg=BRAND["bg"])
-        wrap.pack(fill="both", expand=True, padx=34, pady=0)
+        wrap = self.scrollable_page()
 
         import_card = self.card(wrap, fill="x", pady=(0, 16), ipady=12)
         self.label(import_card, "IMPORT WORKFLOW", 12, BRAND["gold"], True, anchor="w", padx=18, pady=(12, 6))
@@ -4224,8 +4250,7 @@ class PutnamOS(BaseTk):
 
     def capture_page(self):
         self.header("Capture", "Capture the next card.")
-        wrap = tk.Frame(self.main, bg=BRAND["bg"])
-        wrap.pack(fill="both", expand=True, padx=34, pady=0)
+        wrap = self.scrollable_page()
 
         workspace = tk.Frame(wrap, bg=BRAND["bg"])
         workspace.pack(side="left", fill="both", expand=True, padx=(0, 14))
@@ -5241,8 +5266,7 @@ class PutnamOS(BaseTk):
 
     def orders_page(self):
         self.header("Orders", "Orders v1: import eBay orders CSVs and generate printable pick slips.")
-        wrap = tk.Frame(self.main, bg=BRAND["bg"])
-        wrap.pack(fill="both", expand=True, padx=34, pady=0)
+        wrap = self.scrollable_page()
 
         setup = self.card(wrap, fill="x", pady=(0, 14), ipady=12)
         self.label(setup, "PICK SLIP FOUNDATION", 12, BRAND["gold"], True, anchor="w", padx=18, pady=(12, 6))
@@ -5793,8 +5817,7 @@ class PutnamOS(BaseTk):
 
     def inventory_page(self):
         self.header("Inventory", "Inventory Audit verifies physical cards and trusted Batch Locations before any eBay revision.")
-        wrap = tk.Frame(self.main, bg=BRAND["bg"])
-        wrap.pack(fill="both", expand=True, padx=34, pady=0)
+        wrap = self.scrollable_page()
 
         self.inventory_conversion_panel(wrap)
         self.inventory_location_registry_panel(wrap)
@@ -6268,8 +6291,7 @@ class PutnamOS(BaseTk):
 
     def sessions_page(self):
         self.header("Work Sessions", "Track production sessions, footage, bottlenecks, and metrics.")
-        wrap = tk.Frame(self.main, bg=BRAND["bg"])
-        wrap.pack(fill="both", expand=True, padx=34, pady=0)
+        wrap = self.scrollable_page()
 
         current = self.card(wrap, fill="x", pady=(0, 16), ipady=12)
         self.label(current, "CURRENT SESSION", 12, BRAND["gold"], True, anchor="w", padx=18, pady=(12, 8))
@@ -6320,8 +6342,7 @@ class PutnamOS(BaseTk):
 
     def content_page(self):
         self.header("Content", "Track recordings, clips, episode ideas, and publishing preparation.")
-        wrap = tk.Frame(self.main, bg=BRAND["bg"])
-        wrap.pack(fill="both", expand=True, padx=34, pady=0)
+        wrap = self.scrollable_page()
         row = tk.Frame(wrap, bg=BRAND["bg"])
         row.pack(fill="x", pady=(0, 16))
         self.metric_card(row, "Recordings", count_files(CONTENT_RECORDINGS, "*"), "Raw footage")
@@ -6338,8 +6359,7 @@ class PutnamOS(BaseTk):
 
     def settings_page(self):
         self.header("Settings", "Configure local CardVector OS settings.")
-        wrap = tk.Frame(self.main, bg=BRAND["bg"])
-        wrap.pack(fill="both", expand=True, padx=34, pady=0)
+        wrap = self.scrollable_page()
         panel = self.card(wrap, fill="x", ipady=14)
         self.label(panel, "OBS WEBSOCKET", 12, BRAND["gold"], True, anchor="w", padx=18, pady=(12, 8))
         obs_config = load_obs_config()
@@ -6475,8 +6495,7 @@ class PutnamOS(BaseTk):
 
     def placeholder_page(self, name):
         self.header(name, "This workspace is under active development.")
-        wrap = tk.Frame(self.main, bg=BRAND["bg"])
-        wrap.pack(fill="both", expand=True, padx=34, pady=0)
+        wrap = self.scrollable_page()
         panel = self.card(wrap, fill="x", ipady=18)
         self.label(panel, f"{name.upper()} WORKSPACE", 14, BRAND["gold"], True, anchor="w", padx=18, pady=(16, 6))
         self.label(panel, "This area will be built from real production bottlenecks, not guesses.", 10, BRAND["muted"], False, anchor="w", padx=18, pady=(0, 16))
@@ -6665,8 +6684,7 @@ Goal: Capture the real listing workflow for process improvement and content crea
 
     def pricing_page(self):
         self.header("Pricing & Decisions", "Analyze CardUploader exports, validate pricing, and prepare upload-ready eBay CSV files.")
-        wrap = tk.Frame(self.main, bg=BRAND["bg"])
-        wrap.pack(fill="both", expand=True, padx=34, pady=0)
+        wrap = self.scrollable_page()
         self.build_acquisition_panel(wrap, "ACQUISITION SUMMARY")
 
         info = self.card(wrap, fill="x", pady=(0, 16), ipady=10)
