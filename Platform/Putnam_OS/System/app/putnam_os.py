@@ -5455,6 +5455,16 @@ class PutnamOS(BaseTk):
             padx=18,
             pady=(0, 8),
         )
+        self.label(
+            panel,
+            "Operational data is currently stored on this workstation. Shared data sync is pending.",
+            9,
+            BRAND["warning"],
+            False,
+            anchor="w",
+            padx=18,
+            pady=(0, 8),
+        )
 
         self.inventory_conversion_dashboard_var = tk.StringVar(value="")
         self.inventory_conversion_capacity_var = tk.StringVar(value="")
