@@ -13,7 +13,7 @@ from Platform.putnam_paths import DATA_CONFIG_DIR, DATA_EXPORTS_DIR
 DEFAULT_ETB_CAPACITY = 400
 DEFAULT_ETB_LOCATION_CAPACITY = 40
 ETB_LOCATION_CODES = tuple("ABCDEFGHIJ")
-LOCATION_STATUSES = ["Empty", "Active", "Full", "Needs Review", "Archived"]
+LOCATION_STATUSES = ["Empty", "Active", "Full", "Location Complete", "Needs Review", "Archived"]
 ETB_RE = re.compile(r"^ETB-(\d{3})$")
 ETB_LOCATION_REGISTRY = DATA_CONFIG_DIR / "etb_location_registry.json"
 ETB_LABEL_ROOT = DATA_EXPORTS_DIR / "Inventory_Location_Labels"
@@ -332,7 +332,7 @@ def mark_location_complete(code: str, location_code: str, path: Path | None = No
                 stored_count = capacity if captured_count is None else max(0, min(capacity, int(captured_count or 0)))
                 child["stored_count"] = stored_count
                 child["remaining_capacity"] = max(0, capacity - stored_count)
-                child["status"] = "Full" if stored_count >= capacity else "Needs Review"
+                child["status"] = "Location Complete" if stored_count >= capacity else "Needs Review"
                 child["updated_at"] = now
         location["locations"] = children
         location["active_location"] = next_available_location_code(children)

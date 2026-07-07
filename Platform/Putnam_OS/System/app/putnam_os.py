@@ -1572,7 +1572,9 @@ def attach_inventory_conversion_capture_session(session, capture_session):
     else:
         session["status"] = "Ready for Capture"
         session.setdefault("workflow_state", {})["current"] = "Waiting for Capture"
-    return save_inventory_conversion_session(session)
+    session = save_inventory_conversion_session(session)
+    sync_completed_inventory_conversion_session_to_registry(session)
+    return session
 
 
 def save_inventory_conversion_session(session):
@@ -1606,6 +1608,49 @@ def load_inventory_conversion_sessions(limit=250):
         except Exception:
             continue
     return sessions
+
+
+def sync_completed_inventory_conversion_session_to_registry(session):
+    if not isinstance(session, dict) or session.get("status") != "Location Complete":
+        return False
+    etb_code = str(session.get("etb") or "").strip()
+    location_code = str(session.get("location") or "").strip().upper()
+    if not etb_code or not location_code:
+        return False
+    try:
+        captured = int(session.get("cards_captured", 0) or 0)
+    except Exception:
+        captured = 0
+    if captured <= 0:
+        return False
+    try:
+        _etb, location = inventory_conversion_location_record(etb_code, location_code)
+        capacity = int(location.get("capacity", DEFAULT_ETB_LOCATION_CAPACITY) or DEFAULT_ETB_LOCATION_CAPACITY)
+        stored = int(location.get("stored_count", 0) or 0)
+        status = str(location.get("status") or "")
+        desired = min(capacity, captured)
+        if stored >= desired and status == "Location Complete":
+            return False
+        mark_location_complete(etb_code, location_code, captured_count=captured)
+        return True
+    except Exception:
+        return False
+
+
+def repair_completed_inventory_conversion_registry(limit=10000):
+    repaired = 0
+    scanned = 0
+    errors = []
+    for session in load_inventory_conversion_sessions(limit=limit):
+        scanned += 1
+        if not isinstance(session, dict) or session.get("status") != "Location Complete":
+            continue
+        try:
+            if sync_completed_inventory_conversion_session_to_registry(session):
+                repaired += 1
+        except Exception as exc:
+            errors.append(f"{session.get('session_id', '(unknown)')}: {exc}")
+    return {"scanned": scanned, "repaired": repaired, "errors": errors}
 
 
 def inventory_conversion_location_record(etb_code, location_code):
@@ -1666,6 +1711,7 @@ def next_suggested_conversion_location():
 
 def inventory_conversion_dashboard_stats():
     today = datetime.now().date().isoformat()
+    repair_completed_inventory_conversion_registry()
     sessions = load_inventory_conversion_sessions()
     today_sessions = [item for item in sessions if str(item.get("date") or item.get("created_at", ""))[:10] == today]
     current = load_current_inventory_conversion_session()
@@ -6229,6 +6275,7 @@ class PutnamOS(BaseTk):
     def inventory_refresh_etb_locations(self, select_code=""):
         if not hasattr(self, "etb_location_tree"):
             return
+        repair_completed_inventory_conversion_registry()
         for item in self.etb_location_tree.get_children():
             self.etb_location_tree.delete(item)
         self.etb_location_tree._base_tags = {}
