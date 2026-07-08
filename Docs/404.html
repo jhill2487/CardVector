@@ -53,8 +53,14 @@ footer{margin-top:20px;color:#9ca3af;font-size:13px;text-align:center}
     subtitle.textContent=etb;
     rows.innerHTML=row("Type","Location")+row("ETB ID",etb)+row("Location",locationCode)+row("Route","/location/"+etb+"/"+locationCode);
     notice.textContent="Inventory details will appear here as CardVector Mobile connects to live inventory data.";
+  }else if(parts[0]==="lot"&&parts[1]){
+    const lot=parts[1].toUpperCase();
+    title.textContent=lot;
+    subtitle.textContent="Acquisition Lot";
+    rows.innerHTML=row("Type","Lot")+row("Lot ID",lot)+row("Route","/lot/"+lot);
+    notice.textContent="Lot details will appear here as CardVector Mobile connects to acquisition data.";
   }else{
-    rows.innerHTML=row("Status","Ready")+row("ETB route","/etb/ETB-001")+row("Location route","/location/ETB-001/A");
+    rows.innerHTML=row("Status","Ready")+row("ETB route","/etb/ETB-001")+row("Location route","/location/ETB-001/A")+row("Lot route","/lot/LOT-2026-001");
     notice.textContent="This static GitHub Pages site is ready for CardVector QR labels.";
   }
 })();
