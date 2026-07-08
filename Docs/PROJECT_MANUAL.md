@@ -1,538 +1,326 @@
-# Putnam Collectibles Project Manual
 
-Version: 1.0
-Owner: Jared Hill
-Project: Putnam Collectibles
+# PROJECT_MANUAL.md
 
----
-
-# Mission
-
-Build the best operating platform for trading card businesses.
-
-Putnam Collectibles remains the production business. CardVector is the software
-platform validated by that business.
-
-The platform should automate repetitive work from image acquisition through
-pricing, inventory, eBay export, fulfillment, and analytics while maximizing:
-
-- Profit per hour
-- Inventory turnover
-- Listing quality
-- Customer experience
-- Scalability
-
-The system should always prioritize reliability and maintainability over adding
-unnecessary features.
+**Project:** CardVector  
+**Version:** 1.0  
+**Status:** Canonical
 
 ---
 
-# Long-Term Vision
+# 1. Purpose
 
-CardVector Platform is composed of reusable applications and services.
+CardVector is the operating system for Putnam Collectibles.
 
-```text
-CardVector Platform
-|
-+-- CardVector Capture Studio
-+-- CardVector Pricing Engine
-+-- CardVector OS
-+-- CardVector Mobile (future)
-+-- CardVector Cloud (future)
-```
+Its purpose is to provide a stable, efficient platform for managing acquisition, inventory, fulfillment, reporting, and future business operations.
 
-## 1. CardVector Capture Studio
+The platform is designed around real production workflows rather than theoretical software practices.
 
-Purpose
+---
 
-- Acquire images
-- Integrate with OBS Studio
-- Support automatic and manual capture
-- Manage front/back pairing
-- Manage capture sessions
-- Provide thumbnail review
-- Prepare future Mobile and Binder Capture workflows
+# 2. Core Philosophy
 
-Capture Studio does not recognize cards. CardUploader currently performs card
-recognition and listing generation.
+The following principles govern every architectural decision.
 
-## 2. CardVector OS
+## Business First
+Business value takes precedence over technical novelty.
 
-Purpose
+## Production First
+Production workflows provide the highest level of validation.
 
-Business operating system and workflow orchestrator.
+## Simplicity First
+When multiple solutions satisfy the business need, prefer the simpler one.
 
-Responsibilities
+## Stability
+Operators should build long-term confidence and muscle memory.
 
-- Guided workflow
-- Inventory
-- Pricing handoff
-- SKU management
-- Batch management
-- Location tracking
-- Export management
-- Reporting
-- Analytics
+## Repository First
+The repository is the authoritative memory of CardVector.
 
-Future
+## Continuous Improvement
+Improve through small, validated changes rather than large rewrites.
 
-Inventory becomes the single source of truth.
+---
 
-## 3. CardVector Pricing Engine
+# 3. Inventory Architecture
 
-Purpose
+## Inventory Model
 
-Price cards using explainable rules and marketplace intelligence.
+CardVector answers one operational question:
 
-Responsibilities
+**Where is the card?**
 
-- Pricing strategy
-- Market validation
-- Rejection diagnostics
-- Floor pricing
-- Cart sweetener rules
-- eBay CSV pricing support
+The authoritative physical reference is:
 
-## 4. CardUploader Integration
+**ETB + Location**
 
-Purpose
+Cards are identified by:
 
-External best-of-breed recognition and listing generation.
+- Name
+- Set
+- Collector Number
+- Variant
+- Condition
 
-Responsibilities
+CardVector does not assign operational inventory IDs to individual cards.
 
-- Card recognition
-- Card metadata generation
-- Listing source data
-- Export files for CardVector OS import
+Permanent identities belong to physical objects:
 
-## 5. Legacy Scanner Research
+- ETBs
+- ETB Locations
+- Shelves
+- Totes
+- Order Bins
+- Acquisition Lots
 
-Purpose
+## Physical Storage
 
-Archived recognition and scanner research.
+Hierarchy:
 
-Responsibilities
+Shelf (optional)
+→ ETB
+→ Location
+→ Card
 
-- Historical OCR research
-- Historical visual matching research
-- Benchmark/reference material
+Operational standard:
 
-Legacy Scanner Research is not the active production recognition path.
+- 10 Locations (A–J) per ETB
+- 40 cards per Location
+- 400 cards per ETB
 
-## 6. Pokemon Lookup Overlay
+These are operating standards, not architectural limits.
 
-Purpose
+Container identities remain permanent.
+Only occupancy changes.
 
-Rapid lookup while buying, selling, streaming, and sorting cards.
+## Inventory Conversion
 
-Responsibilities
+Inventory Conversion establishes the authoritative physical location of existing inventory.
 
-- Chrome Extension
-- Local backend
-- SQLite database
-- Live pricing
-- Fast search
-- Whatnot support
-- eBay support
+Standard workflow:
 
-Primary goal:
+1. Select ETB
+2. Select Location
+3. Capture inventory
+4. Complete Location
+5. Continue
 
-Instant pricing with minimal clicks.
+The ETB Registry records occupancy, capacity, active location and completion status.
 
-## 7. Analytics
+---
 
-Eventually every business decision should become data driven.
+# 4. Operational Workflows
 
-Examples
+## Acquisition
 
-- Sell-through
-- Days to sell
-- Average order value
-- Average cards per order
-- Profit by batch
-- Profit by ETB
+An acquisition is a purchasing event rather than a storage location.
+
+Acquisition supports:
+
+- Cost tracking
+- ROI
+- Profitability
 - Inventory aging
-- Listing performance
+- Business reporting
+
+Cards become operational inventory only after assignment to an ETB and Location.
+
+## Fulfillment
+
+CardVector's responsibility is physical inventory.
+
+CardVector manages:
+
+- Physical location
+- ETB occupancy
+- Location occupancy
+- Pick accuracy
+
+Marketplace platforms remain responsible for:
+
+- Listings
+- Orders
+- Payments
+- Shipping
+- Tracking
+
+When a location reaches zero cards it becomes available for reuse.
+
+## Marketplace Integration
+
+Marketplace data is imported and reconciled conservatively.
+
+CardVector remains the authority for physical inventory.
 
 ---
 
-# Current Development Phase
+# 5. Platform Architecture
 
-## Completed
+## Shared Operational Data
 
-- Capture Studio production validation
-- CardUploader import workflow
-- Pricing workflow
-- eBay CSV generation and upload
-- Inventory and location workflows
-- Acquisition data during intake
-- Legacy scanner research archive
+Business data is shared independently from source code.
 
-## Current Priority
+Current synchronization platform:
 
-Build CardVector Platform v1.0.
+- OneDrive
 
-Current focus
+Examples:
 
-- CardVector Platform Rebrand
-- Capture Studio v2
-- CardVector Pricing Engine Marketplace Intelligence
-- Workflow Polish
-- Inventory Improvements
+- Inventory database
+- ETB registry
+- Product images
+- Acquisition records
+- Marketplace imports
 
-## Future
+## Runtime vs Source Data
 
-- Mobile Companion
-- Inventory Transactions
-- eBay Draft Automation
-- TCGPlayer Sync
-- AI-assisted grading support
-- Warehouse management
-- Business dashboard
+Git stores:
 
----
+- Source code
+- Documentation
+- Templates
 
-# Project Architecture
+Operational business data is synchronized separately.
 
-```text
-CardVector Capture Studio
-|
-v
-CardUploader
-|
-v
-CardVector OS
-|
-v
-CardVector Pricing Engine
-|
-v
-eBay CSV Export
-|
-v
-Marketplace
-```
+Temporary runtime data remains workstation specific.
 
-Normalized Listing Pipeline
+## Data Ownership
 
-```text
-CSV Input
-|
-v
-Source Detection
-|
-v
-Column Mapping / Adapter Profile
-|
-v
-Normalized Listing
-|
-v
-Existing Pricing Engine
-|
-v
-Reports / Recommendations
-|
-v
-Source-appropriate export
-```
+Every category of data has a single authoritative owner.
 
-Overlay
+## Data Integrity
 
-```text
-Pokemon Lookup Overlay
-|
-v
-Local Backend
-|
-v
-SQLite
-|
-v
-Live Pricing
-```
+Accuracy is preferred over speed.
+
+Conflicts should be presented for operator review.
+
+## Data Migration
+
+Business data should survive platform evolution through safe migration paths.
 
 ---
 
-# Platform Principles
+# 6. User Experience
 
-Every major subsystem should be reusable outside CardVector OS when practical.
+CardVector is professional business software.
 
-Single Responsibility Principle:
+Design goals:
 
-- CardVector Capture Studio captures.
-- CardVector Pricing Engine prices.
-- CardVector OS orchestrates.
-- CardUploader performs recognition.
+- Minimal clicks
+- Stable layouts
+- Predictable workflows
+- Clear terminology
+- Fast operation
 
-Prefer modular components, reusable services, external best-of-breed
-integrations, and workflow-first design.
+Routine screens should maximize workspace rather than instructional text.
 
----
+CardVector is a tool, not a tutorial.
 
-# Development Standards
+## User Interface Stability
 
-Every Codex session should:
+A stable interface is considered a feature.
 
-1. Inspect the project before changing files.
-2. Extend existing code whenever practical.
-3. Avoid duplicate functionality.
-4. Keep paths portable.
-5. Avoid hard-coded user directories.
-6. Preserve existing workflows.
-7. Create backups before risky changes.
-8. Bump versions when appropriate.
-9. Run smoke tests.
-10. Explain what changed.
-11. Report any remaining issues.
-12. Never silently delete data.
+Layouts should change only when they provide measurable operational benefit.
+
+## Mobile & QR
+
+QR codes identify physical objects.
+
+Mobile extends CardVector OS into the physical workspace.
 
 ---
 
-# Code Quality Standards
+# 7. Engineering Standards
 
-Prefer
+Development sequence:
 
-- Small reusable modules
-- Clear naming
-- Comments around business logic
-- Relative paths
-- Configurable values
+1. Define the objective.
+2. Review existing architecture.
+3. Implement the smallest practical change.
+4. Validate using production workflows.
+5. Commit.
+6. Push when appropriate.
 
-Avoid
+## Testing
 
-- Giant scripts
-- Duplicate logic
-- Magic numbers
-- Hard-coded paths
+Production validation is the highest level of confidence.
 
----
+Testing should identify:
 
-# Business Philosophy
+- Bugs
+- Workflow friction
+- Unnecessary clicks
+- Operator confusion
+- Performance issues
 
-The goal is NOT:
+## Versioning
 
-Maximum profit per listing.
+CardVector follows a production-first release philosophy.
 
-The goal IS:
+The production system is the primary working system.
 
-Maximum profit per hour.
+## Change Management
 
-Business decisions should optimize
+Changes should:
 
-- Inventory turnover
-- Average order value
-- Profit per shipment
-- Cash flow
-- Scalability
-
----
-
-# Pricing Strategy
-
-Current rules
-
-Market <= 1.50
-
-v
-
-0.99
-
-Market 1.51-2.99
-
-v
-
-1.49
-
-Market 3.00-4.99
-
-v
-
-2.99
-
-Market >=5.00
-
-v
-
-Keep market pricing
-
-Never export below $0.99 unless explicitly requested.
+- Improve business operations
+- Reduce operator effort
+- Preserve workflows
+- Respect frozen architectural decisions
 
 ---
 
-# Shipping Strategy
+# 8. Infrastructure
 
-Default
+Deployment goals:
 
-Buyer pays shipping.
+- Git for source code
+- OneDrive for shared operational data
+- Portable configuration
+- Modular hardware
+- Vendor independence
+- Business continuity
 
-Promotion
-
-Free shipping on 3+ cards.
-
-The export process must always confirm shipping settings before writing an eBay
-CSV.
-
----
-
-# Cart Sweetener Strategy
-
-Cards at $0.99 are intentional cart builders.
-
-Purpose
-
-Increase
-
-- Basket size
-- Multi-card orders
-- Revenue per shipment
-
-Cart sweeteners should be tracked internally for analytics.
+Core business operations should continue even if external services are temporarily unavailable.
 
 ---
 
-# Inventory Strategy
+# 9. Automation & Reporting
 
-Simple first.
+Automation exists to reduce repetitive work while preserving operator control.
 
-Location format
+Low-confidence situations require operator review.
 
-ETB-01-A
-
-Use for
-
-- Batch
-- Custom SKU
-- User SKU where appropriate
-- Export logs
-
-Avoid complex warehouse logic until necessary.
+Reporting is read-only and exists to improve business decisions without complicating production workflows.
 
 ---
 
-# eBay Export Workflow
+# 10. Platform Evolution
 
-Every export should perform:
+CardVector is intended to mature into a stable operating system.
 
-1. Ask batch
-2. Confirm shipping
-3. Run pricing optimizer
-4. Flag cart sweeteners
-5. Display export summary
-6. Require confirmation
-7. Generate CSV
-8. Write export log
+Once the platform reaches production maturity, architectural evolution should largely stop.
 
-Never modify required eBay columns.
+Future work should primarily consist of:
 
----
-
-# Capture Standards
-
-Priority
-
-Clean, paired, reviewable images first.
-
-Preferred output
-
-- Front image
-- Back image
-- Session metadata
-- Capture count
-- Pairing state
-- CardUploader handoff readiness
-
-Card recognition belongs to CardUploader unless a future milestone explicitly
-changes the responsibility boundary.
+- Bug fixes
+- Workflow improvements
+- Marketplace updates
+- Hardware support
+- Operator-requested quality-of-life improvements
 
 ---
 
-# Overlay Standards
+# 11. Long-Term Vision
 
-Primary purpose
+CardVector should become trusted infrastructure for Putnam Collectibles.
 
-Fast lookup.
+Success is measured by:
 
-Do not sacrifice speed for unnecessary features.
+- Accurate inventory
+- Efficient fulfillment
+- Stable workflows
+- Reduced operator effort
+- Business continuity
+- Long-term maintainability
 
-Pricing display priority
-
-NM
-
-v
-
-LP
-
-v
-
-MP
-
-v
-
-HP/DMG
-
-Variants should display without expanding.
-
----
-
-# User Preferences
-
-The project owner prefers
-
-- Complete patch scripts
-- Minimal manual editing
-- Copy/paste commands
-- One-step troubleshooting
-- Plain-text Codex prompts
-
-Provide pushback if an idea hurts
-
-- Speed
-- Accuracy
-- Maintainability
-- Business goals
-
-Do not agree automatically.
-
----
-
-# Versioning
-
-Every meaningful feature should
-
-- Update version
-- Update changelog
-- Preserve compatibility
-- Include migration when necessary
-
----
-
-# Changelog
-
-## v1.0
-
-Created unified project manual.
-
-Established
-
-- Vision
-- Standards
-- Architecture
-- Roadmap
-- Business rules
-- Pricing philosophy
-- Development workflow
-
-This document becomes the authoritative reference for future development.
-
----
-
-# Guiding Principle
-
-When making development decisions, always ask:
-
-"Does this make Putnam Collectibles faster, more accurate, easier to maintain,
-and more profitable?"
-
-If the answer is no, reconsider the approach.
+The goal is a platform that operators trust every day without needing to think about the software itself.
