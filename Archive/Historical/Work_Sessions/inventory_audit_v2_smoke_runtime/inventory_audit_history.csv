@@ -1,0 +1,3 @@
+﻿item_id,title,game,audit_timestamp,confirmed_location,audit_status,notes,capture_image_path,source_file
+TEST-001,Pokemon Test Card One,pokemon,2026-06-29T15:46:55,ETB-09-A,confirmed,confirmed smoke row,,Work_Sessions\inventory_audit_v2_smoke_source.csv
+TEST-002,Pokemon Test Card Two,pokemon,2026-06-29T15:46:55,ETB-09-B,location_updated,location smoke row,,Work_Sessions\inventory_audit_v2_smoke_source.csv

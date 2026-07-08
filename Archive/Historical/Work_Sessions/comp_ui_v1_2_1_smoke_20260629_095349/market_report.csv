@@ -1,0 +1,3 @@
+﻿row,title,card_name,set,number,current_price,query,status,accepted_count,rejected_count,last_sale,last3_avg,median,confidence,reason
+1,PIKACHU 58 BASE SET NM,Pikachu,Base Set,58,1.49,Pikachu Base Set 58,NO_CHANGE,1,0,2.25,2.25,2.25,44,Market data did not exceed opportunity threshold.
+2,DISTORTED FUTURE OPXX-001 NM,Distorted Future,Future Set,OPXX-001,1.49,Distorted Future Future Set OPXX-001,NO_DATA,0,1,,,,0,No accepted comparables after validation.

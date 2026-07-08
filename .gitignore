@@ -159,3 +159,10 @@ temporary_reports/
 /Archive/Shelved_Projects/
 
 Data/Completed_Jobs/
+
+# Historical media files - keep local, do not track
+*.mkv
+*.mp4
+
+# Work session video segments
+Archive/Historical/Work_Sessions/*_segments/

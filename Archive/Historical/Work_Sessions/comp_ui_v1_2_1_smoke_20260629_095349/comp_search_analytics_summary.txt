@@ -1,0 +1,11 @@
+Putnam Comp Engine v1.2
+Search Analytics + Explainable Rejections
+Generated: 2026-06-29T09:53:49
+
+Searches: 2
+Total candidates reviewed: 2
+Total accepted: 1
+Total rejected: 1
+
+Top rejection reasons:
+- Rejected: card name mismatch: 1

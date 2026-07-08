@@ -1,0 +1,15 @@
+Putnam Comp Engine v1.2
+Search Analytics + Explainable Rejections
+Generated: 2026-06-29T09:42:45
+
+Searches: 27
+Total candidates reviewed: 1756
+Total accepted: 273
+Total rejected: 1483
+
+Top rejection reasons:
+- Rejected: card name mismatch: 1148
+- Rejected: excluded lot/pack/playset/booster/deck/sealed term: 198
+- Rejected: excluded graded term: 107
+- Rejected: other reason: 22
+- Rejected: card number mismatch: 8
