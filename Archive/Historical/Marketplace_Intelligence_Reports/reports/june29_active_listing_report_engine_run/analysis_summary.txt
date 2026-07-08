@@ -1,0 +1,18 @@
+Marketplace Intelligence v1.0
+Generated: 2026-07-01T06:43:07
+Input file: Business\eBay_Store_Items\eBay-all-active-listings-report-2026-06-29-12328689686.csv
+Output folder: Platform\Marketplace_Intelligence\reports\june29_active_listing_report_engine_run
+Mode: Reports + Bulk Revise Export
+
+Listings Imported: 695
+Listings Matched: 0
+Listings Unmatched: 695
+Price Increases: 0
+Price Decreases: 0
+No Changes: 0
+Review Required: 695
+Changed Listings: 0
+Potential Revenue Impact: $0.00
+
+Recommendation:
+Review changed listings first. Marketplace Intelligence does not upload or revise listings automatically.

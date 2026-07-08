@@ -1,0 +1,18 @@
+Marketplace Intelligence v1.0
+Generated: 2026-07-01T00:33:13
+Input file: Platform\Marketplace_Intelligence\examples\ebay_active_listings_sample.csv
+Output folder: C:\Users\user\OneDrive\PutnamCollectibles\Platform\Marketplace_Intelligence\reports\ebay_active_listings_sample_20260701_003313
+Mode: Analysis Only
+
+Listings Imported: 4
+Listings Matched: 3
+Listings Unmatched: 1
+Price Increases: 1
+Price Decreases: 1
+No Changes: 0
+Review Required: 2
+Changed Listings: 2
+Potential Revenue Impact: $0.50
+
+Recommendation:
+Review changed listings first. Marketplace Intelligence does not upload or revise listings automatically.

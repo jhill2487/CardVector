@@ -1,0 +1,3 @@
+﻿row_number,item_id,title,sku,match_method,match_confidence,current_price,market_price,recommended_price,difference,percent_change,recommendation,changed,review_required,reason,provider
+2,100000000002,Pokemon TCG Test Card Beta 002,PKM-002,sku,high,2.99,3.99,3.99,1.00,33.44,Increase,TRUE,FALSE,Market $3.99; configurable strategy target $3.99.,TCGtracking
+3,100000000003,Magic The Gathering Test Spell 003,MTG-001,sku,high,1.49,0.99,0.99,-0.50,-33.56,Decrease,TRUE,FALSE,Market $0.99; configurable strategy target $0.99.,TCGtracking

@@ -1,0 +1,35 @@
+Putnam OS Decision Engine Check
+Generated: 2026-06-28 08:48:11
+
+Business goal: cash_flow
+Secondary goal: profit
+Risk tolerance: low
+Modules loaded: 7
+Modules active: 3
+Placeholders: 4
+Errors: 0
+
+Module results:
+- pricing: active score=1.0 confidence=0.8
+  - Latest pricing summary found: C:\Users\user\OneDrive\PutnamCollectibles\Putnam_OS\Completed Jobs\Pricing_Analysis_20260626_234633\summary.txt
+- inventory: active score=0.308 confidence=0.9
+  - Snapshot: C:\Users\user\OneDrive\PutnamCollectibles\Putnam_OS\System\data\carduploader_inventory_snapshot.csv
+  - Rows: 308
+  - Listed rows: 295
+  - Quantity total: 308
+  - TCG quantity counts: mtg=137, pokemon english=168, pokemon japanese=3
+- marketplace: active score=1.0 confidence=0.9
+  - Default marketplace: ebay
+- promotion: not_implemented score=0.0 confidence=0.0
+  - Promotion module placeholder.
+- velocity: not_implemented score=0.0 confidence=0.0
+  - Velocity module placeholder.
+- market_signals: not_implemented score=0.0 confidence=0.0
+  - Market signals module placeholder.
+- content: not_implemented score=0.0 confidence=0.0
+  - Content module placeholder.
+
+Recommendation:
+  card_key: portfolio
+  recommendation: Decision Engine framework check complete. No automated action taken.
+  confidence: 0.867

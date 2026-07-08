@@ -1,0 +1,18 @@
+Marketplace Intelligence v1.1.0
+Generated: 2026-07-01T07:28:01
+Input file: C:\Users\user\.codex\codex-remote-attachments\019f0e75-6e86-71d1-b3b9-507459271a73\0930CF74-B470-4D30-BF12-B312E362EAB4\1-eBay-all-active-listings-report-2026-07-01-13311427171.csv
+Output folder: C:\Users\user\OneDrive\PutnamCollectibles\Platform\Marketplace_Intelligence\reports\july01_active_listing_report_free_shipping_eval_074
+Mode: Reports + Bulk Revise Export
+
+Listings Imported: 743
+Listings Matched: 292
+Listings Unmatched: 451
+Price Increases: 109
+Price Decreases: 154
+No Changes: 27
+Review Required: 453
+Changed Listings: 263
+Potential Revenue Impact: $-11.94
+
+Recommendation:
+Review changed listings first. Marketplace Intelligence does not upload or revise listings automatically.

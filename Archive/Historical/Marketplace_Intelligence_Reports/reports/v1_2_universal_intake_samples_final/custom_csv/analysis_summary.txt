@@ -1,0 +1,22 @@
+CardVector Pricing Engine v1.2.0
+Generated: 2026-07-01T16:41:55
+Input file: C:\Users\JaredHill\OneDrive\PutnamCollectibles\Platform\Marketplace_Intelligence\examples\custom_listing_sample.csv
+Detected source type: custom_csv
+Output folder: C:\Users\JaredHill\OneDrive\PutnamCollectibles\Platform\Marketplace_Intelligence\reports\v1_2_universal_intake_samples_final\custom_csv
+Mode: Reports / Validation Only
+
+Listings Imported: 2
+Listings Normalized: 2
+Listings Matched: 2
+Listings Unmatched: 0
+Price Increases: 1
+Price Decreases: 0
+No Changes: 1
+Review Required: 0
+0.99 Review Candidates: 1
+Reference-only Evidence Count: 0
+Changed Listings: 1
+Potential Revenue Impact: $0.50
+
+Recommendation:
+Review changed listings first. Marketplace Intelligence does not upload or revise listings automatically.

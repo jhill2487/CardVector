@@ -1,0 +1,22 @@
+CardVector Pricing Engine v1.2.0
+Generated: 2026-07-01T16:42:09
+Input file: Platform\Marketplace_Intelligence\examples\ebay_active_listings_sample.csv
+Detected source type: ebay_active_listings
+Output folder: Platform\Marketplace_Intelligence\reports\v1_2_cli_ebay_smoke
+Mode: Reports + Bulk Revise Export
+
+Listings Imported: 4
+Listings Normalized: 4
+Listings Matched: 3
+Listings Unmatched: 1
+Price Increases: 0
+Price Decreases: 0
+No Changes: 0
+Review Required: 4
+0.99 Review Candidates: 1
+Reference-only Evidence Count: 3
+Changed Listings: 0
+Potential Revenue Impact: $0.00
+
+Recommendation:
+Review changed listings first. Marketplace Intelligence does not upload or revise listings automatically.

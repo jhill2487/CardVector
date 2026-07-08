@@ -1,0 +1,16 @@
+{
+  "profile_name": "Community Beta Conservative",
+  "minimum_price": "0.99",
+  "market_strategy": "match_market",
+  "undercut_amount": "0.00",
+  "hold_band_percent": "5.00",
+  "maximum_increase_percent": "50.00",
+  "maximum_decrease_percent": "35.00",
+  "maximum_increase_amount": "25.00",
+  "maximum_decrease_amount": "10.00",
+  "ignore_changes_under": "0.25",
+  "rounding_rule": "nearest_cent",
+  "review_price_over": "100.00",
+  "review_change_percent_over": "40.00",
+  "shipping_assumption": "buyer_pays_shipping"
+}

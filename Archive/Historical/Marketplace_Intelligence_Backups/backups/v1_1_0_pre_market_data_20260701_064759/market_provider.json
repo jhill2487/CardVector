@@ -1,0 +1,6 @@
+{
+  "provider": "tcgtracking",
+  "mode": "local_export",
+  "price_file": "examples/tcgtracking_prices_sample.json",
+  "notes": "v1.0 reads a local TCGtracking-style export. Future providers can implement the same provider interface."
+}
