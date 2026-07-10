@@ -42,6 +42,8 @@ from Platform.putnam_paths import (
     WORK_SESSIONS_DIR,
 )
 
+from Platform.Putnam_OS.System.MarketIntelligence.Pricing import build_pricing_decision
+
 APP_VERSION = "1.2.2"
 PLATFORM_VERSION = "CardVector Platform v1.2.2"
 APP_NAME = "CardVector OS"
@@ -846,32 +848,20 @@ def prepare_listing_export_rows(
         r = dict(row)
         original_market_price = decimal_money(r.get(pcol))
         market_report = market_reports_by_row.get(idx, {})
-        accepted_count = int(market_report.get("accepted_count") or 0)
-        confidence = int(market_report.get("confidence") or 0)
-        market_value = calculate_market_value(market_report)
-
-        if market_value <= 0:
-            final_price = max(original_market_price, EXPORT_FLOOR_PRICE).quantize(
-                Decimal("0.01"),
-                rounding=ROUND_HALF_UP,
-            )
-            pricing_basis = "carduploader_price_retained"
-            pricing_review_status = "NO_MARKET_DATA"
-        elif confidence < review_threshold:
-            final_price = max(original_market_price, EXPORT_FLOOR_PRICE).quantize(
-                Decimal("0.01"),
-                rounding=ROUND_HALF_UP,
-            )
-            pricing_basis = "low_confidence_source_retained"
-            pricing_review_status = "MANUAL_REVIEW_REQUIRED"
-        else:
-            final_price = apply_pricing_strategy(market_value, pricing_strategy)
-            pricing_basis = "weighted_market_value"
-            pricing_review_status = (
-                "AUTO_APPLIED"
-                if confidence >= auto_apply_threshold
-                else "APPLIED_REVIEW_RECOMMENDED"
-            ) 
+        pricing_decision = build_pricing_decision(
+            original_price=original_market_price,
+            market_report=market_report,
+            strategy=pricing_strategy,
+            review_threshold=review_threshold,
+            auto_apply_threshold=auto_apply_threshold,
+            export_floor=EXPORT_FLOOR_PRICE,
+        )
+        accepted_count = pricing_decision.accepted_count
+        confidence = pricing_decision.confidence
+        market_value = pricing_decision.market_value
+        final_price = pricing_decision.recommended_price
+        pricing_basis = pricing_decision.pricing_basis
+        pricing_review_status = pricing_decision.review_status
 
         if final_price != original_market_price.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP):
             price_changes += 1
