@@ -431,7 +431,12 @@ def latest_decision_log():
 
 
 def load_app_config():
-    defaults = {"carduploader_url": ""}
+    defaults = {
+        "carduploader_url": "",
+        "pricing_strategy": "market_match",
+        "pricing_review_threshold": 60,
+        "pricing_auto_apply_threshold": 80,
+    }
     if not APP_CONFIG_PATH.exists():
         return defaults
     try:
@@ -441,15 +446,45 @@ def load_app_config():
     section = data.get("putnam_os", data) if isinstance(data, dict) else {}
     if not isinstance(section, dict):
         return defaults
+
     defaults["carduploader_url"] = str(section.get("carduploader_url", "") or "").strip()
+    strategy = str(section.get("pricing_strategy", "market_match") or "market_match").strip().lower()
+    defaults["pricing_strategy"] = strategy if strategy in {"market_match", "fast_sell", "profit"} else "market_match"
+    try:
+        defaults["pricing_review_threshold"] = max(0, min(100, int(section.get("pricing_review_threshold", 60))))
+    except (TypeError, ValueError):
+        defaults["pricing_review_threshold"] = 60
+    try:
+        defaults["pricing_auto_apply_threshold"] = max(
+            defaults["pricing_review_threshold"],
+            min(100, int(section.get("pricing_auto_apply_threshold", 80))),
+        )
+    except (TypeError, ValueError):
+        defaults["pricing_auto_apply_threshold"] = 80
     return defaults
 
 
 def save_app_config(values):
     APP_CONFIG_PATH.parent.mkdir(parents=True, exist_ok=True)
-    data = {"putnam_os": {"carduploader_url": str(values.get("carduploader_url", "") or "").strip()}}
-    APP_CONFIG_PATH.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
+    current = load_app_config()
+    current.update(values or {})
 
+    strategy = str(current.get("pricing_strategy", "market_match") or "market_match").strip().lower()
+    if strategy not in {"market_match", "fast_sell", "profit"}:
+        raise ValueError(f"Unknown pricing strategy: {strategy}")
+
+    review_threshold = max(0, min(100, int(current.get("pricing_review_threshold", 60))))
+    auto_threshold = max(review_threshold, min(100, int(current.get("pricing_auto_apply_threshold", 80))))
+
+    data = {
+        "putnam_os": {
+            "carduploader_url": str(current.get("carduploader_url", "") or "").strip(),
+            "pricing_strategy": strategy,
+            "pricing_review_threshold": review_threshold,
+            "pricing_auto_apply_threshold": auto_threshold,
+        }
+    }
+    APP_CONFIG_PATH.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
 
 def money(v):
     try:
@@ -682,6 +717,54 @@ def optimized_export_price(market_price: Decimal) -> Decimal:
     return max(final_price, EXPORT_FLOOR_PRICE).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
 
 
+
+def calculate_market_value(market_report) -> Decimal:
+    market_report = market_report or {}
+    accepted_count = int(market_report.get("accepted_count") or 0)
+    if accepted_count < 3:
+        return Decimal("0.00")
+
+    median = decimal_money(market_report.get("median"))
+    last3_avg = decimal_money(market_report.get("last3_avg"))
+    last_sale = decimal_money(market_report.get("last_sale"))
+
+    weighted_parts = []
+    if median > 0:
+        weighted_parts.append((median, Decimal("0.60")))
+    if last3_avg > 0:
+        weighted_parts.append((last3_avg, Decimal("0.30")))
+    if last_sale > 0:
+        weighted_parts.append((last_sale, Decimal("0.10")))
+
+    if not weighted_parts:
+        return Decimal("0.00")
+
+    total_weight = sum((weight for _value, weight in weighted_parts), Decimal("0.00"))
+    weighted_value = sum((value * weight for value, weight in weighted_parts), Decimal("0.00"))
+    return (weighted_value / total_weight).quantize(
+        Decimal("0.01"),
+        rounding=ROUND_HALF_UP,
+    )
+
+
+def apply_pricing_strategy(market_value: Decimal, strategy="market_match") -> Decimal:
+    value = max(decimal_money(market_value), EXPORT_FLOOR_PRICE)
+    normalized = str(strategy or "market_match").strip().lower()
+
+    if normalized == "market_match":
+        recommended = value
+    elif normalized == "fast_sell":
+        recommended = value * Decimal("0.95")
+    elif normalized == "profit":
+        recommended = value * Decimal("1.05")
+    else:
+        raise ValueError(f"Unknown pricing strategy: {strategy}")
+
+    return max(recommended, EXPORT_FLOOR_PRICE).quantize(
+        Decimal("0.01"),
+        rounding=ROUND_HALF_UP,
+    )
+
 def summarize_final_prices(final_prices, batch_location, output_csv_path, policies):
     total = len(final_prices)
     avg = (sum(final_prices, Decimal("0.00")) / Decimal(total)).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
@@ -712,7 +795,13 @@ def validate_export_price_floor(final_prices):
         )
 
 
-def prepare_listing_export_rows(rows, batch_location, policies=None, progress_callback=None):
+def prepare_listing_export_rows(
+    rows,
+    batch_location,
+    policies=None,
+    progress_callback=None,
+    market_reports=None,
+):
     if not rows:
         raise ValueError("Input CSV has no data rows.")
     fieldnames = list(rows[0].keys())
@@ -734,6 +823,18 @@ def prepare_listing_export_rows(rows, batch_location, policies=None, progress_ca
     final_prices = []
     price_changes = 0
     total_rows = len(rows)
+    market_reports_by_row = {}
+    for report in market_reports or []:
+        try:
+            market_reports_by_row[int(report.get("row") or 0)] = report
+        except (TypeError, ValueError):
+            continue
+
+    pricing_config = load_app_config()
+    pricing_strategy = pricing_config.get("pricing_strategy", "market_match")
+    review_threshold = int(pricing_config.get("pricing_review_threshold", 60))
+    auto_apply_threshold = int(pricing_config.get("pricing_auto_apply_threshold", 80))
+
     for idx, row in enumerate(rows, 1):
         if progress_callback:
             progress_callback(
@@ -744,7 +845,34 @@ def prepare_listing_export_rows(rows, batch_location, policies=None, progress_ca
             )
         r = dict(row)
         original_market_price = decimal_money(r.get(pcol))
-        final_price = optimized_export_price(original_market_price)
+        market_report = market_reports_by_row.get(idx, {})
+        accepted_count = int(market_report.get("accepted_count") or 0)
+        confidence = int(market_report.get("confidence") or 0)
+        market_value = calculate_market_value(market_report)
+
+        if market_value <= 0:
+            final_price = max(original_market_price, EXPORT_FLOOR_PRICE).quantize(
+                Decimal("0.01"),
+                rounding=ROUND_HALF_UP,
+            )
+            pricing_basis = "carduploader_price_retained"
+            pricing_review_status = "NO_MARKET_DATA"
+        elif confidence < review_threshold:
+            final_price = max(original_market_price, EXPORT_FLOOR_PRICE).quantize(
+                Decimal("0.01"),
+                rounding=ROUND_HALF_UP,
+            )
+            pricing_basis = "low_confidence_source_retained"
+            pricing_review_status = "MANUAL_REVIEW_REQUIRED"
+        else:
+            final_price = apply_pricing_strategy(market_value, pricing_strategy)
+            pricing_basis = "weighted_market_value"
+            pricing_review_status = (
+                "AUTO_APPLIED"
+                if confidence >= auto_apply_threshold
+                else "APPLIED_REVIEW_RECOMMENDED"
+            ) 
+
         if final_price != original_market_price.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP):
             price_changes += 1
         r[pcol] = format_decimal_money(final_price)
@@ -770,6 +898,18 @@ def prepare_listing_export_rows(rows, batch_location, policies=None, progress_ca
             {
                 "optimizer_row": idx,
                 "original_market_price": format_decimal_money(original_market_price),
+                "market_last_sale": format_decimal_money(market_report.get("last_sale")) if market_report.get("last_sale") not in ("", None) else "",
+                "market_last3_avg": format_decimal_money(market_report.get("last3_avg")) if market_report.get("last3_avg") not in ("", None) else "",
+                "market_median": format_decimal_money(market_report.get("median")) if market_report.get("median") not in ("", None) else "",
+                "market_accepted_count": accepted_count,
+                "market_confidence": confidence,
+                "market_value": format_decimal_money(market_value) if market_value > 0 else "",
+                "pricing_strategy": pricing_strategy if market_value > 0 else "retain_source",
+                "pricing_review_threshold": review_threshold,
+                "pricing_auto_apply_threshold": auto_apply_threshold,
+                "pricing_review_status": pricing_review_status,
+                "recommended_price": format_decimal_money(final_price),
+                "pricing_basis": pricing_basis,
                 "final_export_price": format_decimal_money(final_price),
                 "cart_sweetener": "TRUE" if cart_sweetener else "FALSE",
             }
@@ -1983,7 +2123,7 @@ def format_carduploader_import_summary(summary):
         f"Readiness: {summary.get('readiness_status', '')}",
         f"Missing required fields: {missing_text}",
         "",
-        "Next step: click Proceed to Listings to open the Pricing workflow.",
+        "Next step: click Continue to Pricing to open the Pricing workflow.",
     ])
 
 
@@ -2921,12 +3061,22 @@ def audit_new_listing(
     stamp = nowstamp()
     job = COMPLETED / f"Pricing_Analysis_{stamp}"
     ebay_ready = job / "ebay_upload_ready.csv"
+
+    market_reports = []
+    rejected = []
+    comp_analytics = []
+    if use_market:
+        if progress_callback:
+            progress_callback("Market analysis", percent=35, current=0, total=len(rows))
+        market_reports, rejected, comp_analytics = market_analyze(rows)
+
     pricing_started = time.perf_counter()
     out_rows, review_rows, final_prices, changes, batch_cols, ship_col, pay_col, ret_col, promo_col = prepare_listing_export_rows(
         rows,
         batch_location,
         policies=policies,
         progress_callback=progress_callback,
+        market_reports=market_reports,
     )
     pricing_time = time.perf_counter() - pricing_started
     validate_export_price_floor(final_prices)
@@ -2958,7 +3108,24 @@ def audit_new_listing(
     write_csv(ebay_ready, out_rows, list(rows[0].keys()))
     write_csv(job / "review.csv", out_rows, list(rows[0].keys()))
     review_fields = list(rows[0].keys())
-    for extra in ["optimizer_row", "original_market_price", "final_export_price", "cart_sweetener"]:
+    for extra in [
+        "optimizer_row",
+        "original_market_price",
+        "market_last_sale",
+        "market_last3_avg",
+        "market_median",
+        "market_accepted_count",
+        "market_confidence",
+        "market_value",
+        "pricing_strategy",
+        "pricing_review_threshold",
+        "pricing_auto_apply_threshold",
+        "pricing_review_status",
+        "recommended_price",
+        "pricing_basis",
+        "final_export_price",
+        "cart_sweetener",
+    ]:
         if extra not in review_fields:
             review_fields.append(extra)
     write_csv(
@@ -2981,13 +3148,9 @@ def audit_new_listing(
         total_listings=len(rows),
     )
     processed_source = copy_to_folder(Path(path), IMPORTS / "Processed")
-    market_reports = []
-    rejected = []
-    comp_analytics = []
     if use_market:
         if progress_callback:
             progress_callback("Writing output", percent=95, current=len(rows), total=len(rows))
-        market_reports, rejected, comp_analytics = market_analyze(out_rows)
         write_csv(job / "market_report.csv", market_reports)
         if rejected:
             write_csv(job / "rejected_comps.csv", rejected)
@@ -4345,8 +4508,9 @@ class PutnamOS(BaseTk):
                         f"- Estimated listing value: ${acquisition_entry['estimated_listing_value']}"
                     )
                 self.import_summary_var.set(format_carduploader_import_summary(summary) + acquisition_text)
-            self.load(path)
-            self.status.set(f"Imported CardUploader CSV: {Path(path).name}")
+            # Import validates and stores the CSV. Pricing loads it only after
+            # the operator explicitly chooses Continue to Pricing.
+            self.status.set(f"Validated CardUploader CSV: {Path(path).name}")
             if hasattr(self, "capture_rail_inner"):
                 self.schedule_capture_thumbnail_refresh()
         except Exception as exc:
@@ -6135,12 +6299,18 @@ class PutnamOS(BaseTk):
             folder = Path(folder_value) if folder_value else inventory_conversion_capture_root(session.get("location_id", "unassigned"))
         else:
             folder = INVENTORY_CONVERSION_CAPTURE_ROOT
-        folder.mkdir(parents=True, exist_ok=True)
-        try:
-            os.startfile(folder)
-        except Exception as exc:
-            messagebox.showinfo("Physical Inventory Conversion", f"Conversion capture folder:\n{folder}\n\nCould not open automatically:\n{exc}")
 
+        folder = Path(folder).expanduser()
+
+        try:
+            folder.mkdir(parents=True, exist_ok=True)
+            os.startfile(str(folder.resolve()))
+        except Exception as exc:
+            messagebox.showinfo(
+                "Physical Inventory Conversion",
+                f"Conversion capture folder:\n{folder}\n\nCould not open automatically:\n{exc}",
+            )
+            
     def inventory_location_registry_panel(self, wrap):
         registry = self.card(wrap, fill="x", pady=(0, 12), ipady=10)
         self.label(registry, "ETB LOCATION REGISTRY", 12, BRAND["gold"], True, anchor="w", padx=18, pady=(12, 4))
@@ -7130,6 +7300,53 @@ class PutnamOS(BaseTk):
         ebay_btns.pack(anchor="w", padx=18, pady=(0, 12))
         self.action_button(ebay_btns, "Save eBay Policies", self.save_ebay_policies_ui).pack(side="left")
 
+        pricing_panel = self.card(wrap, fill="x", pady=(14, 0), ipady=14)
+        self.label(pricing_panel, "PRICING INTELLIGENCE", 12, BRAND["gold"], True, anchor="w", padx=18, pady=(12, 8))
+        pricing_config = load_app_config()
+        strategy_labels = {
+            "Market Match": "market_match",
+            "Fast Sell": "fast_sell",
+            "Profit": "profit",
+        }
+        current_strategy = pricing_config.get("pricing_strategy", "market_match")
+        current_strategy_label = next(
+            (label for label, value in strategy_labels.items() if value == current_strategy),
+            "Market Match",
+        )
+        self.pricing_strategy_var = tk.StringVar(value=current_strategy_label)
+        self.pricing_review_threshold_var = tk.StringVar(value=str(pricing_config.get("pricing_review_threshold", 60)))
+        self.pricing_auto_apply_threshold_var = tk.StringVar(value=str(pricing_config.get("pricing_auto_apply_threshold", 80)))
+
+        strategy_row = tk.Frame(pricing_panel, bg=BRAND["panel"])
+        strategy_row.pack(fill="x", padx=18, pady=4)
+        self.label(strategy_row, "Strategy", 9, BRAND["muted"], False, side="left", padx=(0, 8))
+        strategy_menu = tk.OptionMenu(strategy_row, self.pricing_strategy_var, *strategy_labels.keys())
+        strategy_menu.configure(bg=BRAND["panel2"], fg=BRAND["text"], activebackground=BRAND["bronze_hover"], relief="flat", width=18)
+        strategy_menu.pack(side="left")
+
+        for label_text, var in [
+            ("Review threshold", self.pricing_review_threshold_var),
+            ("Auto-apply threshold", self.pricing_auto_apply_threshold_var),
+        ]:
+            row = tk.Frame(pricing_panel, bg=BRAND["panel"])
+            row.pack(fill="x", padx=18, pady=4)
+            self.label(row, label_text, 9, BRAND["muted"], False, side="left", padx=(0, 8))
+            tk.Entry(row, textvariable=var, bg=BRAND["panel2"], fg=BRAND["text"], insertbackground=BRAND["text"], relief="flat", width=8).pack(side="left")
+
+        self.label(
+            pricing_panel,
+            "Below the review threshold, retain the CardUploader price. Between thresholds, apply the recommendation and flag it for review. At or above the auto-apply threshold, apply automatically.",
+            9,
+            BRAND["muted"],
+            False,
+            anchor="w",
+            padx=18,
+            pady=(8, 8),
+        )
+        pricing_btns = tk.Frame(pricing_panel, bg=BRAND["panel"])
+        pricing_btns.pack(anchor="w", padx=18, pady=(0, 12))
+        self.action_button(pricing_btns, "Save Pricing Settings", self.save_pricing_settings_ui).pack(side="left")
+
         app_panel = self.card(wrap, fill="x", pady=(14, 0), ipady=14)
         self.label(app_panel, "CARDUPLOADER", 12, BRAND["gold"], True, anchor="w", padx=18, pady=(12, 8))
         app_config = load_app_config()
@@ -7181,6 +7398,38 @@ class PutnamOS(BaseTk):
             messagebox.showinfo("CardVector OS Settings", "eBay business policies saved.")
         except Exception as exc:
             self.status.set("Could not save eBay business policies.")
+            messagebox.showerror("CardVector OS Settings", str(exc))
+
+    def save_pricing_settings_ui(self):
+        try:
+            strategy_labels = {
+                "Market Match": "market_match",
+                "Fast Sell": "fast_sell",
+                "Profit": "profit",
+            }
+            strategy = strategy_labels.get(self.pricing_strategy_var.get(), "market_match")
+            review_threshold = int(self.pricing_review_threshold_var.get())
+            auto_threshold = int(self.pricing_auto_apply_threshold_var.get())
+
+            if not 0 <= review_threshold <= 100:
+                raise ValueError("Review threshold must be between 0 and 100.")
+            if not review_threshold <= auto_threshold <= 100:
+                raise ValueError("Auto-apply threshold must be between the review threshold and 100.")
+
+            save_app_config(
+                {
+                    "pricing_strategy": strategy,
+                    "pricing_review_threshold": review_threshold,
+                    "pricing_auto_apply_threshold": auto_threshold,
+                }
+            )
+            self.status.set(f"Pricing settings saved to {APP_CONFIG_PATH}")
+            append_activity(
+                f"Updated pricing strategy: {strategy}, review threshold {review_threshold}, auto threshold {auto_threshold}"
+            )
+            messagebox.showinfo("CardVector OS Settings", "Pricing Intelligence settings saved.")
+        except Exception as exc:
+            self.status.set("Could not save Pricing Intelligence settings.")
             messagebox.showerror("CardVector OS Settings", str(exc))
 
     def save_carduploader_settings_ui(self):
