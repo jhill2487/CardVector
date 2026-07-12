@@ -157,6 +157,9 @@ def ensure_etb_location_records(location: dict[str, Any], registry: dict[str, An
             "remaining_capacity": remaining,
             "status": normalize_status(status),
             "assigned_batch": item.get("assigned_batch", item.get("assigned_session", "")),
+            "carduploader_batch_url": item.get("carduploader_batch_url", ""),
+            "carduploader_batch_id": item.get("carduploader_batch_id", ""),
+            "carduploader_batch_name": item.get("carduploader_batch_name", ""),
             "created_at": item.get("created_at") or location.get("created_at") or now,
             "updated_at": item.get("updated_at") or location.get("updated_at") or now,
         })
@@ -447,6 +450,9 @@ def resolve_cardvector_qr_payload(payload: str, path: Path | None = None) -> dic
         "capacity": int(location.get("capacity", DEFAULT_ETB_LOCATION_CAPACITY) or DEFAULT_ETB_LOCATION_CAPACITY),
         "status": location.get("status", ""),
         "assigned_batch": location.get("assigned_batch") or location.get("assigned_session") or "",
+        "carduploader_batch_url": location.get("carduploader_batch_url", ""),
+        "carduploader_batch_id": location.get("carduploader_batch_id", ""),
+        "carduploader_batch_name": location.get("carduploader_batch_name", ""),
         "last_updated": location.get("updated_at", ""),
     }
 
@@ -470,6 +476,8 @@ def qr_resolution_text(resolved: dict[str, Any]) -> str:
         f"Occupancy: {resolved.get('stored', 0)}/{resolved.get('capacity', DEFAULT_ETB_LOCATION_CAPACITY)}",
         f"Status: {resolved.get('status', '')}",
         f"Assigned Batch: {resolved.get('assigned_batch', '') or '(none)'}",
+        f"CardUploader Batch: {resolved.get('carduploader_batch_name', '') or resolved.get('carduploader_batch_id', '') or '(none)'}",
+        f"CardUploader URL: {resolved.get('carduploader_batch_url', '') or '(none)'}",
         f"Last Updated: {resolved.get('last_updated', '') or '(none)'}",
     ])
 
