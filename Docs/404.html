@@ -16,6 +16,7 @@ h2{margin:0 0 20px;color:var(--muted);font-size:clamp(20px,5vw,28px)}
 .row{display:flex;justify-content:space-between;gap:18px;padding:13px 0;border-top:1px solid var(--line)}
 .row strong{color:#6b7280}
 .row span{font-weight:700;text-align:right}
+.row a{color:var(--accent);font-weight:700;text-align:right;word-break:break-word}
 .notice{margin-top:22px;padding:14px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;color:#1e40af}
 footer{margin-top:20px;color:#9ca3af;font-size:13px;text-align:center}
 </style>
@@ -38,8 +39,15 @@ footer{margin-top:20px;color:#9ca3af;font-size:13px;text-align:center}
   const subtitle=document.getElementById("subtitle");
   const rows=document.getElementById("rows");
   const notice=document.getElementById("notice");
+  const locationLinks={
+    "ETB-001/A":{
+      carduploaderBatchName:"ETB-001-A CardUploader Batch",
+      carduploaderBatchUrl:"https://carduploader.com/dashboard/history/ungraded/59e96e70-2d06-4c7f-b214-978e6343f7fc"
+    }
+  };
   function esc(value){return String(value).replace(/[&<>"']/g,function(ch){return({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"})[ch];});}
   function row(label,value){return '<div class="row"><strong>'+esc(label)+'</strong><span>'+esc(value)+'</span></div>';}
+  function rowLink(label,text,url){return '<div class="row"><strong>'+esc(label)+'</strong><a href="'+esc(url)+'" rel="noopener noreferrer">'+esc(text)+'</a></div>';}
   if(parts[0]==="etb"&&parts[1]){
     const etb=parts[1].toUpperCase();
     title.textContent=etb;
@@ -49,10 +57,14 @@ footer{margin-top:20px;color:#9ca3af;font-size:13px;text-align:center}
   }else if(parts[0]==="location"&&parts[1]&&parts[2]){
     const etb=parts[1].toUpperCase();
     const locationCode=parts[2].toUpperCase();
+    const linked=locationLinks[etb+"/"+locationCode];
     title.textContent="Location "+locationCode;
     subtitle.textContent=etb;
-    rows.innerHTML=row("Type","Location")+row("ETB ID",etb)+row("Location",locationCode)+row("Route","/location/"+etb+"/"+locationCode);
-    notice.textContent="Inventory details will appear here as CardVector Mobile connects to live inventory data.";
+    rows.innerHTML=row("Type","Location")+row("ETB ID",etb)+row("Location",locationCode)+row("Route","/location/"+etb+"/"+locationCode)
+      +(linked?row("Linked Source",linked.carduploaderBatchName)+rowLink("Open Batch","Open CardUploader Batch",linked.carduploaderBatchUrl):"");
+    notice.textContent=linked
+      ?"This location is linked to a CardUploader batch. CardVector remains the permanent location record."
+      :"Inventory details will appear here as CardVector Mobile connects to live inventory data.";
   }else if(parts[0]==="lot"&&parts[1]){
     const lot=parts[1].toUpperCase();
     title.textContent=lot;
