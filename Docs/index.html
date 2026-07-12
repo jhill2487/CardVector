@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CardVector Mobile</title>
+<style>
+:root{color-scheme:light;--bg:#f5f7fb;--card:#fff;--text:#1f2937;--muted:#4b5563;--line:#e5e7eb;--accent:#2563eb}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);font-family:Arial,Helvetica,sans-serif;color:var(--text)}
+.wrap{max-width:720px;margin:0 auto;padding:22px}
+.card{background:var(--card);border:1px solid #dbe3ef;border-radius:16px;padding:24px;box-shadow:0 12px 30px rgba(15,23,42,.08)}
+.badge{color:var(--accent);font-weight:700;text-transform:uppercase;font-size:12px;letter-spacing:.08em}
+h1{margin:.35em 0 .15em;font-size:clamp(34px,10vw,54px);line-height:1}
+h2{margin:0 0 20px;color:var(--muted);font-size:clamp(20px,5vw,28px)}
+.row{display:flex;justify-content:space-between;gap:18px;padding:13px 0;border-top:1px solid var(--line)}
+.row strong{color:#6b7280}
+.row span{font-weight:700;text-align:right}
+.notice{margin-top:22px;padding:14px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;color:#1e40af}
+footer{margin-top:20px;color:#9ca3af;font-size:13px;text-align:center}
+</style>
+</head>
+<body>
+<main class="wrap">
+<section class="card">
+<div class="badge">CardVector Mobile</div>
+<h1 id="title">CardVector</h1>
+<h2 id="subtitle">Trading Card Inventory Operating System</h2>
+<div id="rows"></div>
+<div id="notice" class="notice">Scan an ETB or Location QR code to view inventory context.</div>
+</section>
+<footer>CardVector</footer>
+</main>
+<script>
+(function(){
+  const parts=location.pathname.split("/").filter(Boolean).map(decodeURIComponent);
+  const title=document.getElementById("title");
+  const subtitle=document.getElementById("subtitle");
+  const rows=document.getElementById("rows");
+  const notice=document.getElementById("notice");
+  function esc(value){return String(value).replace(/[&<>"']/g,function(ch){return({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"})[ch];});}
+  function row(label,value){return '<div class="row"><strong>'+esc(label)+'</strong><span>'+esc(value)+'</span></div>';}
+  if(parts[0]==="etb"&&parts[1]){
+    const etb=parts[1].toUpperCase();
+    title.textContent=etb;
+    subtitle.textContent="ETB";
+    rows.innerHTML=row("Type","ETB")+row("ETB ID",etb)+row("Route","/etb/"+etb);
+    notice.textContent="Inventory details will appear here as CardVector Mobile connects to live inventory data.";
+  }else if(parts[0]==="location"&&parts[1]&&parts[2]){
+    const etb=parts[1].toUpperCase();
+    const locationCode=parts[2].toUpperCase();
+    title.textContent="Location "+locationCode;
+    subtitle.textContent=etb;
+    rows.innerHTML=row("Type","Location")+row("ETB ID",etb)+row("Location",locationCode)+row("Route","/location/"+etb+"/"+locationCode);
+    notice.textContent="Inventory details will appear here as CardVector Mobile connects to live inventory data.";
+  }else if(parts[0]==="lot"&&parts[1]){
+    const lot=parts[1].toUpperCase();
+    title.textContent=lot;
+    subtitle.textContent="Acquisition Lot";
+    rows.innerHTML=row("Type","Lot")+row("Lot ID",lot)+row("Route","/lot/"+lot);
+    notice.textContent="Lot details will appear here as CardVector Mobile connects to acquisition data.";
+  }else{
+    rows.innerHTML=row("Status","Ready")+row("ETB route","/etb/ETB-001")+row("Location route","/location/ETB-001/A")+row("Lot route","/lot/LOT-2026-001");
+    notice.textContent="This static GitHub Pages site is ready for CardVector QR labels.";
+  }
+})();
+</script>
+</body>
+</html>
