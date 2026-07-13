@@ -1,81 +1,137 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>CardVector Mobile</title>
-<style>
-:root{color-scheme:light;--bg:#f5f7fb;--card:#fff;--text:#1f2937;--muted:#4b5563;--line:#e5e7eb;--accent:#2563eb}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);font-family:Arial,Helvetica,sans-serif;color:var(--text)}
-.wrap{max-width:720px;margin:0 auto;padding:22px}
-.card{background:var(--card);border:1px solid #dbe3ef;border-radius:16px;padding:24px;box-shadow:0 12px 30px rgba(15,23,42,.08)}
-.badge{color:var(--accent);font-weight:700;text-transform:uppercase;font-size:12px;letter-spacing:.08em}
-h1{margin:.35em 0 .15em;font-size:clamp(34px,10vw,54px);line-height:1}
-h2{margin:0 0 20px;color:var(--muted);font-size:clamp(20px,5vw,28px)}
-.row{display:flex;justify-content:space-between;gap:18px;padding:13px 0;border-top:1px solid var(--line)}
-.row strong{color:#6b7280}
-.row span{font-weight:700;text-align:right}
-.row a{color:var(--accent);font-weight:700;text-align:right;word-break:break-word}
-.notice{margin-top:22px;padding:14px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;color:#1e40af}
-footer{margin-top:20px;color:#9ca3af;font-size:13px;text-align:center}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Putnam Collectibles buys, sells, and trades Pok&eacute;mon cards. Powered by CardVector.">
+  <title>Putnam Collectibles | Pok&eacute;mon Cards</title>
+  <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-<main class="wrap">
-<section class="card">
-<div class="badge">CardVector Mobile</div>
-<h1 id="title">CardVector</h1>
-<h2 id="subtitle">Trading Card Inventory Operating System</h2>
-<div id="rows"></div>
-<div id="notice" class="notice">Scan an ETB or Location QR code to view inventory context.</div>
-</section>
-<footer>CardVector</footer>
-</main>
-<script>
-(function(){
-  const parts=location.pathname.split("/").filter(Boolean).map(decodeURIComponent);
-  const title=document.getElementById("title");
-  const subtitle=document.getElementById("subtitle");
-  const rows=document.getElementById("rows");
-  const notice=document.getElementById("notice");
-  const locationLinks={
-    "ETB-001/A":{
-      carduploaderBatchName:"ETB-001-A CardUploader Batch",
-      carduploaderBatchUrl:"https://carduploader.com/dashboard/history/ungraded/59e96e70-2d06-4c7f-b214-978e6343f7fc"
-    }
-  };
-  function esc(value){return String(value).replace(/[&<>"']/g,function(ch){return({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"})[ch];});}
-  function row(label,value){return '<div class="row"><strong>'+esc(label)+'</strong><span>'+esc(value)+'</span></div>';}
-  function rowLink(label,text,url){return '<div class="row"><strong>'+esc(label)+'</strong><a href="'+esc(url)+'" rel="noopener noreferrer">'+esc(text)+'</a></div>';}
-  if(parts[0]==="etb"&&parts[1]){
-    const etb=parts[1].toUpperCase();
-    title.textContent=etb;
-    subtitle.textContent="ETB";
-    rows.innerHTML=row("Type","ETB")+row("ETB ID",etb)+row("Route","/etb/"+etb);
-    notice.textContent="Inventory details will appear here as CardVector Mobile connects to live inventory data.";
-  }else if(parts[0]==="location"&&parts[1]&&parts[2]){
-    const etb=parts[1].toUpperCase();
-    const locationCode=parts[2].toUpperCase();
-    const linked=locationLinks[etb+"/"+locationCode];
-    title.textContent="Location "+locationCode;
-    subtitle.textContent=etb;
-    rows.innerHTML=row("Type","Location")+row("ETB ID",etb)+row("Location",locationCode)+row("Route","/location/"+etb+"/"+locationCode)
-      +(linked?row("Linked Source",linked.carduploaderBatchName)+rowLink("Open Batch","Open CardUploader Batch",linked.carduploaderBatchUrl):"");
-    notice.textContent=linked
-      ?"This location is linked to a CardUploader batch. CardVector remains the permanent location record."
-      :"Inventory details will appear here as CardVector Mobile connects to live inventory data.";
-  }else if(parts[0]==="lot"&&parts[1]){
-    const lot=parts[1].toUpperCase();
-    title.textContent=lot;
-    subtitle.textContent="Acquisition Lot";
-    rows.innerHTML=row("Type","Lot")+row("Lot ID",lot)+row("Route","/lot/"+lot);
-    notice.textContent="Lot details will appear here as CardVector Mobile connects to acquisition data.";
-  }else{
-    rows.innerHTML=row("Status","Ready")+row("ETB route","/etb/ETB-001")+row("Location route","/location/ETB-001/A")+row("Lot route","/lot/LOT-2026-001");
-    notice.textContent="This static GitHub Pages site is ready for CardVector QR labels.";
-  }
-})();
-</script>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header" aria-label="Primary">
+    <nav class="nav wrap">
+      <a class="brand" href="/" aria-label="Putnam Collectibles home">
+        <img class="brand-logo" src="/assets/putnam-profile-onepiece.png" alt="" width="42" height="42">
+        <span class="brand-text">Putnam Collectibles</span>
+      </a>
+      <ul class="nav-links" aria-label="Site navigation">
+        <li><a href="#shop">Shop</a></li>
+        <li><a href="#sell">Sell</a></li>
+        <li><a href="#bulk">Bulk</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="/contact" aria-disabled="true">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="hero wrap">
+      <div class="hero-copy">
+        <p class="eyebrow">Buying &bull; Selling &bull; Trading Pok&eacute;mon Cards</p>
+        <img class="hero-logo" src="/assets/putnam-profile-onepiece.png" alt="Putnam Collectibles logo" width="148" height="148">
+        <h1>PUTNAM COLLECTIBLES</h1>
+        <p class="hero-lede">
+          A modern trading card business focused on clean listings, fair collection buys,
+          and reliable service for Pok&eacute;mon collectors.
+        </p>
+        <div class="hero-actions" aria-label="Primary actions">
+          <a class="button primary" href="#" id="ebay-store-link">Shop our eBay Store</a>
+          <a class="button secondary" href="/contact">Sell Your Collection</a>
+        </div>
+      </div>
+      <div class="hero-panel" aria-label="Putnam Collectibles service summary">
+        <div class="panel-line">
+          <span>Cards Listed</span>
+          <strong>Pokemon Singles</strong>
+        </div>
+        <div class="panel-line">
+          <span>Buying</span>
+          <strong>Collections + Bulk</strong>
+        </div>
+        <div class="panel-line">
+          <span>Powered By</span>
+          <strong>CardVector</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="actions wrap" aria-labelledby="actions-title">
+      <div class="section-heading">
+        <p class="eyebrow">What can we help with?</p>
+        <h2 id="actions-title">Start here</h2>
+      </div>
+      <div class="card-grid">
+        <article class="action-card" id="shop">
+          <span class="card-number">01</span>
+          <h3>Shop eBay</h3>
+          <p>Browse our inventory.</p>
+          <a href="#" aria-label="Shop Putnam Collectibles on eBay">Shop now</a>
+        </article>
+        <article class="action-card" id="sell">
+          <span class="card-number">02</span>
+          <h3>Sell Your Collection</h3>
+          <p>Interested in selling Pok&eacute;mon cards? We buy collections of all sizes.</p>
+          <a href="/contact">Get in touch</a>
+        </article>
+        <article class="action-card featured" id="bulk">
+          <span class="card-number">03</span>
+          <h3>Bulk Buy Prices</h3>
+          <p class="rate-label">Current Buy Rate</p>
+          <p class="rate">Near Mint Holo &amp; Reverse Holo Bulk <strong>$50 per 1,000</strong></p>
+          <ul>
+            <li>Local pickup preferred</li>
+            <li>English cards</li>
+            <li>Sword &amp; Shield era &amp; older</li>
+          </ul>
+          <a href="/bulk">View buylist details</a>
+        </article>
+        <article class="action-card" id="about">
+          <span class="card-number">04</span>
+          <h3>About</h3>
+          <p>Learn about Putnam Collectibles and CardVector.</p>
+          <a href="/about">Learn more</a>
+        </article>
+      </div>
+    </section>
+
+    <section class="building wrap" aria-labelledby="building-title">
+      <div>
+        <p class="eyebrow">Behind the counter</p>
+        <h2 id="building-title">Building the Business</h2>
+        <p>
+          Follow the journey as Putnam Collectibles grows from a small eBay store
+          into a modern trading card business powered by CardVector.
+        </p>
+      </div>
+      <div class="updates" aria-label="Future YouTube videos and development updates">
+        <div class="update-placeholder">
+          <span>Coming Soon</span>
+          <strong>YouTube Videos</strong>
+        </div>
+        <div class="update-placeholder">
+          <span>Coming Soon</span>
+          <strong>Development Updates</strong>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <p>&copy; <span id="year">2026</span> Putnam Collectibles</p>
+      <ul>
+        <li><a href="#">Shop eBay</a></li>
+        <li><a href="/contact">Contact</a></li>
+        <li><a href="https://github.com/jhill2487/CardVector">GitHub</a></li>
+        <li><span>Powered by CardVector</span></li>
+      </ul>
+    </div>
+  </footer>
+
+  <script src="/app.js" defer></script>
 </body>
 </html>
+
+
+
