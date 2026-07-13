@@ -23,6 +23,7 @@ env/
 # Environment variables and local secrets
 .env
 .env.*
+!.env.example
 secrets.json
 
 # IDE and editor state

@@ -33,119 +33,20 @@ Desktop queue processor:
 
 The service-role key must never be committed and must never be exposed in browser JavaScript.
 
-## SQL
+## SQL Migration
 
-Run this in the Supabase SQL editor before enabling production uploads.
+The reproducible setup now lives in:
 
-```sql
-create table if not exists public.mobile_capture_sessions (
-  capture_session_id text primary key,
-  etb_location text not null,
-  created_at timestamptz not null,
-  updated_at timestamptz not null,
-  submitted_at timestamptz,
-  status text not null check (
-    status in ('DRAFT', 'UPLOADING', 'PENDING_CONVERSION', 'PROCESSING', 'CONVERTED', 'FAILED', 'CANCELLED')
-  ),
-  source text not null default 'MOBILE_WEB',
-  operator text,
-  device jsonb not null default '{}'::jsonb,
-  image_count integer not null default 0,
-  original_image_locations jsonb not null default '[]'::jsonb,
-  conversion_status text,
-  conversion_workstation text,
-  error_message text,
-  schema_version integer not null default 1,
-  user_id uuid references auth.users(id)
-);
-
-create table if not exists public.mobile_capture_images (
-  image_id text primary key,
-  capture_session_id text not null references public.mobile_capture_sessions(capture_session_id) on delete cascade,
-  storage_bucket text not null,
-  storage_path text not null,
-  original_filename text,
-  content_type text not null,
-  byte_size bigint,
-  sha256 text,
-  sequence_number integer not null,
-  created_at timestamptz not null,
-  removed_at timestamptz,
-  user_id uuid references auth.users(id)
-);
-
-create index if not exists mobile_capture_sessions_status_idx
-  on public.mobile_capture_sessions(status, submitted_at);
-
-create index if not exists mobile_capture_images_session_idx
-  on public.mobile_capture_images(capture_session_id, sequence_number);
-
-alter table public.mobile_capture_sessions enable row level security;
-alter table public.mobile_capture_images enable row level security;
-
-create policy "operators insert own mobile capture sessions"
-  on public.mobile_capture_sessions
-  for insert
-  to authenticated
-  with check (user_id = auth.uid());
-
-create policy "operators read own mobile capture sessions"
-  on public.mobile_capture_sessions
-  for select
-  to authenticated
-  using (user_id = auth.uid());
-
-create policy "operators update own draft mobile capture sessions"
-  on public.mobile_capture_sessions
-  for update
-  to authenticated
-  using (user_id = auth.uid())
-  with check (user_id = auth.uid());
-
-create policy "operators insert own mobile capture images"
-  on public.mobile_capture_images
-  for insert
-  to authenticated
-  with check (user_id = auth.uid());
-
-create policy "operators read own mobile capture images"
-  on public.mobile_capture_images
-  for select
-  to authenticated
-  using (user_id = auth.uid());
-
-create policy "operators update own mobile capture images"
-  on public.mobile_capture_images
-  for update
-  to authenticated
-  using (user_id = auth.uid())
-  with check (user_id = auth.uid());
+```text
+supabase/migrations/20260713153000_mobile_capture.sql
 ```
 
-Create the private storage bucket:
+Run that migration in the Supabase SQL editor or through the Supabase CLI after linking the project. The migration creates the tables, indexes, lifecycle checks, trigger-based compatibility aliases, RLS policies, private storage bucket, MIME/size limits, and storage object policies.
 
-```sql
-insert into storage.buckets (id, name, public)
-values ('mobile-capture-originals', 'mobile-capture-originals', false)
-on conflict (id) do nothing;
+Detailed setup and validation steps live in:
 
-create policy "operators upload mobile originals"
-  on storage.objects
-  for insert
-  to authenticated
-  with check (
-    bucket_id = 'mobile-capture-originals'
-    and (storage.foldername(name))[1] = auth.uid()::text
-  );
-
-create policy "operators read mobile originals"
-  on storage.objects
-  for select
-  to authenticated
-  using (
-    bucket_id = 'mobile-capture-originals'
-    and (storage.foldername(name))[1] = auth.uid()::text
-  );
+```text
+supabase/README.md
 ```
 
 The desktop processor uses the service-role key, which bypasses RLS for queue listing, atomic claim, image download, and status updates.
@@ -190,8 +91,10 @@ The desktop processor writes outside Git:
 
 Original uploaded images are retained in Supabase Storage and are also copied into the local processing folder when staged.
 
+The migration configures the bucket as private with a 25 MB object limit and allows common phone image formats: JPEG, PNG, HEIC, HEIF, and WebP.
+
 Storage object paths are scoped by operator user ID:
 
 ```text
-mobile-capture-originals/{operator_user_id}/{etb_location}/{capture_session_id}/{sequence_number}-{image_id}.jpg
+mobile-capture-originals/{operator_user_id}/{etb_location}/{capture_session_id}/{sequence_number}-{image_id}.{extension}
 ```

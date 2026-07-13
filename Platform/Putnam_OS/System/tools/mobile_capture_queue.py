@@ -64,6 +64,13 @@ def parse_etb_location(value: str) -> tuple[str, str, str]:
     return etb, location, f"{etb}-{location}"
 
 
+def session_location_id(session: dict[str, Any]) -> str:
+    location_id = str(session.get("etb_location") or session.get("etb_location_id") or "").strip()
+    if not location_id:
+        raise MobileCaptureError("Mobile capture session is missing etb_location/etb_location_id.")
+    return parse_etb_location(location_id)[2]
+
+
 def today_folder_name(now: datetime | None = None) -> str:
     return (now or datetime.now()).strftime("%m.%d.%y")
 
@@ -132,8 +139,7 @@ def request_json(method: str, path: str, body: Any | None = None, prefer: str | 
 
 def download_storage_object(bucket: str, storage_path: str, destination: Path) -> None:
     base_url, key = supabase_config()
-    encoded_path = "/".join(urllib.parse.quote(part, safe="") for part in storage_path.split("/"))
-    url = f"{base_url}/storage/v1/object/{urllib.parse.quote(bucket, safe='')}/{encoded_path}"
+    url = storage_object_url(base_url, bucket, storage_path)
     request = urllib.request.Request(
         url,
         headers={
@@ -217,6 +223,11 @@ def update_session_status(session_id: str, status: str, message: str = "") -> di
     return rows[0]
 
 
+def storage_object_url(base_url: str, bucket: str, storage_path: str) -> str:
+    encoded_path = "/".join(urllib.parse.quote(part, safe="") for part in storage_path.split("/"))
+    return f"{base_url.rstrip('/')}/storage/v1/object/{urllib.parse.quote(bucket, safe='')}/{encoded_path}"
+
+
 def write_json(path: Path, data: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     temp = path.with_suffix(path.suffix + ".tmp")
@@ -227,7 +238,7 @@ def write_json(path: Path, data: dict[str, Any]) -> None:
 def stage_session(session: dict[str, Any], images: list[dict[str, Any]]) -> dict[str, Any]:
     if not images:
         raise MobileCaptureError("Pending mobile capture session has no images.")
-    etb, location, location_id = parse_etb_location(session.get("etb_location", ""))
+    etb, location, location_id = parse_etb_location(session_location_id(session))
     session_id = str(session["capture_session_id"])
     processing_dir = MOBILE_PROCESSING_DIR / safe_path_part(session_id)
     originals_dir = processing_dir / "originals"
@@ -321,7 +332,7 @@ def cmd_list(args: argparse.Namespace) -> int:
         print(
             "\t".join([
                 str(row.get("capture_session_id", "")),
-                str(row.get("etb_location", "")),
+                str(row.get("etb_location") or row.get("etb_location_id") or ""),
                 str(row.get("submitted_at", "")),
                 str(row.get("image_count", 0)),
                 str(row.get("status", "")),
