@@ -6,6 +6,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 MIGRATION = ROOT / "supabase" / "migrations" / "20260713153000_mobile_capture.sql"
+GRANTS_MIGRATION = ROOT / "supabase" / "migrations" / "20260713170000_mobile_capture_authenticated_grants.sql"
 PUBLIC_CONFIG = ROOT / "Docs" / "mobile-capture-config.js"
 APP_JS = ROOT / "Docs" / "app.js"
 
@@ -14,6 +15,7 @@ class MobileCaptureSupabaseContractTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.sql = MIGRATION.read_text(encoding="utf-8")
+        cls.grants_sql = GRANTS_MIGRATION.read_text(encoding="utf-8")
         cls.config = PUBLIC_CONFIG.read_text(encoding="utf-8")
         cls.app_js = APP_JS.read_text(encoding="utf-8")
 
@@ -51,6 +53,14 @@ class MobileCaptureSupabaseContractTests(unittest.TestCase):
         self.assertIn("enable row level security", self.sql)
         self.assertIn("operators insert own mobile capture sessions", self.sql)
         self.assertIn("operators update own draft mobile capture sessions", self.sql)
+
+    def test_authenticated_table_grants_support_rls_policies(self):
+        self.assertIn("grant usage on schema public to authenticated", self.grants_sql)
+        self.assertIn("grant select, insert, update", self.grants_sql)
+        self.assertIn("on table public.mobile_capture_sessions", self.grants_sql)
+        self.assertIn("on table public.mobile_capture_images", self.grants_sql)
+        self.assertNotIn(" to anon", self.grants_sql)
+        self.assertNotIn("grant delete", self.grants_sql)
 
     def test_public_config_has_no_private_secret_names(self):
         forbidden = (
