@@ -10,7 +10,13 @@
   }
 
   const route = parts[0].toLowerCase();
-  const knownPlaceholderRoutes = new Set(["buylist", "bulk", "events", "contact", "about"]);
+  const collectionInquiryUrl = "https://tally.so/r/ob1ABN";
+  if (route === "contact") {
+    window.location.replace(collectionInquiryUrl);
+    return;
+  }
+
+  const knownPlaceholderRoutes = new Set(["buylist", "bulk", "events", "about"]);
   const main = document.getElementById("main");
   if (!main) {
     return;
