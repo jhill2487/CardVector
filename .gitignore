@@ -51,11 +51,14 @@ tmp/
 /Capture/Cache/
 /Capture/[0-9][0-9].[0-9][0-9].[0-9][0-9]*/
 /Capture/Physical_Inventory_Conversion/
+/Business/ebay active listings/
 /Data/Exports/
+/Data/Imports/Processed/
 /Data/Logs/
 /Data/Media/
 /Data/Processed/
 !/Data/Config/
+/exports/
 
 # Large local datasets and generated visual indexes
 /Archive/kaggle_dataset/
@@ -141,6 +144,10 @@ Tools/resources/
 # Marketplace Intelligence generated output
 /Platform/Marketplace_Intelligence/reports/
 /Platform/Marketplace_Intelligence/backups/
+/Platform/Putnam_OS/System/marketplace/.cache/
+/Platform/Putnam_OS/System/marketplace/__pycache__/
+/Platform/Putnam_OS/System/marketplace/*_report*.csv
+/Platform/Putnam_OS/System/marketplace/market_signals*.csv
 
 # Work session smoke-test and temporary output
 /Work_Sessions/*smoke*/
@@ -150,6 +157,8 @@ smoke-test-output/
 test_outputs/
 temp_reports/
 temporary_reports/
+*.backup_*
+temappputnam_os.py*
 
 # Machine-specific local configuration copies
 *-DESKTOP-*.json
