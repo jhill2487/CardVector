@@ -1,6 +1,6 @@
 # Mobile Capture Pipeline Audit
 
-Status: Security-gated architecture audit
+Status: Implemented with Supabase-backed Mobile Capture MVP
 
 Date: 2026-07-13
 
@@ -10,7 +10,7 @@ Starting commit: `df6d9d7b428ce45a11fcf6cef470728a1e8461d7`
 
 Inspect the current CardVector web, QR, registry, storage, and desktop conversion implementation before adding mobile capture.
 
-The requested Mobile Capture MVP is blocked by the security gate because the current deployed mobile surface is GitHub Pages only. GitHub Pages is static hosting and is not a secure writable backend for original card images, capture-session metadata, or shared processing queues.
+The requested Mobile Capture MVP required a backend because the existing deployed mobile surface was GitHub Pages only. GitHub Pages remains the static host, while the implemented MVP uses Supabase Auth, Postgres, and Storage for authenticated writes.
 
 ## Current-State Audit
 
@@ -117,7 +117,7 @@ Storage bucket:
 Suggested storage path:
 
 ```text
-mobile-capture-originals/{etb_location_id}/{capture_session_id}/{sequence_number}-{image_id}.jpg
+mobile-capture-originals/{operator_user_id}/{etb_location_id}/{capture_session_id}/{sequence_number}-{image_id}.jpg
 ```
 
 ## Proposed API Contract

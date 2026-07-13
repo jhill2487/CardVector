@@ -51,6 +51,7 @@ tmp/
 /Capture/Cache/
 /Capture/[0-9][0-9].[0-9][0-9].[0-9][0-9]*/
 /Capture/Physical_Inventory_Conversion/
+/MobileCapture/
 /Business/ebay active listings/
 /Data/Exports/
 /Data/Imports/Processed/
