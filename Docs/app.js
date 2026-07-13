@@ -43,8 +43,12 @@
     const etbId = parts[1].toUpperCase();
     renderQrView(
       etbId,
-      "Putnam Collectibles storage container.",
-      detailRow("Type", "ETB") + detailRow("ETB ID", etbId) + detailRow("Powered By", "CardVector")
+      "Putnam Collectibles inventory location check.",
+      detailRow("Type", "Storage Label") +
+        detailRow("ETB ID", etbId) +
+        detailRow("Inventory Details", "Private") +
+        detailRow("Owner", "Putnam Collectibles") +
+        detailRow("Powered By", "CardVector")
     );
     document.title = `${etbId} | Putnam Collectibles`;
     return;
@@ -55,10 +59,12 @@
     const location = parts[2].toUpperCase();
     renderQrView(
       `Location ${location}`,
-      "Putnam Collectibles storage location.",
-      detailRow("Type", "Location") +
+      "Putnam Collectibles inventory location check.",
+      detailRow("Type", "Location Label") +
         detailRow("ETB ID", etbId) +
         detailRow("Location", location) +
+        detailRow("Inventory Details", "Private") +
+        detailRow("Owner", "Putnam Collectibles") +
         detailRow("Powered By", "CardVector")
     );
     document.title = `${etbId} Location ${location} | Putnam Collectibles`;

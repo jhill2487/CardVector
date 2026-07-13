@@ -130,12 +130,30 @@ a:hover {
 }
 
 .hero {
-  min-height: 650px;
+  min-height: 560px;
   display: grid;
   grid-template-columns: minmax(0, 1.1fr) 420px;
   align-items: center;
   gap: 56px;
-  padding: 72px 0 56px;
+  padding: 52px 0 56px;
+}
+
+.brand-banner {
+  padding-top: 28px;
+}
+
+.brand-banner a {
+  display: block;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.brand-banner img {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: var(--blue-950);
 }
 
 .hero-logo {
@@ -553,8 +571,16 @@ h3 {
   }
 
   .hero {
-    padding-top: 44px;
+    padding-top: 34px;
     gap: 28px;
+  }
+
+  .brand-banner {
+    padding-top: 18px;
+  }
+
+  .brand-banner a {
+    border-radius: 16px;
   }
 
   .hero-actions,
