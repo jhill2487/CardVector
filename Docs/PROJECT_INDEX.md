@@ -57,6 +57,10 @@ Examples include:
 - API references
 - Deployment notes
 
+Current deployment reference:
+
+- `Docs/Reference/PUBLIC_SITE_DEPLOYMENT.md`
+
 Reference documents expand upon the canonical documents but do not define project architecture.
 
 ---

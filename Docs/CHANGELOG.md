@@ -1,5 +1,23 @@
 # Changelog
 
+## CardVector Public Site Deployment Pipeline
+
+### Added
+
+- Added a controlled static-site export path from private `CardVector/Docs` to public `CardVector-site`.
+- Added a cross-repository deployment workflow for `cardvector.app`.
+- Added public artifact validation and generated deployment manifest support.
+
+### Changed
+
+- Replaced the invalid private-repository GitHub Pages workflow with deployment to the public Pages repository.
+- Reconciled the live public Whatnot footer link and banner asset back into `CardVector/Docs`.
+
+### Safety
+
+- Public deployment uses an explicit file allowlist and excludes internal reference docs, reports, runtime data, business exports, Python code, and service-role secret references.
+- `CardVector-site` is deployment output only; source edits remain in `CardVector/Docs`.
+
 ## CardVector Platform v1.2.2 - UI Foundation v1
 
 ### Changed

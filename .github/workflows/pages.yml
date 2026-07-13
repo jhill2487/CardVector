@@ -1,4 +1,4 @@
-name: Deploy CardVector Mobile
+name: Deploy CardVector Site
 
 on:
   push:
@@ -7,32 +7,64 @@ on:
     paths:
       - Docs/**
       - .github/workflows/pages.yml
+      - Tools/export_cardvector_site.py
   workflow_dispatch:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
-  group: pages
+  group: cardvector-site-deploy
   cancel-in-progress: false
 
 jobs:
   deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
+    env:
+      CARDVECTOR_SITE_DEPLOY_TOKEN: ${{ secrets.CARDVECTOR_SITE_DEPLOY_TOKEN }}
     steps:
-      - name: Checkout
+      - name: Check deploy token
+        run: |
+          if [ -z "$CARDVECTOR_SITE_DEPLOY_TOKEN" ]; then
+            echo "Missing CARDVECTOR_SITE_DEPLOY_TOKEN. Add a fine-grained token in CardVector repository secrets with Contents: Read and write on jhill2487/CardVector-site."
+            exit 1
+          fi
+
+      - name: Checkout CardVector source
         uses: actions/checkout@v4
-      - name: Configure Pages
-        uses: actions/configure-pages@v5
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+
+      - name: Export public static site artifact
+        run: |
+          python Tools/export_cardvector_site.py --output public-site --source-sha "$GITHUB_SHA"
+          test -s public-site/index.html
+          test -s public-site/app.js
+          test -s public-site/mobile-capture-config.js
+          echo "Source CardVector commit: $GITHUB_SHA"
+
+      - name: Checkout CardVector-site deployment repository
+        uses: actions/checkout@v4
         with:
-          path: Docs
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          repository: jhill2487/CardVector-site
+          token: ${{ secrets.CARDVECTOR_SITE_DEPLOY_TOKEN }}
+          path: cardvector-site
+
+      - name: Replace deployment artifact
+        run: |
+          shopt -s dotglob
+          find cardvector-site -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          cp -R public-site/. cardvector-site/
+          cd cardvector-site
+          git status --short
+
+      - name: Commit and push if changed
+        run: |
+          cd cardvector-site
+          git config user.name "cardvector-deploy[bot]"
+          git config user.email "cardvector-deploy[bot]@users.noreply.github.com"
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "No public site changes to deploy."
+            exit 0
+          fi
+          git add -A
+          git commit -m "deploy: publish CardVector site from ${GITHUB_SHA}"
+          git push origin main

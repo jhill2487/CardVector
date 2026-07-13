@@ -282,6 +282,14 @@ Deployment goals:
 
 Core business operations should continue even if external services are temporarily unavailable.
 
+## Public Website Deployment
+
+CardVector public website source is maintained only in the private authoritative repository under `Docs/`.
+
+The public `jhill2487/CardVector-site` repository is deployment output for GitHub Pages and serves `cardvector.app`. It must contain only the approved static artifact generated from `CardVector/Docs`.
+
+Manual website source edits belong in `CardVector/Docs`, not in `CardVector-site`.
+
 ---
 
 # 9. Automation & Reporting

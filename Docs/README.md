@@ -110,6 +110,20 @@ Software development should generally happen in `Platform/`.
 
 Project documentation should live in `Docs/`.
 
+## Public Website Deployment
+
+Website source is edited only in this private repository under `Docs/`.
+
+The public `jhill2487/CardVector-site` repository is generated deployment output
+for GitHub Pages and serves `cardvector.app`. Do not manually maintain duplicate
+website source there.
+
+Deployment is handled by `.github/workflows/pages.yml`, which exports an
+allowlisted static artifact with `Tools/export_cardvector_site.py` and pushes it
+to `CardVector-site` using the `CARDVECTOR_SITE_DEPLOY_TOKEN` repository secret.
+
+Operational details live in `Docs/Reference/PUBLIC_SITE_DEPLOYMENT.md`.
+
 ## Platform Vision
 
 The stable platform vision lives at `PLATFORM_VISION.md`.
