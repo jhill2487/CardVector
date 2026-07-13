@@ -96,14 +96,30 @@ class MobileCaptureSupabaseContractTests(unittest.TestCase):
 
     def test_frontend_reports_sanitized_supabase_errors(self):
         self.assertIn("supabaseErrorDetails", self.app_js)
+        self.assertIn("storageErrorDetails", self.app_js)
         self.assertIn("sanitizeErrorMessage", self.app_js)
         self.assertIn("Create capture session", self.app_js)
+        self.assertIn("Upload original image", self.app_js)
         self.assertIn("Record uploaded image", self.app_js)
         self.assertIn("Submit capture session", self.app_js)
 
     def test_frontend_shows_signed_in_operator_indicator(self):
         self.assertIn("capture-operator", self.app_js)
         self.assertIn("authStateLabel", self.app_js)
+
+    def test_frontend_storage_upload_uses_user_bearer_token(self):
+        self.assertIn("uploadOriginalImage", self.app_js)
+        self.assertIn("Authorization: `Bearer ${session.access_token}`", self.app_js)
+        self.assertIn("apikey: cfg.supabaseAnonKey", self.app_js)
+        self.assertIn("authTokenStateLabel", self.app_js)
+        self.assertIn("user bearer token missing", self.app_js)
+
+    def test_frontend_storage_path_and_file_validation(self):
+        self.assertIn("storageObjectUrl", self.app_js)
+        self.assertIn("validateUploadImage", self.app_js)
+        self.assertIn("image.file instanceof Blob", self.app_js)
+        self.assertIn('startsWith("image/")', self.app_js)
+        self.assertIn("startsWith(`${user.id}/`)", self.app_js)
 
 
 if __name__ == "__main__":
