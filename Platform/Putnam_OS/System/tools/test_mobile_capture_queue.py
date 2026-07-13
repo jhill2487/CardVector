@@ -1,18 +1,36 @@
 from __future__ import annotations
 
+import json
+import os
+import tempfile
 import unittest
+from pathlib import Path
+from unittest import mock
 
+from Platform.Putnam_OS.System.tools import mobile_capture_queue as queue
 from Platform.Putnam_OS.System.tools.mobile_capture_queue import (
+    MobileCaptureQueueService,
     MobileCaptureError,
+    filter_session_rows,
     parse_etb_location,
+    queue_summary,
+    sanitize_error_message,
+    session_row_model,
     session_location_id,
     storage_object_url,
     safe_path_part,
+    stage_session,
+    claim_session,
     update_session_status,
 )
 
 
 class MobileCaptureQueueTests(unittest.TestCase):
+    @staticmethod
+    def fake_download(_bucket, storage_path, destination):
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        destination.write_text(storage_path, encoding="utf-8")
+
     def test_parse_etb_location_normalizes_location_id(self):
         self.assertEqual(parse_etb_location("etb-002-a"), ("ETB-002", "A", "ETB-002-A"))
 
@@ -38,6 +56,139 @@ class MobileCaptureQueueTests(unittest.TestCase):
             storage_object_url("https://example.supabase.co/", "mobile-capture-originals", "user 1/ETB-001-A/file 1.jpg"),
             "https://example.supabase.co/storage/v1/object/mobile-capture-originals/user%201/ETB-001-A/file%201.jpg",
         )
+
+    def test_sanitize_error_message_redacts_tokens_and_urls(self):
+        text = sanitize_error_message("Bearer secret-token eyJabc https://abc.supabase.co service_role_key")
+        self.assertIn("Bearer [redacted]", text)
+        self.assertIn("[redacted-token]", text)
+        self.assertIn("[supabase-url]", text)
+        self.assertNotIn("secret-token", text)
+
+    def test_missing_environment_variables_fail_closed(self):
+        with mock.patch.dict(os.environ, {}, clear=True):
+            ok, message = MobileCaptureQueueService().environment_ready()
+        self.assertFalse(ok)
+        self.assertIn("CARDVECTOR_SUPABASE_URL", message)
+
+    def test_queue_list_parsing_and_summary(self):
+        rows = [
+            {"capture_session_id": "s1", "status": "PENDING_CONVERSION", "etb_location": "ETB-001-A", "image_count": 2},
+            {"capture_session_id": "s2", "status": "PROCESSING", "etb_location": "ETB-001-B", "conversion_workstation": "other"},
+            {"capture_session_id": "s3", "status": "FAILED", "etb_location": "ETB-001-C", "error_message": "bad"},
+        ]
+        models = [session_row_model(row, current_workstation="this-pc") for row in rows]
+        self.assertEqual(models[0]["status_label"], "Pending")
+        self.assertTrue(models[1]["locked_by_other"])
+        self.assertEqual(queue_summary(models), {"pending": 1, "processing": 1, "failed": 1})
+
+    def test_status_filters_and_search(self):
+        rows = [
+            session_row_model({"capture_session_id": "pending-1", "status": "PENDING_CONVERSION", "etb_location": "ETB-001-A"}),
+            session_row_model({"capture_session_id": "converted-1", "status": "CONVERTED", "etb_location": "ETB-002-A"}),
+            session_row_model({"capture_session_id": "draft-1", "status": "DRAFT", "etb_location": "ETB-003-A"}),
+        ]
+        self.assertEqual([row["capture_session_id"] for row in filter_session_rows(rows, "ACTIVE")], ["pending-1"])
+        self.assertEqual([row["capture_session_id"] for row in filter_session_rows(rows, "CONVERTED")], ["converted-1"])
+        self.assertEqual([row["capture_session_id"] for row in filter_session_rows(rows, "ALL", "ETB-003")], ["draft-1"])
+
+    def test_atomic_claim_conflict_rejects_non_pending_session(self):
+        with mock.patch.object(queue, "request_json", return_value=[]):
+            with self.assertRaises(MobileCaptureError):
+                claim_session("session-1")
+
+    def test_claim_uses_pending_conversion_guard(self):
+        calls = []
+
+        def fake_request(method, path, body=None, prefer=None):
+            calls.append((method, path, body, prefer))
+            return [{"capture_session_id": "session-1", "status": "PROCESSING"}]
+
+        with mock.patch.object(queue, "request_json", side_effect=fake_request):
+            claim_session("session-1")
+        self.assertIn("status=eq.PENDING_CONVERSION", calls[0][1])
+        self.assertEqual(calls[0][2]["status"], "PROCESSING")
+
+    def test_stage_session_download_order_and_capture_session_contents(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            with (
+                mock.patch.object(queue, "MOBILE_PROCESSING_DIR", root / "MobileCapture" / "Processing"),
+                mock.patch.object(queue, "INVENTORY_CONVERSION_CAPTURE_ROOT", root / "Capture" / "Physical_Inventory_Conversion"),
+                mock.patch.object(queue, "INVENTORY_CONVERSION_SESSIONS_DIR", root / "inventory_conversion" / "sessions"),
+                mock.patch.object(queue, "CURRENT_INVENTORY_CONVERSION", root / "inventory_conversion" / "current.json"),
+                mock.patch.object(queue, "download_storage_object", side_effect=self.fake_download),
+                mock.patch.object(queue, "workstation_name", return_value="TEST-PC"),
+            ):
+                manifest = stage_session(
+                    {"capture_session_id": "session-1", "etb_location": "ETB-001-C", "created_at": "2026-07-13T12:00:00"},
+                    [
+                        {"image_id": "img-1", "storage_bucket": "mobile-capture-originals", "storage_path": "u/ETB-001-C/session-1/0001-a.jpg", "created_at": "t1"},
+                        {"image_id": "img-2", "storage_bucket": "mobile-capture-originals", "storage_path": "u/ETB-001-C/session-1/0002-b.jpg", "created_at": "t2"},
+                    ],
+                )
+            capture_file = Path(manifest["capture_session_file"])
+            self.assertTrue(capture_file.exists())
+            data = json.loads(capture_file.read_text(encoding="utf-8"))
+            self.assertEqual(data["location_id"], "ETB-001-C")
+            self.assertEqual(data["capture_session_id"], "session-1")
+            self.assertEqual([record["mobile_image_id"] for record in data["records"]], ["img-1", "img-2"])
+            self.assertEqual(data["records"][0]["filename"], "000001_front.jpg")
+
+    def test_local_folder_helper_reads_manifest_capture_folder(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            processing = root / "Processing" / "session-1"
+            capture_folder = root / "Capture" / "Physical_Inventory_Conversion" / "ETB-001-C" / "07.13.26"
+            capture_folder.mkdir(parents=True)
+            processing.mkdir(parents=True)
+            (processing / "mobile_capture_manifest.json").write_text(json.dumps({"capture_folder": str(capture_folder)}), encoding="utf-8")
+            with mock.patch.object(queue, "MOBILE_PROCESSING_DIR", root / "Processing"):
+                self.assertEqual(queue.local_session_folder("session-1"), capture_folder)
+
+    def test_service_process_uses_claim_load_stage_sequence(self):
+        service = MobileCaptureQueueService(current_workstation="TEST-PC")
+        with (
+            mock.patch.object(queue, "claim_session", return_value={"capture_session_id": "session-1"}),
+            mock.patch.object(queue, "load_session_images", return_value=[{"image_id": "img-1"}]),
+            mock.patch.object(queue, "stage_session", return_value={"capture_folder": "folder"}) as stage,
+        ):
+            self.assertEqual(service.process("session-1")["capture_folder"], "folder")
+        stage.assert_called_once()
+
+    def test_service_complete_fail_and_retry_use_controlled_actions(self):
+        service = MobileCaptureQueueService(current_workstation="TEST-PC")
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            with (
+                mock.patch.object(queue, "MOBILE_CONVERTED_DIR", root / "Converted"),
+                mock.patch.object(queue, "MOBILE_FAILED_DIR", root / "Failed"),
+                mock.patch.object(queue, "update_session_status", return_value={"status": "CONVERTED"}) as update,
+            ):
+                service.complete("session-1")
+            update.assert_called_with("session-1", "CONVERTED")
+            with (
+                mock.patch.object(queue, "MOBILE_FAILED_DIR", root / "Failed"),
+                mock.patch.object(queue, "update_session_status", return_value={"status": "FAILED"}) as update,
+            ):
+                service.fail("session-1", "Bearer should-redact")
+            self.assertNotIn("should-redact", update.call_args.args[2])
+        with mock.patch.object(queue, "retry_failed_session", return_value={"status": "PENDING_CONVERSION"}) as retry:
+            service.retry_failed("session-1")
+        retry.assert_called_with("session-1")
+
+    def test_retry_failed_requires_failed_status(self):
+        with mock.patch.object(queue, "load_session", return_value={"error_message": "previous"}):
+            with mock.patch.object(queue, "request_json", return_value=[]):
+                with self.assertRaises(MobileCaptureError):
+                    queue.retry_failed_session("session-1")
+
+    def test_capture_queue_ui_uses_service_layer_and_cancels_auto_refresh(self):
+        source = (queue.ROOT / "Platform" / "Putnam_OS" / "System" / "app" / "putnam_os.py").read_text(encoding="utf-8")
+        self.assertIn("MobileCaptureQueueService", source)
+        self.assertIn("capture_queue_cancel_auto_refresh", source)
+        self.assertIn("self.after_cancel(after_id)", source)
+        self.assertIn("self.after(30000, self.capture_queue_refresh_ui)", source)
+        self.assertNotIn("request_json(", source)
 
 
 if __name__ == "__main__":

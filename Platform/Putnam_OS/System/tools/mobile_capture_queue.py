@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import socket
 import sys
 import urllib.error
@@ -48,6 +49,19 @@ INVENTORY_CONVERSION_CAPTURE_ROOT = ROOT / "Capture" / "Physical_Inventory_Conve
 
 class MobileCaptureError(RuntimeError):
     pass
+
+
+PRIMARY_QUEUE_STATUSES = ("PENDING_CONVERSION", "PROCESSING", "FAILED", "CONVERTED", "CANCELLED")
+DIAGNOSTIC_QUEUE_STATUSES = ("DRAFT", "UPLOADING")
+QUEUE_STATUS_LABELS = {
+    "PENDING_CONVERSION": "Pending",
+    "PROCESSING": "Processing",
+    "CONVERTED": "Converted",
+    "FAILED": "Failed",
+    "CANCELLED": "Cancelled",
+    "DRAFT": "Draft",
+    "UPLOADING": "Uploading",
+}
 
 
 def iso_now() -> str:
@@ -97,6 +111,15 @@ def workstation_name() -> str:
     return os.environ.get("COMPUTERNAME") or socket.gethostname() or "unknown-workstation"
 
 
+def sanitize_error_message(value: Any, limit: int = 700) -> str:
+    text = str(value or "").strip()
+    text = re.sub(r"Bearer\s+[A-Za-z0-9._~+/=-]+", "Bearer [redacted]", text, flags=re.IGNORECASE)
+    text = re.sub(r"eyJ[A-Za-z0-9._-]+", "[redacted-token]", text)
+    text = re.sub(r"https://[a-z0-9-]+\.supabase\.co", "[supabase-url]", text, flags=re.IGNORECASE)
+    text = re.sub(r"service[_ -]?role[^,\s)\"']*", "service-role-[redacted]", text, flags=re.IGNORECASE)
+    return text[:limit]
+
+
 def supabase_config() -> tuple[str, str]:
     url = os.environ.get("CARDVECTOR_SUPABASE_URL") or os.environ.get("SUPABASE_URL") or ""
     key = (
@@ -131,7 +154,7 @@ def request_json(method: str, path: str, body: Any | None = None, prefer: str | 
             payload = response.read().decode("utf-8")
     except urllib.error.HTTPError as exc:
         detail = exc.read().decode("utf-8", errors="replace")
-        raise MobileCaptureError(f"Supabase request failed: {exc.code} {detail}") from exc
+        raise MobileCaptureError(f"Supabase request failed: {exc.code} {sanitize_error_message(detail)}") from exc
     if not payload:
         return None
     return json.loads(payload)
@@ -154,7 +177,18 @@ def download_storage_object(bucket: str, storage_path: str, destination: Path) -
             destination.write_bytes(response.read())
     except urllib.error.HTTPError as exc:
         detail = exc.read().decode("utf-8", errors="replace")
-        raise MobileCaptureError(f"Storage download failed: {exc.code} {detail}") from exc
+        raise MobileCaptureError(f"Storage download failed: {exc.code} {sanitize_error_message(detail)}") from exc
+
+
+def list_sessions(statuses: tuple[str, ...] | list[str] | None = None, limit: int = 100) -> list[dict[str, Any]]:
+    status_values = tuple(statuses or PRIMARY_QUEUE_STATUSES)
+    query = urllib.parse.urlencode({
+        "status": f"in.({','.join(status_values)})",
+        "order": "updated_at.desc",
+        "limit": str(limit),
+        "select": "*",
+    })
+    return request_json("GET", f"/rest/v1/mobile_capture_sessions?{query}") or []
 
 
 def list_pending_sessions(limit: int = 25) -> list[dict[str, Any]]:
@@ -175,6 +209,16 @@ def load_session_images(session_id: str) -> list[dict[str, Any]]:
         "&select=*"
     )
     return request_json("GET", f"/rest/v1/mobile_capture_images?{query}") or []
+
+
+def load_session(session_id: str) -> dict[str, Any] | None:
+    query = urllib.parse.urlencode({
+        "capture_session_id": f"eq.{session_id}",
+        "limit": "1",
+        "select": "*",
+    })
+    rows = request_json("GET", f"/rest/v1/mobile_capture_sessions?{query}") or []
+    return rows[0] if rows else None
 
 
 def claim_session(session_id: str) -> dict[str, Any]:
@@ -200,6 +244,30 @@ def claim_session(session_id: str) -> dict[str, Any]:
     return rows[0]
 
 
+def retry_failed_session(session_id: str) -> dict[str, Any]:
+    existing = load_session(session_id) or {}
+    previous = sanitize_error_message(existing.get("error_message", ""))
+    note = f"Retry requested by {workstation_name()} at {iso_now()}."
+    if previous:
+        note = f"{note} Previous error: {previous}"
+    body = {
+        "status": "PENDING_CONVERSION",
+        "conversion_status": "PENDING_CONVERSION",
+        "conversion_workstation": workstation_name(),
+        "error_message": sanitize_error_message(note),
+        "updated_at": iso_now(),
+    }
+    rows = request_json(
+        "PATCH",
+        f"/rest/v1/mobile_capture_sessions?capture_session_id=eq.{urllib.parse.quote(session_id, safe='')}&status=eq.FAILED",
+        body,
+        prefer="return=representation",
+    ) or []
+    if not rows:
+        raise MobileCaptureError(f"Session is not failed or cannot be retried safely: {session_id}")
+    return rows[0]
+
+
 def update_session_status(session_id: str, status: str, message: str = "") -> dict[str, Any]:
     status = status.upper()
     if status not in {"CONVERTED", "FAILED", "CANCELLED"}:
@@ -211,7 +279,7 @@ def update_session_status(session_id: str, status: str, message: str = "") -> di
         "updated_at": iso_now(),
     }
     if message:
-        body["error_message"] = message
+        body["error_message"] = sanitize_error_message(message)
     rows = request_json(
         "PATCH",
         f"/rest/v1/mobile_capture_sessions?capture_session_id=eq.{urllib.parse.quote(session_id, safe='')}",
@@ -323,6 +391,135 @@ def stage_session(session: dict[str, Any], images: list[dict[str, Any]]) -> dict
     return manifest
 
 
+def status_label(status: str) -> str:
+    return QUEUE_STATUS_LABELS.get(str(status or "").upper(), str(status or "Unknown"))
+
+
+def local_session_folder(session_id: str) -> Path | None:
+    safe_id = safe_path_part(session_id)
+    candidates = [
+        MOBILE_PROCESSING_DIR / safe_id,
+        MOBILE_CONVERTED_DIR / safe_id,
+        MOBILE_FAILED_DIR / safe_id,
+        MOBILE_PENDING_DIR / safe_id,
+    ]
+    for candidate in candidates:
+        if candidate.exists():
+            manifest_path = candidate / "mobile_capture_manifest.json"
+            if manifest_path.exists():
+                try:
+                    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+                    capture_folder = manifest.get("capture_folder")
+                    if capture_folder and Path(capture_folder).exists():
+                        return Path(capture_folder)
+                except Exception:
+                    pass
+            return candidate
+    return None
+
+
+def session_row_model(session: dict[str, Any], current_workstation: str | None = None) -> dict[str, Any]:
+    status = str(session.get("status") or "").upper()
+    session_id = str(session.get("capture_session_id") or "")
+    claimed_by = str(session.get("conversion_workstation") or "")
+    current = current_workstation or workstation_name()
+    locked_by_other = status == "PROCESSING" and bool(claimed_by) and claimed_by != current
+    location_id = str(session.get("etb_location") or session.get("etb_location_id") or "")
+    return {
+        "status": status,
+        "status_label": status_label(status),
+        "etb_location": location_id,
+        "capture_session_id": session_id,
+        "image_count": int(session.get("image_count") or 0),
+        "submitted_at": str(session.get("submitted_at") or session.get("updated_at") or session.get("created_at") or ""),
+        "source": str(session.get("source") or ""),
+        "conversion_workstation": claimed_by,
+        "last_error": sanitize_error_message(session.get("error_message", "")),
+        "locked_by_other": locked_by_other,
+        "local_folder": str(local_session_folder(session_id) or ""),
+        "raw": session,
+    }
+
+
+def filter_session_rows(
+    rows: list[dict[str, Any]],
+    status_filter: str = "ACTIVE",
+    search: str = "",
+) -> list[dict[str, Any]]:
+    status_filter = str(status_filter or "ACTIVE").upper()
+    search = str(search or "").strip().upper()
+    if status_filter == "ACTIVE":
+        allowed = {"PENDING_CONVERSION", "PROCESSING", "FAILED"}
+    elif status_filter == "PRIMARY":
+        allowed = set(PRIMARY_QUEUE_STATUSES)
+    elif status_filter == "ALL":
+        allowed = set(PRIMARY_QUEUE_STATUSES + DIAGNOSTIC_QUEUE_STATUSES)
+    else:
+        allowed = {status_filter}
+    filtered = [row for row in rows if row.get("status") in allowed]
+    if search:
+        filtered = [
+            row for row in filtered
+            if search in str(row.get("etb_location", "")).upper()
+            or search in str(row.get("capture_session_id", "")).upper()
+        ]
+    return filtered
+
+
+def queue_summary(rows: list[dict[str, Any]]) -> dict[str, int]:
+    return {
+        "pending": sum(1 for row in rows if row.get("status") == "PENDING_CONVERSION"),
+        "processing": sum(1 for row in rows if row.get("status") == "PROCESSING"),
+        "failed": sum(1 for row in rows if row.get("status") == "FAILED"),
+    }
+
+
+class MobileCaptureQueueService:
+    def __init__(self, current_workstation: str | None = None):
+        self.current_workstation = current_workstation or workstation_name()
+
+    def environment_ready(self) -> tuple[bool, str]:
+        try:
+            supabase_config()
+            return True, "Connected"
+        except MobileCaptureError as exc:
+            return False, str(exc)
+
+    def list_queue(self, include_diagnostics: bool = True, limit: int = 100) -> list[dict[str, Any]]:
+        statuses = PRIMARY_QUEUE_STATUSES + (DIAGNOSTIC_QUEUE_STATUSES if include_diagnostics else ())
+        return [session_row_model(row, self.current_workstation) for row in list_sessions(statuses, limit=limit)]
+
+    def process(self, session_id: str) -> dict[str, Any]:
+        session = claim_session(session_id)
+        images = load_session_images(session_id)
+        try:
+            manifest = stage_session(session, images)
+        except Exception as exc:
+            update_session_status(session_id, "FAILED", sanitize_error_message(exc))
+            raise
+        return manifest
+
+    def complete(self, session_id: str) -> dict[str, Any]:
+        row = update_session_status(session_id, "CONVERTED")
+        converted_dir = MOBILE_CONVERTED_DIR / safe_path_part(session_id)
+        converted_dir.mkdir(parents=True, exist_ok=True)
+        write_json(converted_dir / "mobile_capture_status.json", row)
+        return row
+
+    def fail(self, session_id: str, message: str) -> dict[str, Any]:
+        row = update_session_status(session_id, "FAILED", sanitize_error_message(message))
+        failed_dir = MOBILE_FAILED_DIR / safe_path_part(session_id)
+        failed_dir.mkdir(parents=True, exist_ok=True)
+        write_json(failed_dir / "mobile_capture_status.json", row)
+        return row
+
+    def retry_failed(self, session_id: str) -> dict[str, Any]:
+        return retry_failed_session(session_id)
+
+    def local_folder(self, session_id: str) -> Path | None:
+        return local_session_folder(session_id)
+
+
 def cmd_list(args: argparse.Namespace) -> int:
     rows = list_pending_sessions(args.limit)
     if not rows:
@@ -377,6 +574,12 @@ def cmd_fail(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_retry_failed(args: argparse.Namespace) -> int:
+    row = retry_failed_session(args.session_id)
+    print(f"Retry queued: {row.get('capture_session_id', args.session_id)}")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="CardVector Mobile Capture queue processor")
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -397,6 +600,10 @@ def build_parser() -> argparse.ArgumentParser:
     fail_parser.add_argument("session_id")
     fail_parser.add_argument("--message", default="")
     fail_parser.set_defaults(func=cmd_fail)
+
+    retry_parser = subparsers.add_parser("retry-failed", help="Return a failed mobile capture session to pending")
+    retry_parser.add_argument("session_id")
+    retry_parser.set_defaults(func=cmd_retry_failed)
     return parser
 
 

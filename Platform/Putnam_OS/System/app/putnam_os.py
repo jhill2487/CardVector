@@ -4,6 +4,7 @@ from decimal import Decimal, InvalidOperation, ROUND_HALF_UP
 from io import BytesIO
 from pathlib import Path
 import time
+import threading
 try:
     from tkinterdnd2 import DND_FILES, TkinterDnD
     DND_AVAILABLE = True
@@ -43,6 +44,12 @@ from Platform.putnam_paths import (
 )
 
 from Platform.Putnam_OS.System.MarketIntelligence.Pricing import build_pricing_decision
+from Platform.Putnam_OS.System.tools.mobile_capture_queue import (
+    MobileCaptureQueueService,
+    filter_session_rows,
+    queue_summary,
+    sanitize_error_message,
+)
 
 APP_VERSION = "1.2.2"
 PLATFORM_VERSION = "CardVector Platform v1.2.2"
@@ -3664,6 +3671,11 @@ class PutnamOS(BaseTk):
         self.current_pricing_job = None
         self.current_pricing_reports = {}
         self.capture_service = CaptureStudioService()
+        self.mobile_capture_queue_service = MobileCaptureQueueService()
+        self.capture_queue_rows = []
+        self.capture_queue_refresh_running = False
+        self.capture_queue_auto_after_id = None
+        self.capture_queue_auto_var = tk.BooleanVar(value=False)
         self.capture_session = None
         self.inventory_conversion_session = load_current_inventory_conversion_session()
         self.inventory_conversion_capture_service = None
@@ -3864,7 +3876,7 @@ class PutnamOS(BaseTk):
 
         nav_sections = [
             ("HOME", ["Home"]),
-            ("OPERATIONS", ["Capture", "Import", "Pricing"]),
+            ("OPERATIONS", ["Capture", "Capture Queue", "Import", "Pricing"]),
             ("INVENTORY", ["Inventory", "Orders", "Shipping"]),
             ("BUSINESS", ["Content", "Analytics"]),
             ("SYSTEM", ["Sessions", "Settings"]),
@@ -3953,6 +3965,8 @@ class PutnamOS(BaseTk):
             w.destroy()
 
     def show_page(self, name):
+        if getattr(self, "current_page", "") == "Capture Queue" and name != "Capture Queue":
+            self.capture_queue_cancel_auto_refresh()
         self.current_page = name
         if hasattr(self, "toolbar_page_var"):
             self.toolbar_page_var.set(nav_text(name))
@@ -3968,6 +3982,8 @@ class PutnamOS(BaseTk):
             self.import_page()
         elif name == "Capture":
             self.capture_page()
+        elif name == "Capture Queue":
+            self.capture_queue_page()
         elif name == "Pricing":
             self.pricing_page()
         elif name == "Orders":
@@ -4284,6 +4300,415 @@ class PutnamOS(BaseTk):
         for line in lines:
             self.label(content, line, 9, BRAND["muted"], False, anchor="w", padx=18, pady=2)
         self.action_button(content, "Open OBS Checklist", self.open_recording_checklist).pack(anchor="w", padx=18, pady=12)
+
+    def capture_queue_page(self):
+        self.header("Capture Queue", "Mobile Capture sessions staged for Physical Inventory Conversion.")
+        wrap = self.scrollable_page()
+
+        if not hasattr(self, "capture_queue_filter_var"):
+            self.capture_queue_filter_var = tk.StringVar(value="Active Queue")
+        if not hasattr(self, "capture_queue_search_var"):
+            self.capture_queue_search_var = tk.StringVar(value="")
+        self.capture_queue_connection_var = tk.StringVar(value="Connection: not checked")
+        self.capture_queue_refresh_var = tk.StringVar(value="Last refresh: never")
+        self.capture_queue_pending_var = tk.StringVar(value="0")
+        self.capture_queue_processing_var = tk.StringVar(value="0")
+        self.capture_queue_failed_var = tk.StringVar(value="0")
+        self.capture_queue_selected_var = tk.StringVar(value="Selected: none")
+
+        top = tk.Frame(wrap, bg=BRAND["bg"])
+        top.pack(fill="x", pady=(0, 16))
+        self.capture_queue_metric_card(top, "Pending", self.capture_queue_pending_var, "Ready to stage")
+        self.capture_queue_metric_card(top, "Processing", self.capture_queue_processing_var, "Claimed locally or elsewhere")
+        self.capture_queue_metric_card(top, "Failed", self.capture_queue_failed_var, "Retry available")
+        connection = self.card(top, side="left", fill="both", expand=True, ipady=12)
+        self.label(connection, "CONNECTION", 9, BRAND["gold"], True, anchor="w", padx=18, pady=(14, 2))
+        tk.Label(
+            connection,
+            textvariable=self.capture_queue_connection_var,
+            bg=BRAND["panel"],
+            fg=BRAND["muted"],
+            font=self.ui_font("label"),
+            justify="left",
+            wraplength=220,
+        ).pack(anchor="w", padx=18)
+        tk.Label(
+            connection,
+            textvariable=self.capture_queue_refresh_var,
+            bg=BRAND["panel"],
+            fg=BRAND["muted2"],
+            font=self.ui_font("small"),
+            justify="left",
+            wraplength=220,
+        ).pack(anchor="w", padx=18, pady=(2, 10))
+
+        controls = self.card(wrap, fill="x", pady=(0, 12), ipady=12)
+        self.label(controls, "QUEUE CONTROLS", 12, BRAND["gold"], True, anchor="w", padx=18, pady=(12, 8))
+        row = tk.Frame(controls, bg=BRAND["panel"])
+        row.pack(fill="x", padx=18, pady=(0, 8))
+        self.primary_button(row, "Refresh", self.capture_queue_refresh_ui).pack(side="left")
+        tk.Checkbutton(
+            row,
+            text="Auto-refresh 30s",
+            variable=self.capture_queue_auto_var,
+            command=self.capture_queue_toggle_auto_refresh,
+            bg=BRAND["panel"],
+            fg=BRAND["muted"],
+            selectcolor=BRAND["panel2"],
+            activebackground=BRAND["panel"],
+            activeforeground=BRAND["text"],
+            font=self.ui_font("label"),
+        ).pack(side="left", padx=12)
+        tk.Label(row, text="Status", bg=BRAND["panel"], fg=BRAND["muted"], font=self.ui_font("label", True)).pack(side="left", padx=(12, 6))
+        status_menu = tk.OptionMenu(
+            row,
+            self.capture_queue_filter_var,
+            "Active Queue",
+            "Pending",
+            "Processing",
+            "Converted",
+            "Failed",
+            "Cancelled",
+            "All Primary",
+            "Diagnostics",
+            command=lambda _value: self.capture_queue_apply_rows(),
+        )
+        status_menu.configure(bg=BRAND["panel2"], fg=BRAND["text"], activebackground=BRAND["bronze_hover"], relief="flat", width=16)
+        status_menu.pack(side="left")
+        tk.Label(row, text="Search", bg=BRAND["panel"], fg=BRAND["muted"], font=self.ui_font("label", True)).pack(side="left", padx=(16, 6))
+        search = tk.Entry(row, textvariable=self.capture_queue_search_var, bg=BRAND["panel2"], fg=BRAND["text"], insertbackground=BRAND["text"], relief="flat", width=30)
+        search.pack(side="left", ipady=4)
+        search.bind("<KeyRelease>", lambda _event: self.capture_queue_apply_rows())
+
+        table_card = self.card(wrap, fill="both", expand=True, pady=(0, 12), ipady=10)
+        self.label(table_card, "SESSIONS", 12, BRAND["gold"], True, anchor="w", padx=18, pady=(12, 6))
+        table_shell = tk.Frame(table_card, bg=BRAND["panel"])
+        table_shell.pack(fill="both", expand=True, padx=18, pady=(0, 8))
+        columns = ("status", "location", "session", "images", "submitted", "source", "workstation", "error")
+        self.capture_queue_tree = ttk.Treeview(table_shell, columns=columns, show="headings", height=12)
+        headings = {
+            "status": ("Status", 110),
+            "location": ("ETB location", 120),
+            "session": ("Session ID", 230),
+            "images": ("Images", 70),
+            "submitted": ("Submitted", 160),
+            "source": ("Source", 105),
+            "workstation": ("Workstation", 150),
+            "error": ("Last error", 260),
+        }
+        for col, (label, width) in headings.items():
+            self.capture_queue_tree.heading(col, text=label)
+            self.capture_queue_tree.column(col, width=width, anchor="w", stretch=col == "error")
+        self.style_treeview(self.capture_queue_tree)
+        yscroll = ttk.Scrollbar(table_shell, orient="vertical", command=self.capture_queue_tree.yview)
+        self.capture_queue_tree.configure(yscrollcommand=yscroll.set)
+        self.capture_queue_tree.pack(side="left", fill="both", expand=True)
+        yscroll.pack(side="right", fill="y")
+        self.capture_queue_tree.bind("<<TreeviewSelect>>", lambda _event: self.capture_queue_update_selection())
+
+        actions = self.card(wrap, fill="x", pady=(0, 12), ipady=12)
+        self.label(actions, "ACTIONS", 12, BRAND["gold"], True, anchor="w", padx=18, pady=(12, 6))
+        tk.Label(
+            actions,
+            textvariable=self.capture_queue_selected_var,
+            bg=BRAND["panel"],
+            fg=BRAND["muted"],
+            font=self.ui_font("label"),
+            anchor="w",
+        ).pack(anchor="w", fill="x", padx=18, pady=(0, 8))
+        action_row = self.button_bar(actions, pad_y=(0, 12))
+        self.primary_button(action_row, "Process Selected", self.capture_queue_process_selected_ui).pack(side="left")
+        self.action_button(action_row, "Open Local Folder", self.capture_queue_open_local_folder_ui).pack(side="left", padx=8)
+        self.action_button(action_row, "Launch Physical Inventory Conversion", self.capture_queue_launch_conversion_ui).pack(side="left", padx=8)
+        self.action_button(action_row, "Mark Complete", self.capture_queue_mark_complete_ui).pack(side="left", padx=8)
+        self.action_button(action_row, "Mark Failed", self.capture_queue_mark_failed_ui).pack(side="left", padx=8)
+        self.action_button(action_row, "Retry Failed", self.capture_queue_retry_failed_ui).pack(side="left", padx=8)
+
+        self.label(
+            actions,
+            "Processing claims a pending session, downloads originals, stages Capture/Physical_Inventory_Conversion input, and leaves completion for explicit operator confirmation.",
+            9,
+            BRAND["muted2"],
+            False,
+            anchor="w",
+            padx=18,
+            pady=(0, 8),
+        )
+        self.capture_queue_apply_rows()
+        self.capture_queue_refresh_ui()
+
+    def capture_queue_metric_card(self, parent, title, value_var, subtitle=""):
+        card = self.card(parent, side="left", fill="both", expand=True, padx=(0, 12), ipady=12)
+        self.label(card, title, 9, BRAND["gold"], True, anchor="w", padx=18, pady=(14, 2))
+        tk.Label(card, textvariable=value_var, bg=BRAND["panel"], fg=BRAND["text"], font=self.ui_font("metric", True)).pack(anchor="w", padx=16)
+        if subtitle:
+            self.label(card, subtitle, 9, BRAND["muted"], False, anchor="w", padx=18, pady=(0, 10))
+        return card
+
+    def capture_queue_filter_code(self):
+        mapping = {
+            "Active Queue": "ACTIVE",
+            "Pending": "PENDING_CONVERSION",
+            "Processing": "PROCESSING",
+            "Converted": "CONVERTED",
+            "Failed": "FAILED",
+            "Cancelled": "CANCELLED",
+            "All Primary": "PRIMARY",
+            "Diagnostics": "ALL",
+        }
+        return mapping.get(getattr(self, "capture_queue_filter_var", tk.StringVar(value="Active Queue")).get(), "ACTIVE")
+
+    def capture_queue_apply_rows(self):
+        if not hasattr(self, "capture_queue_tree"):
+            return
+        for item in self.capture_queue_tree.get_children():
+            self.capture_queue_tree.delete(item)
+        rows = filter_session_rows(
+            self.capture_queue_rows,
+            self.capture_queue_filter_code(),
+            self.capture_queue_search_var.get() if hasattr(self, "capture_queue_search_var") else "",
+        )
+        for row in rows:
+            session_id = row.get("capture_session_id") or f"row-{len(self.capture_queue_tree.get_children())}"
+            error = str(row.get("last_error") or "")
+            if len(error) > 110:
+                error = error[:107] + "..."
+            self.tree_insert(
+                self.capture_queue_tree,
+                "",
+                "end",
+                values=(
+                    row.get("status_label", ""),
+                    row.get("etb_location", ""),
+                    session_id,
+                    row.get("image_count", 0),
+                    row.get("submitted_at", ""),
+                    row.get("source", ""),
+                    row.get("conversion_workstation", ""),
+                    error,
+                ),
+                text=session_id,
+            )
+        self.capture_queue_update_selection()
+
+    def capture_queue_update_summary(self):
+        summary = queue_summary(self.capture_queue_rows)
+        if hasattr(self, "capture_queue_pending_var"):
+            self.capture_queue_pending_var.set(str(summary["pending"]))
+            self.capture_queue_processing_var.set(str(summary["processing"]))
+            self.capture_queue_failed_var.set(str(summary["failed"]))
+
+    def capture_queue_update_selection(self):
+        row = self.capture_queue_selected_row()
+        if hasattr(self, "capture_queue_selected_var"):
+            if row:
+                locked = " | locked by another workstation" if row.get("locked_by_other") else ""
+                self.capture_queue_selected_var.set(
+                    f"Selected: {row.get('capture_session_id')} | {row.get('status_label')} | {row.get('etb_location')}{locked}"
+                )
+            else:
+                self.capture_queue_selected_var.set("Selected: none")
+
+    def capture_queue_selected_session_id(self):
+        if not hasattr(self, "capture_queue_tree"):
+            return ""
+        selected = self.capture_queue_tree.selection()
+        if not selected:
+            return ""
+        values = self.capture_queue_tree.item(selected[0], "values")
+        return str(values[2]) if values else ""
+
+    def capture_queue_selected_row(self):
+        session_id = self.capture_queue_selected_session_id()
+        if not session_id:
+            return None
+        for row in self.capture_queue_rows:
+            if row.get("capture_session_id") == session_id:
+                return row
+        return None
+
+    def capture_queue_run_background(self, label, work, on_success=None):
+        self.status.set(label)
+
+        def worker():
+            try:
+                result = work()
+            except Exception as exc:
+                message = sanitize_error_message(exc)
+                self.after(0, lambda: self.capture_queue_background_error(label, message))
+                return
+            if on_success:
+                self.after(0, lambda: on_success(result))
+
+        threading.Thread(target=worker, daemon=True).start()
+
+    def capture_queue_background_error(self, label, message):
+        self.status.set(f"{label} failed.")
+        if hasattr(self, "capture_queue_connection_var"):
+            self.capture_queue_connection_var.set(f"Connection/error: {message}")
+        messagebox.showerror("Capture Queue", message)
+
+    def capture_queue_refresh_ui(self):
+        if self.capture_queue_refresh_running:
+            return
+        self.capture_queue_refresh_running = True
+        if hasattr(self, "capture_queue_connection_var"):
+            self.capture_queue_connection_var.set("Connection: refreshing...")
+
+        def work():
+            return self.mobile_capture_queue_service.list_queue(include_diagnostics=True, limit=100)
+
+        def success(rows):
+            self.capture_queue_refresh_running = False
+            self.capture_queue_rows = rows
+            if hasattr(self, "capture_queue_connection_var"):
+                self.capture_queue_connection_var.set(f"Connection: ready on {self.mobile_capture_queue_service.current_workstation}")
+                self.capture_queue_refresh_var.set(f"Last refresh: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+            self.capture_queue_update_summary()
+            self.capture_queue_apply_rows()
+            self.status.set(f"Capture Queue refreshed: {len(rows)} session(s).")
+            self.capture_queue_schedule_auto_refresh()
+
+        def worker():
+            try:
+                rows = work()
+            except Exception as exc:
+                message = sanitize_error_message(exc)
+                self.after(0, lambda: self.capture_queue_refresh_failed(message))
+                return
+            self.after(0, lambda: success(rows))
+
+        threading.Thread(target=worker, daemon=True).start()
+
+    def capture_queue_refresh_failed(self, message):
+        self.capture_queue_refresh_running = False
+        if hasattr(self, "capture_queue_connection_var"):
+            self.capture_queue_connection_var.set(f"Connection: setup/error - {message}")
+            self.capture_queue_refresh_var.set(f"Last refresh failed: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        self.status.set("Capture Queue refresh failed.")
+        self.capture_queue_schedule_auto_refresh()
+
+    def capture_queue_toggle_auto_refresh(self):
+        if self.capture_queue_auto_var.get():
+            self.capture_queue_schedule_auto_refresh()
+        else:
+            self.capture_queue_cancel_auto_refresh()
+
+    def capture_queue_schedule_auto_refresh(self):
+        self.capture_queue_cancel_auto_refresh()
+        if not getattr(self, "capture_queue_auto_var", tk.BooleanVar(value=False)).get():
+            return
+        if getattr(self, "current_page", "") != "Capture Queue":
+            return
+        self.capture_queue_auto_after_id = self.after(30000, self.capture_queue_refresh_ui)
+
+    def capture_queue_cancel_auto_refresh(self):
+        after_id = getattr(self, "capture_queue_auto_after_id", None)
+        if after_id:
+            try:
+                self.after_cancel(after_id)
+            except Exception:
+                pass
+        self.capture_queue_auto_after_id = None
+
+    def capture_queue_process_selected_ui(self):
+        row = self.capture_queue_selected_row()
+        if not row:
+            messagebox.showinfo("Capture Queue", "Select a pending session first.")
+            return
+        if row.get("status") != "PENDING_CONVERSION":
+            messagebox.showinfo("Capture Queue", "Only Pending sessions can be processed.")
+            return
+        session_id = row["capture_session_id"]
+
+        def success(manifest):
+            append_activity(f"Mobile capture session staged: {session_id}")
+            self.status.set(f"Staged mobile capture session: {session_id}")
+            self.capture_queue_refresh_ui()
+            folder = manifest.get("capture_folder")
+            if folder:
+                self.capture_queue_selected_var.set(f"Staged: {session_id} | {folder}")
+
+        self.capture_queue_run_background("Processing mobile capture session...", lambda: self.mobile_capture_queue_service.process(session_id), success)
+
+    def capture_queue_mark_complete_ui(self):
+        row = self.capture_queue_selected_row()
+        if not row:
+            messagebox.showinfo("Capture Queue", "Select a processing session first.")
+            return
+        if row.get("status") != "PROCESSING":
+            messagebox.showinfo("Capture Queue", "Only Processing sessions can be marked complete.")
+            return
+        session_id = row["capture_session_id"]
+        if not messagebox.askyesno("Mark Complete", f"Mark mobile capture session converted?\n\n{session_id}"):
+            return
+
+        def success(_row):
+            append_activity(f"Mobile capture session marked converted: {session_id}")
+            self.status.set(f"Marked converted: {session_id}")
+            self.capture_queue_refresh_ui()
+
+        self.capture_queue_run_background("Marking mobile capture converted...", lambda: self.mobile_capture_queue_service.complete(session_id), success)
+
+    def capture_queue_mark_failed_ui(self):
+        row = self.capture_queue_selected_row()
+        if not row:
+            messagebox.showinfo("Capture Queue", "Select a session first.")
+            return
+        session_id = row["capture_session_id"]
+        message = simpledialog.askstring("Mark Failed", "Failure note:", initialvalue="Operator marked failed from Capture Queue.")
+        if message is None:
+            return
+
+        def success(_row):
+            append_activity(f"Mobile capture session marked failed: {session_id}")
+            self.status.set(f"Marked failed: {session_id}")
+            self.capture_queue_refresh_ui()
+
+        self.capture_queue_run_background("Marking mobile capture failed...", lambda: self.mobile_capture_queue_service.fail(session_id, message), success)
+
+    def capture_queue_retry_failed_ui(self):
+        row = self.capture_queue_selected_row()
+        if not row:
+            messagebox.showinfo("Capture Queue", "Select a failed session first.")
+            return
+        if row.get("status") != "FAILED":
+            messagebox.showinfo("Capture Queue", "Only Failed sessions can be retried.")
+            return
+        session_id = row["capture_session_id"]
+        if not messagebox.askyesno("Retry Failed", f"Return this failed session to Pending?\n\n{session_id}"):
+            return
+
+        def success(_row):
+            append_activity(f"Mobile capture failed session retried: {session_id}")
+            self.status.set(f"Retry queued: {session_id}")
+            self.capture_queue_refresh_ui()
+
+        self.capture_queue_run_background("Retrying failed mobile capture session...", lambda: self.mobile_capture_queue_service.retry_failed(session_id), success)
+
+    def capture_queue_open_local_folder_ui(self):
+        row = self.capture_queue_selected_row()
+        if not row:
+            messagebox.showinfo("Capture Queue", "Select a session first.")
+            return
+        session_id = row["capture_session_id"]
+        folder = row.get("local_folder") or self.mobile_capture_queue_service.local_folder(session_id)
+        if not folder:
+            messagebox.showinfo("Capture Queue", "No local staged folder exists for this session yet.")
+            return
+        try:
+            os.startfile(str(Path(folder).resolve()))
+            self.status.set(f"Opened local folder for {session_id}")
+        except Exception as exc:
+            messagebox.showinfo("Capture Queue", f"Local folder:\n{folder}\n\nCould not open automatically:\n{exc}")
+
+    def capture_queue_launch_conversion_ui(self):
+        row = self.capture_queue_selected_row()
+        if row and row.get("status") == "PENDING_CONVERSION":
+            messagebox.showinfo("Capture Queue", "Process the pending session before launching Physical Inventory Conversion.")
+            return
+        self.show_page("Inventory")
+        self.status.set("Physical Inventory Conversion opened. Use the staged mobile capture folder/current session.")
 
     def action_button(self, parent, text, command):
         return self.ui_button(parent, text, command, variant="secondary")
@@ -7914,4 +8339,3 @@ if __name__ == "__main__":
     print(f"{APP_NAME} v{APP_VERSION} - {PLATFORM_VERSION}")
     append_activity(f"CardVector OS launched v{APP_VERSION}")
     PutnamOS().mainloop()
-

@@ -66,6 +66,20 @@ Objectives:
 Status:
 In Progress
 
+Current production capability:
+
+- Mobile Capture can submit authenticated phone captures to Supabase.
+- CardVector OS includes a Capture Queue workspace for reviewing,
+  claiming, staging, retrying, and completing Mobile Capture sessions through
+  the existing Physical Inventory Conversion workflow.
+
+Known limitations:
+
+- Card recognition and CardUploader automation remain future work.
+- Completion remains an explicit operator action after downstream conversion.
+- Supabase Realtime is not used; desktop refresh is manual or conservative
+  polling.
+
 ---
 
 # Active Epic 4 — Reporting & Analytics

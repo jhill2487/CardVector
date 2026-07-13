@@ -106,6 +106,43 @@ Standard workflow:
 
 The ETB Registry records occupancy, capacity, active location and completion status.
 
+## Mobile Capture Queue
+
+Mobile Capture Queue is the desktop CardVector OS workspace for processing
+phone-submitted capture sessions from Supabase into the existing Physical
+Inventory Conversion workflow.
+
+The workflow is:
+
+1. Phone submits a Mobile Capture session.
+2. Supabase stores session metadata, image metadata, and private originals.
+3. CardVector OS shows the session in `Capture Queue`.
+4. The operator processes one pending session.
+5. The desktop queue atomically claims the session for the current workstation.
+6. Originals download to the portable MobileCapture runtime folder.
+7. Files are staged under `Capture/Physical_Inventory_Conversion/{location_id}/...`.
+8. `capture_session.json` and the current inventory conversion session are written.
+9. The operator runs Physical Inventory Conversion.
+10. The operator explicitly marks the mobile session complete.
+
+Status meanings:
+
+- `PENDING_CONVERSION`: ready to claim and stage.
+- `PROCESSING`: claimed by a workstation and staged for conversion.
+- `CONVERTED`: operator confirmed successful downstream conversion.
+- `FAILED`: processing failed or was marked failed; retry is available.
+- `CANCELLED`: no longer active.
+
+The queue uses `CARDVECTOR_SUPABASE_URL` and
+`CARDVECTOR_SUPABASE_SERVICE_ROLE_KEY` from the desktop environment. Service-role
+credentials are never stored in tracked config and are never exposed to the
+public website.
+
+Multi-workstation behavior is conservative. Claiming is performed with an
+atomic status transition from `PENDING_CONVERSION` to `PROCESSING`; another
+workstation cannot process an already-claimed session without an explicit retry
+or recovery action.
+
 ---
 
 # 4. Operational Workflows

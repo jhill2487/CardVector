@@ -1,5 +1,25 @@
 # Changelog
 
+## CardVector OS Mobile Capture Queue
+
+### Added
+
+- Added a first-class `Capture Queue` workspace inside CardVector OS.
+- Added desktop queue visibility for pending, processing, converted, failed, cancelled, and diagnostic Mobile Capture sessions.
+- Added queue actions for refresh, conservative auto-refresh, process/stage, open local folder, launch Physical Inventory Conversion, mark complete, mark failed, and retry failed.
+- Added a reusable Mobile Capture queue service layer around `Platform/Putnam_OS/System/tools/mobile_capture_queue.py`.
+
+### Changed
+
+- Extended the queue tool with status display models, sanitized errors, retry handling, local staged-folder lookup, and a `retry-failed` CLI command.
+- Mobile Capture processing now surfaces multi-workstation claim state through the desktop UI while keeping atomic Supabase claim behavior.
+
+### Safety
+
+- No Mobile Capture frontend, Supabase schema, CardUploader recognition, marketplace, or eBay workflow behavior was redesigned.
+- The desktop queue still uses `CARDVECTOR_SUPABASE_URL` and `CARDVECTOR_SUPABASE_SERVICE_ROLE_KEY`; service-role keys are not printed or stored in tracked config.
+- Original cloud images are downloaded for staging and are never automatically deleted.
+
 ## CardVector Public Site Deployment Pipeline
 
 ### Added

@@ -171,6 +171,43 @@ CardVector Platform v1.2.2 applies UI Foundation v1 to the existing app shell:
 dark professional theme, bronze accent, compact toolbar, bottom status bar,
 status dots, outlined buttons, and modern desktop table styling.
 
+#### Mobile Capture Queue
+
+CardVector OS includes a `Capture Queue` workspace in the Operations navigation.
+It is the desktop processing surface for authenticated phone captures that have
+reached `PENDING_CONVERSION` in Supabase.
+
+Required desktop environment variables:
+
+- `CARDVECTOR_SUPABASE_URL`
+- `CARDVECTOR_SUPABASE_SERVICE_ROLE_KEY`
+
+Operator flow:
+
+1. Open CardVector OS.
+2. Open `Capture Queue`.
+3. Refresh the queue or enable conservative 30-second auto-refresh.
+4. Select a `Pending` session.
+5. Choose `Process Selected`.
+6. Confirm originals are downloaded and staged under
+   `Capture/Physical_Inventory_Conversion/{location_id}/...`.
+7. Open the local folder or launch the Inventory page for Physical Inventory
+   Conversion.
+8. Mark the Mobile Capture session complete only after downstream conversion
+   succeeds.
+
+Queue statuses:
+
+- Pending: ready to claim and stage.
+- Processing: claimed by a workstation.
+- Converted: operator-confirmed completion.
+- Failed: visible for audit and retry.
+- Cancelled: retained as a non-active record.
+
+Failed sessions can be retried through a controlled action. Retry returns the
+session to Pending after recording that retry was requested; it does not delete
+cloud originals or local partial folders.
+
 #### Production Workflow: v1.2.1
 
 CardVector Platform v1.2.1 adds a shared OBS WebSocket connection manager for

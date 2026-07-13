@@ -60,6 +60,13 @@ Examples include:
 Current deployment reference:
 
 - `Docs/Reference/PUBLIC_SITE_DEPLOYMENT.md`
+- `Docs/Reference/MOBILE_CAPTURE_SUPABASE_SETUP.md`
+- `Docs/Reference/MOBILE_CAPTURE_PIPELINE_AUDIT.md`
+
+Current desktop queue implementation:
+
+- `Platform/Putnam_OS/System/tools/mobile_capture_queue.py`
+- CardVector OS workspace: `Capture Queue`
 
 Reference documents expand upon the canonical documents but do not define project architecture.
 
