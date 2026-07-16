@@ -190,7 +190,7 @@ Operator flow:
 4. Select a `Pending` session.
 5. Choose `Process Selected`.
 6. Confirm originals are downloaded and staged under
-   `Capture/Physical_Inventory_Conversion/{location_id}/...`.
+   `Capture/Physical_Inventory_Conversion/MM.DD.YY`.
 7. Open the local folder or launch the Inventory page for Physical Inventory
    Conversion.
 8. Mark the Mobile Capture session complete only after downstream conversion
@@ -207,6 +207,11 @@ Queue statuses:
 Failed sessions can be retried through a controlled action. Retry returns the
 session to Pending after recording that retry was requested; it does not delete
 cloud originals or local partial folders.
+
+Mobile capture sessions now use an explicit capture type. `NEW_CAPTURE` stages
+under `Capture/MM.DD.YY`; `PHYSICAL_INVENTORY` stages under
+`Capture/Physical_Inventory_Conversion/MM.DD.YY`. Existing blank capture-type
+sessions default to `PHYSICAL_INVENTORY`.
 
 #### Production Workflow: v1.2.1
 

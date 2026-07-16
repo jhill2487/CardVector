@@ -7,6 +7,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 MIGRATION = ROOT / "supabase" / "migrations" / "20260713153000_mobile_capture.sql"
 GRANTS_MIGRATION = ROOT / "supabase" / "migrations" / "20260713170000_mobile_capture_authenticated_grants.sql"
+CAPTURE_TYPE_MIGRATION = ROOT / "supabase" / "migrations" / "20260716090000_mobile_capture_type.sql"
 PUBLIC_CONFIG = ROOT / "Docs" / "mobile-capture-config.js"
 APP_JS = ROOT / "Docs" / "app.js"
 
@@ -16,6 +17,7 @@ class MobileCaptureSupabaseContractTests(unittest.TestCase):
     def setUpClass(cls):
         cls.sql = MIGRATION.read_text(encoding="utf-8")
         cls.grants_sql = GRANTS_MIGRATION.read_text(encoding="utf-8")
+        cls.capture_type_sql = CAPTURE_TYPE_MIGRATION.read_text(encoding="utf-8")
         cls.config = PUBLIC_CONFIG.read_text(encoding="utf-8")
         cls.app_js = APP_JS.read_text(encoding="utf-8")
 
@@ -38,6 +40,13 @@ class MobileCaptureSupabaseContractTests(unittest.TestCase):
             "schema_version",
         ):
             self.assertIn(field, self.sql)
+
+    def test_capture_type_migration_defines_two_workflows_and_backcompat(self):
+        self.assertIn("add column if not exists capture_type", self.capture_type_sql)
+        self.assertIn("default 'PHYSICAL_INVENTORY'", self.capture_type_sql)
+        self.assertIn("'NEW_CAPTURE'", self.capture_type_sql)
+        self.assertIn("'PHYSICAL_INVENTORY'", self.capture_type_sql)
+        self.assertIn("mobile_capture_sessions_capture_type_chk", self.capture_type_sql)
 
     def test_migration_supports_required_statuses(self):
         for status in ("DRAFT", "UPLOADING", "PENDING_CONVERSION", "PROCESSING", "CONVERTED", "FAILED", "CANCELLED"):
@@ -84,6 +93,7 @@ class MobileCaptureSupabaseContractTests(unittest.TestCase):
             "operator_id: user ? user.id : null",
             "user_id: user ? user.id : null",
             "source_device: session.device",
+            "capture_type: normalizeCaptureType(session.capture_type)",
             'status: "UPLOADING"',
             'source: "MOBILE_WEB"',
             'conversion_status: "UPLOADING"',
@@ -120,6 +130,15 @@ class MobileCaptureSupabaseContractTests(unittest.TestCase):
         self.assertIn("image.file instanceof Blob", self.app_js)
         self.assertIn('startsWith("image/")', self.app_js)
         self.assertIn("startsWith(`${user.id}/`)", self.app_js)
+
+    def test_frontend_uses_explicit_capture_type_and_camera_screen(self):
+        self.assertIn("captureTypeConfig", self.app_js)
+        self.assertIn("New Inventory Capture", self.app_js)
+        self.assertIn("Physical Inventory Conversion", self.app_js)
+        self.assertIn("navigator.mediaDevices.getUserMedia", self.app_js)
+        self.assertIn("captureStillFromVideo", self.app_js)
+        self.assertIn("Finish Session", self.app_js)
+        self.assertIn("Choose from Photo Library", self.app_js)
 
 
 if __name__ == "__main__":

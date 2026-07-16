@@ -463,6 +463,7 @@ def session_row_model(session: dict[str, Any], current_workstation: str | None =
         "image_count": int(session.get("image_count") or 0),
         "submitted_at": str(session.get("submitted_at") or session.get("updated_at") or session.get("created_at") or ""),
         "source": str(session.get("source") or ""),
+        "capture_type": session_capture_type(session),
         "conversion_workstation": claimed_by,
         "last_error": sanitize_error_message(session.get("error_message", "")),
         "locked_by_other": locked_by_other,

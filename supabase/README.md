@@ -19,6 +19,8 @@ Apply:
 
 ```text
 supabase/migrations/20260713153000_mobile_capture.sql
+supabase/migrations/20260713170000_mobile_capture_authenticated_grants.sql
+supabase/migrations/20260716090000_mobile_capture_type.sql
 ```
 
 The migration creates or safely reconciles:
@@ -27,6 +29,7 @@ The migration creates or safely reconciles:
 - `public.mobile_capture_images`
 - indexes and uniqueness constraints
 - lifecycle status validation
+- explicit `capture_type` validation for `NEW_CAPTURE` and `PHYSICAL_INVENTORY`
 - `updated_at` trigger behavior
 - RLS policies for authenticated operators
 - private `mobile-capture-originals` bucket
@@ -133,14 +136,14 @@ The bucket is private. Desktop downloads use the service-role key outside Git.
 Use non-sensitive test images:
 
 1. Open an existing `/location/{ETB}/{A-J}` QR route on the phone.
-2. Sign in as the operator.
-3. Start a capture session.
-4. Select or capture three test images.
+2. Choose `New Inventory Capture` or `Physical Inventory Conversion`.
+3. Sign in as the operator.
+4. Capture three test images with the custom shutter or choose from Photo Library.
 5. Remove one image.
-6. Upload two images.
-7. Confirm the session reaches `PENDING_CONVERSION`.
+6. Finish the session and upload two images.
+7. Confirm the session reaches `PENDING_CONVERSION` with the selected `capture_type`.
 8. On the desktop, list and process the session.
 9. Confirm originals download under `<USERENVIRONMENT>/MobileCapture/Processing/`.
-10. Confirm `capture_session.json` is staged under `<USERENVIRONMENT>/Capture/Physical_Inventory_Conversion/`.
+10. Confirm `capture_session.json` is staged under `<USERENVIRONMENT>/Capture/` for `NEW_CAPTURE` or `<USERENVIRONMENT>/Capture/Physical_Inventory_Conversion/` for `PHYSICAL_INVENTORY`.
 11. Confirm the ETB location ID survives in the staged conversion session.
 12. Mark complete only after processing succeeds.

@@ -39,9 +39,17 @@ The reproducible setup now lives in:
 
 ```text
 supabase/migrations/20260713153000_mobile_capture.sql
+supabase/migrations/20260716090000_mobile_capture_type.sql
 ```
 
-Run that migration in the Supabase SQL editor or through the Supabase CLI after linking the project. The migration creates the tables, indexes, lifecycle checks, trigger-based compatibility aliases, RLS policies, private storage bucket, MIME/size limits, and storage object policies.
+Run those migrations in the Supabase SQL editor or through the Supabase CLI after linking the project. The base migration creates the tables, indexes, lifecycle checks, trigger-based compatibility aliases, RLS policies, private storage bucket, MIME/size limits, and storage object policies. The capture-type migration adds the explicit Phase 2 workflow field.
+
+Supported `mobile_capture_sessions.capture_type` values:
+
+- `NEW_CAPTURE`
+- `PHYSICAL_INVENTORY`
+
+Existing blank or older sessions default to `PHYSICAL_INVENTORY` for backward-compatible desktop staging.
 
 Detailed setup and validation steps live in:
 
@@ -86,10 +94,13 @@ The desktop processor writes outside Git:
 <USERENVIRONMENT>/MobileCapture/Processing/
 <USERENVIRONMENT>/MobileCapture/Converted/
 <USERENVIRONMENT>/MobileCapture/Failed/
+<USERENVIRONMENT>/Capture/
 <USERENVIRONMENT>/Capture/Physical_Inventory_Conversion/
 ```
 
 Original uploaded images are retained in Supabase Storage and are also copied into the local processing folder when staged.
+
+`NEW_CAPTURE` sessions stage under `<USERENVIRONMENT>/Capture/MM.DD.YY`. `PHYSICAL_INVENTORY` sessions stage under `<USERENVIRONMENT>/Capture/Physical_Inventory_Conversion/MM.DD.YY`. Additional same-day sessions use `.1`, `.2`, and so on.
 
 The migration configures the bucket as private with a 25 MB object limit and allows common phone image formats: JPEG, PNG, HEIC, HEIF, and WebP.
 

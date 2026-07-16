@@ -1,5 +1,23 @@
 # Changelog
 
+## CardVector Mobile Capture Phase 2
+
+### Added
+
+- Added explicit mobile workflow selection for `NEW_CAPTURE` and `PHYSICAL_INVENTORY`.
+- Added a dedicated mobile capture screen with rear-camera preview, custom shutter capture, IndexedDB draft staging, thumbnail removal, photo-library fallback, and Finish Session upload.
+- Added a Supabase migration for the durable `mobile_capture_sessions.capture_type` contract.
+
+### Changed
+
+- Kept ETB/location QR pages as informational landing pages instead of opening camera capture automatically.
+- `NEW_CAPTURE` sessions stage under `Capture/MM.DD.YY`; `PHYSICAL_INVENTORY` sessions stage under `Capture/Physical_Inventory_Conversion/MM.DD.YY`.
+- Existing blank capture-type sessions default to `PHYSICAL_INVENTORY` for backward-compatible desktop staging.
+
+### Safety
+
+- Preserved authenticated Supabase Storage upload, private bucket behavior, desktop queue atomic claim/staging, and service-role key separation.
+
 ## CardVector OS Mobile Capture Queue
 
 ### Added

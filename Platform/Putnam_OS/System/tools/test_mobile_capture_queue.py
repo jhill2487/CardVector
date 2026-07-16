@@ -17,6 +17,7 @@ from Platform.Putnam_OS.System.tools.mobile_capture_queue import (
     sanitize_error_message,
     session_row_model,
     session_location_id,
+    session_capture_type,
     storage_object_url,
     safe_path_part,
     stage_session,
@@ -50,6 +51,11 @@ class MobileCaptureQueueTests(unittest.TestCase):
     def test_update_status_rejects_processing_as_terminal_update(self):
         with self.assertRaises(MobileCaptureError):
             update_session_status("capture-1", "PROCESSING")
+
+    def test_session_capture_type_defaults_blank_to_physical_inventory(self):
+        self.assertEqual(session_capture_type({}), "PHYSICAL_INVENTORY")
+        self.assertEqual(session_capture_type({"capture_type": ""}), "PHYSICAL_INVENTORY")
+        self.assertEqual(session_capture_type({"device": {"capture_type": "new inventory"}}), "NEW_CAPTURE")
 
     def test_storage_object_url_encodes_path_segments(self):
         self.assertEqual(
@@ -131,8 +137,53 @@ class MobileCaptureQueueTests(unittest.TestCase):
             data = json.loads(capture_file.read_text(encoding="utf-8"))
             self.assertEqual(data["location_id"], "ETB-001-C")
             self.assertEqual(data["capture_session_id"], "session-1")
+            self.assertEqual(data["capture_type"], "PHYSICAL_INVENTORY")
             self.assertEqual([record["mobile_image_id"] for record in data["records"]], ["img-1", "img-2"])
             self.assertEqual(data["records"][0]["filename"], "000001_front.jpg")
+            self.assertIn("Physical_Inventory_Conversion", str(capture_file))
+            self.assertNotIn("ETB-001-C", capture_file.parent.name)
+
+    def test_stage_session_routes_new_capture_to_root_capture_folder(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            with (
+                mock.patch.object(queue, "MOBILE_PROCESSING_DIR", root / "MobileCapture" / "Processing"),
+                mock.patch.object(queue, "CAPTURE_ROOT", root / "Capture"),
+                mock.patch.object(queue, "INVENTORY_CONVERSION_CAPTURE_ROOT", root / "Capture" / "Physical_Inventory_Conversion"),
+                mock.patch.object(queue, "INVENTORY_CONVERSION_SESSIONS_DIR", root / "inventory_conversion" / "sessions"),
+                mock.patch.object(queue, "CURRENT_INVENTORY_CONVERSION", root / "inventory_conversion" / "current.json"),
+                mock.patch.object(queue, "download_storage_object", side_effect=self.fake_download),
+                mock.patch.object(queue, "workstation_name", return_value="TEST-PC"),
+            ):
+                manifest = stage_session(
+                    {
+                        "capture_session_id": "session-new",
+                        "etb_location": "ETB-001-A",
+                        "capture_type": "NEW_CAPTURE",
+                        "created_at": "2026-07-13T12:00:00",
+                    },
+                    [
+                        {"image_id": "img-1", "storage_bucket": "mobile-capture-originals", "storage_path": "u/ETB-001-A/session-new/0001-a.jpg", "created_at": "t1"},
+                    ],
+                )
+            capture_file = Path(manifest["capture_session_file"])
+            data = json.loads(capture_file.read_text(encoding="utf-8"))
+            self.assertEqual(capture_file.parent.parent, root / "Capture")
+            self.assertEqual(data["capture_type"], "NEW_CAPTURE")
+            self.assertEqual(data["capture_workflow"], "new_inventory_capture")
+            self.assertEqual(manifest["inventory_conversion_session_file"], "")
+            self.assertFalse((root / "inventory_conversion" / "current.json").exists())
+
+    def test_next_capture_folder_uses_dot_suffixes(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "Capture" / "01.02.26").mkdir(parents=True)
+            (root / "Capture" / "01.02.26.1").mkdir(parents=True)
+            with (
+                mock.patch.object(queue, "CAPTURE_ROOT", root / "Capture"),
+                mock.patch.object(queue, "today_folder_name", return_value="01.02.26"),
+            ):
+                self.assertEqual(queue.next_capture_folder("NEW_CAPTURE").name, "01.02.26.2")
 
     def test_local_folder_helper_reads_manifest_capture_folder(self):
         with tempfile.TemporaryDirectory() as tmp:
