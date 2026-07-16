@@ -1,5 +1,25 @@
 # Changelog
 
+## CardVector Mobile Unified Capture Entry And Location Management
+
+### Added
+
+- Added authenticated main-ETB and no-QR mobile capture setup flows that reuse
+  the existing camera, IndexedDB, upload, crop, and capture-session path.
+- Added private Supabase ETB/location identity tables, operator authorization,
+  authenticated reads, and an atomic next-location RPC.
+- Added desktop ETB/location synchronization with offline-safe best-effort queue
+  integration and an explicit `sync-locations` command.
+- Added lightweight same-device draft resume/discard for the signed-in operator.
+
+### Safety
+
+- Direct location QR behavior, preview-matched cropping, Photo Library fallback,
+  authenticated Storage uploads, atomic queue claims, and dated routing remain
+  unchanged.
+- Location creation requires manual production migration activation and operator
+  authorization; anonymous and direct browser inserts are denied.
+
 ## CardVector Mobile Preview-Matched Camera Capture
 
 ### Fixed

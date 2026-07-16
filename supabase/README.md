@@ -21,6 +21,7 @@ Apply:
 supabase/migrations/20260713153000_mobile_capture.sql
 supabase/migrations/20260713170000_mobile_capture_authenticated_grants.sql
 supabase/migrations/20260716090000_mobile_capture_type.sql
+supabase/migrations/20260716130000_mobile_location_registry.sql
 ```
 
 The migration creates or safely reconciles:
@@ -34,6 +35,8 @@ The migration creates or safely reconciles:
 - RLS policies for authenticated operators
 - private `mobile-capture-originals` bucket
 - Storage policies for authenticated operator-owned paths
+- private cloud ETB/location identity tables
+- authorized read policies and secure atomic next-location RPC
 
 ## Required Supabase Project Steps
 
@@ -53,6 +56,13 @@ mobile-capture-originals
 ```
 
 5. Confirm table RLS is enabled and policies exist.
+6. Authorize the intended operator for location management using the statement
+   documented in `Docs/Reference/MOBILE_LOCATION_SYNC.md`.
+7. Run the initial desktop location synchronization:
+
+```powershell
+py Platform\Putnam_OS\System\tools\mobile_capture_queue.py sync-locations
+```
 
 ## Browser Configuration
 
@@ -119,6 +129,12 @@ Mark failed if staging or conversion fails:
 
 ```powershell
 py Platform\Putnam_OS\System\tools\mobile_capture_queue.py fail <capture_session_id> --message "reason"
+```
+
+Synchronize ETB/location identity:
+
+```powershell
+py Platform\Putnam_OS\System\tools\mobile_capture_queue.py sync-locations
 ```
 
 ## Storage Path Contract

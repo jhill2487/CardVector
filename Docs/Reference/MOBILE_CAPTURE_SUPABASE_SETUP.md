@@ -15,6 +15,9 @@ GitHub Pages remains the static host for `cardvector.app`. The browser receives 
 - Supabase Auth with operator accounts.
 - Table: `mobile_capture_sessions`.
 - Table: `mobile_capture_images`.
+- Table: `cardvector_etbs`.
+- Table: `cardvector_locations`.
+- Table: `cardvector_location_operators`.
 - Storage bucket: `mobile-capture-originals`.
 
 ## Environment Variables
@@ -40,6 +43,7 @@ The reproducible setup now lives in:
 ```text
 supabase/migrations/20260713153000_mobile_capture.sql
 supabase/migrations/20260716090000_mobile_capture_type.sql
+supabase/migrations/20260716130000_mobile_location_registry.sql
 ```
 
 Run those migrations in the Supabase SQL editor or through the Supabase CLI after linking the project. The base migration creates the tables, indexes, lifecycle checks, trigger-based compatibility aliases, RLS policies, private storage bucket, MIME/size limits, and storage object policies. The capture-type migration adds the explicit Phase 2 workflow field.
@@ -50,6 +54,11 @@ Supported `mobile_capture_sessions.capture_type` values:
 - `PHYSICAL_INVENTORY`
 
 Existing blank or older sessions default to `PHYSICAL_INVENTORY` for backward-compatible desktop staging.
+
+The location migration adds private authenticated ETB/location reads and the
+authorized, atomic `cardvector_create_next_location` RPC. Production requires an
+explicit operator authorization row and an initial desktop `sync-locations`
+run. See `Docs/Reference/MOBILE_LOCATION_SYNC.md`.
 
 ## Live Camera Viewport Contract
 
@@ -94,6 +103,12 @@ If processing fails:
 
 ```powershell
 py Platform\Putnam_OS\System\tools\mobile_capture_queue.py fail <capture_session_id> --message "reason"
+```
+
+Synchronize ETB/location identity:
+
+```powershell
+py Platform\Putnam_OS\System\tools\mobile_capture_queue.py sync-locations
 ```
 
 ## Runtime Paths

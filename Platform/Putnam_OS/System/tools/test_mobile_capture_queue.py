@@ -199,6 +199,7 @@ class MobileCaptureQueueTests(unittest.TestCase):
     def test_service_process_uses_claim_load_stage_sequence(self):
         service = MobileCaptureQueueService(current_workstation="TEST-PC")
         with (
+            mock.patch.object(queue, "sync_cloud_location_registry", return_value={"changed": False}),
             mock.patch.object(queue, "claim_session", return_value={"capture_session_id": "session-1"}),
             mock.patch.object(queue, "load_session_images", return_value=[{"image_id": "img-1"}]),
             mock.patch.object(queue, "stage_session", return_value={"capture_folder": "folder"}) as stage,

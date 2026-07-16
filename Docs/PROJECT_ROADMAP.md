@@ -72,6 +72,9 @@ Current production capability:
 - CardVector OS includes a Capture Queue workspace for reviewing,
   claiming, staging, retrying, and completing Mobile Capture sessions through
   the existing Physical Inventory Conversion workflow.
+- Mobile entry supports direct location QR, main ETB QR, and no-QR capture
+  setup through one shared capture implementation. Cloud location creation
+  remains pending production migration activation and live mobile validation.
 
 Known limitations:
 
