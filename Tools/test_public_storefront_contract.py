@@ -14,6 +14,7 @@ EXPECTED_URLS = {
     "EBAY_STORE_URL": "https://ebay.io/m/gttiV0",
     "TCGPLAYER_STORE_URL": "https://www.tcgplayer.com/sellers/Putnam-Collectibles/747c057d",
     "WHATNOT_REFERRAL_URL": "https://whatnot.com/invite/putnam_collectibles",
+    "WHATNOT_SELLER_REFERRAL_URL": "https://whatnot.com/invite/seller/putnam_collectibles",
     "COLLECTION_INQUIRY_URL": "https://tally.so/r/ob1ABN",
 }
 
@@ -80,8 +81,11 @@ class PublicStorefrontContractTests(unittest.TestCase):
             self.assertIn(route_id, self.source_html)
 
     def test_whatnot_copy_is_clear_and_non_guaranteed(self):
-        self.assertIn("Shop Live on Whatnot", self.source_html)
+        self.assertIn("Whatnot Referral Bonuses", self.source_html)
+        self.assertIn("New to Whatnot?", self.source_html)
+        self.assertIn("Interested in Selling?", self.source_html)
         self.assertIn("any available new-user promotional credit", self.source_html)
+        self.assertIn("any available new-seller promotional bonus", self.source_html)
         self.assertIn("credit eligibility are determined by Whatnot and may change", self.source_html)
         self.assertNotRegex(self.source_html, r"\$\d+[^<]*Whatnot")
 

@@ -7,6 +7,8 @@
 - Added side-by-side eBay and TCGplayer shopping destinations using centralized public-site configuration.
 - Consolidated collection and Near Mint English bulk inquiries under one Sell Your Collection destination while preserving `/sell`, `/bulk`, and `/buylist` routes.
 - Promoted the existing Whatnot referral into a homepage callout with clear, non-guaranteed promotional-credit disclosure.
+- Expanded the Whatnot callout into separate new-buyer and prospective-seller referral options with eligibility disclosures.
+- Added polished marketplace buttons that use correctly spelled plain-text marketplace names without copying restricted third-party logos.
 - Replaced the phone-width horizontal navigation scroller with a compact touch-friendly menu.
 
 ### Safety
