@@ -10,6 +10,11 @@ Date: 2026-07-13
 
 `jhill2487/CardVector-site` is the public deployment repository for `cardvector.app`. It is generated from `CardVector/Docs` and should not be edited manually.
 
+Public marketplace and inquiry destinations are maintained once in
+`Docs/site-config.json`. The exporter resolves those values into direct HTML and
+JavaScript links so the storefront remains navigable when JavaScript is unavailable.
+Placeholder or non-HTTPS values stop the export.
+
 ## Deployment Flow
 
 ```text

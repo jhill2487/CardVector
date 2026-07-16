@@ -1,5 +1,19 @@
 # Changelog
 
+## Putnam Collectibles Public Storefront Navigation
+
+### Changed
+
+- Added side-by-side eBay and TCGplayer shopping destinations using centralized public-site configuration.
+- Consolidated collection and Near Mint English bulk inquiries under one Sell Your Collection destination while preserving `/sell`, `/bulk`, and `/buylist` routes.
+- Promoted the existing Whatnot referral into a homepage callout with clear, non-guaranteed promotional-credit disclosure.
+- Replaced the phone-width horizontal navigation scroller with a compact touch-friendly menu.
+
+### Safety
+
+- No CardVector desktop, mobile capture, Supabase, pricing, or inventory behavior changed.
+- Public export validation rejects missing marketplace URLs, unresolved configuration tokens, and placeholder URLs.
+
 ## CardVector Platform v1.3.0 - Workflow Conductor Desktop
 
 ### Changed
