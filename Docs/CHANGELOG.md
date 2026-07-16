@@ -1,5 +1,23 @@
 # Changelog
 
+## CardVector Platform v1.3.0 - Workflow Conductor Desktop
+
+### Changed
+
+- Simplified production navigation to Home, Capture, Processing, Marketplace, Orders, and Settings.
+- Rebuilt Home around real Pending Work, the newest verified local eBay Active Listings CSV, and actionable Business Alerts.
+- Merged CardUploader import, pricing review, and eBay export handoff into Processing.
+- Simplified Capture around desktop capture, mobile capture, pending mobile sessions, staged folders, and the existing preview rail.
+- Moved Decision Engine and Marketplace Intelligence off Home and moved capture tuning, workflow links, location sync, and diagnostics under Settings.
+- Added bounded workflow context files beside capture sessions so CardUploader, imported CSV, pricing output, and eBay handoffs retain the exact source folder.
+- Moved pricing analysis and export preparation off the Tkinter main thread while keeping confirmations on the UI thread.
+- Removed Verified Inventory Review UI entry points; legacy audit code remains retained for backward compatibility.
+
+### Safety
+
+- Mobile camera cropping, authenticated Supabase upload, atomic queue claiming, dated capture routing, CardUploader parsing, pricing calculations, and eBay CSV columns were not changed.
+- Active Listings is labeled as a local CSV source with its actual refresh time; no live eBay connection is claimed.
+
 ## CardVector Mobile Unified Capture Entry And Location Management
 
 ### Added

@@ -66,7 +66,12 @@ Current deployment reference:
 Current desktop queue implementation:
 
 - `Platform/Putnam_OS/System/tools/mobile_capture_queue.py`
-- CardVector OS workspace: `Capture Queue`
+- CardVector OS workspace: `Capture`, with detailed `Capture Queue` available contextually
+
+Current desktop workflow implementation:
+
+- `Platform/Putnam_OS/System/app/workflow_context.py`
+- CardVector OS workspaces: `Home`, `Capture`, `Processing`, `Marketplace`, `Orders`, `Settings`
 
 Reference documents expand upon the canonical documents but do not define project architecture.
 

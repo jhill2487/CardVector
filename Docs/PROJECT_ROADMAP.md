@@ -20,6 +20,12 @@ All roadmap items should:
 - Preserve workflow stability.
 - Be validated in production.
 
+Current desktop direction:
+
+- CardVector OS is a workflow conductor, not a replacement for CardUploader or eBay.
+- The production path is Capture -> CardUploader -> Processing -> eBay.
+- Home remains limited to actionable pending work, active-listings freshness, and business alerts.
+
 ---
 
 # Active Epic 1 — Order Fulfillment Foundation
@@ -123,6 +129,7 @@ Future work may include:
 - Additional hardware support
 - Additional marketplace integrations
 - Quality-of-life improvements
+- ETB creation and broader storage-management redesign
 
 These items should be implemented only when driven by demonstrated operational need.
 

@@ -165,17 +165,27 @@ Primary responsibilities:
 - Business analytics
 - Future marketplace automation
 
-#### Current Production Workflow: v1.2.2
+#### Current Production Workflow: v1.3.0
 
-CardVector Platform v1.2.2 applies UI Foundation v1 to the existing app shell:
-dark professional theme, bronze accent, compact toolbar, bottom status bar,
-status dots, outlined buttons, and modern desktop table styling.
+CardVector OS is the workflow conductor for:
+
+```text
+Capture -> CardUploader -> Processing -> eBay Upload
+```
+
+The production navigation is Home, Capture, Processing, Marketplace, Orders,
+and Settings. Home contains only actionable Pending Work, source-labeled Active
+Listings, and contextual Business Alerts. Processing owns CardUploader CSV
+import, pricing review, and the eBay export handoff.
+
+CardVector does not replace CardUploader recognition, CardUploader managed
+inventory, or eBay fulfillment.
 
 #### Mobile Capture Queue
 
-CardVector OS includes a `Capture Queue` workspace in the Operations navigation.
-It is the desktop processing surface for authenticated phone captures that have
-reached `PENDING_CONVERSION` in Supabase.
+CardVector OS automatically polls authenticated phone captures that reach
+`PENDING_CONVERSION` in Supabase. Queue summaries appear in Capture and
+Processing; the detailed `Capture Queue` remains available as a contextual tool.
 
 Required desktop environment variables:
 
@@ -185,15 +195,13 @@ Required desktop environment variables:
 Operator flow:
 
 1. Open CardVector OS.
-2. Open `Capture Queue`.
-3. Refresh the queue or enable conservative 30-second auto-refresh.
-4. Select a `Pending` session.
-5. Choose `Process Selected`.
-6. Confirm originals are downloaded and staged under
+2. Leave the automatic queue running.
+3. CardVector atomically claims pending sessions and downloads originals.
+4. `NEW_CAPTURE` is staged under `Capture/MM.DD.YY`.
+5. `PHYSICAL_INVENTORY` is staged under
    `Capture/Physical_Inventory_Conversion/MM.DD.YY`.
-7. Open the local folder or launch the Inventory page for Physical Inventory
-   Conversion.
-8. Mark the Mobile Capture session complete only after downstream conversion
+6. Continue the exact staged folder from Home, Capture, or Processing.
+7. Mark the Mobile Capture session complete only after downstream conversion
    succeeds.
 
 Queue statuses:

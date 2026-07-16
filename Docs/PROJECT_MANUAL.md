@@ -192,6 +192,25 @@ CardVector remains the authority for physical inventory.
 
 # 5. Platform Architecture
 
+## Workflow Conductor
+
+CardVector OS coordinates the daily business workflow:
+
+```text
+Capture
+-> CardUploader
+-> Import and Pricing Review
+-> eBay Upload
+```
+
+CardVector owns workflow context and handoffs. CardUploader owns card
+recognition and managed marketplace inventory. eBay owns listing publication
+and fulfillment. CardVector should not duplicate those external systems.
+
+The desktop workspace keeps lightweight job context beside capture sessions so
+the operator can resume the correct folder, imported CSV, pricing output, or
+eBay handoff without searching.
+
 ## Shared Operational Data
 
 Business data is shared independently from source code.
@@ -257,6 +276,25 @@ CardVector is a tool, not a tutorial.
 A stable interface is considered a feature.
 
 Layouts should change only when they provide measurable operational benefit.
+
+## Daily Desktop Navigation
+
+The production navigation is limited to:
+
+- Home
+- Capture
+- Processing
+- Marketplace
+- Orders
+- Settings
+
+Home answers what needs attention next and contains only Pending Work, Active
+Listings, and Business Alerts. Processing owns the CardUploader CSV import,
+pricing review, and eBay export handoff. Progress is visible only while work is
+running.
+
+Acquisition tracking and historical inventory-review code may remain for
+backward compatibility, but they are not part of the daily production UI.
 
 ## Mobile & QR
 
