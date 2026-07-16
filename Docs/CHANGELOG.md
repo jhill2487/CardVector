@@ -1,5 +1,22 @@
 # Changelog
 
+## CardVector Mobile Preview-Matched Camera Capture
+
+### Fixed
+
+- Live camera JPEGs now use the visible centered `object-fit: cover` source
+  region instead of the wider full camera sensor frame.
+- Added a non-captured 63:88 card-positioning guide and bounded 1800-pixel JPEG
+  output at quality 0.90.
+- Improved temporary thumbnail object-URL cleanup for larger capture sessions.
+
+### Safety
+
+- Photo Library images remain uncropped.
+- Supabase authentication, authenticated Storage upload, capture types,
+  IndexedDB recovery, queue processing, atomic claims, and desktop routing are
+  unchanged.
+
 ## CardVector Mobile Capture Phase 2
 
 ### Added

@@ -213,6 +213,11 @@ under `Capture/MM.DD.YY`; `PHYSICAL_INVENTORY` stages under
 `Capture/Physical_Inventory_Conversion/MM.DD.YY`. Existing blank capture-type
 sessions default to `PHYSICAL_INVENTORY`.
 
+The in-browser camera saves the same centered `object-fit: cover` viewport shown
+in the live preview. A 63:88 guide helps position a card but is not included in
+the JPEG. Photo Library files are uploaded without applying the live-preview
+crop.
+
 #### Production Workflow: v1.2.1
 
 CardVector Platform v1.2.1 adds a shared OBS WebSocket connection manager for

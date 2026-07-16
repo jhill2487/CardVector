@@ -51,6 +51,17 @@ Supported `mobile_capture_sessions.capture_type` values:
 
 Existing blank or older sessions default to `PHYSICAL_INVENTORY` for backward-compatible desktop staging.
 
+## Live Camera Viewport Contract
+
+Live-camera stills use the same centered `object-fit: cover` viewport shown on
+screen. CardVector reads the native video dimensions and rendered preview size,
+then draws only the visible centered source rectangle to a JPEG canvas at up to
+1800 pixels on its longest edge and quality 0.90.
+
+The 63:88 card outline is a positioning guide layered over the video and is not
+drawn into the saved image. Images selected through Photo Library are preserved
+as selected and are not processed through the live-camera viewport crop.
+
 Detailed setup and validation steps live in:
 
 ```text

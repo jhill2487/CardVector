@@ -140,6 +140,24 @@ class MobileCaptureSupabaseContractTests(unittest.TestCase):
         self.assertIn("Finish Session", self.app_js)
         self.assertIn("Choose from Photo Library", self.app_js)
 
+    def test_live_camera_capture_matches_centered_cover_preview(self):
+        for contract in (
+            "calculateCoverCrop",
+            "video.videoWidth",
+            "video.videoHeight",
+            "video.getBoundingClientRect()",
+            "crop.sourceX",
+            "crop.sourceY",
+            "crop.sourceWidth",
+            "crop.sourceHeight",
+            '"image/jpeg", 0.9',
+            '"LIVE_CAMERA"',
+            '"PHOTO_LIBRARY"',
+        ):
+            self.assertIn(contract, self.app_js)
+
+        self.assertNotIn("context.drawImage(video, 0, 0, canvas.width, canvas.height)", self.app_js)
+
 
 if __name__ == "__main__":
     unittest.main()
