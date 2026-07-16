@@ -44,8 +44,7 @@ MOBILE_FAILED_DIR = MOBILE_CAPTURE_ROOT / "Failed"
 INVENTORY_CONVERSION_DIR = PUTNAM_OS_DIR / "System" / "data" / "inventory_conversion"
 INVENTORY_CONVERSION_SESSIONS_DIR = INVENTORY_CONVERSION_DIR / "sessions"
 CURRENT_INVENTORY_CONVERSION = INVENTORY_CONVERSION_DIR / "current_inventory_conversion.json"
-CAPTURE_ROOT = ROOT / "Capture"
-INVENTORY_CONVERSION_CAPTURE_ROOT = CAPTURE_ROOT / "Physical_Inventory_Conversion"
+INVENTORY_CONVERSION_CAPTURE_ROOT = ROOT / "Capture" / "Physical_Inventory_Conversion"
 
 
 class MobileCaptureError(RuntimeError):
@@ -90,32 +89,8 @@ def today_folder_name(now: datetime | None = None) -> str:
     return (now or datetime.now()).strftime("%m.%d.%y")
 
 
-def session_capture_type(session: dict[str, Any]) -> str:
-    """Return the normalized capture workflow.
-
-    Existing mobile sessions predate capture-type selection, so they safely
-    default to Physical Inventory Conversion.
-    """
-    device = session.get("source_device") or session.get("device") or {}
-    raw = (
-        session.get("capture_type")
-        or (device.get("capture_type") if isinstance(device, dict) else "")
-        or "PHYSICAL_INVENTORY"
-    )
-    normalized = str(raw or "").strip().upper().replace("-", "_").replace(" ", "_")
-    if normalized in {"NEW", "NEW_CAPTURE", "NEW_INVENTORY"}:
-        return "NEW_CAPTURE"
-    return "PHYSICAL_INVENTORY"
-
-
-def next_capture_folder(capture_type: str = "PHYSICAL_INVENTORY") -> Path:
-    """Create the next canonical dated capture folder.
-
-    New captures land directly under Capture. Legacy physical-inventory
-    sessions land under Capture/Physical_Inventory_Conversion. The first
-    session of a day uses MM.DD.YY; later sessions use .1, .2, and so on.
-    """
-    root = CAPTURE_ROOT if capture_type == "NEW_CAPTURE" else INVENTORY_CONVERSION_CAPTURE_ROOT
+def next_capture_folder(location_id: str) -> Path:
+    root = INVENTORY_CONVERSION_CAPTURE_ROOT / safe_path_part(location_id)
     root.mkdir(parents=True, exist_ok=True)
     base = today_folder_name()
     candidate = root / base
@@ -335,8 +310,7 @@ def stage_session(session: dict[str, Any], images: list[dict[str, Any]]) -> dict
     session_id = str(session["capture_session_id"])
     processing_dir = MOBILE_PROCESSING_DIR / safe_path_part(session_id)
     originals_dir = processing_dir / "originals"
-    capture_type = session_capture_type(session)
-    capture_folder = next_capture_folder(capture_type)
+    capture_folder = next_capture_folder(location_id)
     records = []
 
     for index, image in enumerate(images, start=1):
@@ -374,36 +348,33 @@ def stage_session(session: dict[str, Any], images: list[dict[str, Any]]) -> dict
         "etb": etb,
         "location": location,
         "location_id": location_id,
-        "capture_type": capture_type,
-        "capture_workflow": "new_inventory_capture" if capture_type == "NEW_CAPTURE" else "front_only_legacy_inventory_conversion",
+        "capture_workflow": "front_only_legacy_inventory_conversion",
     }
     write_json(capture_folder / "capture_session.json", capture_session)
 
-    session_path: Path | None = None
-    if capture_type == "PHYSICAL_INVENTORY":
-        conversion_session_id = f"conversion_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
-        conversion_session = {
-            "session_id": conversion_session_id,
-            "session_type": "physical_inventory_conversion",
-            "created_at": session.get("created_at") or iso_now(),
-            "updated_at": iso_now(),
-            "etb": etb,
-            "location": location,
-            "location_id": location_id,
-            "operator": session.get("operator", ""),
-            "status": "Mobile Capture Staged",
-            "expected_capacity": DEFAULT_ETB_LOCATION_CAPACITY,
-            "cards_captured": len(records),
-            "capture_folder": str(capture_folder),
-            "capture_session_file": str(capture_folder / "capture_session.json"),
-            "mobile_capture_session_id": session_id,
-            "source": "MOBILE_WEB",
-            "workflow_state": "Pending Physical Inventory Conversion",
-            "notes": "Mobile originals staged for existing Physical Inventory Conversion. CardUploader remains the recognition system.",
-        }
-        session_path = INVENTORY_CONVERSION_SESSIONS_DIR / f"{conversion_session_id}.json"
-        write_json(session_path, conversion_session)
-        write_json(CURRENT_INVENTORY_CONVERSION, conversion_session)
+    conversion_session_id = f"conversion_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+    conversion_session = {
+        "session_id": conversion_session_id,
+        "session_type": "physical_inventory_conversion",
+        "created_at": session.get("created_at") or iso_now(),
+        "updated_at": iso_now(),
+        "etb": etb,
+        "location": location,
+        "location_id": location_id,
+        "operator": session.get("operator", ""),
+        "status": "Mobile Capture Staged",
+        "expected_capacity": DEFAULT_ETB_LOCATION_CAPACITY,
+        "cards_captured": len(records),
+        "capture_folder": str(capture_folder),
+        "capture_session_file": str(capture_folder / "capture_session.json"),
+        "mobile_capture_session_id": session_id,
+        "source": "MOBILE_WEB",
+        "workflow_state": "Pending Physical Inventory Conversion",
+        "notes": "Mobile originals staged for existing Physical Inventory Conversion. CardUploader recognition and Marketplace Intelligence remain downstream steps.",
+    }
+    session_path = INVENTORY_CONVERSION_SESSIONS_DIR / f"{conversion_session_id}.json"
+    write_json(session_path, conversion_session)
+    write_json(CURRENT_INVENTORY_CONVERSION, conversion_session)
 
     manifest = {
         "mobile_capture_session": session,
@@ -412,8 +383,7 @@ def stage_session(session: dict[str, Any], images: list[dict[str, Any]]) -> dict
         "originals_dir": str(originals_dir),
         "capture_folder": str(capture_folder),
         "capture_session_file": str(capture_folder / "capture_session.json"),
-        "inventory_conversion_session_file": str(session_path) if session_path else "",
-        "capture_type": capture_type,
+        "inventory_conversion_session_file": str(session_path),
         "staged_at": iso_now(),
         "workstation": workstation_name(),
     }
@@ -528,31 +498,6 @@ class MobileCaptureQueueService:
             update_session_status(session_id, "FAILED", sanitize_error_message(exc))
             raise
         return manifest
-
-    def process_next_pending(self) -> dict[str, Any] | None:
-        """Atomically claim and stage the oldest pending session, if any."""
-        pending = list_pending_sessions(limit=1)
-        if not pending:
-            return None
-        session_id = str(pending[0].get("capture_session_id") or "")
-        if not session_id:
-            return None
-        try:
-            return self.process(session_id)
-        except MobileCaptureError as exc:
-            # Another workstation may claim the row between the list and PATCH.
-            if "already claimed" in str(exc).lower() or "not pending" in str(exc).lower():
-                return None
-            raise
-
-    def process_all_pending(self, limit: int = 25) -> list[dict[str, Any]]:
-        manifests = []
-        for _index in range(max(0, int(limit))):
-            manifest = self.process_next_pending()
-            if not manifest:
-                break
-            manifests.append(manifest)
-        return manifests
 
     def complete(self, session_id: str) -> dict[str, Any]:
         row = update_session_status(session_id, "CONVERTED")

@@ -3675,10 +3675,7 @@ class PutnamOS(BaseTk):
         self.capture_queue_rows = []
         self.capture_queue_refresh_running = False
         self.capture_queue_auto_after_id = None
-        self.capture_queue_auto_var = tk.BooleanVar(value=True)
-        self.capture_queue_zero_touch_running = False
-        self.capture_queue_zero_touch_after_id = None
-        self.capture_queue_last_staged_folder = ""
+        self.capture_queue_auto_var = tk.BooleanVar(value=False)
         self.capture_session = None
         self.inventory_conversion_session = load_current_inventory_conversion_session()
         self.inventory_conversion_capture_service = None
@@ -3722,7 +3719,6 @@ class PutnamOS(BaseTk):
         self.build_styles()
         self.build_ui()
         self.after(900, self.auto_check_obs_connection)
-        self.after(1400, self.capture_queue_start_zero_touch)
 
     def build_styles(self):
         s = ttk.Style(self)
@@ -4421,6 +4417,7 @@ class PutnamOS(BaseTk):
             anchor="w",
         ).pack(anchor="w", fill="x", padx=18, pady=(0, 8))
         action_row = self.button_bar(actions, pad_y=(0, 12))
+        self.primary_button(action_row, "Process Selected", self.capture_queue_process_selected_ui).pack(side="left")
         self.action_button(action_row, "Open Local Folder", self.capture_queue_open_local_folder_ui).pack(side="left", padx=8)
         self.action_button(action_row, "Launch Physical Inventory Conversion", self.capture_queue_launch_conversion_ui).pack(side="left", padx=8)
         self.action_button(action_row, "Mark Complete", self.capture_queue_mark_complete_ui).pack(side="left", padx=8)
@@ -4429,7 +4426,7 @@ class PutnamOS(BaseTk):
 
         self.label(
             actions,
-            "Zero-touch capture is active. Pending mobile sessions are claimed automatically, downloaded, and staged into the canonical Capture folder. Completion remains an explicit operator action.",
+            "Processing claims a pending session, downloads originals, stages Capture/Physical_Inventory_Conversion input, and leaves completion for explicit operator confirmation.",
             9,
             BRAND["muted2"],
             False,
@@ -4614,74 +4611,25 @@ class PutnamOS(BaseTk):
                 pass
         self.capture_queue_auto_after_id = None
 
-    def capture_queue_start_zero_touch(self):
-        """Start the global mobile-capture watcher.
-
-        This runs while CardVector is open, independent of the currently
-        visible page. Atomic database claiming prevents two workstations from
-        staging the same session.
-        """
-        self.capture_queue_schedule_zero_touch(250)
-
-    def capture_queue_schedule_zero_touch(self, delay_ms=15000):
-        after_id = getattr(self, "capture_queue_zero_touch_after_id", None)
-        if after_id:
-            try:
-                self.after_cancel(after_id)
-            except Exception:
-                pass
-        self.capture_queue_zero_touch_after_id = self.after(delay_ms, self.capture_queue_zero_touch_tick)
-
-    def capture_queue_zero_touch_tick(self):
-        if getattr(self, "capture_queue_zero_touch_running", False):
-            self.capture_queue_schedule_zero_touch()
+    def capture_queue_process_selected_ui(self):
+        row = self.capture_queue_selected_row()
+        if not row:
+            messagebox.showinfo("Capture Queue", "Select a pending session first.")
             return
-        ready, message = self.mobile_capture_queue_service.environment_ready()
-        if not ready:
-            self.status.set("Mobile capture auto-sync waiting for Supabase setup.")
-            if hasattr(self, "capture_queue_connection_var"):
-                self.capture_queue_connection_var.set(f"Connection: setup/error - {sanitize_error_message(message)}")
-            self.capture_queue_schedule_zero_touch(30000)
+        if row.get("status") != "PENDING_CONVERSION":
+            messagebox.showinfo("Capture Queue", "Only Pending sessions can be processed.")
             return
+        session_id = row["capture_session_id"]
 
-        self.capture_queue_zero_touch_running = True
+        def success(manifest):
+            append_activity(f"Mobile capture session staged: {session_id}")
+            self.status.set(f"Staged mobile capture session: {session_id}")
+            self.capture_queue_refresh_ui()
+            folder = manifest.get("capture_folder")
+            if folder:
+                self.capture_queue_selected_var.set(f"Staged: {session_id} | {folder}")
 
-        def worker():
-            try:
-                manifest = self.mobile_capture_queue_service.process_next_pending()
-            except Exception as exc:
-                self.after(0, lambda: self.capture_queue_zero_touch_failed(sanitize_error_message(exc)))
-                return
-            self.after(0, lambda: self.capture_queue_zero_touch_finished(manifest))
-
-        threading.Thread(target=worker, daemon=True).start()
-
-    def capture_queue_zero_touch_finished(self, manifest):
-        self.capture_queue_zero_touch_running = False
-        if manifest:
-            session = manifest.get("mobile_capture_session") or {}
-            session_id = str(session.get("capture_session_id") or "")
-            folder = str(manifest.get("capture_folder") or "")
-            self.capture_queue_last_staged_folder = folder
-            append_activity(f"Mobile capture auto-staged: {session_id} -> {folder}")
-            self.status.set(f"Mobile capture ready: {Path(folder).name if folder else session_id}")
-            if hasattr(self, "capture_queue_selected_var"):
-                self.capture_queue_selected_var.set(f"Automatically staged: {session_id} | {folder}")
-            if getattr(self, "current_page", "") == "Capture Queue":
-                self.capture_queue_refresh_ui()
-            # Check again quickly so multiple uploaded sessions drain without
-            # waiting a full polling interval.
-            self.capture_queue_schedule_zero_touch(500)
-            return
-        self.capture_queue_schedule_zero_touch()
-
-    def capture_queue_zero_touch_failed(self, message):
-        self.capture_queue_zero_touch_running = False
-        self.status.set("Mobile capture auto-sync failed; session remains visible in Capture Queue.")
-        if hasattr(self, "capture_queue_connection_var"):
-            self.capture_queue_connection_var.set(f"Auto-sync error: {message}")
-        append_activity(f"Mobile capture auto-sync failed: {message}")
-        self.capture_queue_schedule_zero_touch(30000)
+        self.capture_queue_run_background("Processing mobile capture session...", lambda: self.mobile_capture_queue_service.process(session_id), success)
 
     def capture_queue_mark_complete_ui(self):
         row = self.capture_queue_selected_row()
