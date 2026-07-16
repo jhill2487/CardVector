@@ -1,5 +1,19 @@
 # Changelog
 
+## CardVector Platform v1.3.0 - Workflow Conductor Desktop
+
+### Changed
+
+- Simplified production navigation to Home, Capture, Processing, Marketplace, Orders, and Settings.
+- Rebuilt Home with actionable Pending Work, source-labeled Active Listings, and contextual Business Alerts.
+- Merged CardUploader import, pricing review, and eBay export handoff into Processing.
+- Added lightweight capture-folder workflow context and non-blocking pricing execution.
+- Removed Verified Inventory Review from the production UI while retaining legacy backend code.
+
+### Safety
+
+- Capture, Supabase upload, queue claiming, CardUploader parsing, pricing calculations, and eBay export columns remain unchanged.
+
 ## CardVector Platform v1.2.2 - UI Foundation v1
 
 ### Changed

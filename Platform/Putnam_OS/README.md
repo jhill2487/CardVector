@@ -3,10 +3,31 @@
 CardVector OS is the operating workspace for Putnam Collectibles inventory,
 pricing, SKU/location logic, work sessions, and eBay-ready CSV workflows.
 
+## CardVector Platform v1.3.0
+
+v1.3.0 makes CardVector OS a minimal workflow conductor.
+
+Production navigation:
+
+- Home
+- Capture
+- Processing
+- Marketplace
+- Orders
+- Settings
+
+Home is limited to Pending Work, Active Listings, and Business Alerts.
+Processing combines CardUploader CSV intake, pricing review, and eBay export
+handoff while retaining the exact capture-folder context. Pricing work runs in
+the background and progress is hidden while idle.
+
+CardVector coordinates Capture -> CardUploader -> Processing -> eBay. It does
+not replace recognition, managed marketplace inventory, or fulfillment systems.
+
 ## CardVector Platform v1.2.2
 
-v1.2.2 applies CardVector UI Foundation v1 to the existing production shell,
-shared controls, status indicators, and tables.
+v1.2.2 applied CardVector UI Foundation v1 to the production shell, shared
+controls, status indicators, and tables.
 
 ## CardVector Platform v1.2.1
 

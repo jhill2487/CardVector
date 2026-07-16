@@ -45,14 +45,26 @@ from Platform.putnam_paths import (
 
 from Platform.Putnam_OS.System.MarketIntelligence.Pricing import build_pricing_decision
 from Platform.Putnam_OS.System.tools.mobile_capture_queue import (
+    MOBILE_FAILED_DIR,
+    MOBILE_PROCESSING_DIR,
     MobileCaptureQueueService,
     filter_session_rows,
     queue_summary,
     sanitize_error_message,
 )
+from workflow_context import (
+    active_listings_summary,
+    business_alerts,
+    discover_workflow_jobs,
+    group_processing_jobs,
+    jobs_from_queue_rows,
+    merge_job_lists,
+    recent_completed_jobs,
+    update_workflow_context,
+)
 
-APP_VERSION = "1.2.2"
-PLATFORM_VERSION = "CardVector Platform v1.2.2"
+APP_VERSION = "1.3.0"
+PLATFORM_VERSION = "CardVector Platform v1.3.0"
 APP_NAME = "CardVector OS"
 FLOOR = 0.99
 REVIEW_THRESHOLD = 20.00
@@ -148,6 +160,8 @@ STATUS_COLORS = {
 NAV_ICONS = {
     "Home": "[H]",
     "Capture": "[C]",
+    "Processing": "[>]",
+    "Marketplace": "[$]",
     "Import": "[I]",
     "Pricing": "[$]",
     "Inventory": "[N]",
@@ -191,7 +205,15 @@ BUTTON_ICONS = {
     "Open": "[O]",
     "Open Capture": "[O]",
     "Open Capture Folder": "[O]",
+    "Open Folder": "[O]",
+    "Open Export Folder": "[O]",
     "Open CardUploader": "[O]",
+    "Open Mobile Capture Website": "[O]",
+    "Open eBay Seller Hub": "[O]",
+    "Open eBay Upload": "[O]",
+    "Open Capture Queue": "[O]",
+    "Open Marketplace Intelligence": "[O]",
+    "Open Inventory Tools": "[O]",
     "Open Completed Jobs": "[O]",
     "Open Content Folder": "[O]",
     "Open Exports": "[O]",
@@ -219,6 +241,7 @@ BUTTON_ICONS = {
     "Return Home": "[H]",
     "Save": "[S]",
     "Save Auto Settings": "[S]",
+    "Save Workflow Links": "[S]",
     "Save CardUploader URL": "[S]",
     "Save eBay Policies": "[S]",
     "Save OBS Settings": "[S]",
@@ -228,8 +251,11 @@ BUTTON_ICONS = {
     "Start Conversion": "[+]",
     "Start Location Conversion": "[+]",
     "Start Capture Session": "[+]",
+    "Start Desktop Capture": "[+]",
     "Start Review Session": "[+]",
     "Start Session": "[+]",
+    "Sync Locations": "[R]",
+    "View Processing": "[>]",
 }
 
 EXCLUDE_TERMS = [
@@ -441,7 +467,10 @@ def latest_decision_log():
 
 def load_app_config():
     defaults = {
-        "carduploader_url": "",
+        "carduploader_url": "https://carduploader.com/dashboard/history",
+        "mobile_capture_url": "https://cardvector.app/capture",
+        "ebay_seller_hub_url": "https://www.ebay.com/sh/ovw",
+        "ebay_upload_url": "https://www.ebay.com/sh/reports/uploads",
         "pricing_strategy": "market_match",
         "pricing_review_threshold": 60,
         "pricing_auto_apply_threshold": 80,
@@ -456,7 +485,8 @@ def load_app_config():
     if not isinstance(section, dict):
         return defaults
 
-    defaults["carduploader_url"] = str(section.get("carduploader_url", "") or "").strip()
+    for key in ("carduploader_url", "mobile_capture_url", "ebay_seller_hub_url", "ebay_upload_url"):
+        defaults[key] = str(section.get(key, defaults[key]) or defaults[key]).strip()
     strategy = str(section.get("pricing_strategy", "market_match") or "market_match").strip().lower()
     defaults["pricing_strategy"] = strategy if strategy in {"market_match", "fast_sell", "profit"} else "market_match"
     try:
@@ -488,6 +518,9 @@ def save_app_config(values):
     data = {
         "putnam_os": {
             "carduploader_url": str(current.get("carduploader_url", "") or "").strip(),
+            "mobile_capture_url": str(current.get("mobile_capture_url", "https://cardvector.app/capture") or "https://cardvector.app/capture").strip(),
+            "ebay_seller_hub_url": str(current.get("ebay_seller_hub_url", "https://www.ebay.com/sh/ovw") or "https://www.ebay.com/sh/ovw").strip(),
+            "ebay_upload_url": str(current.get("ebay_upload_url", "https://www.ebay.com/sh/reports/uploads") or "https://www.ebay.com/sh/reports/uploads").strip(),
             "pricing_strategy": strategy,
             "pricing_review_threshold": review_threshold,
             "pricing_auto_apply_threshold": auto_threshold,
@@ -3658,6 +3691,8 @@ class PutnamOS(BaseTk):
         self.geometry("1240x800")
         self.minsize(1100, 720)
         self.configure(bg=BRAND["bg"])
+        self.app_closing = False
+        self.protocol("WM_DELETE_WINDOW", self.close_application)
         self.option_add("*Font", self.ui_font("body"))
         self.loaded = None
         self.rows = []
@@ -3673,6 +3708,12 @@ class PutnamOS(BaseTk):
         self.capture_service = CaptureStudioService()
         self.mobile_capture_queue_service = MobileCaptureQueueService()
         self.capture_queue_rows = []
+        self.workflow_jobs = []
+        self.workflow_local_jobs = []
+        self.workflow_local_jobs_refreshed = 0.0
+        self.active_workflow_job = None
+        self.workflow_refresh_running = False
+        self.workflow_last_network_refresh = 0.0
         self.capture_queue_refresh_running = False
         self.capture_queue_auto_after_id = None
         self.capture_queue_auto_var = tk.BooleanVar(value=True)
@@ -3721,8 +3762,8 @@ class PutnamOS(BaseTk):
         self.acquisition_summary_var = tk.StringVar(value=acquisition_display_text(self.current_acquisition))
         self.build_styles()
         self.build_ui()
-        self.after(900, self.auto_check_obs_connection)
-        self.after(1400, self.capture_queue_start_zero_touch)
+        self.obs_health_after_id = self.after(900, self.auto_check_obs_connection)
+        self.capture_queue_zero_touch_after_id = self.after(1400, self.capture_queue_start_zero_touch)
 
     def build_styles(self):
         s = ttk.Style(self)
@@ -3875,15 +3916,12 @@ class PutnamOS(BaseTk):
 
         tk.Label(side, text="CARDVECTOR", bg=BRAND["sidebar"], fg=BRAND["text"],
                  font=self.ui_font("app_title", True)).pack(pady=(22, 0))
-        tk.Label(side, text=f"OS v{APP_VERSION}", bg=BRAND["sidebar"], fg=BRAND["gold"],
-                 font=self.ui_font("small", True)).pack(pady=(0, 14))
+        tk.Label(side, text="WORKFLOW OS", bg=BRAND["sidebar"], fg=BRAND["gold"],
+                 font=self.ui_font("small", True)).pack(pady=(0, 18))
 
         nav_sections = [
-            ("HOME", ["Home"]),
-            ("OPERATIONS", ["Capture", "Capture Queue", "Import", "Pricing"]),
-            ("INVENTORY", ["Inventory", "Orders", "Shipping"]),
-            ("BUSINESS", ["Content", "Analytics"]),
-            ("SYSTEM", ["Sessions", "Settings"]),
+            ("WORKSPACE", ["Home", "Capture", "Processing", "Marketplace", "Orders"]),
+            ("SYSTEM", ["Settings"]),
         ]
         for section, names in nav_sections:
             tk.Label(
@@ -3908,9 +3946,8 @@ class PutnamOS(BaseTk):
 
         bottom = tk.Frame(side, bg=BRAND["sidebar"])
         bottom.pack(side="bottom", fill="x", padx=14, pady=18)
-        tk.Label(bottom, text="Root", bg=BRAND["sidebar"], fg=BRAND["gold"], font=self.ui_font("small", True)).pack(anchor="w")
-        tk.Label(bottom, text=str(ROOT), bg=BRAND["sidebar"], fg=BRAND["muted2"], font=self.ui_font("small"),
-                 wraplength=190, justify="left").pack(anchor="w")
+        tk.Label(bottom, text=f"CardVector OS v{APP_VERSION}", bg=BRAND["sidebar"], fg=BRAND["muted2"],
+                 font=self.ui_font("small"), justify="left").pack(anchor="w")
 
         self.workspace = tk.Frame(self, bg=BRAND["bg"])
         self.workspace.pack(side="left", fill="both", expand=True)
@@ -3929,7 +3966,7 @@ class PutnamOS(BaseTk):
         ).pack(side="left", padx=(18, 12), fill="y")
         tk.Label(
             toolbar,
-            text="Capture > CardUploader > Pricing > eBay CSV > eBay Upload",
+            text="Capture  >  CardUploader  >  Pricing  >  eBay",
             bg=BRAND["toolbar"],
             fg=BRAND["muted2"],
             font=self.ui_font("label"),
@@ -3968,7 +4005,34 @@ class PutnamOS(BaseTk):
         for w in self.main.winfo_children():
             w.destroy()
 
+    def dispatch_ui(self, callback):
+        if self.app_closing:
+            return False
+        try:
+            self.after(0, callback)
+            return True
+        except (RuntimeError, tk.TclError):
+            return False
+
+    def close_application(self):
+        self.app_closing = True
+        self.capture_queue_cancel_auto_refresh()
+        for attribute in ("capture_queue_zero_touch_after_id", "auto_capture_after_id", "obs_health_after_id"):
+            after_id = getattr(self, attribute, None)
+            if after_id:
+                try:
+                    self.after_cancel(after_id)
+                except Exception:
+                    pass
+                setattr(self, attribute, None)
+        try:
+            self.destroy()
+        except tk.TclError:
+            pass
+
     def show_page(self, name):
+        aliases = {"Import": "Processing", "Pricing": "Processing"}
+        name = aliases.get(name, name)
         if getattr(self, "current_page", "") == "Capture Queue" and name != "Capture Queue":
             self.capture_queue_cancel_auto_refresh()
         self.current_page = name
@@ -3982,14 +4046,14 @@ class PutnamOS(BaseTk):
         self.clear()
         if name == "Home":
             self.home_page()
-        elif name == "Import":
-            self.import_page()
         elif name == "Capture":
             self.capture_page()
         elif name == "Capture Queue":
             self.capture_queue_page()
-        elif name == "Pricing":
-            self.pricing_page()
+        elif name == "Processing":
+            self.processing_page()
+        elif name == "Marketplace":
+            self.marketplace_page()
         elif name == "Orders":
             self.orders_page()
         elif name == "Sessions":
@@ -4199,114 +4263,195 @@ class PutnamOS(BaseTk):
         if getattr(self, "current_page", "") in {"Home", "Import", "Pricing"}:
             self.show_page(self.current_page)
 
+    def workflow_job_snapshot(self, include_completed=False, force=False):
+        if force or not self.workflow_local_jobs or time.monotonic() - self.workflow_local_jobs_refreshed > 8:
+            self.workflow_local_jobs = discover_workflow_jobs(
+                CAPTURE_ROOT,
+                MOBILE_PROCESSING_DIR,
+                MOBILE_FAILED_DIR,
+                limit=60,
+            )
+            self.workflow_local_jobs_refreshed = time.monotonic()
+        local_jobs = self.workflow_local_jobs
+        queue_jobs = jobs_from_queue_rows(self.capture_queue_rows)
+        active_jobs = [self.active_workflow_job] if self.active_workflow_job else []
+        groups = [local_jobs, queue_jobs, active_jobs]
+        if include_completed:
+            groups.append(recent_completed_jobs(COMPLETED, limit=5))
+        self.workflow_jobs = merge_job_lists(*groups, limit=65)
+        return self.workflow_jobs
+
+    def refresh_workflow_jobs_background(self, force=False):
+        if self.workflow_refresh_running:
+            return
+        if not force and time.monotonic() - self.workflow_last_network_refresh < 30:
+            return
+        self.workflow_refresh_running = True
+
+        def worker():
+            try:
+                rows = self.mobile_capture_queue_service.list_queue(include_diagnostics=True, limit=100)
+            except Exception as exc:
+                self.dispatch_ui(lambda: self.finish_workflow_refresh(None, sanitize_error_message(exc)))
+                return
+            self.dispatch_ui(lambda: self.finish_workflow_refresh(rows, ""))
+
+        threading.Thread(target=worker, daemon=True).start()
+
+    def finish_workflow_refresh(self, rows, error):
+        self.workflow_refresh_running = False
+        self.workflow_last_network_refresh = time.monotonic()
+        if rows is not None:
+            self.capture_queue_rows = rows
+        elif error:
+            self.status.set(f"Mobile capture refresh unavailable: {error}")
+        if getattr(self, "current_page", "") == "Home":
+            self.show_page("Home")
+
+    def status_chip(self, parent, state):
+        color_key = {
+            "Ready": "success",
+            "In Progress": "active",
+            "Needs Attention": "warning",
+            "Complete": "success",
+            "Failed": "error",
+        }.get(state, "unknown")
+        chip = tk.Frame(parent, bg=BRAND["panel2"], highlightbackground=STATUS_COLORS[color_key], highlightthickness=1)
+        tk.Label(chip, text=state, bg=BRAND["panel2"], fg=STATUS_COLORS[color_key], font=self.ui_font("small", True), padx=9, pady=3).pack()
+        return chip
+
+    def open_path_safe(self, path, title="Folder"):
+        target = Path(str(path or "")) if path else None
+        if not target or not target.exists():
+            messagebox.showinfo(APP_NAME, f"{title} is not available yet.")
+            return False
+        try:
+            os.startfile(target)
+            return True
+        except Exception as exc:
+            messagebox.showinfo(APP_NAME, f"{title}:\n{target}\n\nCould not open automatically:\n{exc}")
+            return False
+
+    def workflow_job_by_id(self, job_id):
+        return next((job for job in self.workflow_jobs if str(job.get("job_id")) == str(job_id)), None)
+
+    def run_workflow_action(self, job, action=None):
+        job = dict(job or {})
+        if job:
+            self.active_workflow_job = job
+        action = action or job.get("action") or "Continue Processing"
+        if action == "Open Capture Folder":
+            self.open_path_safe(job.get("capture_folder"), "Capture folder")
+        elif action == "Open CardUploader":
+            self.open_carduploader(job)
+        elif action == "Import CardUploader CSV":
+            self.show_page("Processing")
+            self.import_carduploader_csv_ui()
+        elif action in {"Review Pricing", "Continue Processing"}:
+            self.show_page("Processing")
+            imported = Path(str(job.get("imported_csv_path") or ""))
+            if imported.exists():
+                self.load(imported)
+        elif action == "Open Export Folder":
+            target = job.get("pricing_job_path") or job.get("export_csv_path")
+            if target and Path(target).is_file():
+                target = Path(target).parent
+            self.open_path_safe(target, "Export folder")
+        elif action == "Retry Failed Capture":
+            session_id = str(job.get("capture_session_id") or "")
+            if session_id:
+                self.capture_queue_run_background(
+                    "Retrying failed mobile capture...",
+                    lambda: self.mobile_capture_queue_service.retry_failed(session_id),
+                    lambda _row: self.refresh_workflow_jobs_background(force=True),
+                )
+        elif action == "Open Capture Queue":
+            self.show_page("Capture Queue")
+        elif action == "Open Settings":
+            self.show_page("Settings")
+        elif action == "Open eBay Seller Hub":
+            self.open_ebay_seller_hub()
+
+    def workflow_job_row(self, parent, job, compact=False):
+        row = tk.Frame(parent, bg=BRAND["panel"], highlightbackground=BRAND["border_soft"], highlightthickness=0)
+        row.pack(fill="x", padx=18, pady=(2, 4))
+        details = tk.Frame(row, bg=BRAND["panel"])
+        details.pack(side="left", fill="x", expand=True, pady=5)
+        title = job.get("session_folder") or job.get("job_id") or "Capture session"
+        self.label(details, title, 10, BRAND["text"], True, anchor="w")
+        bits = [str(job.get("capture_type") or "").replace("_", " ").title()]
+        if job.get("image_count"):
+            bits.append(f"{job['image_count']} images")
+        if job.get("row_count"):
+            bits.append(f"{job['row_count']} rows")
+        if job.get("etb_location"):
+            bits.append(str(job["etb_location"]))
+        bits.append(str(job.get("stage") or "Ready"))
+        self.label(details, "  |  ".join(bit for bit in bits if bit), 8, BRAND["muted"], False, anchor="w")
+        self.status_chip(row, str(job.get("state") or "Ready")).pack(side="left", padx=10)
+        self.primary_button(row, str(job.get("action") or "Continue"), lambda item=dict(job): self.run_workflow_action(item)).pack(side="right", padx=(8, 0), pady=7)
+        if job.get("capture_folder") and Path(str(job.get("capture_folder"))).exists() and not compact:
+            self.action_button(row, "Open Folder", lambda item=dict(job): self.run_workflow_action(item, "Open Capture Folder")).pack(side="right", pady=7)
+        tk.Frame(parent, bg=BRAND["border_soft"], height=1).pack(fill="x", padx=18)
+        return row
+
     def home_page(self):
-        self.header("Home", "Mission control for Putnam Collectibles.")
-        wrap = self.scrollable_page()
+        self.header("Home", "What needs your attention next.")
+        wrap = tk.Frame(self.main, bg=BRAND["bg"])
+        wrap.pack(fill="both", expand=True, padx=SPACING["page_x"], pady=(0, 18))
+        jobs = self.workflow_job_snapshot(include_completed=False)
+        pending = [job for job in jobs if job.get("state") != "Complete"]
 
-        mission = self.card(wrap, fill="x", pady=(0, 16), ipady=14)
-        self.label(mission, "TODAY'S MISSION", 13, BRAND["gold"], True, anchor="w", padx=18, pady=(14, 4))
-        cur = load_current_session()
-        stage = current_workflow_stage()
-        if cur:
-            msg = (
-                f"Active session: {Path(cur.get('folder','')).name}\n"
-                f"Current game: {display_location_game(cur.get('game', 'pokemon'))}\n"
-                f"Batch location: {cur.get('batch_location', '') or '(not set)'}\n"
-                f"Current workflow stage: {stage}\n"
-                f"Next recommended action: {next_recommended_action()}"
-            )
+        pending_card = self.card(wrap, fill="x", pady=(0, 14), ipady=8)
+        heading = tk.Frame(pending_card, bg=BRAND["panel"])
+        heading.pack(fill="x", padx=18, pady=(14, 6))
+        self.label(heading, "PENDING WORK", 12, BRAND["gold"], True, side="left")
+        self.action_button(heading, "View Processing", lambda: self.show_page("Processing")).pack(side="right")
+        if pending:
+            for job in pending[:2]:
+                self.workflow_job_row(pending_card, job, compact=True)
         else:
-            msg = (
-                "Active session: none\n"
-                "Current game: not selected\n"
-                "Batch location: not selected\n"
-                f"Current workflow stage: {stage}\n"
-                f"Next recommended action: {next_recommended_action()}"
-            )
-        self.label(mission, msg, 10, BRAND["muted"], False, anchor="w", padx=18, pady=(0, 12))
-
-        self.build_acquisition_panel(wrap, "CURRENT ACQUISITION")
-
-        progress = self.card(wrap, fill="x", pady=(0, 16), ipady=12)
-        self.label(progress, "WORKFLOW PROGRESS", 12, BRAND["gold"], True, anchor="w", padx=18, pady=(12, 6))
-        steps = ["Capture", "Import", "Pricing", "Upload", "Inventory", "Shipping"]
-        progress_lines = []
-        for step in steps:
-            marker = ">>" if step == stage else "  "
-            progress_lines.append(f"{marker} {step}")
-        self.label(progress, "\n".join(progress_lines), 11, BRAND["muted"], False, anchor="w", padx=18, pady=(0, 12))
-
-        decision = self.card(wrap, fill="x", pady=(0, 16), ipady=12)
-        self.label(decision, "DECISION ENGINE", 12, BRAND["gold"], True, anchor="w", padx=18, pady=(12, 6))
-        initial_engine_status = run_decision_engine_check(write_log=False)
-        self.decision_engine_var = tk.StringVar(value=decision_engine_summary_text(initial_engine_status))
-        tk.Label(
-            decision,
-            textvariable=self.decision_engine_var,
-            bg=BRAND["panel"],
-            fg=BRAND["muted"],
-            font=("Segoe UI", 9),
-            justify="left",
-            wraplength=980,
-        ).pack(anchor="w", fill="x", padx=18, pady=(0, 10))
-        decision_buttons = tk.Frame(decision, bg=BRAND["panel"])
-        decision_buttons.pack(anchor="w", padx=18, pady=(0, 14))
-        self.action_button(decision_buttons, "Run Decision Engine Check", self.run_decision_engine_check_ui).pack(side="left")
-        self.action_button(decision_buttons, "Open Latest Decision Log", self.open_latest_decision_log).pack(side="left", padx=8)
-
-        latest_card = self.card(wrap, fill="x", pady=(0, 16), ipady=12)
-        self.label(latest_card, "LATEST CARDUPLOADER EXPORT", 12, BRAND["gold"], True, anchor="w", padx=18, pady=(12, 6))
-        detected = latest_carduploader_export()
-        detected_text = f"Detected: {detected}" if detected else "No CSV detected in Imports, Incoming Files, or Downloads."
-        self.latest_csv_var = tk.StringVar(value=detected_text)
-        tk.Label(latest_card, textvariable=self.latest_csv_var, bg=BRAND["panel"], fg=BRAND["muted"],
-                 font=("Segoe UI", 9), justify="left", wraplength=820).pack(anchor="w", padx=18, pady=(0, 10))
-        latest_buttons = self.button_bar(latest_card, pad_y=(0, 14))
-        self.primary_button(latest_buttons, "Analyze Latest Export", self.analyze_latest_carduploader_export).pack(side="left")
-        self.action_button(latest_buttons, "Browse for CSV", self.browse_and_run).pack(side="left", padx=10)
-
-        actions = self.card(wrap, fill="x", pady=(0, 16), ipady=12)
-        self.label(actions, "QUICK ACTIONS", 12, BRAND["gold"], True, anchor="w", padx=18, pady=(12, 8))
-        btns = self.button_bar(actions, pad_y=(0, 8))
-        self.action_button(btns, "Open Capture", lambda: self.show_page("Capture")).pack(side="left")
-        self.action_button(btns, "Import Latest CardUploader Export", self.import_latest_carduploader_export_ui).pack(side="left", padx=8)
-        self.action_button(btns, "Analyze Latest Export", self.analyze_latest_carduploader_export).pack(side="left", padx=8)
-        self.action_button(btns, "Open Pricing Output", self.open_current_output_folder).pack(side="left", padx=8)
-        self.action_button(btns, "Open CardUploader", self.open_carduploader).pack(side="left", padx=8)
-        folder_btns = self.button_bar(actions, pad_y=(0, 14))
-        self.action_button(folder_btns, "Open Imports", lambda: os.startfile(IMPORTS)).pack(side="left")
-        self.action_button(folder_btns, "Open Exports", lambda: os.startfile(EXPORTS)).pack(side="left", padx=8)
-        self.action_button(folder_btns, "Open Completed Jobs", lambda: os.startfile(COMPLETED)).pack(side="left", padx=8)
-
-        row = tk.Frame(wrap, bg=BRAND["bg"])
-        row.pack(fill="x", pady=(0, 16))
-        self.metric_card(row, "Pricing Jobs Today", todays_jobs_count(), "Completed job folders")
-        self.metric_card(row, "Work Sessions", len(latest_sessions(99)), "Tracked sessions")
-        self.metric_card(row, "Raw Recordings", count_files(CONTENT_RECORDINGS, "*"), "Saved footage")
-        self.metric_card(row, "Content Ideas", count_files(CONTENT_IDEAS, "*"), "Backlog")
+            self.label(pending_card, "No pending jobs. Start a capture when you are ready.", 10, BRAND["muted"], False, anchor="w", padx=18, pady=(6, 16))
 
         lower = tk.Frame(wrap, bg=BRAND["bg"])
         lower.pack(fill="both", expand=True)
-        activity = self.card(lower, side="left", fill="both", expand=True, padx=(0, 12), ipady=10)
-        self.label(activity, "RECENT ACTIVITY", 12, BRAND["gold"], True, anchor="w", padx=18, pady=(12, 6))
-        acts = recent_activity(7) or ["No activity recorded yet."]
-        for a in acts:
-            self.label(activity, "OK - " + a, 9, BRAND["muted"], False, anchor="w", padx=18, pady=2)
+        listings = active_listings_summary(latest_ebay_active_listings_report())
+        active = self.card(lower, fill="x", pady=(0, 14), ipady=8)
+        active_content = tk.Frame(active, bg=BRAND["panel"])
+        active_content.pack(fill="x", padx=18, pady=(12, 10))
+        metric = tk.Frame(active_content, bg=BRAND["panel"])
+        metric.pack(side="left", padx=(0, 20))
+        self.label(metric, "ACTIVE LISTINGS", 12, BRAND["gold"], True, anchor="w")
+        self.label(metric, str(listings["count"]), 22, BRAND["text"], True, anchor="w")
+        source = tk.Frame(active_content, bg=BRAND["panel"])
+        source.pack(side="left", fill="x", expand=True, pady=4)
+        tk.Label(source, text=listings["source"], bg=BRAND["panel"], fg=BRAND["muted"], font=self.ui_font("label"), justify="left", anchor="w", wraplength=480).pack(anchor="w", fill="x")
+        refreshed = listings.get("refreshed_at") or "Not available"
+        self.label(source, f"Last refreshed: {refreshed}", 8, BRAND["muted2"], False, anchor="w", pady=(2, 0))
+        self.primary_button(active_content, "Open eBay Seller Hub", self.open_ebay_seller_hub).pack(side="right", padx=(16, 0), pady=10)
 
-        content = self.card(lower, side="left", fill="both", expand=True, ipady=10)
-        self.label(content, "CONTENT SNAPSHOT", 12, BRAND["gold"], True, anchor="w", padx=18, pady=(12, 6))
-        lines = [
-            f"Recordings saved: {count_files(CONTENT_RECORDINGS, '*')}",
-            f"Clips captured: {count_files(CONTENT_CLIPS, '*')}",
-            f"Episodes planned: {count_files(CONTENT_EPISODES, '*')}",
-            "Current concept: 100-card listing workflow",
-        ]
-        for line in lines:
-            self.label(content, line, 9, BRAND["muted"], False, anchor="w", padx=18, pady=2)
-        self.action_button(content, "Open OBS Checklist", self.open_recording_checklist).pack(anchor="w", padx=18, pady=12)
+        policy_error = ""
+        policies = load_ebay_business_policies()
+        missing = [label for key, label in (("shipping_policy", "shipping policy"), ("payment_policy", "payment policy"), ("return_policy", "return policy")) if not policies.get(key)]
+        if missing:
+            policy_error = "Required eBay policy setting is missing: " + ", ".join(missing)
+        alerts = business_alerts(jobs, listings, policy_error=policy_error)
+        alert_card = self.card(lower, fill="both", expand=True, ipady=8)
+        self.label(alert_card, "BUSINESS ALERTS", 12, BRAND["gold"], True, anchor="w", padx=18, pady=(14, 6))
+        if not alerts:
+            self.label(alert_card, "No items need attention.", 10, BRAND["muted"], False, anchor="w", padx=18, pady=(4, 14))
+        for alert in alerts[:3]:
+            line = tk.Frame(alert_card, bg=BRAND["panel"])
+            line.pack(fill="x", padx=18, pady=3)
+            color = BRAND["danger"] if alert["severity"] == "Failed" else BRAND["warning"]
+            tk.Label(line, text="!", bg=BRAND["panel"], fg=color, font=self.ui_font("label", True), width=2).pack(side="left")
+            tk.Label(line, text=alert["text"], bg=BRAND["panel"], fg=BRAND["muted"], font=self.ui_font("label"), anchor="w", justify="left", wraplength=560).pack(side="left", fill="x", expand=True)
+            self.action_button(line, alert["action"], lambda item=dict(alert): self.run_workflow_action(self.workflow_job_by_id(item.get("job_id")) or {}, item["action"])).pack(side="right", padx=(8, 0))
+
+        self.refresh_workflow_jobs_background()
 
     def capture_queue_page(self):
-        self.header("Capture Queue", "Mobile Capture sessions staged for Physical Inventory Conversion.")
+        self.header("Capture Queue", "Detailed status for authenticated mobile capture sessions.")
         wrap = self.scrollable_page()
 
         if not hasattr(self, "capture_queue_filter_var"):
@@ -4538,10 +4683,10 @@ class PutnamOS(BaseTk):
                 result = work()
             except Exception as exc:
                 message = sanitize_error_message(exc)
-                self.after(0, lambda: self.capture_queue_background_error(label, message))
+                self.dispatch_ui(lambda: self.capture_queue_background_error(label, message))
                 return
             if on_success:
-                self.after(0, lambda: on_success(result))
+                self.dispatch_ui(lambda: on_success(result))
 
         threading.Thread(target=worker, daemon=True).start()
 
@@ -4577,9 +4722,9 @@ class PutnamOS(BaseTk):
                 rows = work()
             except Exception as exc:
                 message = sanitize_error_message(exc)
-                self.after(0, lambda: self.capture_queue_refresh_failed(message))
+                self.dispatch_ui(lambda: self.capture_queue_refresh_failed(message))
                 return
-            self.after(0, lambda: success(rows))
+            self.dispatch_ui(lambda: success(rows))
 
         threading.Thread(target=worker, daemon=True).start()
 
@@ -4624,6 +4769,8 @@ class PutnamOS(BaseTk):
         self.capture_queue_schedule_zero_touch(250)
 
     def capture_queue_schedule_zero_touch(self, delay_ms=15000):
+        if self.app_closing:
+            return
         after_id = getattr(self, "capture_queue_zero_touch_after_id", None)
         if after_id:
             try:
@@ -4650,9 +4797,9 @@ class PutnamOS(BaseTk):
             try:
                 manifest = self.mobile_capture_queue_service.process_next_pending()
             except Exception as exc:
-                self.after(0, lambda: self.capture_queue_zero_touch_failed(sanitize_error_message(exc)))
+                self.dispatch_ui(lambda: self.capture_queue_zero_touch_failed(sanitize_error_message(exc)))
                 return
-            self.after(0, lambda: self.capture_queue_zero_touch_finished(manifest))
+            self.dispatch_ui(lambda: self.capture_queue_zero_touch_finished(manifest))
 
         threading.Thread(target=worker, daemon=True).start()
 
@@ -4663,6 +4810,16 @@ class PutnamOS(BaseTk):
             session_id = str(session.get("capture_session_id") or "")
             folder = str(manifest.get("capture_folder") or "")
             self.capture_queue_last_staged_folder = folder
+            if folder and Path(folder).exists():
+                update_workflow_context(
+                    folder,
+                    capture_session_id=session_id,
+                    capture_type=manifest.get("capture_type") or session.get("capture_type") or (session.get("device") or {}).get("capture_type") or "NEW_CAPTURE",
+                    etb_location=session.get("etb_location") or session.get("etb_location_id") or "",
+                    current_workflow_state="Ready for CardUploader",
+                    last_error="",
+                )
+                self.workflow_local_jobs_refreshed = 0.0
             append_activity(f"Mobile capture auto-staged: {session_id} -> {folder}")
             self.status.set(f"Mobile capture ready: {Path(folder).name if folder else session_id}")
             if hasattr(self, "capture_queue_selected_var"):
@@ -4847,7 +5004,9 @@ class PutnamOS(BaseTk):
         except Exception as exc:
             messagebox.showinfo("Decision Engine", f"Latest log:\n{path}\n\nCould not open automatically:\n{exc}")
 
-    def open_carduploader(self):
+    def open_carduploader(self, job=None):
+        if job:
+            self.active_workflow_job = dict(job)
         url = load_app_config().get("carduploader_url", "")
         if not url:
             messagebox.showinfo(
@@ -4857,7 +5016,33 @@ class PutnamOS(BaseTk):
             self.show_page("Settings")
             return
         webbrowser.open(url)
+        job = self.active_workflow_job or {}
+        folder = str(job.get("capture_folder") or "")
+        if folder and Path(folder).exists():
+            update_workflow_context(
+                folder,
+                capture_session_id=job.get("capture_session_id", ""),
+                capture_type=job.get("capture_type", ""),
+                etb_location=job.get("etb_location", ""),
+                carduploader_handoff_status="opened",
+                current_workflow_state="Awaiting CSV Import",
+                last_error="",
+            )
+            self.workflow_local_jobs_refreshed = 0.0
+            self.active_workflow_job = {**job, "carduploader_handoff_status": "opened", "stage": "Awaiting CSV Import", "state": "Ready", "action": "Import CardUploader CSV"}
         self.status.set("Opened CardUploader.")
+
+    def open_mobile_capture_website(self):
+        webbrowser.open(load_app_config().get("mobile_capture_url", "https://cardvector.app/capture"))
+        self.status.set("Opened CardVector Mobile Capture.")
+
+    def open_ebay_seller_hub(self):
+        webbrowser.open(load_app_config().get("ebay_seller_hub_url", "https://www.ebay.com/sh/ovw"))
+        self.status.set("Opened eBay Seller Hub.")
+
+    def open_ebay_upload(self):
+        webbrowser.open(load_app_config().get("ebay_upload_url", "https://www.ebay.com/sh/reports/uploads"))
+        self.status.set("Opened eBay upload.")
 
     def import_latest_carduploader_export_ui(self):
         latest = latest_carduploader_export()
@@ -4865,7 +5050,89 @@ class PutnamOS(BaseTk):
             messagebox.showinfo("CardVector OS Import", "No CardUploader CSV found in Imports, Downloads, or Incoming Files.")
             return
         self.import_carduploader_csv_path(latest)
-        self.show_page("Import")
+        self.show_page("Processing")
+
+    def processing_page(self):
+        self.header("Processing", "Move each capture from CardUploader to an eBay-ready CSV.")
+        wrap = self.scrollable_page()
+        jobs = self.workflow_job_snapshot(include_completed=True)
+        grouped = group_processing_jobs(jobs)
+
+        queue_card = self.card(wrap, fill="x", pady=(0, 14), ipady=10)
+        queue_head = tk.Frame(queue_card, bg=BRAND["panel"])
+        queue_head.pack(fill="x", padx=18, pady=(14, 5))
+        self.label(queue_head, "PROCESSING QUEUE", 12, BRAND["gold"], True, side="left")
+        self.action_button(queue_head, "Open Capture Queue", lambda: self.show_page("Capture Queue")).pack(side="right")
+        visible = 0
+        for stage in ("Ready for CardUploader", "Awaiting CSV Import", "Pricing Review", "Ready for eBay Upload"):
+            stage_jobs = grouped.get(stage) or []
+            if not stage_jobs:
+                continue
+            self.label(queue_card, stage.upper(), 8, BRAND["muted2"], True, anchor="w", padx=18, pady=(8, 1))
+            for job in stage_jobs[:3]:
+                self.workflow_job_row(queue_card, job)
+                visible += 1
+        if not visible:
+            self.label(queue_card, "No active processing jobs. Capture cards or import a CardUploader CSV to begin.", 10, BRAND["muted"], False, anchor="w", padx=18, pady=(8, 16))
+
+        import_card = self.card(wrap, fill="x", pady=(0, 14), ipady=12)
+        self.label(import_card, "CARDUPLOADER CSV", 12, BRAND["gold"], True, anchor="w", padx=18, pady=(14, 4))
+        if self.imported_carduploader_summary:
+            summary_text = format_carduploader_import_summary(self.imported_carduploader_summary)
+        else:
+            detected = latest_carduploader_export()
+            summary_text = f"Latest detected: {detected}" if detected else "No CardUploader CSV imported yet."
+        self.import_summary_var = tk.StringVar(value=summary_text)
+        tk.Label(import_card, textvariable=self.import_summary_var, bg=BRAND["panel"], fg=BRAND["muted"], font=self.ui_font("label"), justify="left", wraplength=960).pack(anchor="w", fill="x", padx=18, pady=(0, 10))
+        import_actions = tk.Frame(import_card, bg=BRAND["panel"])
+        import_actions.pack(anchor="w", padx=18, pady=(0, 12))
+        self.primary_button(import_actions, "Import CardUploader CSV", self.import_carduploader_csv_ui).pack(side="left")
+        self.action_button(import_actions, "Import Latest Export", self.import_latest_carduploader_export_ui).pack(side="left", padx=10)
+        self.action_button(import_actions, "Open CardUploader", self.open_carduploader).pack(side="left")
+        self.action_button(import_actions, "Open Capture Folder", lambda: self.run_workflow_action(self.active_workflow_job or {}, "Open Capture Folder")).pack(side="left", padx=10)
+
+        pricing_card = self.card(wrap, fill="x", pady=(0, 14), ipady=12)
+        self.label(pricing_card, "PRICING REVIEW", 12, BRAND["gold"], True, anchor="w", padx=18, pady=(14, 4))
+        loaded_text = "No CSV loaded. Import a CardUploader CSV above."
+        if self.loaded:
+            loaded_text = f"{self.loaded.name}  |  {len(self.rows)} rows  |  {self.detected}"
+        self.info_var = tk.StringVar(value=loaded_text)
+        tk.Label(pricing_card, textvariable=self.info_var, bg=BRAND["panel"], fg=BRAND["muted"], font=self.ui_font("label"), justify="left", wraplength=960).pack(anchor="w", fill="x", padx=18, pady=(0, 10))
+        pricing_actions = tk.Frame(pricing_card, bg=BRAND["panel"])
+        pricing_actions.pack(anchor="w", padx=18, pady=(0, 12))
+        self.pricing_action_button = self.primary_button(pricing_actions, "Analyze & Prepare eBay CSV", self.auto_run)
+        self.pricing_action_button.pack(side="left")
+        self.action_button(pricing_actions, "Open Completed Jobs", lambda: self.open_path_safe(COMPLETED, "Completed jobs")).pack(side="left", padx=10)
+
+        self.pricing_progress_card = self.card(wrap, fill="x", pady=(0, 14), ipady=10)
+        self.label(self.pricing_progress_card, "IN PROGRESS", 12, BRAND["gold"], True, anchor="w", padx=18, pady=(12, 2))
+        self.pricing_stage_var = tk.StringVar(value="")
+        self.pricing_progress_var = tk.DoubleVar(value=0)
+        tk.Label(self.pricing_progress_card, textvariable=self.pricing_stage_var, bg=BRAND["panel"], fg=BRAND["muted"], font=self.ui_font("label"), justify="left").pack(anchor="w", padx=18, pady=(0, 8))
+        ttk.Progressbar(self.pricing_progress_card, variable=self.pricing_progress_var, maximum=100, mode="determinate").pack(fill="x", padx=18, pady=(0, 12))
+        if not self.pricing_running:
+            self.pricing_progress_card.pack_forget()
+
+        result_card = self.card(wrap, fill="x", pady=(0, 14), ipady=12)
+        self.label(result_card, "EBAY HANDOFF", 12, BRAND["gold"], True, anchor="w", padx=18, pady=(14, 4))
+        result_text = "Complete pricing to create an eBay-ready CSV."
+        if self.current_pricing_job:
+            result_text = f"Ready for eBay Upload\n{self.current_pricing_job}"
+        self.result_var = tk.StringVar(value=result_text)
+        tk.Label(result_card, textvariable=self.result_var, bg=BRAND["panel"], fg=BRAND["muted"], font=self.ui_font("label"), justify="left", wraplength=960).pack(anchor="w", fill="x", padx=18, pady=(0, 10))
+        self.output_path_var = tk.StringVar(value=str(self.current_pricing_job or ""))
+        handoff = tk.Frame(result_card, bg=BRAND["panel"])
+        handoff.pack(anchor="w", padx=18, pady=(0, 12))
+        self.primary_button(handoff, "Open Export Folder", self.open_current_output_folder).pack(side="left")
+        self.action_button(handoff, "Open eBay Upload", self.open_ebay_upload).pack(side="left", padx=10)
+        self.action_button(handoff, "Open eBay Seller Hub", self.open_ebay_seller_hub).pack(side="left")
+
+        completed = grouped.get("Completed Recently") or []
+        if completed:
+            recent_card = self.card(wrap, fill="x", pady=(0, 14), ipady=10)
+            self.label(recent_card, "COMPLETED RECENTLY", 12, BRAND["gold"], True, anchor="w", padx=18, pady=(12, 4))
+            for job in completed[:3]:
+                self.workflow_job_row(recent_card, job, compact=True)
 
     def import_page(self):
         self.header("Import", "Unified CardUploader CSV import and validation.")
@@ -4947,42 +5214,79 @@ class PutnamOS(BaseTk):
         self.import_carduploader_csv_path(path)
 
     def import_carduploader_csv_path(self, path):
-        try:
-            rows = read_csv(path)
-            summary = build_carduploader_import_summary(path, rows)
-            acquisition_entry = record_import_acquisition_metadata(path, rows)
-            active_session = attach_current_session_to_current_acquisition()
-            self.imported_carduploader_csv = Path(path)
-            self.imported_carduploader_summary = summary
-            state = {
-                "last_carduploader_folder": str(Path(path).parent),
-                "last_carduploader_csv": str(Path(path)),
-                "session_id": active_session.get("session_id", "") if active_session else "",
-                "acquisition_id": acquisition_entry.get("acquisition_id", "") if acquisition_entry else "",
-                "acquisition_name": acquisition_entry.get("acquisition_name", "") if acquisition_entry else "",
-                "purchase_price_snapshot": acquisition_entry.get("purchase_price_snapshot", "") if acquisition_entry else "",
-                "batch_location": acquisition_entry.get("batch_location", "") if acquisition_entry else "",
-                "updated_at": datetime.now().isoformat(timespec="seconds"),
-            }
-            save_import_module_state(state)
-            if hasattr(self, "import_summary_var"):
-                acquisition_text = ""
-                if acquisition_entry:
-                    acquisition_text = (
-                        "\n\nAcquisition:\n"
-                        f"- {acquisition_entry['acquisition_name']}\n"
-                        f"- Purchase price snapshot: ${acquisition_entry['purchase_price_snapshot']}\n"
-                        f"- Estimated listing value: ${acquisition_entry['estimated_listing_value']}"
-                    )
-                self.import_summary_var.set(format_carduploader_import_summary(summary) + acquisition_text)
-            # Import validates and stores the CSV. Pricing loads it only after
-            # the operator explicitly chooses Continue to Pricing.
-            self.status.set(f"Validated CardUploader CSV: {Path(path).name}")
-            if hasattr(self, "capture_rail_inner"):
-                self.schedule_capture_thumbnail_refresh()
-        except Exception as exc:
-            self.status.set("CardUploader import failed.")
-            messagebox.showerror("CardVector OS Import", f"Could not import CSV:\n{exc}")
+        path = Path(path)
+        self.status.set(f"Loading CardUploader CSV: {path.name}")
+
+        def worker():
+            try:
+                rows = read_csv(path)
+                summary = build_carduploader_import_summary(path, rows)
+                acquisition_entry = record_import_acquisition_metadata(path, rows)
+                active_session = attach_current_session_to_current_acquisition()
+                state = {
+                    "last_carduploader_folder": str(path.parent),
+                    "last_carduploader_csv": str(path),
+                    "session_id": active_session.get("session_id", "") if active_session else "",
+                    "acquisition_id": acquisition_entry.get("acquisition_id", "") if acquisition_entry else "",
+                    "acquisition_name": acquisition_entry.get("acquisition_name", "") if acquisition_entry else "",
+                    "purchase_price_snapshot": acquisition_entry.get("purchase_price_snapshot", "") if acquisition_entry else "",
+                    "batch_location": acquisition_entry.get("batch_location", "") if acquisition_entry else "",
+                    "updated_at": datetime.now().isoformat(timespec="seconds"),
+                }
+                save_import_module_state(state)
+            except Exception as exc:
+                self.dispatch_ui(lambda error=exc: self.finish_carduploader_import_error(error))
+                return
+            self.dispatch_ui(lambda: self.finish_carduploader_import(path, rows, summary, acquisition_entry))
+
+        threading.Thread(target=worker, daemon=True).start()
+
+    def finish_carduploader_import(self, path, rows, summary, acquisition_entry):
+        self.imported_carduploader_csv = Path(path)
+        self.imported_carduploader_summary = summary
+        active_job = self.active_workflow_job or {
+            "job_id": f"import-{Path(path).stem}",
+            "capture_session_id": "",
+            "capture_folder": "",
+            "session_folder": Path(path).name,
+            "capture_type": "",
+            "etb_location": "",
+            "image_count": 0,
+            "source": "CardUploader Import",
+        }
+        capture_folder = str(active_job.get("capture_folder") or "")
+        if capture_folder and Path(capture_folder).exists():
+            update_workflow_context(
+                capture_folder,
+                capture_session_id=active_job.get("capture_session_id", ""),
+                capture_type=active_job.get("capture_type", ""),
+                etb_location=active_job.get("etb_location", ""),
+                carduploader_handoff_status="complete",
+                imported_csv_path=str(path),
+                row_count=len(rows),
+                current_workflow_state="Pricing Review",
+                last_error="",
+            )
+            self.workflow_local_jobs_refreshed = 0.0
+        self.active_workflow_job = {
+            **active_job,
+            "imported_csv_path": str(path),
+            "row_count": len(rows),
+            "stage": "Pricing Review",
+            "state": "Needs Attention",
+            "action": "Review Pricing",
+            "updated_timestamp": datetime.now().isoformat(timespec="seconds"),
+        }
+        if hasattr(self, "import_summary_var"):
+            self.import_summary_var.set(format_carduploader_import_summary(summary))
+        self.load(path, rows=rows)
+        self.status.set(f"Validated CardUploader CSV: {Path(path).name}")
+        if hasattr(self, "capture_rail_inner"):
+            self.schedule_capture_thumbnail_refresh()
+
+    def finish_carduploader_import_error(self, error):
+        self.status.set("CardUploader import failed.")
+        messagebox.showerror("CardVector OS Import", f"Could not import CSV:\n{error}")
 
     def proceed_import_to_listings(self):
         if not self.imported_carduploader_csv:
@@ -4996,12 +5300,12 @@ class PutnamOS(BaseTk):
                     f"{status}\n\nProceed to Listings anyway?",
                 ):
                     return
-        self.show_page("Pricing")
+        self.show_page("Processing")
         self.load(self.imported_carduploader_csv)
         self.status.set("Imported CSV loaded in CardVector Pricing Engine. Ready to analyze.")
 
     def capture_page(self):
-        self.header("Capture", "Capture the next card.")
+        self.header("Capture", "Start a capture or continue a staged mobile session.")
         wrap = self.scrollable_page()
 
         workspace = tk.Frame(wrap, bg=BRAND["bg"])
@@ -5009,6 +5313,15 @@ class PutnamOS(BaseTk):
         rail = tk.Frame(wrap, bg=BRAND["panel"], width=315, highlightbackground=BRAND["border"], highlightthickness=1)
         rail.pack(side="right", fill="y")
         rail.pack_propagate(False)
+
+        start_card = self.card(workspace, fill="x", pady=(0, 14), ipady=12)
+        self.label(start_card, "START CAPTURE", 12, BRAND["gold"], True, anchor="w", padx=18, pady=(14, 4))
+        self.label(start_card, "Use OBS on this workstation or open the authenticated mobile capture site.", 9, BRAND["muted"], False, anchor="w", padx=18, pady=(0, 10))
+        start_actions = tk.Frame(start_card, bg=BRAND["panel"])
+        start_actions.pack(anchor="w", padx=18, pady=(0, 14))
+        self.primary_button(start_actions, "Start Desktop Capture", self.start_capture_session_ui).pack(side="left")
+        self.action_button(start_actions, "Open Mobile Capture Website", self.open_mobile_capture_website).pack(side="left", padx=10)
+        self.action_button(start_actions, "Open Capture Folder", self.open_capture_folder_ui).pack(side="left")
 
         status_card = self.card(workspace, fill="x", pady=(0, 14), ipady=12)
         self.label(status_card, "CURRENT SESSION", 12, BRAND["gold"], True, anchor="w", padx=18, pady=(12, 6))
@@ -5087,7 +5400,7 @@ class PutnamOS(BaseTk):
         self.label(actions, "ACTIONS", 12, BRAND["gold"], True, anchor="w", padx=18, pady=(12, 8))
         row1 = tk.Frame(actions, bg=BRAND["panel"])
         row1.pack(anchor="w", padx=18, pady=(0, 12))
-        self.action_button(row1, "Start Capture Session", self.start_capture_session_ui).pack(side="left")
+        self.action_button(row1, "Start Desktop Capture", self.start_capture_session_ui).pack(side="left")
         self.primary_button(row1, "Capture", self.capture_next_card_ui).pack(side="left", padx=10)
         self.action_button(row1, "Retake Last", self.retake_last_capture_ui).pack(side="left")
         self.action_button(row1, "Finish Session", self.finish_capture_session_ui).pack(side="left", padx=10)
@@ -5101,25 +5414,27 @@ class PutnamOS(BaseTk):
         self.stop_auto_button = self.action_button(row2, "Stop Auto Capture", self.stop_auto_capture_ui)
         self.stop_auto_button.pack(side="left", padx=10)
 
-        settings_card = self.card(workspace, fill="x", pady=(0, 14), ipady=12)
-        self.label(settings_card, "AUTO CAPTURE SETTINGS", 12, BRAND["gold"], True, anchor="w", padx=18, pady=(12, 8))
-        settings_row = tk.Frame(settings_card, bg=BRAND["panel"])
-        settings_row.pack(fill="x", padx=18, pady=(0, 10))
-        for label_text, var, width in [
-            ("Stability sec", self.auto_stability_delay_var, 8),
-            ("Lockout sec", self.auto_lockout_var, 8),
-            ("Poll ms", self.auto_poll_interval_var, 8),
-        ]:
-            tk.Label(settings_row, text=label_text, bg=BRAND["panel"], fg=BRAND["muted"],
-                     font=self.ui_font("label", True)).pack(side="left", padx=(0, 6))
-            tk.Entry(settings_row, textvariable=var, width=width, bg=BRAND["panel2"], fg=BRAND["text"],
-                     relief="flat", insertbackground=BRAND["text"]).pack(side="left", padx=(0, 12), ipady=3)
-        tk.Label(settings_row, text="Sensitivity", bg=BRAND["panel"], fg=BRAND["muted"],
-                 font=self.ui_font("label", True)).pack(side="left", padx=(0, 6))
-        sensitivity_menu = tk.OptionMenu(settings_row, self.auto_sensitivity_var, "Low", "Medium", "High")
-        sensitivity_menu.configure(bg=BRAND["panel2"], fg=BRAND["text"], activebackground=BRAND["bronze_hover"], relief="flat", width=9)
-        sensitivity_menu.pack(side="left")
-        self.action_button(settings_row, "Save Auto Settings", self.save_auto_capture_settings_ui).pack(side="left", padx=12)
+        jobs = self.workflow_job_snapshot(include_completed=False)
+        pending_mobile = [job for job in jobs if job.get("source") == "Mobile Queue"]
+        staged = [job for job in jobs if job.get("source") == "Mobile Capture" and job.get("state") != "Failed"]
+        queue_card = self.card(workspace, fill="x", pady=(0, 14), ipady=10)
+        queue_head = tk.Frame(queue_card, bg=BRAND["panel"])
+        queue_head.pack(fill="x", padx=18, pady=(12, 4))
+        self.label(queue_head, "PENDING MOBILE CAPTURES", 12, BRAND["gold"], True, side="left")
+        self.action_button(queue_head, "Open Capture Queue", lambda: self.show_page("Capture Queue")).pack(side="right")
+        if pending_mobile:
+            for job in pending_mobile[:3]:
+                self.workflow_job_row(queue_card, job, compact=True)
+        else:
+            self.label(queue_card, "No mobile captures are waiting.", 9, BRAND["muted"], False, anchor="w", padx=18, pady=(6, 12))
+
+        staged_card = self.card(workspace, fill="x", pady=(0, 14), ipady=10)
+        self.label(staged_card, "RECENTLY STAGED CAPTURES", 12, BRAND["gold"], True, anchor="w", padx=18, pady=(12, 4))
+        if staged:
+            for job in staged[:3]:
+                self.workflow_job_row(staged_card, job, compact=True)
+        else:
+            self.label(staged_card, "No staged captures yet.", 9, BRAND["muted"], False, anchor="w", padx=18, pady=(6, 12))
 
         self.label(rail, "RECENT CAPTURES", 12, BRAND["gold"], True, anchor="w", padx=14, pady=(14, 8))
         rail_buttons = tk.Frame(rail, bg=BRAND["panel"])
@@ -5655,13 +5970,16 @@ class PutnamOS(BaseTk):
         messagebox.showinfo("Capture Batch Complete", message)
 
     def auto_check_obs_connection(self):
+        if self.app_closing:
+            return
         try:
             status = self.capture_service.obs_status()
             self.update_capture_obs_indicator(status)
         except Exception:
             self.update_capture_obs_indicator("")
         finally:
-            self.after(30000, self.auto_check_obs_connection)
+            if not self.app_closing:
+                self.obs_health_after_id = self.after(30000, self.auto_check_obs_connection)
 
     def auto_status(self, text):
         self.auto_capture_state = text
@@ -6015,6 +6333,36 @@ class PutnamOS(BaseTk):
         self.status.set(status)
         if not silent and not obs_status_is_connected(status):
             messagebox.showinfo("Capture Studio", status)
+
+    def marketplace_page(self):
+        self.header("Marketplace", "Review pricing strategy and marketplace opportunities when needed.")
+        wrap = self.scrollable_page()
+
+        decision = self.card(wrap, fill="x", pady=(0, 14), ipady=12)
+        self.label(decision, "DECISION ENGINE", 12, BRAND["gold"], True, anchor="w", padx=18, pady=(14, 4))
+        initial = run_decision_engine_check(write_log=False)
+        self.decision_engine_var = tk.StringVar(value=decision_engine_summary_text(initial))
+        tk.Label(decision, textvariable=self.decision_engine_var, bg=BRAND["panel"], fg=BRAND["muted"], font=self.ui_font("label"), justify="left", wraplength=960).pack(anchor="w", fill="x", padx=18, pady=(0, 10))
+        buttons = tk.Frame(decision, bg=BRAND["panel"])
+        buttons.pack(anchor="w", padx=18, pady=(0, 12))
+        self.primary_button(buttons, "Run Decision Engine Check", self.run_decision_engine_check_ui).pack(side="left")
+        self.action_button(buttons, "Open Latest Decision Log", self.open_latest_decision_log).pack(side="left", padx=10)
+
+        intelligence = self.card(wrap, fill="x", pady=(0, 14), ipady=12)
+        self.label(intelligence, "MARKETPLACE INTELLIGENCE", 12, BRAND["gold"], True, anchor="w", padx=18, pady=(14, 4))
+        self.label(intelligence, "Standalone analysis tools for pricing strategy, comps, and listing recommendations.", 9, BRAND["muted"], False, anchor="w", padx=18, pady=(0, 10))
+        self.primary_button(intelligence, "Open Marketplace Intelligence", self.open_marketplace_intelligence).pack(anchor="w", padx=18, pady=(0, 12))
+
+    def open_marketplace_intelligence(self):
+        launcher = ROOT / "Platform" / "Marketplace_Intelligence" / "Run Marketplace Intelligence.bat"
+        if not launcher.exists():
+            messagebox.showinfo(APP_NAME, "Marketplace Intelligence launcher is not available.")
+            return
+        try:
+            os.startfile(launcher)
+            self.status.set("Opened Marketplace Intelligence.")
+        except Exception as exc:
+            messagebox.showerror(APP_NAME, str(exc))
 
     def orders_page(self):
         self.header("Orders", "Orders v1: import eBay orders CSVs and generate printable pick slips.")
@@ -7167,115 +7515,6 @@ class PutnamOS(BaseTk):
         self.inventory_location_registry_panel(wrap)
         self.inventory_label_center_panel(wrap)
 
-        # Physical Inventory Conversion creates trusted inventory from cards in hand.
-        # Inventory Review preserves the future audit workflow for inventory records that already exist.
-        setup = self.card(wrap, fill="x", pady=(0, 12), ipady=10)
-        self.label(setup, "VERIFIED INVENTORY REVIEW (FUTURE AUDIT)", 12, BRAND["gold"], True, anchor="w", padx=18, pady=(12, 4))
-        self.label(
-            setup,
-            "Future workflow for verifying inventory records that already exist. The current production focus is Physical Inventory Conversion above.",
-            9,
-            BRAND["muted"],
-            False,
-            anchor="w",
-            padx=18,
-            pady=(0, 10),
-        )
-
-        latest = latest_ebay_active_listings_report()
-        self.inventory_source_var = tk.StringVar(value=str(latest or ""))
-        self.inventory_game_var = tk.StringVar(value="Pokemon")
-        self.inventory_location_var = tk.StringVar(value=suggest_next_location("Pokemon", root=ROOT))
-        self.inventory_capture_var = tk.BooleanVar(value=False)
-
-        source_row = tk.Frame(setup, bg=BRAND["panel"])
-        source_row.pack(fill="x", padx=18, pady=3)
-        self.label(source_row, "Source", 9, BRAND["muted"], False, side="left", padx=(0, 8))
-        tk.Entry(source_row, textvariable=self.inventory_source_var, bg=BRAND["panel2"], fg=BRAND["text"],
-                 insertbackground=BRAND["text"], relief="flat", width=92).pack(side="left", fill="x", expand=True)
-        self.action_button(source_row, "Latest eBay", self.inventory_use_latest_source).pack(side="left", padx=8)
-        self.action_button(source_row, "Browse", self.inventory_browse_source).pack(side="left")
-
-        config_row = tk.Frame(setup, bg=BRAND["panel"])
-        config_row.pack(fill="x", padx=18, pady=6)
-        self.label(config_row, "Game", 9, BRAND["muted"], False, side="left", padx=(0, 8))
-        game_menu = tk.OptionMenu(config_row, self.inventory_game_var, "Pokemon", "Magic", "One Piece", "All")
-        game_menu.configure(bg=BRAND["panel2"], fg=BRAND["text"], activebackground=BRAND["bronze_hover"], relief="flat", width=12)
-        game_menu.pack(side="left")
-        self.action_button(config_row, "Suggest Location", self.inventory_suggest_location).pack(side="left", padx=8)
-        self.label(config_row, "Batch Location", 9, BRAND["muted"], False, side="left", padx=(12, 8))
-        tk.Entry(config_row, textvariable=self.inventory_location_var, bg=BRAND["panel2"], fg=BRAND["text"],
-                 insertbackground=BRAND["text"], relief="flat", width=14).pack(side="left")
-        tk.Checkbutton(
-            config_row,
-            text="Capture verification images",
-            variable=self.inventory_capture_var,
-            bg=BRAND["panel"],
-            fg=BRAND["muted"],
-            selectcolor=BRAND["panel2"],
-            activebackground=BRAND["panel"],
-            activeforeground=BRAND["text"],
-        ).pack(side="left", padx=16)
-
-        setup_actions = tk.Frame(setup, bg=BRAND["panel"])
-        setup_actions.pack(anchor="w", padx=18, pady=(4, 12))
-        self.primary_button(setup_actions, "Start Review Session", self.inventory_start_audit).pack(side="left")
-        self.action_button(setup_actions, "Resume Review", self.inventory_resume_audit).pack(side="left", padx=8)
-        self.action_button(setup_actions, "Generate Review Reports", self.inventory_generate_reports).pack(side="left", padx=8)
-        self.action_button(setup_actions, "Launch Capture Studio", self.launch_capture_studio).pack(side="left", padx=8)
-        self.action_button(setup_actions, "Open Review Folder", lambda: os.startfile(INVENTORY_AUDIT_DIR)).pack(side="left", padx=8)
-
-        queue = self.card(wrap, fill="both", expand=True, ipady=12)
-        self.label(queue, "VERIFIED INVENTORY REVIEW", 12, BRAND["gold"], True, anchor="w", padx=18, pady=(12, 4))
-        self.inventory_progress_var = tk.StringVar(value="No review session loaded.")
-        self.inventory_title_var = tk.StringVar(value="")
-        self.inventory_meta_var = tk.StringVar(value="")
-        self.inventory_stats_var = tk.StringVar(value="")
-        tk.Label(queue, textvariable=self.inventory_progress_var, bg=BRAND["panel"], fg=BRAND["gold"],
-                 font=("Segoe UI", 11, "bold"), justify="left").pack(anchor="w", padx=18, pady=(0, 6))
-        tk.Label(queue, textvariable=self.inventory_title_var, bg=BRAND["panel"], fg=BRAND["text"],
-                 font=("Segoe UI", 14, "bold"), justify="left", wraplength=940).pack(anchor="w", padx=18, pady=(0, 8))
-        tk.Label(queue, textvariable=self.inventory_meta_var, bg=BRAND["panel"], fg=BRAND["muted"],
-                 font=("Segoe UI", 10), justify="left", wraplength=1000).pack(anchor="w", padx=18, pady=(0, 8))
-
-        location_row = tk.Frame(queue, bg=BRAND["panel"])
-        location_row.pack(fill="x", padx=18, pady=(0, 8))
-        self.inventory_current_location_var = tk.StringVar(value="")
-        self.inventory_new_location_var = tk.StringVar(value="")
-        self.label(location_row, "Current Location", 9, BRAND["muted"], False, side="left", padx=(0, 8))
-        tk.Entry(location_row, textvariable=self.inventory_current_location_var, bg=BRAND["panel2"], fg=BRAND["text"],
-                 relief="flat", width=18, state="readonly", readonlybackground=BRAND["panel2"]).pack(side="left")
-        self.label(location_row, "New Location", 9, BRAND["muted"], False, side="left", padx=(12, 8))
-        tk.Entry(location_row, textvariable=self.inventory_new_location_var, bg=BRAND["panel2"], fg=BRAND["text"],
-                 insertbackground=BRAND["text"], relief="flat", width=18).pack(side="left")
-        self.action_button(location_row, "Save Location", self.inventory_save_location).pack(side="left", padx=8)
-        self.action_button(location_row, "Use Last Location", self.inventory_use_last_location).pack(side="left")
-
-        notes_row = tk.Frame(queue, bg=BRAND["panel"])
-        notes_row.pack(fill="x", padx=18, pady=(0, 8))
-        self.label(notes_row, "Notes", 9, BRAND["muted"], False, side="left", padx=(0, 8))
-        self.inventory_notes_var = tk.StringVar(value="")
-        tk.Entry(notes_row, textvariable=self.inventory_notes_var, bg=BRAND["panel2"], fg=BRAND["text"],
-                 insertbackground=BRAND["text"], relief="flat").pack(side="left", fill="x", expand=True)
-
-        actions = tk.Frame(queue, bg=BRAND["panel"])
-        actions.pack(anchor="w", padx=18, pady=(0, 10))
-        self.primary_button(actions, "Mark Confirmed", lambda: self.inventory_apply_action("confirm")).pack(side="left")
-        self.action_button(actions, "Already Correct", lambda: self.inventory_apply_action("already_correct")).pack(side="left", padx=8)
-        self.action_button(actions, "Mark Missing", lambda: self.inventory_apply_action("missing")).pack(side="left", padx=8)
-        self.action_button(actions, "Needs Review", lambda: self.inventory_apply_action("needs_review")).pack(side="left", padx=8)
-        self.action_button(actions, "Save Progress", self.inventory_save_progress).pack(side="left", padx=8)
-        self.action_button(actions, "Skip", lambda: self.inventory_apply_action("skip")).pack(side="left", padx=8)
-        self.action_button(actions, "Previous", lambda: self.inventory_move(-1)).pack(side="left", padx=(18, 8))
-        self.action_button(actions, "Next", lambda: self.inventory_move(1)).pack(side="left")
-
-        tk.Label(queue, textvariable=self.inventory_stats_var, bg=BRAND["panel"], fg=BRAND["muted"],
-                 font=("Segoe UI", 10), justify="left", wraplength=1000).pack(anchor="w", padx=18, pady=(0, 10))
-        self.label(queue, "Review Progress", 9, BRAND["gold"], True, anchor="w", padx=18, pady=(0, 4))
-        self.inventory_audit_session = load_inventory_audit_session()
-        if self.inventory_audit_session:
-            self.inventory_update_queue_view()
-
     def inventory_use_latest_source(self):
         latest = latest_ebay_active_listings_report()
         if not latest:
@@ -7572,7 +7811,7 @@ class PutnamOS(BaseTk):
         if not str(p).lower().endswith(".csv"):
             messagebox.showwarning("CardVector OS", "Please drop a CSV file.")
             return
-        if getattr(self, "current_page", "") == "Import":
+        if getattr(self, "current_page", "") == "Processing":
             self.import_carduploader_csv_path(p)
             return
         self.load(p)
@@ -7737,6 +7976,28 @@ class PutnamOS(BaseTk):
         self.action_button(btns, "Save OBS Settings", self.save_obs_settings_ui).pack(side="left")
         self.action_button(btns, "Check OBS Status", self.check_obs_status_ui).pack(side="left", padx=8)
 
+        capture_panel = self.card(wrap, fill="x", pady=(14, 0), ipady=14)
+        self.label(capture_panel, "CAPTURE SETTINGS", 12, BRAND["gold"], True, anchor="w", padx=18, pady=(12, 8))
+        capture_config = load_auto_capture_settings()
+        self.auto_stability_delay_var = tk.StringVar(value=str(capture_config.get("stability_delay_seconds", 1.0)))
+        self.auto_lockout_var = tk.StringVar(value=str(capture_config.get("duplicate_lockout_seconds", 2.0)))
+        self.auto_poll_interval_var = tk.StringVar(value=str(capture_config.get("frame_poll_interval_ms", 200)))
+        self.auto_sensitivity_var = tk.StringVar(value=str(capture_config.get("sensitivity", "Medium")))
+        capture_row = tk.Frame(capture_panel, bg=BRAND["panel"])
+        capture_row.pack(fill="x", padx=18, pady=(0, 10))
+        for label_text, var, width in [
+            ("Stability sec", self.auto_stability_delay_var, 8),
+            ("Lockout sec", self.auto_lockout_var, 8),
+            ("Poll ms", self.auto_poll_interval_var, 8),
+        ]:
+            self.label(capture_row, label_text, 9, BRAND["muted"], False, side="left", padx=(0, 6))
+            tk.Entry(capture_row, textvariable=var, width=width, bg=BRAND["panel2"], fg=BRAND["text"], relief="flat", insertbackground=BRAND["text"]).pack(side="left", padx=(0, 12), ipady=3)
+        self.label(capture_row, "Sensitivity", 9, BRAND["muted"], False, side="left", padx=(0, 6))
+        sensitivity_menu = tk.OptionMenu(capture_row, self.auto_sensitivity_var, "Low", "Medium", "High")
+        sensitivity_menu.configure(bg=BRAND["panel2"], fg=BRAND["text"], activebackground=BRAND["bronze_hover"], relief="flat", width=9)
+        sensitivity_menu.pack(side="left")
+        self.action_button(capture_row, "Save Auto Settings", self.save_auto_capture_settings_ui).pack(side="left", padx=12)
+
         ebay_panel = self.card(wrap, fill="x", pady=(14, 0), ipady=14)
         self.label(ebay_panel, "EBAY BUSINESS POLICIES", 12, BRAND["gold"], True, anchor="w", padx=18, pady=(12, 8))
         policies = load_ebay_business_policies()
@@ -7818,14 +8079,22 @@ class PutnamOS(BaseTk):
         self.label(app_panel, "CARDUPLOADER", 12, BRAND["gold"], True, anchor="w", padx=18, pady=(12, 8))
         app_config = load_app_config()
         self.carduploader_url_var = tk.StringVar(value=app_config.get("carduploader_url", ""))
-        row = tk.Frame(app_panel, bg=BRAND["panel"])
-        row.pack(fill="x", padx=18, pady=4)
-        self.label(row, "carduploader_url", 9, BRAND["muted"], False, side="left", padx=(0, 8))
-        tk.Entry(row, textvariable=self.carduploader_url_var, bg=BRAND["panel2"], fg=BRAND["text"],
-                 insertbackground=BRAND["text"], relief="flat").pack(side="left", fill="x", expand=True)
+        self.mobile_capture_url_var = tk.StringVar(value=app_config.get("mobile_capture_url", "https://cardvector.app/capture"))
+        self.ebay_seller_hub_url_var = tk.StringVar(value=app_config.get("ebay_seller_hub_url", "https://www.ebay.com/sh/ovw"))
+        self.ebay_upload_url_var = tk.StringVar(value=app_config.get("ebay_upload_url", "https://www.ebay.com/sh/reports/uploads"))
+        for label_text, var in [
+            ("CardUploader", self.carduploader_url_var),
+            ("Mobile Capture", self.mobile_capture_url_var),
+            ("eBay Seller Hub", self.ebay_seller_hub_url_var),
+            ("eBay Upload", self.ebay_upload_url_var),
+        ]:
+            row = tk.Frame(app_panel, bg=BRAND["panel"])
+            row.pack(fill="x", padx=18, pady=4)
+            self.label(row, label_text, 9, BRAND["muted"], False, side="left", padx=(0, 8))
+            tk.Entry(row, textvariable=var, bg=BRAND["panel2"], fg=BRAND["text"], insertbackground=BRAND["text"], relief="flat").pack(side="left", fill="x", expand=True)
         self.label(
             app_panel,
-            f"Saved locally at {APP_CONFIG_PATH}. Leave blank to disable the Open CardUploader button.",
+            f"Workflow handoff links are saved locally at {APP_CONFIG_PATH}.",
             9,
             BRAND["muted"],
             False,
@@ -7835,9 +8104,21 @@ class PutnamOS(BaseTk):
         )
         app_btns = tk.Frame(app_panel, bg=BRAND["panel"])
         app_btns.pack(anchor="w", padx=18, pady=(0, 12))
-        self.action_button(app_btns, "Save CardUploader URL", self.save_carduploader_settings_ui).pack(side="left")
+        self.action_button(app_btns, "Save Workflow Links", self.save_carduploader_settings_ui).pack(side="left")
         self.action_button(app_btns, "Open CardUploader", self.open_carduploader).pack(side="left", padx=8)
         self.action_button(app_btns, "About CardVector OS", self.show_about_dialog).pack(side="left")
+
+        system_panel = self.card(wrap, fill="x", pady=(14, 0), ipady=14)
+        self.label(system_panel, "SYSTEM & LOCATIONS", 12, BRAND["gold"], True, anchor="w", padx=18, pady=(12, 6))
+        ready, message = self.mobile_capture_queue_service.environment_ready()
+        environment_label = "Configured" if ready else "Needs Attention"
+        self.label(system_panel, f"Supabase environment: {environment_label}\n{sanitize_error_message(message)}", 9, BRAND["muted"], False, anchor="w", padx=18, pady=(0, 8))
+        self.label(system_panel, f"Application root: {ROOT}\nCapture: {CAPTURE_ROOT}\nImports: {IMPORTS}\nExports: {EXPORTS}", 8, BRAND["muted2"], False, anchor="w", padx=18, pady=(0, 10))
+        system_actions = tk.Frame(system_panel, bg=BRAND["panel"])
+        system_actions.pack(anchor="w", padx=18, pady=(0, 12))
+        self.action_button(system_actions, "Sync Locations", self.sync_locations_ui).pack(side="left")
+        self.action_button(system_actions, "Open Inventory Tools", lambda: self.show_page("Inventory")).pack(side="left", padx=8)
+        self.action_button(system_actions, "Open Capture Queue", lambda: self.show_page("Capture Queue")).pack(side="left")
 
     def save_obs_settings_ui(self):
         try:
@@ -7901,21 +8182,43 @@ class PutnamOS(BaseTk):
 
     def save_carduploader_settings_ui(self):
         try:
-            save_app_config({"carduploader_url": self.carduploader_url_var.get()})
-            self.status.set(f"CardUploader URL saved to {APP_CONFIG_PATH}")
-            append_activity("Updated local CardUploader URL setting")
-            messagebox.showinfo("CardVector OS Settings", "CardUploader URL saved.")
+            save_app_config(
+                {
+                    "carduploader_url": self.carduploader_url_var.get(),
+                    "mobile_capture_url": self.mobile_capture_url_var.get(),
+                    "ebay_seller_hub_url": self.ebay_seller_hub_url_var.get(),
+                    "ebay_upload_url": self.ebay_upload_url_var.get(),
+                }
+            )
+            self.status.set(f"Workflow links saved to {APP_CONFIG_PATH}")
+            append_activity("Updated local workflow handoff links")
+            messagebox.showinfo("CardVector OS Settings", "Workflow links saved.")
         except Exception as exc:
-            self.status.set("Could not save CardUploader URL.")
+            self.status.set("Could not save workflow links.")
             messagebox.showerror("CardVector OS Settings", str(exc))
+
+    def sync_locations_ui(self):
+        self.capture_queue_run_background(
+            "Synchronizing locations...",
+            lambda: self.mobile_capture_queue_service.sync_locations(strict=True),
+            self.finish_location_sync,
+        )
+
+    def finish_location_sync(self, result):
+        self.status.set("Location synchronization complete.")
+        messagebox.showinfo(
+            "CardVector Locations",
+            f"ETBs synchronized: {result.get('cloud_etb_count', result.get('etb_count', 0))}\n"
+            f"Locations synchronized: {result.get('cloud_location_count', result.get('location_count', 0))}",
+        )
 
     def show_about_dialog(self):
         messagebox.showinfo(
             "About CardVector OS",
             f"CardVector OS v{APP_VERSION}\n{PLATFORM_VERSION}\n\n"
-            "CardVector OS orchestrates Capture Studio, Pricing Engine, inventory, "
-            "business intelligence, and workflow guidance.\n\n"
-            "Putnam Collectibles is the operating business. CardUploader owns card recognition and listing generation.",
+            "CardVector OS conducts the workflow from Capture to CardUploader, "
+            "Pricing, and eBay handoff.\n\n"
+            "Putnam Collectibles is the operating business. CardUploader owns card recognition and managed inventory; eBay owns listing publication and fulfillment.",
         )
 
     def placeholder_page(self, name):
@@ -7960,6 +8263,9 @@ Goal: Capture the real listing workflow for process improvement and content crea
         return "\n".join(lines)
 
     def update_pricing_progress(self, stage, percent=None, current=None, total=None):
+        if threading.current_thread() is not threading.main_thread():
+            self.dispatch_ui(lambda: self.update_pricing_progress(stage, percent, current, total))
+            return
         elapsed = None
         if self.pricing_started_at is not None:
             elapsed = time.perf_counter() - self.pricing_started_at
@@ -7979,6 +8285,15 @@ Goal: Capture the real listing workflow for process improvement and content crea
 
     def set_pricing_busy(self, running):
         self.pricing_running = running
+        progress_card = getattr(self, "pricing_progress_card", None)
+        if progress_card is not None:
+            try:
+                if running and not progress_card.winfo_ismapped():
+                    progress_card.pack(fill="x", pady=(0, 14), ipady=10)
+                elif not running and progress_card.winfo_exists():
+                    progress_card.pack_forget()
+            except Exception:
+                pass
         if self.pricing_action_button is not None:
             try:
                 self.pricing_action_button.configure(state=("disabled" if running else "normal"))
@@ -8016,6 +8331,34 @@ Goal: Capture the real listing workflow for process improvement and content crea
             self.output_path_var.set(str(self.current_pricing_job or ""))
         except Exception:
             pass
+        active_job = self.active_workflow_job or {}
+        capture_folder = str(active_job.get("capture_folder") or "")
+        if self.current_pricing_job and active_job:
+            export_path = self.current_pricing_job / "ebay_upload_ready.csv"
+            self.active_workflow_job = {
+                **active_job,
+                "pricing_job_path": str(self.current_pricing_job),
+                "export_csv_path": str(export_path if export_path.exists() else ""),
+                "stage": "Ready for eBay Upload",
+                "state": "Ready",
+                "action": "Open Export Folder",
+                "updated_timestamp": datetime.now().isoformat(timespec="seconds"),
+            }
+        if self.current_pricing_job and capture_folder and Path(capture_folder).exists():
+            export_path = self.current_pricing_job / "ebay_upload_ready.csv"
+            update_workflow_context(
+                capture_folder,
+                capture_session_id=active_job.get("capture_session_id", ""),
+                capture_type=active_job.get("capture_type", ""),
+                etb_location=active_job.get("etb_location", ""),
+                imported_csv_path=str(self.loaded or active_job.get("imported_csv_path") or ""),
+                row_count=len(self.rows or []),
+                pricing_job_path=str(self.current_pricing_job),
+                export_csv_path=str(export_path if export_path.exists() else ""),
+                current_workflow_state="Ready for eBay Upload",
+                last_error="",
+            )
+            self.workflow_local_jobs_refreshed = 0.0
 
     def open_current_output_folder(self):
         if not self.current_pricing_job or not self.current_pricing_job.exists():
@@ -8207,9 +8550,9 @@ Goal: Capture the real listing workflow for process improvement and content crea
             return
         self.load(p)
 
-    def load(self, p):
+    def load(self, p, rows=None):
         self.loaded = Path(p)
-        self.rows = read_csv(p)
+        self.rows = list(rows) if rows is not None else read_csv(p)
         self.detected = detect_type(self.rows)
         self.set_current_pricing_job(None)
         try:
@@ -8244,7 +8587,21 @@ Goal: Capture the real listing workflow for process improvement and content crea
         return validate_location(value)
 
     def confirm_listing_export_step(self, _phase, message):
-        return messagebox.askyesno("CardVector Pricing Engine", message)
+        if threading.current_thread() is threading.main_thread():
+            return messagebox.askyesno("CardVector Pricing Engine", message)
+        response = {"value": False}
+        completed = threading.Event()
+
+        def ask_on_ui_thread():
+            try:
+                response["value"] = messagebox.askyesno("CardVector Pricing Engine", message)
+            finally:
+                completed.set()
+
+        if not self.dispatch_ui(ask_on_ui_thread):
+            completed.set()
+        completed.wait()
+        return response["value"]
 
     def auto_run(self):
         if self.pricing_running:
@@ -8253,6 +8610,16 @@ Goal: Capture the real listing workflow for process improvement and content crea
             self.browse()
             if not self.loaded:
                 return
+        if self.detected != "carduploader_new":
+            append_pricing_performance_log(
+                pricing_performance_record(self.loaded, row_count=len(self.rows or []), status="unsupported_type")
+            )
+            messagebox.showwarning(
+                "CardVector OS",
+                "This workflow currently analyzes CardUploader new-listing CSVs. Existing listing revision support remains available through the pricing engine.",
+            )
+            return
+
         self.pricing_started_at = time.perf_counter()
         self.set_pricing_busy(True)
         try:
@@ -8262,39 +8629,37 @@ Goal: Capture the real listing workflow for process improvement and content crea
                 self.result_var.set("")
             if hasattr(self, "flow_var"):
                 self.flow_var.set("Loading -> Validating -> Pricing -> Confirming -> Writing output -> Complete")
-            self.status.set("Loading.")
-            if self.detected == "carduploader_new":
-                self.update_pricing_progress("Validating", percent=15, current=0, total=len(self.rows))
-                missing_names, validation_warnings = self.pricing_input_messages()
-                if missing_names:
-                    message = "Card name is required."
-                    if len(missing_names) <= 5:
-                        message += f"\nRows missing card name: {', '.join(str(i) for i in missing_names)}"
-                    else:
-                        message += f"\nRows missing card name: {len(missing_names)} rows."
-                    self.update_pricing_progress("Card name is required.", percent=0)
-                    self.status.set("Card name is required.")
-                    append_pricing_performance_log(
-                        pricing_performance_record(
-                            self.loaded,
-                            row_count=len(self.rows or []),
-                            started_at=self.pricing_started_at,
-                            status="validation_error",
-                        )
-                    )
-                    messagebox.showerror("CardVector OS", message)
-                    return
-                if validation_warnings:
-                    warning_text = "\n".join(dict.fromkeys(validation_warnings))
-                    self.status.set(warning_text)
-                    messagebox.showwarning("CardVector OS", warning_text)
-                game_hint = infer_game_from_rows(self.rows)
-                self.update_pricing_progress("Confirming", percent=25, current=len(self.rows), total=len(self.rows))
-                batch_location = self.prompt_listing_export_batch(game_hint)
-                if not batch_location:
-                    raise ExportCancelled("Export canceled because batch/location was blank.")
-                self.update_pricing_progress("Confirming", percent=30, current=len(self.rows), total=len(self.rows))
-                job, rows, changes, opp, export_summary = audit_new_listing(
+            self.update_pricing_progress("Validating", percent=15, current=0, total=len(self.rows))
+            missing_names, validation_warnings = self.pricing_input_messages()
+            if missing_names:
+                message = "Card name is required."
+                if len(missing_names) <= 5:
+                    message += f"\nRows missing card name: {', '.join(str(i) for i in missing_names)}"
+                else:
+                    message += f"\nRows missing card name: {len(missing_names)} rows."
+                self.finish_pricing_failure(ValueError(message), status="validation_error")
+                return
+            if validation_warnings:
+                warning_text = "\n".join(dict.fromkeys(validation_warnings))
+                self.status.set(warning_text)
+                messagebox.showwarning("CardVector OS", warning_text)
+            game_hint = infer_game_from_rows(self.rows)
+            self.update_pricing_progress("Confirming", percent=25, current=len(self.rows), total=len(self.rows))
+            batch_location = self.prompt_listing_export_batch(game_hint)
+            if not batch_location:
+                raise ExportCancelled("Export canceled because batch/location was blank.")
+        except ExportCancelled as exc:
+            self.finish_pricing_failure(exc, status="canceled")
+            return
+        except Exception as exc:
+            self.finish_pricing_failure(exc, status="error")
+            return
+
+        self.update_pricing_progress("Pricing", percent=30, current=0, total=len(self.rows))
+
+        def worker():
+            try:
+                result = audit_new_listing(
                     self.loaded,
                     use_market=True,
                     batch_location=batch_location,
@@ -8302,89 +8667,70 @@ Goal: Capture the real listing workflow for process improvement and content crea
                     confirm_callback=self.confirm_listing_export_step,
                     progress_callback=self.update_pricing_progress,
                 )
-                total_runtime = export_summary.get("total_runtime_seconds")
-                runtime_text = elapsed_display(total_runtime) if total_runtime is not None else ""
-                accepted = int(export_summary.get("comp_total_accepted") or 0)
-                rejected = int(export_summary.get("comp_total_rejected") or 0)
-                self.set_current_pricing_job(job, export_summary)
-                self.update_pricing_progress("Complete", percent=100, current=rows, total=rows)
-                comp_status = f"Search complete: {accepted} accepted, {rejected} rejected."
-                acquisition = current_acquisition()
-                acquisition_status = ""
-                if acquisition:
-                    acquisition_status = (
-                        f"\nAcquisition: {acquisition.get('acquisition_name', '')}"
-                        f"\nPurchase price: ${acquisition.get('purchase_price', '0.00')}"
-                        f"\nEstimated listing value: ${export_summary.get('estimated_listing_value', '0.00')}"
-                        "\nEstimated break-even progress: placeholder"
-                    )
-                if accepted == 0:
-                    comp_status += "\nNo accepted comps found. Review rejected comps report for details."
-                    comp_status += "\nNo pricing data available for this card. See rejected comps for explanation."
-                try:
-                    self.flow_var.set(f"OK Loaded {rows} rows -> OK Optimized pricing -> OK Confirmed policies -> OK Output ready")
-                    self.result_var.set(
-                        f"{comp_status}\n"
-                        f"Complete.\nRows: {rows}\nOptimized price changes: {changes}\n"
-                        f"Cart sweeteners: {export_summary['cart_sweetener_count']}\n"
-                        f"Market opportunities: {opp}\n"
-                        f"{acquisition_status}\n"
-                        f"Runtime: {runtime_text or 'n/a'}\n"
-                        f"Output: {job}"
-                    )
-                except Exception:
-                    pass
-                self.status.set(comp_status.replace("\n", " "))
-                messagebox.showinfo(
-                    "CardVector OS",
-                    f"Analysis complete.\nRows: {rows}\nOptimized price changes: {changes}\n"
-                    f"Cart sweeteners: {export_summary['cart_sweetener_count']}\n"
-                    f"Market opportunities: {opp}\n"
-                    f"{acquisition_status}\n"
-                    f"{comp_status}\n"
-                    f"Runtime: {runtime_text or 'n/a'}\n\nOutput folder:\n{job}"
-                )
-                os.startfile(job)
-            else:
-                append_pricing_performance_log(
-                    pricing_performance_record(
-                        self.loaded,
-                        row_count=len(self.rows or []),
-                        started_at=self.pricing_started_at,
-                        status="unsupported_type",
-                    )
-                )
-                messagebox.showwarning("CardVector OS", "This workflow currently analyzes CardUploader new-listing CSVs. Existing listing revision support remains available through the pricing engine.")
-        except ExportCancelled as e:
-            self.update_pricing_progress("Canceled", percent=0)
-            self.status.set("Export canceled.")
-            append_pricing_performance_log(
-                pricing_performance_record(
-                    self.loaded,
-                    row_count=len(self.rows or []),
-                    started_at=self.pricing_started_at,
-                    output_folder=self.current_pricing_job or "",
-                    status="canceled",
-                )
+            except ExportCancelled as exc:
+                self.dispatch_ui(lambda error=exc: self.finish_pricing_failure(error, status="canceled"))
+                return
+            except Exception as exc:
+                self.dispatch_ui(lambda error=exc: self.finish_pricing_failure(error, status="error"))
+                return
+            self.dispatch_ui(lambda value=result: self.finish_pricing_success(value))
+
+        threading.Thread(target=worker, daemon=True).start()
+
+    def finish_pricing_success(self, result):
+        job, rows, changes, opportunities, export_summary = result
+        total_runtime = export_summary.get("total_runtime_seconds")
+        runtime_text = elapsed_display(total_runtime) if total_runtime is not None else "n/a"
+        accepted = int(export_summary.get("comp_total_accepted") or 0)
+        rejected = int(export_summary.get("comp_total_rejected") or 0)
+        self.set_current_pricing_job(job, export_summary)
+        self.update_pricing_progress("Complete", percent=100, current=rows, total=rows)
+        comp_status = f"Search complete: {accepted} accepted, {rejected} rejected."
+        if accepted == 0:
+            comp_status += " Review rejected comps for details."
+        try:
+            if hasattr(self, "flow_var"):
+                self.flow_var.set(f"Loaded {rows} rows -> Optimized pricing -> Confirmed policies -> Output ready")
+            self.result_var.set(
+                f"Ready for eBay Upload\nRows: {rows}  |  Price changes: {changes}  |  "
+                f"Cart sweeteners: {export_summary['cart_sweetener_count']}  |  Opportunities: {opportunities}\n"
+                f"Runtime: {runtime_text}\nOutput: {job}"
             )
-            messagebox.showinfo("CardVector OS", str(e))
-        except Exception as e:
-            self.update_pricing_progress("Error", percent=0)
-            self.status.set(f"Error: {e}")
-            append_pricing_performance_log(
-                pricing_performance_record(
-                    self.loaded,
-                    row_count=len(self.rows or []),
-                    started_at=self.pricing_started_at,
-                    output_folder=self.current_pricing_job or "",
-                    status="error",
-                )
+        except Exception:
+            pass
+        self.status.set(comp_status)
+        self.set_pricing_busy(False)
+        self.pricing_started_at = None
+        self.workflow_job_snapshot(include_completed=True)
+        messagebox.showinfo(
+            "CardVector OS",
+            f"Pricing complete.\n\nRows: {rows}\nOptimized price changes: {changes}\n"
+            f"Cart sweeteners: {export_summary['cart_sweetener_count']}\n"
+            f"Market opportunities: {opportunities}\nRuntime: {runtime_text}\n\n"
+            f"Ready for eBay Upload:\n{job}",
+        )
+
+    def finish_pricing_failure(self, error, status="error"):
+        canceled = status == "canceled"
+        self.update_pricing_progress("Canceled" if canceled else "Error", percent=0)
+        self.status.set("Export canceled." if canceled else f"Pricing failed: {error}")
+        append_pricing_performance_log(
+            pricing_performance_record(
+                self.loaded,
+                row_count=len(self.rows or []),
+                started_at=self.pricing_started_at,
+                output_folder=self.current_pricing_job or "",
+                status=status,
             )
-            append_ui_bugfix_log(f"Runtime UI error: {e}")
-            messagebox.showerror("CardVector OS", str(e))
-        finally:
-            self.set_pricing_busy(False)
-            self.pricing_started_at = None
+        )
+        if not canceled:
+            append_ui_bugfix_log(f"Runtime UI error: {error}")
+        self.set_pricing_busy(False)
+        self.pricing_started_at = None
+        if canceled:
+            messagebox.showinfo("CardVector OS", str(error))
+        else:
+            messagebox.showerror("CardVector OS", str(error))
 
 
 if __name__ == "__main__":

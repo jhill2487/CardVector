@@ -17,13 +17,13 @@ End If
 stamp = Replace(Replace(Replace(CStr(Now), "/", "-"), ":", "-"), " ", "_")
 outFile = startupDir & "\production_launch_" & stamp & ".txt"
 Set outStream = fso.OpenTextFile(outFile, 8, True)
-outStream.WriteLine CStr(Now) & " | Launching CardVector OS v1.2.2 production"
+outStream.WriteLine CStr(Now) & " | Launching CardVector OS v1.3.0 production"
 outStream.Close
 
 cmdFile = startupDir & "\run_putnam_os_production.cmd"
 Set cmdOut = fso.OpenTextFile(cmdFile, 2, True)
 cmdOut.WriteLine "@echo off"
-cmdOut.WriteLine "echo %date% %time% ^| Starting CardVector OS v1.2.2 >> """ & outFile & """"
+cmdOut.WriteLine "echo %date% %time% ^| Starting CardVector OS v1.3.0 >> """ & outFile & """"
 cmdOut.WriteLine "py.exe """ & app & """ >> """ & outFile & """ 2>&1"
 cmdOut.Close
 
