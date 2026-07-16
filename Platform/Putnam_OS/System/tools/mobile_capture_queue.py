@@ -31,6 +31,8 @@ _bootstrap_repo_import_path()
 from Platform.putnam_paths import PUTNAM_OS_DIR, ROOT
 from Platform.Putnam_OS.System.app.inventory_locations import (
     DEFAULT_ETB_LOCATION_CAPACITY,
+    cloud_location_registry_snapshot,
+    merge_cloud_location_registry,
     normalize_etb_code,
     normalize_location_code,
 )
@@ -224,6 +226,37 @@ def list_pending_sessions(limit: int = 25) -> list[dict[str, Any]]:
         "select": "*",
     })
     return request_json("GET", f"/rest/v1/mobile_capture_sessions?{query}") or []
+
+
+def sync_cloud_location_registry() -> dict[str, Any]:
+    """Synchronize cloud identity with the desktop offline registry projection."""
+    snapshot = cloud_location_registry_snapshot()
+    if snapshot["etbs"]:
+        request_json(
+            "POST",
+            "/rest/v1/cardvector_etbs?on_conflict=etb_id",
+            snapshot["etbs"],
+            prefer="resolution=merge-duplicates,return=minimal",
+        )
+    if snapshot["locations"]:
+        request_json(
+            "POST",
+            "/rest/v1/cardvector_locations?on_conflict=location_id",
+            snapshot["locations"],
+            prefer="resolution=merge-duplicates,return=minimal",
+        )
+    cloud_etbs = request_json(
+        "GET",
+        "/rest/v1/cardvector_etbs?select=*&order=etb_id.asc",
+    ) or []
+    cloud_locations = request_json(
+        "GET",
+        "/rest/v1/cardvector_locations?select=*&order=etb_id.asc,location_code.asc",
+    ) or []
+    result = merge_cloud_location_registry(cloud_etbs, cloud_locations)
+    result["etbs_published"] = len(snapshot["etbs"])
+    result["locations_published"] = len(snapshot["locations"])
+    return result
 
 
 def load_session_images(session_id: str) -> list[dict[str, Any]]:
@@ -508,6 +541,8 @@ def queue_summary(rows: list[dict[str, Any]]) -> dict[str, int]:
 class MobileCaptureQueueService:
     def __init__(self, current_workstation: str | None = None):
         self.current_workstation = current_workstation or workstation_name()
+        self.last_location_sync_warning = ""
+        self.last_location_sync_result: dict[str, Any] = {}
 
     def environment_ready(self) -> tuple[bool, str]:
         try:
@@ -517,10 +552,25 @@ class MobileCaptureQueueService:
             return False, str(exc)
 
     def list_queue(self, include_diagnostics: bool = True, limit: int = 100) -> list[dict[str, Any]]:
+        self.sync_locations(strict=False)
         statuses = PRIMARY_QUEUE_STATUSES + (DIAGNOSTIC_QUEUE_STATUSES if include_diagnostics else ())
         return [session_row_model(row, self.current_workstation) for row in list_sessions(statuses, limit=limit)]
 
+    def sync_locations(self, strict: bool = True) -> dict[str, Any]:
+        try:
+            result = sync_cloud_location_registry()
+            self.last_location_sync_result = result
+            self.last_location_sync_warning = ""
+            return result
+        except Exception as exc:
+            message = sanitize_error_message(exc)
+            self.last_location_sync_warning = message
+            if strict:
+                raise MobileCaptureError(message) from exc
+            return {"changed": False, "warning": message}
+
     def process(self, session_id: str) -> dict[str, Any]:
+        self.sync_locations(strict=False)
         session = claim_session(session_id)
         images = load_session_images(session_id)
         try:
@@ -636,6 +686,12 @@ def cmd_retry_failed(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_sync_locations(_args: argparse.Namespace) -> int:
+    result = sync_cloud_location_registry()
+    print(json.dumps(result, indent=2))
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="CardVector Mobile Capture queue processor")
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -660,6 +716,9 @@ def build_parser() -> argparse.ArgumentParser:
     retry_parser = subparsers.add_parser("retry-failed", help="Return a failed mobile capture session to pending")
     retry_parser.add_argument("session_id")
     retry_parser.set_defaults(func=cmd_retry_failed)
+
+    sync_parser = subparsers.add_parser("sync-locations", help="Synchronize the desktop ETB registry with Supabase")
+    sync_parser.set_defaults(func=cmd_sync_locations)
     return parser
 
 

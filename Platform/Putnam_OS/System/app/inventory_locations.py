@@ -246,6 +246,212 @@ def etb_location_rows(path: Path | None = None) -> list[dict[str, Any]]:
     return sorted(rows, key=location_sort_key)
 
 
+def location_is_cloud_provisioned(location: dict[str, Any], active_location: str = "") -> bool:
+    """Return whether a local A-J slot represents a real cloud-visible location."""
+    try:
+        code = normalize_location_code(location.get("location_code", ""))
+    except ValueError:
+        return False
+    if bool(location.get("cloud_provisioned")):
+        return True
+    if active_location and code == normalize_location_code(active_location):
+        return True
+    if int(location.get("stored_count", location.get("estimated_assigned_count", 0)) or 0) > 0:
+        return True
+    try:
+        if normalize_status(location.get("status") or "Empty") != "Empty":
+            return True
+    except ValueError:
+        return True
+    return any(
+        str(location.get(field) or "").strip()
+        for field in (
+            "assigned_batch",
+            "assigned_session",
+            "carduploader_batch_id",
+            "carduploader_batch_url",
+            "carduploader_batch_name",
+        )
+    )
+
+
+def next_unprovisioned_location_code(existing_codes: list[str] | tuple[str, ...] | set[str]) -> str:
+    existing = set()
+    for value in existing_codes or []:
+        try:
+            existing.add(normalize_location_code(value))
+        except ValueError:
+            continue
+    return next((code for code in ETB_LOCATION_CODES if code not in existing), "")
+
+
+def cloud_location_registry_snapshot(path: Path | None = None) -> dict[str, list[dict[str, Any]]]:
+    """Build the validated desktop-to-cloud identity snapshot.
+
+    Desktop A-J rows are capacity slots. Only explicitly provisioned or
+    operationally used slots are cloud identities. All earlier letters are
+    included to preserve canonical sequential allocation.
+    """
+    registry = load_etb_registry(path)
+    etbs: list[dict[str, Any]] = []
+    locations: list[dict[str, Any]] = []
+    etb_statuses = {"Empty", "Active", "Full", "Needs Review", "Archived"}
+
+    for raw_etb in registry.get("locations", []):
+        try:
+            normalized = normalize_etb_record(raw_etb, registry)
+        except (TypeError, ValueError):
+            continue
+        etb_id = normalized["location_code"]
+        explicit_active = str(
+            raw_etb.get("current_active_location") or raw_etb.get("active_location") or ""
+        ).strip().upper()
+        if explicit_active:
+            try:
+                explicit_active = normalize_location_code(explicit_active)
+            except ValueError:
+                explicit_active = ""
+        status = str(normalized.get("status") or "Empty")
+        if status not in etb_statuses:
+            status = "Active" if int(normalized.get("stored_count") or 0) else "Empty"
+        etbs.append({
+            "etb_id": etb_id,
+            "status": status,
+            "capacity": int(normalized.get("total_capacity") or DEFAULT_ETB_CAPACITY),
+            "active_location_code": explicit_active or None,
+            "source_updated_at": str(raw_etb.get("updated_at") or registry.get("updated_at") or ""),
+        })
+
+        children = normalized.get("locations", [])
+        signaled_codes = [
+            normalize_location_code(child.get("location_code", ""))
+            for child in children
+            if location_is_cloud_provisioned(child, explicit_active)
+        ]
+        if not signaled_codes:
+            continue
+        highest_index = max(ETB_LOCATION_CODES.index(code) for code in signaled_codes)
+        provisioned_codes = set(ETB_LOCATION_CODES[: highest_index + 1])
+        for child in children:
+            code = normalize_location_code(child.get("location_code", ""))
+            if code not in provisioned_codes:
+                continue
+            capacity = int(child.get("capacity") or DEFAULT_ETB_LOCATION_CAPACITY)
+            stored_count = max(0, min(capacity, int(child.get("stored_count") or 0)))
+            status = normalize_status(child.get("status") or "Empty")
+            locations.append({
+                "location_id": etb_location_id(etb_id, code),
+                "etb_id": etb_id,
+                "location_code": code,
+                "status": status,
+                "capacity": capacity,
+                "stored_count": stored_count,
+                "assigned_batch": str(child.get("assigned_batch") or ""),
+                "source_updated_at": str(child.get("updated_at") or raw_etb.get("updated_at") or ""),
+            })
+
+    return {"etbs": etbs, "locations": locations}
+
+
+def merge_cloud_location_registry(
+    cloud_etbs: list[dict[str, Any]],
+    cloud_locations: list[dict[str, Any]],
+    path: Path | None = None,
+) -> dict[str, Any]:
+    """Merge cloud identity/provisioning into the offline desktop projection."""
+    registry = load_etb_registry(path)
+    local_etbs: dict[str, dict[str, Any]] = {}
+    for item in registry.get("locations", []):
+        try:
+            local_etbs[normalize_etb_code(item.get("location_code", ""))] = item
+        except ValueError:
+            continue
+
+    changed = False
+    added_etbs: list[str] = []
+    provisioned_locations: list[str] = []
+    now = timestamp()
+    for cloud_etb in cloud_etbs or []:
+        try:
+            etb_id = normalize_etb_code(cloud_etb.get("etb_id", ""))
+        except ValueError:
+            continue
+        local = local_etbs.get(etb_id)
+        if local is None:
+            local = {
+                "location_code": etb_id,
+                "etb_id": etb_id,
+                "status": "Empty",
+                "total_capacity": int(cloud_etb.get("capacity") or DEFAULT_ETB_CAPACITY),
+                "created_at": str(cloud_etb.get("created_at") or now),
+                "updated_at": now,
+                "locations": [],
+            }
+            registry.setdefault("locations", []).append(local)
+            local_etbs[etb_id] = local
+            added_etbs.append(etb_id)
+            changed = True
+        if not local.get("cloud_registered"):
+            local["cloud_registered"] = True
+            changed = True
+        active_code = str(cloud_etb.get("active_location_code") or "").strip()
+        if active_code and not (local.get("current_active_location") or local.get("active_location")):
+            try:
+                local["active_location"] = normalize_location_code(active_code)
+                local["current_active_location"] = local["active_location"]
+                changed = True
+            except ValueError:
+                pass
+        ensure_etb_location_records(local, registry)
+
+    for cloud_location in cloud_locations or []:
+        try:
+            etb_id = normalize_etb_code(cloud_location.get("etb_id", ""))
+            code = normalize_location_code(cloud_location.get("location_code", ""))
+            canonical_id = etb_location_id(etb_id, code)
+        except ValueError:
+            continue
+        if str(cloud_location.get("location_id") or canonical_id) != canonical_id:
+            continue
+        local_etb = local_etbs.get(etb_id)
+        if local_etb is None:
+            continue
+        children = ensure_etb_location_records(local_etb, registry)
+        child = next(item for item in children if item["location_code"] == code)
+        if not child.get("cloud_provisioned"):
+            child["cloud_provisioned"] = True
+            child["cloud_location_id"] = canonical_id
+            provisioned_locations.append(canonical_id)
+            changed = True
+        if int(child.get("stored_count") or 0) == 0 and child.get("status") == "Empty":
+            cloud_capacity = int(cloud_location.get("capacity") or DEFAULT_ETB_LOCATION_CAPACITY)
+            if int(child.get("capacity") or DEFAULT_ETB_LOCATION_CAPACITY) != cloud_capacity:
+                child["capacity"] = cloud_capacity
+                child["remaining_capacity"] = cloud_capacity
+                changed = True
+            cloud_batch = str(cloud_location.get("assigned_batch") or "")
+            if cloud_batch and not child.get("assigned_batch"):
+                child["assigned_batch"] = cloud_batch
+                changed = True
+        local_etb["locations"] = children
+
+    if changed:
+        registry.setdefault("history", []).append({
+            "timestamp": now,
+            "action": "cloud_location_sync",
+            "etbs_added": added_etbs,
+            "locations_provisioned": provisioned_locations,
+        })
+        save_etb_registry(registry, path)
+    return {
+        "changed": changed,
+        "etbs_received": len(cloud_etbs or []),
+        "locations_received": len(cloud_locations or []),
+        "etbs_added": added_etbs,
+        "locations_provisioned": provisioned_locations,
+    }
+
+
 def next_etb_code(path: Path | None = None) -> str:
     rows = etb_location_rows(path)
     if not rows:
