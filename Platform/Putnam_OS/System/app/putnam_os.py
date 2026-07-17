@@ -81,45 +81,51 @@ RETURN_POLICY_DEFAULT = ""
 PROMOTION_POLICY_DEFAULT = "Free Shipping on 3+ Cards"
 
 BRAND = {
-    "bg": "#070B12",
-    "panel": "#0D1420",
-    "panel2": "#121C2B",
-    "panel_hover": "#182437",
-    "panel_tint": "#1F1B12",
-    "sidebar": "#05080E",
-    "sidebar_hover": "#111927",
-    "toolbar": "#090F18",
-    "statusbar": "#05080E",
-    "border": "#263244",
-    "border_soft": "#1A2433",
-    "border_accent": "#9B7A32",
+    # Mirrors the public cardvector.app visual language.
+    "bg": "#F6F9FD",
+    "panel": "#FFFFFF",
+    "panel2": "#EFF6FF",
+    "panel_hover": "#EAF2FF",
+    "panel_tint": "#EFF6FF",
+    "sidebar": "#FFFFFF",
+    "sidebar_hover": "#EFF6FF",
+    "toolbar": "#FFFFFF",
+    "statusbar": "#F7FAFF",
+    "border": "#D8E2F0",
+    "border_soft": "#EAF0F7",
+    "border_accent": "#2563EB",
     "blue": "#2563EB",
-    "blue2": "#3B82F6",
-    "blue_dark": "#1D4ED8",
-    "gold": "#D6A935",
-    "gold_soft": "#E7C66A",
-    "gold_dark": "#9B7A32",
-    "bronze": "#B68A35",
-    "bronze_hover": "#2A2113",
-    "text": "#F4F7FB",
-    "muted": "#A9B7CB",
-    "muted2": "#73839A",
-    "success": "#22C55E",
-    "warning": "#FACC15",
-    "danger": "#EF4444",
-    "inactive": "#64748B",
-    "disabled": "#334155",
-    "table_even": "#0D1420",
-    "table_odd": "#101A28",
-    "table_hover": "#172338",
-    "table_selected": "#262114",
+    "blue2": "#1F5FBF",
+    "blue_dark": "#12346D",
+    # Legacy accent keys remain so existing screens inherit the new blue system.
+    "gold": "#1F5FBF",
+    "gold_soft": "#2563EB",
+    "gold_dark": "#12346D",
+    "bronze": "#2563EB",
+    "bronze_hover": "#12346D",
+    "text": "#102033",
+    "muted": "#5D6B7D",
+    "muted2": "#8594A8",
+    "success": "#15803D",
+    "warning": "#B45309",
+    "danger": "#B42318",
+    "inactive": "#718096",
+    "disabled": "#CBD5E1",
+    "success_soft": "#EAF8EF",
+    "warning_soft": "#FFF4DC",
+    "danger_soft": "#FDECEC",
+    "inactive_soft": "#EEF2F6",
+    "table_even": "#FFFFFF",
+    "table_odd": "#F8FAFD",
+    "table_hover": "#EFF6FF",
+    "table_selected": "#DBEAFE",
 }
 
-FONT_FAMILY = "Segoe UI Variable"
+FONT_FAMILY = "Segoe UI"
 FONT_FALLBACKS = ["Segoe UI", "Arial"]
 FONT_SIZES = {
-    "app_title": 22,
-    "page_title": 22,
+    "app_title": 18,
+    "page_title": 25,
     "section": 11,
     "body": 10,
     "label": 9,
@@ -128,15 +134,15 @@ FONT_SIZES = {
     "metric": 22,
 }
 SPACING = {
-    "page_x": 28,
-    "page_top": 18,
-    "card_pad_x": 20,
-    "card_title_top": 14,
-    "card_gap": 14,
-    "button_pad_x": 13,
-    "button_pad_y": 6,
-    "toolbar_height": 42,
-    "sidebar_width": 255,
+    "page_x": 40,
+    "page_top": 28,
+    "card_pad_x": 22,
+    "card_title_top": 18,
+    "card_gap": 18,
+    "button_pad_x": 14,
+    "button_pad_y": 7,
+    "toolbar_height": 66,
+    "sidebar_width": 246,
 }
 
 STATUS_COLORS = {
@@ -157,105 +163,123 @@ STATUS_COLORS = {
     "disabled": BRAND["inactive"],
 }
 
+STATUS_BACKGROUNDS = {
+    "success": BRAND["success_soft"],
+    "ready": BRAND["success_soft"],
+    "connected": BRAND["success_soft"],
+    "active": BRAND["panel2"],
+    "working": BRAND["panel2"],
+    "current": BRAND["panel2"],
+    "warning": BRAND["warning_soft"],
+    "waiting": BRAND["warning_soft"],
+    "review": BRAND["warning_soft"],
+    "error": BRAND["danger_soft"],
+    "failed": BRAND["danger_soft"],
+    "disconnected": BRAND["danger_soft"],
+    "inactive": BRAND["inactive_soft"],
+    "unknown": BRAND["inactive_soft"],
+    "disabled": BRAND["inactive_soft"],
+}
+
 NAV_ICONS = {
-    "Home": "[H]",
-    "Capture": "[C]",
-    "Processing": "[>]",
-    "Marketplace": "[$]",
-    "Import": "[I]",
-    "Pricing": "[$]",
-    "Inventory": "[N]",
-    "Orders": "[O]",
-    "Shipping": "[S]",
-    "Content": "[T]",
-    "Analytics": "[A]",
-    "Sessions": "[W]",
-    "Settings": "[G]",
+    "Home": "\u2302",
+    "Capture": "\u25c9",
+    "Processing": "\u2197",
+    "Marketplace": "\u25c7",
+    "Import": "\u2193",
+    "Pricing": "$",
+    "Inventory": "\u25a6",
+    "Orders": "\u25a4",
+    "Shipping": "\u2192",
+    "Content": "\u25a1",
+    "Analytics": "\u25b3",
+    "Sessions": "\u25f7",
+    "Settings": "\u2699",
 }
 
 BUTTON_ICONS = {
-    "Analyze": "[>]",
-    "Analyze & Prepare eBay CSV": "[>]",
-    "Analyze Latest Export": "[>]",
-    "Attach Current Session": "[+]",
-    "Back": "[<]",
-    "Browse CSV": "[...]",
-    "Browse for CSV": "[...]",
-    "Browse": "[...]",
-    "Capture": "[C]",
-    "Capture Front": "[C]",
-    "Check OBS Status": "[?]",
-    "Continue to Pricing": "[>]",
-    "Copy": "[#]",
-    "Create Acquisition": "[+]",
-    "Create Next ETB": "[+]",
-    "Finish Session": "[x]",
-    "Finish Location": "[x]",
-    "Generate Labels": "[#]",
-    "Generate Reports": "[#]",
-    "Generate Review Reports": "[#]",
-    "Import CardUploader CSV": "[I]",
-    "Import eBay Orders CSV": "[I]",
-    "Import Latest CardUploader Export": "[I]",
-    "Import Latest Export": "[I]",
-    "Mark Confirmed": "[+]",
-    "Needs Review": "[!]",
-    "Next": "[>]",
-    "No Acquisition": "[-]",
-    "Open": "[O]",
-    "Open Capture": "[O]",
-    "Open Capture Folder": "[O]",
-    "Open Folder": "[O]",
-    "Open Export Folder": "[O]",
-    "Open CardUploader": "[O]",
-    "Open Mobile Capture Website": "[O]",
-    "Open eBay Seller Hub": "[O]",
-    "Open eBay Upload": "[O]",
-    "Open Capture Queue": "[O]",
-    "Open Marketplace Intelligence": "[O]",
-    "Open Inventory Tools": "[O]",
-    "Open Completed Jobs": "[O]",
-    "Open Content Folder": "[O]",
-    "Open Exports": "[O]",
-    "Open Imports": "[O]",
-    "Open Incoming Files": "[O]",
-    "Open Label Folder": "[O]",
-    "Open Output Folder": "[O]",
-    "Open Pick Slip Folder": "[O]",
-    "Open Pricing Output": "[O]",
-    "Open Pricing Output Folder": "[O]",
-    "Open Printable Pick Slips": "[O]",
-    "Open Review Folder": "[O]",
-    "Open Conversion Folder": "[O]",
-    "Open Session Folder": "[O]",
-    "Open Sessions Folder": "[O]",
-    "Previous": "[<]",
-    "Print All Labels": "[#]",
-    "Refresh Counts": "[R]",
-    "Reprint Selected ETB": "[#]",
-    "Reprint Selected Location": "[#]",
-    "Resolve QR": "[>]",
-    "Resume Review": "[R]",
-    "Retake Last": "[R]",
-    "Retry": "[R]",
-    "Return Home": "[H]",
-    "Save": "[S]",
-    "Save Auto Settings": "[S]",
-    "Save Workflow Links": "[S]",
-    "Save CardUploader URL": "[S]",
-    "Save eBay Policies": "[S]",
-    "Save OBS Settings": "[S]",
-    "Save Progress": "[S]",
-    "Select Acquisition": "[+]",
-    "Skip": "[>]",
-    "Start Conversion": "[+]",
-    "Start Location Conversion": "[+]",
-    "Start Capture Session": "[+]",
-    "Start Desktop Capture": "[+]",
-    "Start Review Session": "[+]",
-    "Start Session": "[+]",
-    "Sync Locations": "[R]",
-    "View Processing": "[>]",
+    "Analyze": "\u2192",
+    "Analyze & Prepare eBay CSV": "\u2192",
+    "Analyze Latest Export": "\u2192",
+    "Attach Current Session": "+",
+    "Back": "\u2039",
+    "Browse CSV": "\u2026",
+    "Browse for CSV": "\u2026",
+    "Browse": "\u2026",
+    "Capture": "\u25cf",
+    "Capture Front": "\u25cf",
+    "Check OBS Status": "\u2713",
+    "Continue to Pricing": "\u2192",
+    "Copy": "\u2398",
+    "Create Acquisition": "+",
+    "Create Next ETB": "+",
+    "Finish Session": "\u2713",
+    "Finish Location": "\u2713",
+    "Generate Labels": "\u25a4",
+    "Generate Reports": "\u25a4",
+    "Generate Review Reports": "\u25a4",
+    "Import CardUploader CSV": "\u2193",
+    "Import eBay Orders CSV": "\u2193",
+    "Import Latest CardUploader Export": "\u2193",
+    "Import Latest Export": "\u2193",
+    "Mark Confirmed": "\u2713",
+    "Needs Review": "!",
+    "Next": "\u203a",
+    "No Acquisition": "-",
+    "Open": "\u2197",
+    "Open Capture": "\u2197",
+    "Open Capture Folder": "\u2197",
+    "Open Folder": "\u2197",
+    "Open Export Folder": "\u2197",
+    "Open CardUploader": "\u2197",
+    "Open Mobile Capture Website": "\u2197",
+    "Open eBay Seller Hub": "\u2197",
+    "Open eBay Upload": "\u2197",
+    "Open Capture Queue": "\u2197",
+    "Open Marketplace Intelligence": "\u2197",
+    "Open Inventory Tools": "\u2197",
+    "Open Completed Jobs": "\u2197",
+    "Open Content Folder": "\u2197",
+    "Open Exports": "\u2197",
+    "Open Imports": "\u2197",
+    "Open Incoming Files": "\u2197",
+    "Open Label Folder": "\u2197",
+    "Open Output Folder": "\u2197",
+    "Open Pick Slip Folder": "\u2197",
+    "Open Pricing Output": "\u2197",
+    "Open Pricing Output Folder": "\u2197",
+    "Open Printable Pick Slips": "\u2197",
+    "Open Review Folder": "\u2197",
+    "Open Conversion Folder": "\u2197",
+    "Open Session Folder": "\u2197",
+    "Open Sessions Folder": "\u2197",
+    "Previous": "\u2039",
+    "Print All Labels": "\u25a4",
+    "Refresh Counts": "\u21bb",
+    "Reprint Selected ETB": "\u25a4",
+    "Reprint Selected Location": "\u25a4",
+    "Resolve QR": "\u2192",
+    "Resume Review": "\u21bb",
+    "Retake Last": "\u21bb",
+    "Retry": "\u21bb",
+    "Return Home": "\u2302",
+    "Save": "\u2713",
+    "Save Auto Settings": "\u2713",
+    "Save Workflow Links": "\u2713",
+    "Save CardUploader URL": "\u2713",
+    "Save eBay Policies": "\u2713",
+    "Save OBS Settings": "\u2713",
+    "Save Progress": "\u2713",
+    "Select Acquisition": "\u2713",
+    "Skip": "\u203a",
+    "Start Conversion": "+",
+    "Start Location Conversion": "+",
+    "Start Capture Session": "+",
+    "Start Desktop Capture": "+",
+    "Start Review Session": "+",
+    "Start Session": "+",
+    "Sync Locations": "\u21bb",
+    "View Processing": "\u2192",
 }
 
 EXCLUDE_TERMS = [
@@ -1407,7 +1431,7 @@ def build_capture_thumbnail_image(path, size=(96, 70)):
         image = ImageOps.exif_transpose(source).convert("RGB")
     resampling = getattr(getattr(Image, "Resampling", Image), "LANCZOS", Image.BICUBIC)
     image.thumbnail(size, resampling)
-    canvas_image = Image.new("RGB", size, "#132238")
+    canvas_image = Image.new("RGB", size, BRAND["panel2"])
     offset = ((size[0] - image.width) // 2, (size[1] - image.height) // 2)
     canvas_image.paste(image, offset)
     return canvas_image
@@ -3772,8 +3796,36 @@ class PutnamOS(BaseTk):
         except Exception:
             pass
         s.configure("Main.TFrame", background=BRAND["bg"])
-        s.configure("Primary.TButton", font=self.ui_font("button", True), padding=(13, 7))
-        s.configure("Secondary.TButton", font=self.ui_font("button"), padding=(13, 7))
+        s.configure("TFrame", background=BRAND["bg"])
+        s.configure("TLabel", background=BRAND["panel"], foreground=BRAND["text"], font=self.ui_font("body"))
+        s.configure("Primary.TButton", font=self.ui_font("button", True), padding=(14, 8))
+        s.configure("Secondary.TButton", font=self.ui_font("button"), padding=(14, 8))
+        s.configure(
+            "TEntry",
+            fieldbackground=BRAND["panel"],
+            foreground=BRAND["text"],
+            bordercolor=BRAND["border"],
+            insertcolor=BRAND["text"],
+            padding=(8, 6),
+        )
+        s.configure(
+            "TCombobox",
+            fieldbackground=BRAND["panel"],
+            background=BRAND["panel"],
+            foreground=BRAND["text"],
+            arrowcolor=BRAND["blue_dark"],
+            bordercolor=BRAND["border"],
+            padding=(7, 5),
+        )
+        s.map(
+            "TCombobox",
+            fieldbackground=[("readonly", BRAND["panel"]), ("disabled", BRAND["inactive_soft"])],
+            foreground=[("readonly", BRAND["text"]), ("disabled", BRAND["muted2"])],
+            bordercolor=[("focus", BRAND["blue"]), ("active", BRAND["blue"])],
+        )
+        s.configure("TCheckbutton", background=BRAND["panel"], foreground=BRAND["text"], font=self.ui_font("body"))
+        s.configure("TRadiobutton", background=BRAND["panel"], foreground=BRAND["text"], font=self.ui_font("body"))
+        s.configure("TScrollbar", background=BRAND["border"], troughcolor=BRAND["bg"], bordercolor=BRAND["bg"], arrowcolor=BRAND["muted"])
         s.configure(
             "Treeview",
             background=BRAND["panel"],
@@ -3787,7 +3839,7 @@ class PutnamOS(BaseTk):
         s.configure(
             "Treeview.Heading",
             background=BRAND["panel2"],
-            foreground=BRAND["gold"],
+            foreground=BRAND["blue_dark"],
             borderwidth=0,
             relief="flat",
             font=self.ui_font("label", True),
@@ -3798,12 +3850,12 @@ class PutnamOS(BaseTk):
             foreground=[("selected", BRAND["text"])],
         )
         s.map("Treeview.Heading", background=[("active", BRAND["panel_hover"])])
-        s.configure("TProgressbar", troughcolor=BRAND["panel2"], background=BRAND["bronze"], bordercolor=BRAND["border"])
-        s.map("Primary.TButton", background=[("active", BRAND["bronze_hover"])])
+        s.configure("TProgressbar", troughcolor=BRAND["panel2"], background=BRAND["blue"], bordercolor=BRAND["border"], lightcolor=BRAND["blue"], darkcolor=BRAND["blue"])
+        s.map("Primary.TButton", background=[("active", BRAND["blue_dark"])])
         s.map("Secondary.TButton", background=[("active", BRAND["panel2"])])
 
     def ui_font(self, size="body", bold=False):
-        return (FONT_FAMILY[0], FONT_SIZES.get(size, FONT_SIZES["body"]), "bold" if bold else "normal")
+        return (FONT_FAMILY, FONT_SIZES.get(size, FONT_SIZES["body"]), "bold" if bold else "normal")
 
     def text_label(self, parent, text=None, textvariable=None, bg=None, color=None, size="body", bold=False, **pack):
         lbl = tk.Label(
@@ -3822,34 +3874,34 @@ class PutnamOS(BaseTk):
     def style_button(self, button, variant="secondary"):
         styles = {
             "primary": {
-                "bg": BRAND["panel"],
-                "fg": BRAND["gold_soft"],
-                "activebackground": BRAND["bronze_hover"],
-                "activeforeground": BRAND["text"],
-                "highlightbackground": BRAND["bronze"],
-                "highlightcolor": BRAND["bronze"],
+                "bg": BRAND["blue2"],
+                "fg": "white",
+                "activebackground": BRAND["blue_dark"],
+                "activeforeground": "white",
+                "highlightbackground": BRAND["blue2"],
+                "highlightcolor": BRAND["blue2"],
             },
             "secondary": {
                 "bg": BRAND["panel"],
-                "fg": BRAND["text"],
+                "fg": BRAND["blue_dark"],
                 "activebackground": BRAND["panel_hover"],
-                "activeforeground": BRAND["text"],
-                "highlightbackground": BRAND["border"],
-                "highlightcolor": BRAND["border"],
+                "activeforeground": BRAND["blue_dark"],
+                "highlightbackground": "#B8CBEA",
+                "highlightcolor": BRAND["blue"],
             },
             "quiet": {
                 "bg": BRAND["panel"],
                 "fg": BRAND["muted"],
-                "activebackground": BRAND["panel2"],
-                "activeforeground": BRAND["text"],
+                "activebackground": BRAND["panel_hover"],
+                "activeforeground": BRAND["blue_dark"],
                 "highlightbackground": BRAND["border_soft"],
                 "highlightcolor": BRAND["border_soft"],
             },
             "danger": {
                 "bg": BRAND["panel"],
-                "fg": "#FCA5A5",
-                "activebackground": "#5B1E2D",
-                "activeforeground": "white",
+                "fg": BRAND["danger"],
+                "activebackground": BRAND["danger_soft"],
+                "activeforeground": BRAND["danger"],
                 "highlightbackground": BRAND["danger"],
                 "highlightcolor": BRAND["danger"],
             },
@@ -3902,6 +3954,19 @@ class PutnamOS(BaseTk):
         except Exception:
             pass
 
+    def load_brand_logo(self, size=(44, 44)):
+        logo_path = DOCS_DIR / "assets" / "putnam-profile-onepiece.png"
+        if not logo_path.exists():
+            return None
+        try:
+            from PIL import Image, ImageOps, ImageTk
+
+            with Image.open(logo_path) as source:
+                image = ImageOps.fit(ImageOps.exif_transpose(source).convert("RGB"), size)
+            return ImageTk.PhotoImage(image)
+        except Exception:
+            return None
+
     def on_global_status_change(self, *_args):
         state = status_state_from_text(self.status.get())
         if hasattr(self, "global_status_dot"):
@@ -3914,10 +3979,27 @@ class PutnamOS(BaseTk):
         side.pack(side="left", fill="y")
         side.pack_propagate(False)
 
-        tk.Label(side, text="CARDVECTOR", bg=BRAND["sidebar"], fg=BRAND["text"],
-                 font=self.ui_font("app_title", True)).pack(pady=(22, 0))
-        tk.Label(side, text="WORKFLOW OS", bg=BRAND["sidebar"], fg=BRAND["gold"],
-                 font=self.ui_font("small", True)).pack(pady=(0, 18))
+        brand = tk.Frame(side, bg=BRAND["sidebar"])
+        brand.pack(fill="x", padx=22, pady=(24, 22))
+        self.brand_logo_photo = self.load_brand_logo()
+        if self.brand_logo_photo:
+            tk.Label(brand, image=self.brand_logo_photo, bg=BRAND["sidebar"], bd=0).pack(side="left", padx=(0, 11))
+        else:
+            tk.Label(
+                brand,
+                text="CV",
+                bg=BRAND["blue_dark"],
+                fg="white",
+                font=self.ui_font("section", True),
+                width=3,
+                height=2,
+            ).pack(side="left", padx=(0, 11))
+        brand_text = tk.Frame(brand, bg=BRAND["sidebar"])
+        brand_text.pack(side="left", fill="x", expand=True)
+        tk.Label(brand_text, text="CardVector", bg=BRAND["sidebar"], fg=BRAND["blue_dark"],
+                 font=self.ui_font("app_title", True), anchor="w").pack(anchor="w")
+        tk.Label(brand_text, text="WORKFLOW OS", bg=BRAND["sidebar"], fg=BRAND["blue2"],
+                 font=self.ui_font("small", True), anchor="w").pack(anchor="w")
 
         nav_sections = [
             ("WORKSPACE", ["Home", "Capture", "Processing", "Marketplace", "Orders"]),
@@ -3935,11 +4017,11 @@ class PutnamOS(BaseTk):
             for name in names:
                 b = tk.Button(
                     side, text=nav_text(name), anchor="w", bg=BRAND["sidebar"], fg=BRAND["muted"],
-                    activebackground=BRAND["sidebar_hover"], activeforeground=BRAND["text"], relief="flat",
-                    bd=0, cursor="hand2", font=self.ui_font("button", True), padx=18, pady=8,
+                    activebackground=BRAND["sidebar_hover"], activeforeground=BRAND["blue_dark"], relief="flat",
+                    bd=0, cursor="hand2", font=self.ui_font("button", True), padx=16, pady=9,
                     command=lambda n=name: self.show_page(n)
                 )
-                b.pack(fill="x", padx=12, pady=1)
+                b.pack(fill="x", padx=12, pady=2)
                 b.bind("<Enter>", lambda _e, btn=b: btn.configure(bg=BRAND["sidebar_hover"]) if btn.cget("bg") != BRAND["panel_tint"] else None)
                 b.bind("<Leave>", lambda _e, btn=b: btn.configure(bg=BRAND["sidebar"]) if btn.cget("bg") != BRAND["panel_tint"] else None)
                 self.nav_buttons[name] = b
@@ -3953,14 +4035,14 @@ class PutnamOS(BaseTk):
         self.workspace.pack(side="left", fill="both", expand=True)
 
         self.toolbar_page_var = tk.StringVar(value="Home")
-        toolbar = tk.Frame(self.workspace, bg=BRAND["toolbar"], height=SPACING["toolbar_height"], highlightbackground=BRAND["border_soft"], highlightthickness=0)
+        toolbar = tk.Frame(self.workspace, bg=BRAND["toolbar"], height=SPACING["toolbar_height"], highlightbackground=BRAND["border_soft"], highlightthickness=1)
         toolbar.pack(side="top", fill="x")
         toolbar.pack_propagate(False)
         tk.Label(
             toolbar,
             textvariable=self.toolbar_page_var,
             bg=BRAND["toolbar"],
-            fg=BRAND["gold_soft"],
+            fg=BRAND["blue_dark"],
             font=self.ui_font("button", True),
             anchor="w",
         ).pack(side="left", padx=(18, 12), fill="y")
@@ -3987,7 +4069,7 @@ class PutnamOS(BaseTk):
         self.main = tk.Frame(self.workspace, bg=BRAND["bg"])
         self.main.pack(side="top", fill="both", expand=True)
 
-        self.statusbar = tk.Frame(self.workspace, bg=BRAND["statusbar"], height=28, highlightbackground=BRAND["border_soft"], highlightthickness=1)
+        self.statusbar = tk.Frame(self.workspace, bg=BRAND["statusbar"], height=34, highlightbackground=BRAND["border"], highlightthickness=1)
         self.statusbar.pack(side="bottom", fill="x")
         self.statusbar.pack_propagate(False)
         self.global_status_dot, _label = self.status_indicator(
@@ -4040,7 +4122,7 @@ class PutnamOS(BaseTk):
             self.toolbar_page_var.set(nav_text(name))
         for n, b in self.nav_buttons.items():
             if n == name:
-                b.configure(bg=BRAND["panel_tint"], fg=BRAND["gold_soft"])
+                b.configure(bg=BRAND["panel_tint"], fg=BRAND["blue_dark"])
             else:
                 b.configure(bg=BRAND["sidebar"], fg=BRAND["muted"])
         self.clear()
@@ -4068,11 +4150,18 @@ class PutnamOS(BaseTk):
             self.placeholder_page(name)
 
     def header(self, title, subtitle=""):
-        tk.Label(self.main, text=title, bg=BRAND["bg"], fg=BRAND["text"], font=self.ui_font("page_title", True)).pack(anchor="w", padx=SPACING["page_x"], pady=(SPACING["page_top"], 2))
+        tk.Label(
+            self.main,
+            text="CARDVECTOR WORKSPACE",
+            bg=BRAND["bg"],
+            fg=BRAND["blue2"],
+            font=self.ui_font("small", True),
+        ).pack(anchor="w", padx=SPACING["page_x"], pady=(SPACING["page_top"], 4))
+        tk.Label(self.main, text=title, bg=BRAND["bg"], fg=BRAND["blue_dark"], font=self.ui_font("page_title", True)).pack(anchor="w", padx=SPACING["page_x"], pady=(0, 2))
         if subtitle:
             tk.Label(self.main, text=subtitle, bg=BRAND["bg"], fg=BRAND["muted"], font=self.ui_font("body")).pack(anchor="w", padx=SPACING["page_x"], pady=(0, 14))
 
-    def scrollable_page(self, padx=34, pady=0):
+    def scrollable_page(self, padx=40, pady=0):
         shell = tk.Frame(self.main, bg=BRAND["bg"])
         shell.pack(fill="both", expand=True, padx=padx, pady=pady)
         canvas = tk.Canvas(shell, bg=BRAND["bg"], highlightthickness=0, bd=0)
@@ -4316,8 +4405,9 @@ class PutnamOS(BaseTk):
             "Complete": "success",
             "Failed": "error",
         }.get(state, "unknown")
-        chip = tk.Frame(parent, bg=BRAND["panel2"], highlightbackground=STATUS_COLORS[color_key], highlightthickness=1)
-        tk.Label(chip, text=state, bg=BRAND["panel2"], fg=STATUS_COLORS[color_key], font=self.ui_font("small", True), padx=9, pady=3).pack()
+        chip_bg = STATUS_BACKGROUNDS[color_key]
+        chip = tk.Frame(parent, bg=chip_bg, highlightbackground=chip_bg, highlightthickness=1)
+        tk.Label(chip, text=state, bg=chip_bg, fg=STATUS_COLORS[color_key], font=self.ui_font("small", True), padx=10, pady=4).pack()
         return chip
 
     def open_path_safe(self, path, title="Folder"):

@@ -1,5 +1,21 @@
 # Changelog
 
+## CardVector OS Website Visual Theme
+
+### Changed
+
+- Aligned the CardVector OS desktop palette, typography, spacing, navigation,
+  cards, buttons, tables, status chips, and progress styling with the public
+  `cardvector.app` blue-and-white visual language.
+- Added the existing Putnam Collectibles profile mark to the desktop sidebar
+  with a safe text fallback when the image cannot be loaded.
+- Updated the canonical Tkinter UI style guidance for the website-matched theme.
+
+### Safety
+
+- No capture, CardUploader, pricing, inventory, marketplace, export, order, or
+  workflow behavior changed.
+
 ## Putnam Collectibles Public Storefront Navigation
 
 ### Changed
