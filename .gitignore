@@ -152,6 +152,7 @@ Tools/resources/
 /Platform/Putnam_OS/System/marketplace/market_signals*.csv
 
 # Work session smoke-test and temporary output
+/Work_Sessions/
 /Work_Sessions/*smoke*/
 /Work_Sessions/**/*smoke*/
 smoke_outputs/
