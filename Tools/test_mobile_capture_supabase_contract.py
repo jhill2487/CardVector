@@ -92,13 +92,33 @@ class MobileCaptureSupabaseContractTests(unittest.TestCase):
             "etb_location_id: session.etb_location",
             "operator_id: user ? user.id : null",
             "user_id: user ? user.id : null",
-            "source_device: session.device",
+            "source_device: sourceDevice",
             "capture_type: normalizeCaptureType(session.capture_type)",
             'status: "UPLOADING"',
             'source: "MOBILE_WEB"',
             'conversion_status: "UPLOADING"',
         ):
             self.assertIn(field, self.app_js)
+
+    def test_frontend_stores_capture_layout_in_existing_private_device_metadata(self):
+        for field in (
+            "captureLayoutConfig",
+            "FRONT_ONLY",
+            "FRONT_BACK",
+            "capture_layout: normalizedLayout",
+            "capture_layout: captureLayout",
+            "source_device: sourceDevice",
+            "Choose Photo Mode",
+            "captureLayoutIsComplete",
+        ):
+            self.assertIn(field, self.app_js)
+
+    def test_frontend_capture_layout_applies_to_both_capture_types(self):
+        self.assertIn("Object.entries(captureLayoutConfig)", self.app_js)
+        self.assertIn("captureRoute(etbId, location, captureType, layout)", self.app_js)
+        self.assertIn("initializeCapture(etbId, location, captureType, captureLayout)", self.app_js)
+        self.assertIn("capturePositionForOrder", self.app_js)
+        self.assertIn("Card ${position.cardNumber} ${position.side", self.app_js)
 
     def test_frontend_records_image_order_and_upload_status(self):
         self.assertIn("image_order: index + 1", self.app_js)

@@ -110,6 +110,32 @@ def session_capture_type(session: dict[str, Any]) -> str:
     return "PHYSICAL_INVENTORY"
 
 
+def session_capture_layout(session: dict[str, Any]) -> str:
+    """Return how mobile images map to cards and sides.
+
+    The mobile site stores this in the existing private device metadata so the
+    upload schema and RLS contract remain unchanged. Legacy sessions safely
+    retain the historical front-only behavior.
+    """
+    device = session.get("source_device") or session.get("device") or {}
+    raw = (
+        session.get("capture_layout")
+        or (device.get("capture_layout") if isinstance(device, dict) else "")
+        or "FRONT_ONLY"
+    )
+    normalized = re.sub(r"[-+\s]+", "_", str(raw or "").strip().upper())
+    if normalized in {"FRONT_BACK", "FRONT_AND_BACK", "BOTH", "PAIRED"}:
+        return "FRONT_BACK"
+    return "FRONT_ONLY"
+
+
+def capture_record_position(sequence_number: int, capture_layout: str) -> tuple[int, str]:
+    sequence = max(1, int(sequence_number))
+    if session_capture_layout({"capture_layout": capture_layout}) == "FRONT_BACK":
+        return ((sequence - 1) // 2) + 1, "front" if sequence % 2 else "back"
+    return sequence, "front"
+
+
 def next_capture_folder(capture_type: str = "PHYSICAL_INVENTORY") -> Path:
     """Create the next canonical dated capture folder.
 
@@ -369,10 +395,15 @@ def stage_session(session: dict[str, Any], images: list[dict[str, Any]]) -> dict
     processing_dir = MOBILE_PROCESSING_DIR / safe_path_part(session_id)
     originals_dir = processing_dir / "originals"
     capture_type = session_capture_type(session)
+    capture_layout = session_capture_layout(session)
     capture_folder = next_capture_folder(capture_type)
     records = []
 
-    for index, image in enumerate(images, start=1):
+    ordered_images = sorted(
+        images,
+        key=lambda image: int(image.get("sequence_number") or image.get("image_order") or 0),
+    )
+    for index, image in enumerate(ordered_images, start=1):
         bucket = str(image.get("storage_bucket") or "mobile-capture-originals")
         storage_path = str(image.get("storage_path") or "")
         if not storage_path:
@@ -380,13 +411,14 @@ def stage_session(session: dict[str, Any], images: list[dict[str, Any]]) -> dict
         suffix = Path(storage_path).suffix or ".jpg"
         original_path = originals_dir / f"{index:06d}{suffix}"
         download_storage_object(bucket, storage_path, original_path)
-        staged_path = capture_folder / f"{index:06d}_front{suffix}"
+        card_number, side = capture_record_position(index, capture_layout)
+        staged_path = capture_folder / f"{card_number:06d}_{side}{suffix}"
         staged_path.write_bytes(original_path.read_bytes())
         records.append({
             "filename": staged_path.name,
             "path": str(staged_path),
-            "side": "front",
-            "card_number": index,
+            "side": side,
+            "card_number": card_number,
             "captured_at": image.get("created_at") or iso_now(),
             "capture_mode": "Mobile Web",
             "mobile_image_id": image.get("image_id", ""),
@@ -394,12 +426,15 @@ def stage_session(session: dict[str, Any], images: list[dict[str, Any]]) -> dict
             "mobile_storage_path": storage_path,
         })
 
+    card_count = len({record["card_number"] for record in records})
     capture_session = {
         "started_at": session.get("created_at") or iso_now(),
         "finished_at": iso_now(),
         "folder": str(capture_folder),
         "capture_mode": "Mobile Web",
-        "current_card_number": len(records) + 1,
+        "capture_layout": capture_layout,
+        "current_card_number": card_count + 1,
+        "cards_captured": card_count,
         "photos_captured": len(records),
         "records": records,
         "source": "MOBILE_WEB",
@@ -408,7 +443,11 @@ def stage_session(session: dict[str, Any], images: list[dict[str, Any]]) -> dict
         "location": location,
         "location_id": location_id,
         "capture_type": capture_type,
-        "capture_workflow": "new_inventory_capture" if capture_type == "NEW_CAPTURE" else "front_only_legacy_inventory_conversion",
+        "capture_workflow": (
+            "new_inventory_capture"
+            if capture_type == "NEW_CAPTURE"
+            else "physical_inventory_conversion"
+        ),
     }
     write_json(capture_folder / "capture_session.json", capture_session)
 
@@ -426,7 +465,9 @@ def stage_session(session: dict[str, Any], images: list[dict[str, Any]]) -> dict
             "operator": session.get("operator", ""),
             "status": "Mobile Capture Staged",
             "expected_capacity": DEFAULT_ETB_LOCATION_CAPACITY,
-            "cards_captured": len(records),
+            "cards_captured": card_count,
+            "photos_captured": len(records),
+            "capture_layout": capture_layout,
             "capture_folder": str(capture_folder),
             "capture_session_file": str(capture_folder / "capture_session.json"),
             "mobile_capture_session_id": session_id,
@@ -447,6 +488,7 @@ def stage_session(session: dict[str, Any], images: list[dict[str, Any]]) -> dict
         "capture_session_file": str(capture_folder / "capture_session.json"),
         "inventory_conversion_session_file": str(session_path) if session_path else "",
         "capture_type": capture_type,
+        "capture_layout": capture_layout,
         "staged_at": iso_now(),
         "workstation": workstation_name(),
     }

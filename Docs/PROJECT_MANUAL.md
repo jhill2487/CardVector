@@ -125,6 +125,17 @@ The workflow is:
 9. The operator runs Physical Inventory Conversion.
 10. The operator explicitly marks the mobile session complete.
 
+Before the camera opens, the operator chooses two independent values:
+
+- Capture type: `NEW_CAPTURE` or `PHYSICAL_INVENTORY`
+- Photo mode: `FRONT_ONLY` or `FRONT_BACK`
+
+Photo mode is stored in the existing private session device metadata.
+`FRONT_ONLY` creates one numbered front record per card. `FRONT_BACK` captures
+front then back and creates a matched numbered pair. Desktop staging writes the
+same canonical filenames used by Capture Studio, allowing the Capture rail to
+display mobile images without a separate thumbnail system.
+
 Status meanings:
 
 - `PENDING_CONVERSION`: ready to claim and stage.

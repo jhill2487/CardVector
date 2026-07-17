@@ -1211,7 +1211,16 @@ def next_recommended_action():
 
 def latest_capture_session():
     try:
-        folders = [p for p in CAPTURE_ROOT.iterdir() if p.is_dir()]
+        # Mobile Physical Inventory sessions are staged below a workflow
+        # directory, while desktop sessions live directly under Capture.
+        # Prefer canonical session metadata so both layouts feed one rail.
+        folders = {
+            path.parent
+            for path in CAPTURE_ROOT.rglob("capture_session.json")
+            if path.is_file() and not any(part in {"_retakes", "_deleted"} for part in path.parts)
+        }
+        if not folders:
+            folders = {p for p in CAPTURE_ROOT.iterdir() if p.is_dir()}
         if not folders:
             return None
 
@@ -1347,6 +1356,13 @@ def capture_pair_rows(folder=None, limit=24):
         return []
     pairs = {}
     session_data = load_capture_session_file(session_folder)
+    capture_layout = str(session_data.get("capture_layout") or "").strip().upper()
+    if capture_layout not in {"FRONT_ONLY", "FRONT_BACK"}:
+        is_legacy_mobile_front_only = (
+            str(session_data.get("source") or "").upper() == "MOBILE_WEB"
+            and "front_only" in str(session_data.get("capture_workflow") or "").lower()
+        )
+        capture_layout = "FRONT_ONLY" if is_legacy_mobile_front_only else "FRONT_BACK"
     session_records = session_data.get("records", [])
     if not isinstance(session_records, list):
         session_records = []
@@ -1405,7 +1421,13 @@ def capture_pair_rows(folder=None, limit=24):
             except OSError:
                 mtimes.append(0)
         latest_mtime = max(mtimes) if mtimes else 0
-        status = "Complete" if item.get("front") and item.get("back") else "Waiting for Back" if item.get("front") else "Needs Front"
+        status = (
+            "Complete"
+            if item.get("front") and (capture_layout == "FRONT_ONLY" or item.get("back"))
+            else "Waiting for Back"
+            if item.get("front")
+            else "Needs Front"
+        )
         rows.append({
             "pair_number": number,
             "front": item.get("front"),
@@ -1414,6 +1436,7 @@ def capture_pair_rows(folder=None, limit=24):
             "timestamp": datetime.fromtimestamp(latest_mtime).strftime("%H:%M:%S"),
             "latest_mtime": latest_mtime,
             "status": status,
+            "capture_layout": capture_layout,
         })
     sorted_rows = sorted(rows, key=lambda row: row["latest_mtime"], reverse=True)[:limit]
     for idx, row in enumerate(sorted_rows):
@@ -4916,6 +4939,8 @@ class PutnamOS(BaseTk):
                 self.capture_queue_selected_var.set(f"Automatically staged: {session_id} | {folder}")
             if getattr(self, "current_page", "") == "Capture Queue":
                 self.capture_queue_refresh_ui()
+            if getattr(self, "current_page", "") == "Capture" and hasattr(self, "capture_rail_inner"):
+                self.schedule_capture_thumbnail_refresh(force=True)
             # Check again quickly so multiple uploaded sessions drain without
             # waiting a full polling interval.
             self.capture_queue_schedule_zero_touch(500)
@@ -5699,7 +5724,7 @@ class PutnamOS(BaseTk):
         status_color = BRAND["success"] if row["status"] == "Complete" else BRAND["warning"]
         tk.Label(
             header,
-            text=f"Pair #{row['pair_number']}",
+            text=f"{'Card' if row.get('capture_layout') == 'FRONT_ONLY' else 'Pair'} #{row['pair_number']}",
             bg=BRAND["panel2"],
             fg=BRAND["text"],
             font=self.ui_font("label", True),
@@ -5724,7 +5749,8 @@ class PutnamOS(BaseTk):
         thumbs = tk.Frame(tile, bg=BRAND["panel2"])
         thumbs.pack(fill="x", padx=10)
         self.capture_thumbnail(thumbs, row.get("front"), "Front", row)
-        self.capture_thumbnail(thumbs, row.get("back"), "Back", row)
+        if row.get("capture_layout") != "FRONT_ONLY":
+            self.capture_thumbnail(thumbs, row.get("back"), "Back", row)
         tk.Label(
             tile,
             text=row["status"],

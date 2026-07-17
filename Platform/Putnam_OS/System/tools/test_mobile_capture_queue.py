@@ -17,7 +17,9 @@ from Platform.Putnam_OS.System.tools.mobile_capture_queue import (
     sanitize_error_message,
     session_row_model,
     session_location_id,
+    session_capture_layout,
     session_capture_type,
+    capture_record_position,
     storage_object_url,
     safe_path_part,
     stage_session,
@@ -56,6 +58,22 @@ class MobileCaptureQueueTests(unittest.TestCase):
         self.assertEqual(session_capture_type({}), "PHYSICAL_INVENTORY")
         self.assertEqual(session_capture_type({"capture_type": ""}), "PHYSICAL_INVENTORY")
         self.assertEqual(session_capture_type({"device": {"capture_type": "new inventory"}}), "NEW_CAPTURE")
+
+    def test_session_capture_layout_defaults_legacy_sessions_to_front_only(self):
+        self.assertEqual(session_capture_layout({}), "FRONT_ONLY")
+        self.assertEqual(session_capture_layout({"capture_layout": ""}), "FRONT_ONLY")
+        self.assertEqual(
+            session_capture_layout({"source_device": {"capture_layout": "front + back"}}),
+            "FRONT_BACK",
+        )
+
+    def test_capture_record_position_maps_front_only_and_pairs(self):
+        self.assertEqual(capture_record_position(1, "FRONT_ONLY"), (1, "front"))
+        self.assertEqual(capture_record_position(2, "FRONT_ONLY"), (2, "front"))
+        self.assertEqual(capture_record_position(1, "FRONT_BACK"), (1, "front"))
+        self.assertEqual(capture_record_position(2, "FRONT_BACK"), (1, "back"))
+        self.assertEqual(capture_record_position(3, "FRONT_BACK"), (2, "front"))
+        self.assertEqual(capture_record_position(4, "FRONT_BACK"), (2, "back"))
 
     def test_storage_object_url_encodes_path_segments(self):
         self.assertEqual(
@@ -138,8 +156,13 @@ class MobileCaptureQueueTests(unittest.TestCase):
             self.assertEqual(data["location_id"], "ETB-001-C")
             self.assertEqual(data["capture_session_id"], "session-1")
             self.assertEqual(data["capture_type"], "PHYSICAL_INVENTORY")
+            self.assertEqual(data["capture_layout"], "FRONT_ONLY")
             self.assertEqual([record["mobile_image_id"] for record in data["records"]], ["img-1", "img-2"])
-            self.assertEqual(data["records"][0]["filename"], "000001_front.jpg")
+            self.assertEqual(
+                [record["filename"] for record in data["records"]],
+                ["000001_front.jpg", "000002_front.jpg"],
+            )
+            self.assertEqual(data["cards_captured"], 2)
             self.assertIn("Physical_Inventory_Conversion", str(capture_file))
             self.assertNotIn("ETB-001-C", capture_file.parent.name)
 
@@ -173,6 +196,52 @@ class MobileCaptureQueueTests(unittest.TestCase):
             self.assertEqual(data["capture_workflow"], "new_inventory_capture")
             self.assertEqual(manifest["inventory_conversion_session_file"], "")
             self.assertFalse((root / "inventory_conversion" / "current.json").exists())
+
+    def test_stage_front_back_session_creates_matched_pair_records(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            with (
+                mock.patch.object(queue, "MOBILE_PROCESSING_DIR", root / "MobileCapture" / "Processing"),
+                mock.patch.object(queue, "CAPTURE_ROOT", root / "Capture"),
+                mock.patch.object(queue, "INVENTORY_CONVERSION_CAPTURE_ROOT", root / "Capture" / "Physical_Inventory_Conversion"),
+                mock.patch.object(queue, "INVENTORY_CONVERSION_SESSIONS_DIR", root / "inventory_conversion" / "sessions"),
+                mock.patch.object(queue, "CURRENT_INVENTORY_CONVERSION", root / "inventory_conversion" / "current.json"),
+                mock.patch.object(queue, "download_storage_object", side_effect=self.fake_download),
+                mock.patch.object(queue, "workstation_name", return_value="TEST-PC"),
+            ):
+                manifest = stage_session(
+                    {
+                        "capture_session_id": "session-pairs",
+                        "etb_location": "ETB-002-G",
+                        "capture_type": "PHYSICAL_INVENTORY",
+                        "source_device": {"capture_layout": "FRONT_BACK"},
+                        "created_at": "2026-07-17T12:00:00",
+                    },
+                    [
+                        {"image_id": "img-2", "storage_path": "u/session/0002.jpg", "sequence_number": 2},
+                        {"image_id": "img-1", "storage_path": "u/session/0001.jpg", "sequence_number": 1},
+                        {"image_id": "img-4", "storage_path": "u/session/0004.jpg", "sequence_number": 4},
+                        {"image_id": "img-3", "storage_path": "u/session/0003.jpg", "sequence_number": 3},
+                    ],
+                )
+            capture_file = Path(manifest["capture_session_file"])
+            data = json.loads(capture_file.read_text(encoding="utf-8"))
+            self.assertEqual(data["capture_layout"], "FRONT_BACK")
+            self.assertEqual(data["cards_captured"], 2)
+            self.assertEqual(data["photos_captured"], 4)
+            self.assertEqual(
+                [(record["card_number"], record["side"], record["filename"]) for record in data["records"]],
+                [
+                    (1, "front", "000001_front.jpg"),
+                    (1, "back", "000001_back.jpg"),
+                    (2, "front", "000002_front.jpg"),
+                    (2, "back", "000002_back.jpg"),
+                ],
+            )
+            conversion = json.loads(Path(manifest["inventory_conversion_session_file"]).read_text(encoding="utf-8"))
+            self.assertEqual(conversion["cards_captured"], 2)
+            self.assertEqual(conversion["photos_captured"], 4)
+            self.assertEqual(conversion["capture_layout"], "FRONT_BACK")
 
     def test_next_capture_folder_uses_dot_suffixes(self):
         with tempfile.TemporaryDirectory() as tmp:

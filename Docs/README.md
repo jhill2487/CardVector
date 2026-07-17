@@ -221,6 +221,16 @@ under `Capture/MM.DD.YY`; `PHYSICAL_INVENTORY` stages under
 `Capture/Physical_Inventory_Conversion/MM.DD.YY`. Existing blank capture-type
 sessions default to `PHYSICAL_INVENTORY`.
 
+After choosing the capture type and destination, choose a photo mode:
+
+- `Front only` captures one image per card.
+- `Front + back` captures the front and then the back of each card.
+
+Front-and-back sessions cannot be finished with an incomplete pair. Mobile
+photo mode is retained in private session metadata, and desktop staging writes
+the standard numbered front/back filenames consumed by the Capture thumbnail
+rail. Existing mobile sessions without photo-mode metadata remain front-only.
+
 The in-browser camera saves the same centered `object-fit: cover` viewport shown
 in the live preview. A 63:88 guide helps position a card but is not included in
 the JPEG. Photo Library files are uploaded without applying the live-preview

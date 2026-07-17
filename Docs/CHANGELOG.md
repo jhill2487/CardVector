@@ -1,5 +1,31 @@
 # Changelog
 
+## CardVector Mobile Capture Photo Modes
+
+### Added
+
+- Added an explicit `Front only` or `Front + back` photo-mode choice for both
+  `NEW_CAPTURE` and `PHYSICAL_INVENTORY` mobile sessions.
+- Added card/side-aware IndexedDB draft metadata, thumbnail labels, next-photo
+  guidance, and incomplete-pair validation.
+- Added deterministic desktop staging for mobile pairs using
+  `000001_front.jpg`, `000001_back.jpg`, and the existing capture-session
+  record format.
+
+### Changed
+
+- The Capture rail now discovers nested Physical Inventory Conversion sessions
+  and refreshes when the automatic mobile queue stages a session.
+- Front-only sessions display as complete single-card captures; front-and-back
+  sessions display as matched pairs.
+
+### Safety
+
+- Capture photo mode is stored in the existing private `source_device` JSON
+  metadata, so no Supabase schema, RLS, Storage, claim, or routing change is
+  required.
+- Legacy mobile sessions continue to default to front-only staging.
+
 ## CardVector OS Website Visual Theme
 
 ### Changed

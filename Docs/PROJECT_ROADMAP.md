@@ -81,6 +81,8 @@ Current production capability:
 - Mobile entry supports direct location QR, main ETB QR, and no-QR capture
   setup through one shared capture implementation. Cloud location creation
   remains pending production migration activation and live mobile validation.
+- Both mobile capture types support explicit Front only and Front + back photo
+  modes. Paired sessions stage into the existing desktop capture-pair format.
 
 Known limitations:
 
