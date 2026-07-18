@@ -10,7 +10,7 @@
 | Application startup | Production VBS -> `putnam_os.py` | `cardvector.__main__`, `cardvector.bootstrap` | Required | Launcher redirect |
 | Desktop shell | `putnam_os.py`, overlapping `main.py` | `cardvector.presentation.desktop` | Required | Existing classes remain during extraction |
 | Navigation | `PutnamOS.build_ui`, `show_page` | `cardvector.presentation.desktop.navigation` | Required | No external adapter expected |
-| Cross-workflow orchestration | `putnam_os.py`, `workflow_context.py` | `cardvector.application.workflows` | Required | Existing UI methods delegate |
+| Cross-workflow orchestration | `cardvector.application.workflows` delegates to existing `putnam_os.py`/`workflow_context.py` behavior | `cardvector.application.workflows` | Phase 2 foundation implemented; further callback migration required | `CV-COMP-012`: existing UI methods delegate |
 | Background jobs | UI threads/callbacks, mobile queue loops | `cardvector.application.background_jobs` plus subsystem workers | Required | Existing scheduling methods delegate |
 | Capture domain | UI functions, `capture_studio.py` | `cardvector.capture` | Required | Old module forwards |
 | OBS connection | `obs_connection_manager.py` | `cardvector.integrations.obs` implementing Capture port | Required | Old import path forwards |

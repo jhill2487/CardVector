@@ -1,8 +1,8 @@
 {
   "schema_version": "1.0",
   "architecture_version": "1.0",
-  "approval_status": "phase_1_standards_accepted_target_migration_proposed",
-  "current_migration_phase": "phase_1_architecture_manifest_and_standards",
+  "approval_status": "phase_2_application_layer_accepted_remaining_target_migration_proposed",
+  "current_migration_phase": "phase_2_application_layer_extraction",
   "current_production_launcher": "Platform/Putnam_OS/Run CardVector OS Production.vbs",
   "current_production_python_target": "Platform/Putnam_OS/System/app/putnam_os.py",
   "proposed_future_python_entry_point": "py -m cardvector",
@@ -50,6 +50,7 @@
     "Work_Sessions"
   ],
   "approved_production_package_roots": [
+    "Platform/cardvector/application",
     "Platform/Marketplace_Intelligence/marketplace_intelligence",
     "Platform/Putnam_OS/System/app",
     "Platform/Putnam_OS/System/MarketIntelligence",
@@ -135,6 +136,12 @@
       "legacy_interface": "Platform/Putnam_OS/System/app/main.py",
       "canonical_target": "unresolved_pending_caller_inventory",
       "status": "planned_candidate"
+    },
+    {
+      "id": "CV-COMP-012",
+      "legacy_interface": "Platform/Putnam_OS/System/app/putnam_os.py workflow methods",
+      "canonical_target": "Platform/cardvector/application/workflows.py",
+      "status": "active"
     }
   ],
   "active_deprecations": [],
@@ -192,7 +199,8 @@
   "required_validation_commands": [
     "py Tools\\architecture\\check_architecture.py",
     "py Tools\\architecture\\check_architecture.py --strict",
-    "py -m unittest discover -s Tools\\architecture -p \"test_*.py\""
+    "py -m unittest discover -s Tools\\architecture -p \"test_*.py\"",
+    "py -m unittest discover -s Tests\\application -p \"test_*.py\""
   ],
   "enforcement_policy": {
     "default_mode": "warning",
@@ -204,7 +212,8 @@
   },
   "decision_log_references": {
     "accepted": [
-      "CV-ADR-017"
+      "CV-ADR-017",
+      "CV-ADR-018"
     ],
     "proposed": [
       "CV-ADR-001",
@@ -225,5 +234,5 @@
       "CV-ADR-016"
     ]
   },
-  "last_updated": "2026-07-18T01:30:32-04:00"
+  "last_updated": "2026-07-18T11:44:32-04:00"
 }

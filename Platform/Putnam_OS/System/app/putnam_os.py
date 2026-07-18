@@ -52,16 +52,32 @@ from Platform.Putnam_OS.System.tools.mobile_capture_queue import (
     queue_summary,
     sanitize_error_message,
 )
-from workflow_context import (
-    active_listings_summary,
-    business_alerts,
-    discover_workflow_jobs,
-    group_processing_jobs,
-    jobs_from_queue_rows,
-    merge_job_lists,
-    recent_completed_jobs,
-    update_workflow_context,
+from Platform.cardvector.application import (
+    ApplicationRuntime,
+    WorkflowApplication,
+    WorkflowDelegates,
 )
+import workflow_context as legacy_workflow_context
+
+
+def build_application_runtime():
+    runtime = ApplicationRuntime()
+    runtime.services.register(
+        "workflows",
+        WorkflowApplication(
+            WorkflowDelegates(
+                discover_workflow_jobs=legacy_workflow_context.discover_workflow_jobs,
+                jobs_from_queue_rows=legacy_workflow_context.jobs_from_queue_rows,
+                merge_job_lists=legacy_workflow_context.merge_job_lists,
+                recent_completed_jobs=legacy_workflow_context.recent_completed_jobs,
+                group_processing_jobs=legacy_workflow_context.group_processing_jobs,
+                active_listings_summary=legacy_workflow_context.active_listings_summary,
+                business_alerts=legacy_workflow_context.business_alerts,
+                update_workflow_context=legacy_workflow_context.update_workflow_context,
+            )
+        ),
+    )
+    return runtime
 
 APP_VERSION = "1.3.0"
 PLATFORM_VERSION = "CardVector Platform v1.3.0"
@@ -3732,7 +3748,7 @@ BaseTk = TkinterDnD.Tk if DND_AVAILABLE else tk.Tk
 
 
 class PutnamOS(BaseTk):
-    def __init__(self):
+    def __init__(self, application_runtime=None):
         super().__init__()
         self.title(f"{APP_NAME} v{APP_VERSION}")
         self.geometry("1240x800")
@@ -3755,9 +3771,12 @@ class PutnamOS(BaseTk):
         self.capture_service = CaptureStudioService()
         self.mobile_capture_queue_service = MobileCaptureQueueService()
         self.capture_queue_rows = []
+        self.application_runtime = application_runtime or build_application_runtime()
+        self.workflow_application = self.application_runtime.services.resolve(
+            "workflows",
+            WorkflowApplication,
+        )
         self.workflow_jobs = []
-        self.workflow_local_jobs = []
-        self.workflow_local_jobs_refreshed = 0.0
         self.active_workflow_job = None
         self.workflow_refresh_running = False
         self.workflow_last_network_refresh = 0.0
@@ -4376,21 +4395,19 @@ class PutnamOS(BaseTk):
             self.show_page(self.current_page)
 
     def workflow_job_snapshot(self, include_completed=False, force=False):
-        if force or not self.workflow_local_jobs or time.monotonic() - self.workflow_local_jobs_refreshed > 8:
-            self.workflow_local_jobs = discover_workflow_jobs(
-                CAPTURE_ROOT,
-                MOBILE_PROCESSING_DIR,
-                MOBILE_FAILED_DIR,
-                limit=60,
-            )
-            self.workflow_local_jobs_refreshed = time.monotonic()
-        local_jobs = self.workflow_local_jobs
-        queue_jobs = jobs_from_queue_rows(self.capture_queue_rows)
-        active_jobs = [self.active_workflow_job] if self.active_workflow_job else []
-        groups = [local_jobs, queue_jobs, active_jobs]
-        if include_completed:
-            groups.append(recent_completed_jobs(COMPLETED, limit=5))
-        self.workflow_jobs = merge_job_lists(*groups, limit=65)
+        self.workflow_jobs = self.workflow_application.snapshot(
+            capture_root=CAPTURE_ROOT,
+            mobile_processing_root=MOBILE_PROCESSING_DIR,
+            mobile_failed_root=MOBILE_FAILED_DIR,
+            queue_rows=self.capture_queue_rows,
+            active_job=self.active_workflow_job,
+            completed_root=COMPLETED,
+            include_completed=include_completed,
+            force=force,
+            local_limit=60,
+            result_limit=65,
+            completed_limit=5,
+        )
         return self.workflow_jobs
 
     def refresh_workflow_jobs_background(self, force=False):
@@ -4446,7 +4463,7 @@ class PutnamOS(BaseTk):
             return False
 
     def workflow_job_by_id(self, job_id):
-        return next((job for job in self.workflow_jobs if str(job.get("job_id")) == str(job_id)), None)
+        return self.workflow_application.job_by_id(self.workflow_jobs, job_id)
 
     def run_workflow_action(self, job, action=None):
         job = dict(job or {})
@@ -4528,7 +4545,9 @@ class PutnamOS(BaseTk):
 
         lower = tk.Frame(wrap, bg=BRAND["bg"])
         lower.pack(fill="both", expand=True)
-        listings = active_listings_summary(latest_ebay_active_listings_report())
+        listings = self.workflow_application.active_listings_summary(
+            latest_ebay_active_listings_report()
+        )
         active = self.card(lower, fill="x", pady=(0, 14), ipady=8)
         active_content = tk.Frame(active, bg=BRAND["panel"])
         active_content.pack(fill="x", padx=18, pady=(12, 10))
@@ -4548,7 +4567,11 @@ class PutnamOS(BaseTk):
         missing = [label for key, label in (("shipping_policy", "shipping policy"), ("payment_policy", "payment policy"), ("return_policy", "return policy")) if not policies.get(key)]
         if missing:
             policy_error = "Required eBay policy setting is missing: " + ", ".join(missing)
-        alerts = business_alerts(jobs, listings, policy_error=policy_error)
+        alerts = self.workflow_application.business_alerts(
+            jobs,
+            listings,
+            policy_error=policy_error,
+        )
         alert_card = self.card(lower, fill="both", expand=True, ipady=8)
         self.label(alert_card, "BUSINESS ALERTS", 12, BRAND["gold"], True, anchor="w", padx=18, pady=(14, 6))
         if not alerts:
@@ -4924,7 +4947,7 @@ class PutnamOS(BaseTk):
             folder = str(manifest.get("capture_folder") or "")
             self.capture_queue_last_staged_folder = folder
             if folder and Path(folder).exists():
-                update_workflow_context(
+                self.workflow_application.update_context(
                     folder,
                     capture_session_id=session_id,
                     capture_type=manifest.get("capture_type") or session.get("capture_type") or (session.get("device") or {}).get("capture_type") or "NEW_CAPTURE",
@@ -4932,7 +4955,7 @@ class PutnamOS(BaseTk):
                     current_workflow_state="Ready for CardUploader",
                     last_error="",
                 )
-                self.workflow_local_jobs_refreshed = 0.0
+                self.workflow_application.invalidate()
             append_activity(f"Mobile capture auto-staged: {session_id} -> {folder}")
             self.status.set(f"Mobile capture ready: {Path(folder).name if folder else session_id}")
             if hasattr(self, "capture_queue_selected_var"):
@@ -5134,7 +5157,7 @@ class PutnamOS(BaseTk):
         job = self.active_workflow_job or {}
         folder = str(job.get("capture_folder") or "")
         if folder and Path(folder).exists():
-            update_workflow_context(
+            self.workflow_application.update_context(
                 folder,
                 capture_session_id=job.get("capture_session_id", ""),
                 capture_type=job.get("capture_type", ""),
@@ -5143,7 +5166,7 @@ class PutnamOS(BaseTk):
                 current_workflow_state="Awaiting CSV Import",
                 last_error="",
             )
-            self.workflow_local_jobs_refreshed = 0.0
+            self.workflow_application.invalidate()
             self.active_workflow_job = {**job, "carduploader_handoff_status": "opened", "stage": "Awaiting CSV Import", "state": "Ready", "action": "Import CardUploader CSV"}
         self.status.set("Opened CardUploader.")
 
@@ -5171,7 +5194,7 @@ class PutnamOS(BaseTk):
         self.header("Processing", "Move each capture from CardUploader to an eBay-ready CSV.")
         wrap = self.scrollable_page()
         jobs = self.workflow_job_snapshot(include_completed=True)
-        grouped = group_processing_jobs(jobs)
+        grouped = self.workflow_application.group_processing_jobs(jobs)
 
         queue_card = self.card(wrap, fill="x", pady=(0, 14), ipady=10)
         queue_head = tk.Frame(queue_card, bg=BRAND["panel"])
@@ -5371,7 +5394,7 @@ class PutnamOS(BaseTk):
         }
         capture_folder = str(active_job.get("capture_folder") or "")
         if capture_folder and Path(capture_folder).exists():
-            update_workflow_context(
+            self.workflow_application.update_context(
                 capture_folder,
                 capture_session_id=active_job.get("capture_session_id", ""),
                 capture_type=active_job.get("capture_type", ""),
@@ -5382,7 +5405,7 @@ class PutnamOS(BaseTk):
                 current_workflow_state="Pricing Review",
                 last_error="",
             )
-            self.workflow_local_jobs_refreshed = 0.0
+            self.workflow_application.invalidate()
         self.active_workflow_job = {
             **active_job,
             "imported_csv_path": str(path),
@@ -8462,7 +8485,7 @@ Goal: Capture the real listing workflow for process improvement and content crea
             }
         if self.current_pricing_job and capture_folder and Path(capture_folder).exists():
             export_path = self.current_pricing_job / "ebay_upload_ready.csv"
-            update_workflow_context(
+            self.workflow_application.update_context(
                 capture_folder,
                 capture_session_id=active_job.get("capture_session_id", ""),
                 capture_type=active_job.get("capture_type", ""),
@@ -8474,7 +8497,7 @@ Goal: Capture the real listing workflow for process improvement and content crea
                 current_workflow_state="Ready for eBay Upload",
                 last_error="",
             )
-            self.workflow_local_jobs_refreshed = 0.0
+            self.workflow_application.invalidate()
 
     def open_current_output_folder(self):
         if not self.current_pricing_job or not self.current_pricing_job.exists():

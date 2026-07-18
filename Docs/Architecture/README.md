@@ -24,15 +24,16 @@ evidence; a recommendation in an audit is not a binding decision.
 
 ## Current State
 
-- **Current phase:** Phase 1 - Architecture Manifest and Standards Enforcement
+- **Current phase:** Phase 2 - Application Layer Extraction
 - **Current production launcher:** `Platform/Putnam_OS/Run CardVector OS Production.vbs`
 - **Current Python target:** `Platform/Putnam_OS/System/app/putnam_os.py`
 - **Proposed future entry point:** `py -m cardvector`
 - **Proposed future package root:** `Platform/cardvector/`
-- **Migration status:** Standards enforcement only; no production package
-  migration has begun
+- **Migration status:** `Platform/cardvector/application` is active as the
+  canonical orchestration layer; all other target packages remain proposed
 - **Phase 0:** Preserved with commits, a recovery branch, and patch/ZIP artifacts
-- **Phase 2:** Not authorized
+- **Phase 2:** Application layer authorized; bootstrap, paths, entry-point, UI,
+  and subsystem migrations are not authorized
 
 ## Canonical Owners
 
@@ -108,6 +109,8 @@ ADR Accepted.
 - [Architecture Roadmap Audit](../Reports/Architecture_Roadmap.md)
 - [Phase 0 Baseline](Phase_0_Baseline/)
 - [Phase 1 Standards](Phase_1_Standards/)
+- [Phase 1.5 Baseline Remediation](Phase_1_5_Baseline_Remediation/)
+- [Phase 2 Application Layer](Phase_2_Application/)
 
 ## Change Approval
 

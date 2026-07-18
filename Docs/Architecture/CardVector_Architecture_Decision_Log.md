@@ -207,3 +207,25 @@ Only the project owner changes approval status to Accepted.
 - **Migration impact:** Phase 1 only. No production code, launcher, or runtime
   behavior changes are authorized by this decision.
 - **Approval status:** Approved by project owner through the Phase 1 authorization.
+
+## CV-ADR-018 - Establish The Canonical Application Layer Before Bootstrap
+
+- **Decision:** Create `Platform/cardvector/application` as CardVector's
+  canonical workflow-orchestration layer. During migration it accepts existing
+  implementations as injected delegates. `putnam_os.py` may compose this
+  facade temporarily without changing the production launcher.
+- **Status:** Accepted.
+- **Evidence:** The owner explicitly authorized Phase 2 Application Layer
+  Extraction on 2026-07-18. `workflow_context.py` is the existing focused seam,
+  while `putnam_os.py` contains cache, coordination, and handoff call sites.
+- **Rationale:** Establish orchestration ownership with a reversible strangler
+  step before moving UI, business logic, infrastructure, or subsystem code.
+- **Alternatives considered:** Begin the earlier packaging/bootstrap roadmap
+  phase; move `workflow_context.py`; rewrite workflows; defer all extraction
+  until subsystem migrations.
+- **Consequences:** The application package provides execution context, service
+  registration, command dispatch, progress, cancellation, events, and a
+  workflow facade. Existing workflow algorithms and persistence stay in place.
+  Bootstrap, paths, entry points, and remaining package roots stay proposed.
+- **Migration impact:** Phase 2 only. Creates active adapter `CV-COMP-012`.
+- **Approval status:** Approved by project owner through the Phase 2 authorization.

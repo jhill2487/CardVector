@@ -13,6 +13,14 @@
 - Every phase begins from an approved checkpoint.
 - Every phase stops for explicit owner approval.
 
+## Authorized Phase Sequence Note
+
+On 2026-07-18 the project owner explicitly authorized a narrower Phase 2 named
+**Application Layer Extraction**. That authorization controls the current phase
+and establishes only `Platform/cardvector/application`. The packaging, paths,
+and bootstrap foundation described below remains deferred and requires a new
+explicit phase authorization. No entry point or launcher change is implied.
+
 ## Phase 0 - Baseline And Protection
 
 **Objective:** Establish a clean, reproducible baseline without losing current work.

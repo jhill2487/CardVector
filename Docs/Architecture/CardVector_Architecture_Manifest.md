@@ -1,6 +1,6 @@
 # CardVector Architecture Manifest
 
-**Status:** Approved for Phase 1 standards enforcement; target migration remains subject to accepted ADRs
+**Status:** Approved through Phase 2 Application-layer extraction; remaining target migration requires separate approval
 **Prepared:** 2026-07-17
 **Scope:** Permanent architecture and migration policy
 **Evidence baseline:** The eight completed reports in `Docs/Reports`
@@ -24,6 +24,15 @@ The evidence baseline is:
 - `Docs/Reports/Architecture_Roadmap.md`
 
 When this manifest conflicts with a historical report, the report remains evidence and this manifest records the proposed future decision. Product vision and business governance remain higher-level authorities.
+
+## Current Implementation Status
+
+The project owner authorized `Platform/cardvector/application` on 2026-07-18.
+That package is the canonical orchestration owner and may delegate to existing
+implementations during migration. This approval does not authorize the proposed
+bootstrap, `__main__`, path/configuration infrastructure, presentation,
+Marketplace Intelligence, Capture, Inventory, Listings, Shipping, or launcher
+migrations.
 
 ## Architectural Mission
 
