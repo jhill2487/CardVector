@@ -15,10 +15,10 @@ for import_path in (REPO_ROOT, APP_DIR):
     if str(import_path) not in sys.path:
         sys.path.insert(0, str(import_path))
 
-from Platform.Marketplace_Intelligence.marketplace_intelligence import (  # noqa: E402
-    pricing_engine as canonical_pricing,
+from Platform.cardvector.marketplace_intelligence import (  # noqa: E402
+    pricing as canonical_pricing,
 )
-from Platform.Marketplace_Intelligence.marketplace_intelligence.models import (  # noqa: E402
+from Platform.cardvector.marketplace_intelligence.models import (  # noqa: E402
     PricingDecision,
 )
 from Platform.Putnam_OS.System.MarketIntelligence.Pricing import (  # noqa: E402
@@ -162,7 +162,7 @@ class PutnamPricingDelegationTests(unittest.TestCase):
         }
         with (
             patch.object(
-                putnam_os.canonical_pricing,
+                putnam_os.pricing_application,
                 "build_pricing_decision",
                 return_value=expected,
             ) as delegated,
