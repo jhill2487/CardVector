@@ -24,18 +24,19 @@ evidence; a recommendation in an audit is not a binding decision.
 
 ## Current State
 
-- **Current phase:** Phase 3 - Marketplace Intelligence Consolidation
+- **Current phase:** Phase 4 - Capture and Card Recognition Consolidation
 - **Current production launcher:** `Platform/Putnam_OS/Run CardVector OS Production.vbs`
 - **Current Python target:** `Platform/Putnam_OS/System/app/putnam_os.py`
 - **Proposed future entry point:** `py -m cardvector`
 - **Proposed future package root:** `Platform/cardvector/`
 - **Migration status:** `Platform/cardvector/application` is the canonical
-  orchestration layer and `Platform/cardvector/marketplace_intelligence` is the
-  canonical pricing, FMV, evidence, and marketplace-pricing API
+  orchestration layer, `Platform/cardvector/marketplace_intelligence` is the
+  canonical pricing API, and `Platform/cardvector/capture` is the canonical
+  Capture API; CardUploader remains the external recognition owner
 - **Phase 0:** Preserved with commits, a recovery branch, and patch/ZIP artifacts
-- **Phase 3:** Marketplace Intelligence ownership authorized; bootstrap, paths,
-  entry-point, UI, capture, inventory, listings, orders, and shipping migrations
-  are not authorized
+- **Phase 4:** Capture ownership and the external CardUploader recognition
+  boundary are authorized; bootstrap, paths, entry-point, UI, inventory,
+  listings, orders, and shipping migrations are not authorized
 
 ## Canonical Owners
 
@@ -45,7 +46,7 @@ evidence; a recommendation in an audit is not a binding decision.
 | Desktop presentation | Future `cardvector.presentation.desktop` |
 | Workflow orchestration | `Platform/cardvector/application` |
 | Shared business types | Future `cardvector.shared.domain` |
-| Capture | Future `cardvector.capture` |
+| Capture | `Platform/cardvector/capture` |
 | Inventory and locations | Future `cardvector.inventory` |
 | FMV, Price Vector, pricing intelligence | `Platform/cardvector/marketplace_intelligence` |
 | Listings and eBay export records | Future `cardvector.listings` |
@@ -115,6 +116,7 @@ ADR Accepted.
 - [Phase 2 Application Layer](Phase_2_Application/)
 - [Price Vector Integration Gate](Price_Vector_Integration_Gate/)
 - [Phase 3 Marketplace Intelligence](Phase_3_Marketplace_Intelligence/)
+- [Phase 4 Capture and Recognition](Phase_4_Capture_and_Recognition/)
 
 ## Change Approval
 

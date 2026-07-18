@@ -252,3 +252,28 @@ Only the project owner changes approval status to Accepted.
 - **Migration impact:** Phase 3 only. No launcher, UI, capture, inventory,
   listings, orders, shipping, or live marketplace behavior changes.
 - **Approval status:** Approved by project owner through the Phase 3 authorization.
+
+## CV-ADR-020 - Establish Capture Ownership And External Recognition Boundary
+
+- **Decision:** Adopt `Platform/cardvector/capture` as the canonical Capture
+  owner and `cardvector.application.CaptureApplication` as its orchestration
+  facade. CardUploader remains the sole production recognition owner;
+  `Platform/cardvector/integrations/carduploader` provides a descriptive
+  handoff adapter without implementing recognition.
+- **Status:** Accepted.
+- **Evidence:** The project owner explicitly authorized Phase 4 on 2026-07-18.
+  Production source uses Capture Studio, the mobile queue, and CardUploader's
+  browser/CSV workflow. No production source imports archived OCR engines.
+- **Rationale:** Capture and recognition need an explicit boundary without
+  copying proven Capture code or promoting conflicting archived scanner
+  experiments.
+- **Alternatives considered:** Relocate Capture implementations immediately;
+  copy CardUploader behavior into CardVector; activate an archived OCR engine;
+  keep direct UI ownership.
+- **Consequences:** Capture helpers and operations have canonical APIs while
+  proven implementations remain tested delegates. The UI and standalone tools
+  remain compatibility surfaces. Native recognition requires a separate ADR.
+- **Migration impact:** Phase 4 only. No launcher, UI layout, Marketplace
+  Intelligence, Inventory, Listings, Orders, Shipping, database, or live-device
+  behavior changes.
+- **Approval status:** Approved by project owner through the Phase 4 authorization.

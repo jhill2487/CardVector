@@ -1,8 +1,8 @@
 {
   "schema_version": "1.0",
   "architecture_version": "1.1",
-  "approval_status": "phase_3_marketplace_intelligence_accepted_remaining_target_migration_proposed",
-  "current_migration_phase": "phase_3_marketplace_intelligence_consolidation",
+  "approval_status": "phase_4_capture_recognition_accepted_remaining_target_migration_proposed",
+  "current_migration_phase": "phase_4_capture_and_recognition_consolidation",
   "current_production_launcher": "Platform/Putnam_OS/Run CardVector OS Production.vbs",
   "current_production_python_target": "Platform/Putnam_OS/System/app/putnam_os.py",
   "proposed_future_python_entry_point": "py -m cardvector",
@@ -51,6 +51,8 @@
   ],
   "approved_production_package_roots": [
     "Platform/cardvector/application",
+    "Platform/cardvector/capture",
+    "Platform/cardvector/integrations/carduploader",
     "Platform/cardvector/marketplace_intelligence",
     "Platform/Marketplace_Intelligence/marketplace_intelligence",
     "Platform/Putnam_OS/System/app",
@@ -133,6 +135,18 @@
       "status": "active"
     },
     {
+      "id": "CV-COMP-006",
+      "legacy_interface": "Platform/Putnam_OS/System/app/capture_studio.py and desktop Capture helpers",
+      "canonical_target": "Platform/cardvector/capture",
+      "status": "active"
+    },
+    {
+      "id": "CV-COMP-009",
+      "legacy_interface": "Platform/Putnam_OS/System/tools/mobile_capture_queue.py",
+      "canonical_target": "Platform/cardvector/capture",
+      "status": "active"
+    },
+    {
       "id": "CV-COMP-005",
       "legacy_interface": "Platform/Putnam_OS/System/app/main.py",
       "canonical_target": "unresolved_pending_caller_inventory",
@@ -155,6 +169,12 @@
       "legacy_interface": "Platform/Marketplace_Intelligence/run_marketplace_intelligence.py direct execution",
       "canonical_target": "Platform/cardvector/marketplace_intelligence",
       "status": "active"
+    },
+    {
+      "id": "CV-COMP-015",
+      "legacy_interface": "Platform/Putnam_Platform/capture/Putnam_Capture.py",
+      "canonical_target": "unresolved_pending_operator_usage_decision",
+      "status": "planned_candidate"
     }
   ],
   "active_deprecations": [],
@@ -227,7 +247,8 @@
     "accepted": [
       "CV-ADR-017",
       "CV-ADR-018",
-      "CV-ADR-019"
+      "CV-ADR-019",
+      "CV-ADR-020"
     ],
     "proposed": [
       "CV-ADR-001",
@@ -248,5 +269,5 @@
       "CV-ADR-016"
     ]
   },
-  "last_updated": "2026-07-18T15:49:27-04:00"
+  "last_updated": "2026-07-18T18:30:00-04:00"
 }
