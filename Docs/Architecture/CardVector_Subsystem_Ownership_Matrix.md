@@ -24,11 +24,13 @@
 | Price Vector | MI pricing engine | `cardvector.marketplace_intelligence` | Required | Putnam OS/optimizer adapters |
 | Bulk repricing | MI plus `bulk_price_engine.py`, `main.py` | MI pricing; Listings owns export preparation | Required | Preserve CLI/UI result shapes |
 | Pricing persistence | Active untracked MI repository/migration | `cardvector.marketplace_intelligence` ports + infrastructure repository | Required | Existing API adapter |
-| Inventory domain | `inventory_locations.py`, UI conversion/audit | `cardvector.inventory` | Required | Old functions/classes forward |
-| Location cloud sync | `mobile_capture_queue.py`, Supabase migration | Inventory application + Supabase integration | Required | Queue command compatibility |
-| Conversion sessions | `putnam_os.py`, runtime JSON | `cardvector.inventory.application` | Required | Current UI/session functions delegate |
-| Reconciliation | `inventory_reconciliation.py` | `cardvector.inventory` | Required | CLI wrapper |
-| QR payloads/labels | Inventory module and label tool | Inventory owns payload/data; Reporting renderer outputs | Required | Existing tool wrapper |
+| Managed inventory domain | CardUploader export and managed-inventory workflow; CardVector snapshot/audit helpers | External CardUploader | Phase 5 ownership accepted; live API unavailable | `CardUploaderInventoryService` snapshot adapter |
+| Inventory UI/orchestration | `putnam_os.py`, `cardvector.application.inventory` | `cardvector.application` | Phase 5 facade implemented | Current UI callbacks remain |
+| Location cloud sync | `mobile_capture_queue.py`, Supabase migration | Capture-location compatibility projection; eventual CardUploader location adapter | Required after a supported API exists | Queue command compatibility |
+| Conversion sessions | `putnam_os.py`, runtime JSON | Capture/application workflow; CardUploader receives completed recognition handoff | Required | Current UI/session functions delegate |
+| Reconciliation | `inventory_reconciliation.py` | CardVector reporting over `cardvector.integrations.carduploader` snapshots | Phase 5 CardUploader parser delegated | CLI wrapper |
+| QR payloads/labels | `inventory_locations.py` and label tool | Capture/location compatibility projection; Reporting renders labels | Required after CardUploader location contract exists | Existing tool wrapper |
+| Quantity, reservation, allocation, picking state | CardUploader managed inventory; no CardVector implementation found | External CardUploader | No CardVector migration | No synthetic adapter permitted |
 | Listings | UI/export helpers, bulk engine, Listing Optimizer | `cardvector.listings` | Required | Existing export functions delegate |
 | eBay CSV preservation | `prepare_listing_export_rows`, MI bulk export | Listings + eBay integration | Required | Legacy function wrapper |
 | Orders | `orders_fulfillment.py`, UI callbacks | `cardvector.orders` | Required | Existing module wrapper |
@@ -85,7 +87,11 @@ Listings must never recalculate FMV or Price Vector.
 
 ### Inventory Versus Capture
 
-Capture records where and how images were acquired. Inventory owns ETB/location identity, occupancy, and conversion completion. Cross-subsystem assignment is orchestrated by the application layer using IDs, not imports between infrastructure modules.
+Capture records where and how images were acquired. CardUploader owns managed
+inventory and authoritative card locations. Existing ETB/location JSON and
+Supabase rows remain capture/location compatibility projections until a
+supported CardUploader location API can replace them. Cross-system handoff is
+orchestrated through application and integration contracts.
 
 ### Reports Versus Analytics
 

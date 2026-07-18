@@ -1,6 +1,6 @@
 # CardVector Architecture Manifest
 
-**Status:** Approved through Phase 2 Application-layer extraction; remaining target migration requires separate approval
+**Status:** Approved through Phase 5 CardUploader inventory integration; remaining target migration requires separate approval
 **Prepared:** 2026-07-17
 **Scope:** Permanent architecture and migration policy
 **Evidence baseline:** The eight completed reports in `Docs/Reports`
@@ -31,8 +31,7 @@ The project owner authorized `Platform/cardvector/application` on 2026-07-18.
 That package is the canonical orchestration owner and may delegate to existing
 implementations during migration. This approval does not authorize the proposed
 bootstrap, `__main__`, path/configuration infrastructure, presentation,
-Marketplace Intelligence, Capture, Inventory, Listings, Shipping, or launcher
-migrations.
+Listings, Shipping, or launcher migrations.
 
 ## Architectural Mission
 
@@ -40,7 +39,11 @@ CardVector is a workflow platform for trading card operations. It coordinates:
 
 `Capture -> CardUploader -> Processing and Price Vector -> eBay handoff`
 
-CardVector owns workflow orchestration, capture preparation, pricing intelligence, operational inventory, supported exports, and operator guidance. External products retain the responsibilities they actually perform.
+CardVector owns workflow orchestration, capture preparation, pricing
+intelligence, supported exports, and operator guidance. CardUploader owns card
+recognition and managed inventory. CardVector consumes that inventory through
+application and integration contracts; it does not maintain a competing source
+of truth.
 
 ## Permanent Architecture Decisions
 
@@ -85,7 +88,10 @@ Permanent layers are:
 5. Integration
 6. Compatibility
 
-Subsystems are vertical owners. Capture, Inventory, Marketplace Intelligence, Listings, Orders, Shipping, Reporting, Analytics, Content, and any future Scanner package each own their domain and application behavior.
+Subsystems are vertical owners. Capture, Marketplace Intelligence, Listings,
+Orders, Shipping, Reporting, Analytics, Content, and any approved future
+Scanner package each own their domain and application behavior. CardUploader is
+the external vertical owner for managed inventory.
 
 ### A5. Marketplace Intelligence owns pricing
 
@@ -128,6 +134,18 @@ Production source folders contain no timestamped copies or names using `old`, `b
 
 CI and local checks must detect forbidden dependencies, duplicate entry points, path mutation, absolute user paths, runtime files in Git, imports from Archive, and unapproved production packages.
 
+### A13. CardUploader owns managed inventory
+
+CardUploader is authoritative for inventory identity, SKU, quantity, location,
+image association, allocation, reservation, picking state, lifecycle,
+persistence, and synchronization. CardVector may expose views, reports,
+pricing, and workflows over CardUploader contracts. `Platform/cardvector` must
+not contain a parallel inventory domain or persistence implementation.
+
+Until a supported live CardUploader API is available, exported snapshots are
+read-only evidence. Existing CardVector ETB JSON and Supabase location data are
+temporary capture/location projections, not authoritative card inventory.
+
 ## Canonical Package Owners
 
 | Responsibility | Permanent owner |
@@ -137,7 +155,8 @@ CI and local checks must detect forbidden dependencies, duplicate entry points, 
 | Cross-subsystem workflow | `cardvector.application` |
 | Common value objects and errors | `cardvector.shared.domain` |
 | Capture | `cardvector.capture` |
-| Inventory and locations | `cardvector.inventory` |
+| Managed inventory | External CardUploader |
+| Inventory orchestration and views | `cardvector.application` through `cardvector.integrations.carduploader` |
 | Marketplace evidence, FMV, Price Vector | `cardvector.marketplace_intelligence` |
 | Listings and eBay-ready listing records | `cardvector.listings` |
 | Orders and pick lists | `cardvector.orders` |

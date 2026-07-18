@@ -449,15 +449,17 @@ explicit phase authorization. No entry point or launcher change is implied.
 **Dependencies:** Phase 4.
 **Risk:** Critical.
 
-## Phase 7 - Inventory And Persistence Consolidation
+## Phase 7 - CardUploader Inventory Integration And Legacy Projection Retirement
 
-**Objective:** Give operational inventory state, location identity, conversion, and persistence clear owners without changing data.
+**Objective:** Complete CardUploader inventory integration and retire CardVector
+inventory-like projections only after supported CardUploader APIs and data
+equivalence are available.
 
 **Exact scope:** Separate migration packages:
 
-- 7A Inventory locations/conversion/sync,
-- 7B Inventory audit/reconciliation/labels,
-- 7C persistence ports/repositories and old-state readers.
+- 7A supported CardUploader inventory/location API adapter,
+- 7B migration of read/write callers from local projections,
+- 7C read compatibility and retirement plan for old ETB/audit state.
 
 **Files/packages involved:**
 
@@ -467,18 +469,19 @@ explicit phase authorization. No entry point or launcher change is implied.
 - `generate_etb_qr_labels.py`,
 - Seller Tools location registry,
 - local JSON and Supabase location contracts,
-- future Inventory and Infrastructure persistence packages.
+- `cardvector.application` and `cardvector.integrations.carduploader`,
+- no `cardvector.inventory` package.
 
 **Preconditions:**
 
 - runtime data classified/backed up,
-- location authority decision approved,
+- CardUploader API/export capabilities documented,
 - fixtures and conversion-resume tests.
 
 **Permitted:**
 
-- repository ports,
-- service extraction,
+- CardUploader integration adapters,
+- application orchestration,
 - UI/CLI adapters,
 - read compatibility for old state.
 
@@ -487,7 +490,7 @@ explicit phase authorization. No entry point or launcher change is implied.
 - silent data rewrite,
 - location/QR format change,
 - inventory reassignment,
-- CardUploader managed-inventory duplication,
+- CardVector managed-inventory implementation,
 - automatic shipping purchase.
 
 **Tests required:**
@@ -510,7 +513,7 @@ explicit phase authorization. No entry point or launcher change is implied.
 
 **Completion criteria:**
 
-- Inventory owns identity/occupancy/conversion,
+- CardUploader owns inventory identity, quantity, location, allocation, and picking,
 - UI does not write state directly,
 - old formats remain readable.
 

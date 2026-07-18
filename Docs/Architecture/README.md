@@ -24,7 +24,7 @@ evidence; a recommendation in an audit is not a binding decision.
 
 ## Current State
 
-- **Current phase:** Phase 4 - Capture and Card Recognition Consolidation
+- **Current phase:** Phase 5 - CardUploader Inventory Ownership and Integration
 - **Current production launcher:** `Platform/Putnam_OS/Run CardVector OS Production.vbs`
 - **Current Python target:** `Platform/Putnam_OS/System/app/putnam_os.py`
 - **Proposed future entry point:** `py -m cardvector`
@@ -32,11 +32,11 @@ evidence; a recommendation in an audit is not a binding decision.
 - **Migration status:** `Platform/cardvector/application` is the canonical
   orchestration layer, `Platform/cardvector/marketplace_intelligence` is the
   canonical pricing API, and `Platform/cardvector/capture` is the canonical
-  Capture API; CardUploader remains the external recognition owner
+  Capture API; CardUploader is the external recognition and inventory owner
 - **Phase 0:** Preserved with commits, a recovery branch, and patch/ZIP artifacts
-- **Phase 4:** Capture ownership and the external CardUploader recognition
-  boundary are authorized; bootstrap, paths, entry-point, UI, inventory,
-  listings, orders, and shipping migrations are not authorized
+- **Phase 5:** CardVector uses a read-only CardUploader snapshot service and
+  registered legacy ETB projection adapters. No live CardUploader inventory
+  write, reservation, allocation, picking, or synchronization API is claimed.
 
 ## Canonical Owners
 
@@ -47,7 +47,8 @@ evidence; a recommendation in an audit is not a binding decision.
 | Workflow orchestration | `Platform/cardvector/application` |
 | Shared business types | Future `cardvector.shared.domain` |
 | Capture | `Platform/cardvector/capture` |
-| Inventory and locations | Future `cardvector.inventory` |
+| Inventory records, quantities, locations, allocation, and picking state | CardUploader |
+| Inventory UI and workflow orchestration | `Platform/cardvector/application` through `Platform/cardvector/integrations/carduploader` |
 | FMV, Price Vector, pricing intelligence | `Platform/cardvector/marketplace_intelligence` |
 | Listings and eBay export records | Future `cardvector.listings` |
 | Orders and fulfillment | Future `cardvector.orders` |
@@ -117,6 +118,7 @@ ADR Accepted.
 - [Price Vector Integration Gate](Price_Vector_Integration_Gate/)
 - [Phase 3 Marketplace Intelligence](Phase_3_Marketplace_Intelligence/)
 - [Phase 4 Capture and Recognition](Phase_4_Capture_and_Recognition/)
+- [Phase 5 CardUploader Inventory](Phase_5_CardUploader_Inventory/)
 
 ## Change Approval
 

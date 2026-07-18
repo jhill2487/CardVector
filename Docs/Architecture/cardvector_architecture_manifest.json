@@ -1,8 +1,8 @@
 {
   "schema_version": "1.0",
-  "architecture_version": "1.1",
-  "approval_status": "phase_4_capture_recognition_accepted_remaining_target_migration_proposed",
-  "current_migration_phase": "phase_4_capture_and_recognition_consolidation",
+  "architecture_version": "1.2",
+  "approval_status": "phase_5_carduploader_inventory_accepted_remaining_target_migration_proposed",
+  "current_migration_phase": "phase_5_carduploader_inventory_integration",
   "current_production_launcher": "Platform/Putnam_OS/Run CardVector OS Production.vbs",
   "current_production_python_target": "Platform/Putnam_OS/System/app/putnam_os.py",
   "proposed_future_python_entry_point": "py -m cardvector",
@@ -15,7 +15,9 @@
     "shared_domain_models": "cardvector.shared.domain",
     "capture": "cardvector.capture",
     "scanner_recognition": "external:CardUploader",
-    "inventory": "cardvector.inventory",
+    "inventory": "external:CardUploader",
+    "inventory_orchestration": "Platform/cardvector/application",
+    "inventory_integration": "Platform/cardvector/integrations/carduploader",
     "marketplace_intelligence": "Platform/cardvector/marketplace_intelligence",
     "fair_market_value": "Platform/cardvector/marketplace_intelligence",
     "price_vector": "Platform/cardvector/marketplace_intelligence",
@@ -147,6 +149,18 @@
       "status": "active"
     },
     {
+      "id": "CV-COMP-007",
+      "legacy_interface": "Platform/Putnam_OS/System/app/inventory_locations.py",
+      "canonical_target": "Platform/cardvector/application plus supported CardUploader location API",
+      "status": "active"
+    },
+    {
+      "id": "CV-COMP-016",
+      "legacy_interface": "Platform/Putnam_OS/System/app/inventory_reconciliation.py CardUploaderInventorySource",
+      "canonical_target": "Platform/cardvector/integrations/carduploader/inventory.py",
+      "status": "active"
+    },
+    {
       "id": "CV-COMP-005",
       "legacy_interface": "Platform/Putnam_OS/System/app/main.py",
       "canonical_target": "unresolved_pending_caller_inventory",
@@ -248,7 +262,8 @@
       "CV-ADR-017",
       "CV-ADR-018",
       "CV-ADR-019",
-      "CV-ADR-020"
+      "CV-ADR-020",
+      "CV-ADR-021"
     ],
     "proposed": [
       "CV-ADR-001",
@@ -269,5 +284,5 @@
       "CV-ADR-016"
     ]
   },
-  "last_updated": "2026-07-18T18:30:00-04:00"
+  "last_updated": "2026-07-18T19:30:00-04:00"
 }

@@ -60,10 +60,6 @@ PutnamCollectibles/
 |   |   |   |-- domain/
 |   |   |   |-- application/
 |   |   |   `-- ports/
-|   |   |-- inventory/
-|   |   |   |-- domain/
-|   |   |   |-- application/
-|   |   |   `-- ports/
 |   |   |-- marketplace_intelligence/
 |   |   |   |-- domain/
 |   |   |   |-- application/
@@ -262,27 +258,29 @@ May depend on:
 
 Concrete OBS/Supabase/filesystem implementations live in integrations/infrastructure.
 
-### `cardvector.inventory`
+### CardUploader inventory integration
 
 Purpose:
 
-- physical inventory, locations, conversion, and reconciliation.
+- expose CardUploader-owned inventory to CardVector application workflows.
 
 Belongs:
 
-- ETB/location identity and validation,
-- occupancy/capacity,
-- conversion sessions,
-- cloud/local sync rules,
-- reconciliation,
-- QR payload definitions,
-- inventory repositories.
+- CardUploader request/response contracts,
+- read-only exported-snapshot normalization,
+- future supported CardUploader API adapters,
+- provider capability reporting and external error translation.
 
 Must not belong:
 
-- eBay listing-price logic,
-- capture UI,
-- arbitrary Seller Tools location formats.
+- inventory business truth, independent quantities, location rules,
+- reservations, allocations, picking state, or inventory persistence,
+- CardVector-managed inventory databases,
+- eBay listing-price logic or capture UI.
+
+CardVector inventory views and commands live in `cardvector.application`.
+Temporary ETB/location projections remain registered compatibility adapters;
+they do not justify a `cardvector.inventory` package.
 
 ### `cardvector.marketplace_intelligence`
 

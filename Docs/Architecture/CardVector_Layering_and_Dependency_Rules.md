@@ -99,7 +99,7 @@ Extract command/query services first. Return result objects that the current UI 
 
 - Business concepts, invariants, value objects, policies, and pure calculations.
 - Capture pair completeness.
-- ETB/location identity and capacity.
+- External inventory identifiers and CardUploader contract values.
 - FMV/recommendation/final-price distinctions.
 - Listing and order semantics.
 - Domain errors.
@@ -121,7 +121,8 @@ Extract command/query services first. Return result objects that the current UI 
 ### Current examples
 
 - Marketplace Intelligence models/pricing logic are closest to domain behavior.
-- `inventory_locations.py` combines domain rules with JSON persistence.
+- `inventory_locations.py` combines legacy capture/location projection rules
+  with JSON persistence; it is not the managed-inventory owner.
 - `optimized_export_price`, policy checks, and inventory capacity logic currently sit near UI code.
 
 ### Migration implication
@@ -266,7 +267,7 @@ It may not calculate prices, parse business CSVs, mutate inventory, or contain U
 Allowed:
 
 ```python
-from cardvector.inventory.api import InventoryService
+from cardvector.application import InventoryApplication
 from cardvector.marketplace_intelligence.api import PricingService
 from cardvector.shared.domain.money import Money
 ```

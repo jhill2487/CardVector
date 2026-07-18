@@ -277,3 +277,24 @@ Only the project owner changes approval status to Accepted.
   Intelligence, Inventory, Listings, Orders, Shipping, database, or live-device
   behavior changes.
 - **Approval status:** Approved by project owner through the Phase 4 authorization.
+
+## CV-ADR-021 - CardUploader Owns Managed Inventory
+
+- **Decision:** CardUploader is the canonical owner of managed inventory.
+  CardVector uses application and CardUploader integration contracts for views,
+  pricing, reporting, and workflow coordination.
+- **Status:** Accepted.
+- **Evidence:** CardUploader exports contain inventory identity, SKU, quantity,
+  status, card identity, and location references. CardVector contains snapshot,
+  audit, reconciliation, and ETB projection code but no reservation, allocation,
+  pick-confirmation, or authoritative inventory API.
+- **Rationale:** A second CardVector inventory implementation would create
+  conflicting quantities, locations, and fulfillment state.
+- **Alternatives considered:** create `cardvector.inventory`; treat local ETB
+  JSON/Supabase as authoritative managed inventory; defer ownership.
+- **Consequences:** `Platform/cardvector/inventory` is not created. Existing
+  local projections remain temporary adapters. Unsupported live CardUploader
+  capabilities are reported explicitly.
+- **Migration impact:** Phase 5 establishes read-only snapshot contracts and
+  application delegation. Data migration and schema changes are excluded.
+- **Approval status:** Approved by project owner through the Phase 5 authorization.
