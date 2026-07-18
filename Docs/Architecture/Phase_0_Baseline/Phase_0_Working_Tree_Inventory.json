@@ -1,0 +1,190 @@
+{
+  "schema_version": 1,
+  "captured_at": "2026-07-17T23:57:52-04:00",
+  "repository": "C:\\Users\\user\\OneDrive\\PutnamCollectibles",
+  "branch": "main",
+  "head_commit": "13fff8e4ec0945a10d37fb01b971b1db5a5c94e7",
+  "upstream": "origin/main",
+  "ahead": 0,
+  "behind": 0,
+  "status": "dirty",
+  "staged_files": [],
+  "changed_files": [
+    {
+      "path": "Platform/Marketplace_Intelligence/marketplace_intelligence/__init__.py",
+      "git_status": "M",
+      "classification": "Active Price Vector / eBay feature work",
+      "proposed_action": "preserve_wip_patch_then_commit_after_validation",
+      "preservation_required": true
+    },
+    {
+      "path": "Platform/Marketplace_Intelligence/marketplace_intelligence/bulk_export.py",
+      "git_status": "M",
+      "classification": "Active Price Vector / eBay feature work",
+      "proposed_action": "preserve_wip_patch_then_commit_after_validation",
+      "preservation_required": true
+    },
+    {
+      "path": "Platform/Marketplace_Intelligence/marketplace_intelligence/engine.py",
+      "git_status": "M",
+      "classification": "Active Price Vector / eBay feature work",
+      "proposed_action": "preserve_wip_patch_then_commit_after_validation",
+      "preservation_required": true
+    },
+    {
+      "path": "Platform/Marketplace_Intelligence/marketplace_intelligence/models.py",
+      "git_status": "M",
+      "classification": "Active Price Vector / eBay feature work",
+      "proposed_action": "preserve_wip_patch_then_commit_after_validation",
+      "preservation_required": true
+    },
+    {
+      "path": "Platform/Marketplace_Intelligence/marketplace_intelligence/pricing_engine.py",
+      "git_status": "M",
+      "classification": "Active Price Vector / eBay feature work",
+      "proposed_action": "preserve_wip_patch_then_commit_after_validation",
+      "preservation_required": true
+    },
+    {
+      "path": "Platform/Marketplace_Intelligence/marketplace_intelligence/reports.py",
+      "git_status": "M",
+      "classification": "Active Price Vector / eBay feature work",
+      "proposed_action": "preserve_wip_patch_then_commit_after_validation",
+      "preservation_required": true
+    },
+    {
+      "path": "Platform/Putnam_OS/System/MarketIntelligence/Pricing/pricing_engine.py",
+      "git_status": "M",
+      "classification": "Active Price Vector / eBay feature work",
+      "proposed_action": "preserve_wip_patch_then_commit_after_validation",
+      "preservation_required": true
+    },
+    {
+      "path": "Platform/Putnam_OS/System/MarketIntelligence/Pricing/pricing_models.py",
+      "git_status": "M",
+      "classification": "Active Price Vector / eBay feature work",
+      "proposed_action": "preserve_wip_patch_then_commit_after_validation",
+      "preservation_required": true
+    },
+    {
+      "path": "Platform/Putnam_OS/System/app/bulk_price_engine.py",
+      "git_status": "M",
+      "classification": "Active Price Vector / eBay feature work",
+      "proposed_action": "preserve_wip_patch_then_commit_after_validation",
+      "preservation_required": true
+    },
+    {
+      "path": "Platform/Putnam_OS/System/app/main.py",
+      "git_status": "M",
+      "classification": "Active Price Vector / eBay feature work",
+      "proposed_action": "preserve_incomplete_wip_do_not_commit_as_validated",
+      "preservation_required": true,
+      "review_required": "unterminated f-string at line 650"
+    },
+    {
+      "path": "Platform/Putnam_OS/System/app/putnam_os.py",
+      "git_status": "M",
+      "classification": "Active Price Vector / eBay feature work",
+      "proposed_action": "preserve_wip_patch_then_commit_after_validation",
+      "preservation_required": true
+    },
+    {
+      "path": "Platform/Putnam_OS/System/config/putnam_os_config.json",
+      "git_status": "M",
+      "classification": "Configuration",
+      "proposed_action": "preserve_and_request_owner_review",
+      "preservation_required": true
+    }
+  ],
+  "untracked_groups": [
+    {
+      "classification": "Architecture documentation",
+      "proposed_action": "commit_separately",
+      "preservation_required": true,
+      "paths": [
+        "Docs/Architecture/CardVector_Architecture_Decision_Log.md",
+        "Docs/Architecture/CardVector_Architecture_Guardrails.md",
+        "Docs/Architecture/CardVector_Architecture_Manifest.md",
+        "Docs/Architecture/CardVector_Compatibility_Strategy.md",
+        "Docs/Architecture/CardVector_Configuration_Path_and_Runtime_Standards.md",
+        "Docs/Architecture/CardVector_Development_Standards.md",
+        "Docs/Architecture/CardVector_Entry_Point_and_Bootstrap_Standard.md",
+        "Docs/Architecture/CardVector_Future_Change_Process.md",
+        "Docs/Architecture/CardVector_Layering_and_Dependency_Rules.md",
+        "Docs/Architecture/CardVector_Migration_Roadmap.md",
+        "Docs/Architecture/CardVector_Open_Architecture_Questions.md",
+        "Docs/Architecture/CardVector_Subsystem_Ownership_Matrix.md",
+        "Docs/Architecture/CardVector_Target_Repository_Structure.md",
+        "Docs/Architecture/CardVector_Validation_and_Rollback_Standards.md",
+        "Docs/Architecture/CardVector_main_py_Retirement_Plan.md",
+        "Docs/Architecture/CardVector_putnam_os_Decomposition_Plan.md",
+        "Docs/Reports/Architecture_Audit.md",
+        "Docs/Reports/Architecture_Roadmap.md",
+        "Docs/Reports/Dead_Code_Report.md",
+        "Docs/Reports/Dependency_Map.md",
+        "Docs/Reports/Duplicate_Module_Report.md",
+        "Docs/Reports/Entry_Point_Report.md",
+        "Docs/Reports/Module_Ownership.md",
+        "Docs/Reports/Repository_Inventory.md"
+      ]
+    },
+    {
+      "classification": "Active Price Vector / eBay feature work",
+      "proposed_action": "preserve_in_wip_archive_then_commit_after_validation",
+      "preservation_required": true,
+      "paths": [
+        "Docs/PriceVector/current_code_audit.md",
+        "Docs/PriceVector/implementation_gap_map.md",
+        "Docs/PriceVector/overlay_extension_reuse_audit.md",
+        "Docs/PriceVector/phase_1_build_plan.md",
+        "Platform/Marketplace_Intelligence/marketplace_intelligence/pricing_repository.py",
+        "Platform/Marketplace_Intelligence/migrations/001_price_vector_pricing_decisions.sql",
+        "Platform/Marketplace_Intelligence/tests/test_price_vector_fmv_separation.py",
+        "Platform/Marketplace_Intelligence/tests/test_pricing_engine_consolidation.py"
+      ]
+    },
+    {
+      "classification": "Developer tool output",
+      "proposed_action": "preserve_in_wip_archive_not_source_commit",
+      "preservation_required": true,
+      "paths": [
+        "Platform/Putnam_OS/System/app/bulk_price_engine.py.before_ebay_patch_20260717_132121.bak",
+        "Platform/Putnam_OS/System/app/main.py.before_ebay_patch_20260717_132121.bak",
+        "Platform/Putnam_OS/System/app/putnam_os.py.before_active_listing_fix_20260717_135604.bak",
+        "patch_cardvector_ebay_existing_listings.py"
+      ]
+    },
+    {
+      "classification": "Business data",
+      "proposed_action": "leave_untracked_in_place_request_retention_policy",
+      "preservation_required": true,
+      "paths": [
+        "Business/eBay_Store_Items/PIP Insurance Claims/Order 27-14693-04250/dedenne earnings.jpg",
+        "Business/eBay_Store_Items/PIP Insurance Claims/Order 27-14693-04250/dedenne not arrived.jpg",
+        "Business/eBay_Store_Items/PIP Insurance Claims/Order 27-14693-04250/order dedenne.jpg"
+      ]
+    }
+  ],
+  "ignored_relevant_paths": [
+    "Capture/",
+    "Data/Completed_Jobs/",
+    "Data/Exports/",
+    "Data/Imports/Processed/sample_acceptance_03.csv",
+    "Data/Imports/Processed/sample_acceptance_04.csv",
+    "Data/Imports/Processed/sample_acceptance_05.csv",
+    "Data/Imports/Processed/sample_acceptance_06.csv",
+    "Data/Logs/",
+    "Data/Media/",
+    "Data/Processed/",
+    "MobileCapture/",
+    "Platform/Putnam_OS/System/cache/",
+    "Platform/Putnam_OS/System/logs/",
+    "Work_Sessions/"
+  ],
+  "sensitive_scan": {
+    "secret_values_found": false,
+    "machine_specific_document_paths_found": true,
+    "potentially_sensitive_business_images_found": true
+  },
+  "inventory_scope_note": "Phase 0 report files created after capture are excluded from the original dirty-tree inventory."
+}
