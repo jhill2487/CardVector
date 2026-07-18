@@ -1,6 +1,6 @@
 ﻿# Phase 1 Architecture Baseline
 
-- **Generated:** 2026-07-18T01:39:59.058526-04:00
+- **Generated:** 2026-07-18T11:15:36.417320-04:00
 - **Mode:** warning-establish-baseline
 - **Total findings:** 48
 - **Critical:** 0
@@ -23,10 +23,10 @@ does not become approved architecture merely because it is recorded.
 | ERROR | imports.sys_path_mutation | `Platform/Putnam_OS/Putnam_Seller_Tools/seller_audit/putnam_sku_repair_planner_v1_1.py` | Yes | No | Phase 2-4 | not reviewed | Production source mutates sys.path. |
 | ERROR | imports.sys_path_mutation | `Platform/Putnam_OS/System/app/bulk_price_engine.py` | Yes | No | Phase 2-4 | not reviewed | Production source mutates sys.path. |
 | ERROR | imports.sys_path_mutation | `Platform/Putnam_OS/System/app/capture_studio.py` | Yes | No | Phase 2-4 | not reviewed | Production source mutates sys.path. |
+| ERROR | imports.sys_path_mutation | `Platform/Putnam_OS/System/app/main.py` | Yes | No | Phase 2-4 | not reviewed | Production source mutates sys.path. |
 | ERROR | imports.sys_path_mutation | `Platform/Putnam_OS/System/app/orders_fulfillment.py` | Yes | No | Phase 2-4 | not reviewed | Production source mutates sys.path. |
 | ERROR | imports.sys_path_mutation | `Platform/Putnam_OS/System/app/putnam_os.py` | Yes | No | Phase 2-4 | not reviewed | Production source mutates sys.path. |
 | ERROR | python.syntax_unreadable | `Platform/Putnam_OS/Putnam_Seller_Tools/listing_optimizer/backups/putnam_os_related_exporter_original_20260627_093120.py` | Yes | Yes | active feature checkpoint | not reviewed | Python source cannot be parsed for architecture inspection. |
-| ERROR | python.syntax_unreadable | `Platform/Putnam_OS/System/app/main.py` | Yes | Yes | active feature checkpoint | not reviewed | Python source cannot be parsed for architecture inspection. |
 | ERROR | python.syntax_unreadable | `Platform/Putnam_OS/System/app/putnam_os_capture_v1_backup_20260629_212812.py` | Yes | Yes | active feature checkpoint | not reviewed | Python source cannot be parsed for architecture inspection. |
 | ERROR | python.syntax_unreadable | `Platform/Putnam_OS/System/app/putnam_os_comp_engine_v1_1_backup_20260629.py` | Yes | Yes | active feature checkpoint | not reviewed | Python source cannot be parsed for architecture inspection. |
 | ERROR | python.syntax_unreadable | `Platform/Putnam_OS/System/app/putnam_os_comp_ui_v1_2_0_backup_20260629.py` | Yes | Yes | active feature checkpoint | not reviewed | Python source cannot be parsed for architecture inspection. |

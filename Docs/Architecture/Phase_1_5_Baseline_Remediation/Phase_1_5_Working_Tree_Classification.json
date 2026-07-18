@@ -1,0 +1,50 @@
+{
+  "schema_version": "1.0",
+  "captured_at": "2026-07-18T11:08:13-04:00",
+  "branch": "main",
+  "head": "e71f06ffa0f8a1d4a2331b0458914b77a5e0d1ca",
+  "summary": {
+    "modified_tracked": 12,
+    "untracked": 15,
+    "unknown": 0,
+    "all_items_resolved": true
+  },
+  "final_disposition": {
+    "feature_branch": "codex/checkpoint-price-vector-ebay-phase-1-5",
+    "feature_commit": "3dbadd593860a2847a8824106be9c1e41e74a76c",
+    "runtime_ignore_commit": "9bfe9cc",
+    "source_files_checkpointed": 20,
+    "local_only_artifacts_ignored": 7,
+    "unknown_items": 0,
+    "phase_2_blockers_remaining_from_initial_tree": 0
+  },
+  "items": [
+    {"status":"M","path":"Platform/Marketplace_Intelligence/marketplace_intelligence/__init__.py","classification":"Active Price Vector/eBay source code","source_controlled_work":true,"preserve":true,"commit":true,"ignore":false,"outside_git":false,"blocks_phase_2":true},
+    {"status":"M","path":"Platform/Marketplace_Intelligence/marketplace_intelligence/bulk_export.py","classification":"Active Price Vector/eBay source code","source_controlled_work":true,"preserve":true,"commit":true,"ignore":false,"outside_git":false,"blocks_phase_2":true},
+    {"status":"M","path":"Platform/Marketplace_Intelligence/marketplace_intelligence/engine.py","classification":"Active Price Vector/eBay source code","source_controlled_work":true,"preserve":true,"commit":true,"ignore":false,"outside_git":false,"blocks_phase_2":true},
+    {"status":"M","path":"Platform/Marketplace_Intelligence/marketplace_intelligence/models.py","classification":"Active Price Vector/eBay source code","source_controlled_work":true,"preserve":true,"commit":true,"ignore":false,"outside_git":false,"blocks_phase_2":true},
+    {"status":"M","path":"Platform/Marketplace_Intelligence/marketplace_intelligence/pricing_engine.py","classification":"Active Price Vector/eBay source code","source_controlled_work":true,"preserve":true,"commit":true,"ignore":false,"outside_git":false,"blocks_phase_2":true},
+    {"status":"M","path":"Platform/Marketplace_Intelligence/marketplace_intelligence/reports.py","classification":"Active Price Vector/eBay source code","source_controlled_work":true,"preserve":true,"commit":true,"ignore":false,"outside_git":false,"blocks_phase_2":true},
+    {"status":"M","path":"Platform/Putnam_OS/System/MarketIntelligence/Pricing/pricing_engine.py","classification":"Active Price Vector/eBay source code","source_controlled_work":true,"preserve":true,"commit":true,"ignore":false,"outside_git":false,"blocks_phase_2":true},
+    {"status":"M","path":"Platform/Putnam_OS/System/MarketIntelligence/Pricing/pricing_models.py","classification":"Active Price Vector/eBay source code","source_controlled_work":true,"preserve":true,"commit":true,"ignore":false,"outside_git":false,"blocks_phase_2":true},
+    {"status":"M","path":"Platform/Putnam_OS/System/app/bulk_price_engine.py","classification":"Active Price Vector/eBay source code","source_controlled_work":true,"preserve":true,"commit":true,"ignore":false,"outside_git":false,"blocks_phase_2":true},
+    {"status":"M","path":"Platform/Putnam_OS/System/app/main.py","classification":"Active Price Vector/eBay source code","source_controlled_work":true,"preserve":true,"commit":true,"ignore":false,"outside_git":false,"blocks_phase_2":true,"note":"minimal escaped-newline syntax repair required"},
+    {"status":"M","path":"Platform/Putnam_OS/System/app/putnam_os.py","classification":"Active Price Vector/eBay source code","source_controlled_work":true,"preserve":true,"commit":true,"ignore":false,"outside_git":false,"blocks_phase_2":true},
+    {"status":"M","path":"Platform/Putnam_OS/System/config/putnam_os_config.json","classification":"Configuration","source_controlled_work":true,"preserve":true,"commit":true,"ignore":false,"outside_git":false,"blocks_phase_2":true},
+    {"status":"??","path":"Docs/PriceVector/current_code_audit.md","classification":"Active Price Vector/eBay documentation","source_controlled_work":true,"preserve":true,"commit":true,"ignore":false,"outside_git":false,"blocks_phase_2":true},
+    {"status":"??","path":"Docs/PriceVector/implementation_gap_map.md","classification":"Active Price Vector/eBay documentation","source_controlled_work":true,"preserve":true,"commit":true,"ignore":false,"outside_git":false,"blocks_phase_2":true},
+    {"status":"??","path":"Docs/PriceVector/overlay_extension_reuse_audit.md","classification":"Active Price Vector/eBay documentation","source_controlled_work":true,"preserve":true,"commit":true,"ignore":false,"outside_git":false,"blocks_phase_2":true},
+    {"status":"??","path":"Docs/PriceVector/phase_1_build_plan.md","classification":"Active Price Vector/eBay documentation","source_controlled_work":true,"preserve":true,"commit":true,"ignore":false,"outside_git":false,"blocks_phase_2":true},
+    {"status":"??","path":"Platform/Marketplace_Intelligence/marketplace_intelligence/pricing_repository.py","classification":"Active Price Vector/eBay source code","source_controlled_work":true,"preserve":true,"commit":true,"ignore":false,"outside_git":false,"blocks_phase_2":true},
+    {"status":"??","path":"Platform/Marketplace_Intelligence/migrations/001_price_vector_pricing_decisions.sql","classification":"Active Price Vector/eBay source code","source_controlled_work":true,"preserve":true,"commit":true,"ignore":false,"outside_git":false,"blocks_phase_2":true},
+    {"status":"??","path":"Platform/Marketplace_Intelligence/tests/test_price_vector_fmv_separation.py","classification":"Active Price Vector/eBay tests","source_controlled_work":true,"preserve":true,"commit":true,"ignore":false,"outside_git":false,"blocks_phase_2":true},
+    {"status":"??","path":"Platform/Marketplace_Intelligence/tests/test_pricing_engine_consolidation.py","classification":"Active Price Vector/eBay tests","source_controlled_work":true,"preserve":true,"commit":true,"ignore":false,"outside_git":false,"blocks_phase_2":true},
+    {"status":"??","path":"Platform/Putnam_OS/System/app/bulk_price_engine.py.before_ebay_patch_20260717_132121.bak","classification":"Backup artifact","source_controlled_work":false,"preserve":true,"commit":false,"ignore":true,"outside_git":true,"blocks_phase_2":true},
+    {"status":"??","path":"Platform/Putnam_OS/System/app/main.py.before_ebay_patch_20260717_132121.bak","classification":"Backup artifact","source_controlled_work":false,"preserve":true,"commit":false,"ignore":true,"outside_git":true,"blocks_phase_2":true},
+    {"status":"??","path":"Platform/Putnam_OS/System/app/putnam_os.py.before_active_listing_fix_20260717_135604.bak","classification":"Backup artifact","source_controlled_work":false,"preserve":true,"commit":false,"ignore":true,"outside_git":true,"blocks_phase_2":true},
+    {"status":"??","path":"patch_cardvector_ebay_existing_listings.py","classification":"Temporary file","source_controlled_work":false,"preserve":true,"commit":false,"ignore":true,"outside_git":true,"blocks_phase_2":true},
+    {"status":"??","path":"Business/eBay_Store_Items/PIP Insurance Claims/Order 27-14693-04250/dedenne earnings.jpg","classification":"Business-evidence image","source_controlled_work":false,"preserve":true,"commit":false,"ignore":true,"outside_git":true,"blocks_phase_2":true},
+    {"status":"??","path":"Business/eBay_Store_Items/PIP Insurance Claims/Order 27-14693-04250/dedenne not arrived.jpg","classification":"Business-evidence image","source_controlled_work":false,"preserve":true,"commit":false,"ignore":true,"outside_git":true,"blocks_phase_2":true},
+    {"status":"??","path":"Business/eBay_Store_Items/PIP Insurance Claims/Order 27-14693-04250/order dedenne.jpg","classification":"Business-evidence image","source_controlled_work":false,"preserve":true,"commit":false,"ignore":true,"outside_git":true,"blocks_phase_2":true}
+  ]
+}

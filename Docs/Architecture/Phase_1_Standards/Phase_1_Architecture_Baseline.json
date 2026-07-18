@@ -1,6 +1,6 @@
 ﻿{
   "schema_version": "1.0",
-  "generated_at": "2026-07-18T01:39:58.014173-04:00",
+  "generated_at": "2026-07-18T11:15:35.033458-04:00",
   "repository_root": ".",
   "manifest": "Docs/Architecture/cardvector_architecture_manifest.json",
   "mode": "warning-establish-baseline",
@@ -90,6 +90,18 @@
     },
     {
       "rule": "imports.sys_path_mutation",
+      "path": "Platform/Putnam_OS/System/app/main.py",
+      "severity": "error",
+      "message": "Production source mutates sys.path.",
+      "pre_existing": true,
+      "blocks_migration": false,
+      "remediation_phase": "Phase 2-4",
+      "false_positive_status": "not reviewed",
+      "notes": "",
+      "fingerprint": "c5d148b1f7351092dede"
+    },
+    {
+      "rule": "imports.sys_path_mutation",
       "path": "Platform/Putnam_OS/System/app/orders_fulfillment.py",
       "severity": "error",
       "message": "Production source mutates sys.path.",
@@ -123,18 +135,6 @@
       "false_positive_status": "not reviewed",
       "notes": "",
       "fingerprint": "cdbe4a13cf72b316f4c7"
-    },
-    {
-      "rule": "python.syntax_unreadable",
-      "path": "Platform/Putnam_OS/System/app/main.py",
-      "severity": "error",
-      "message": "Python source cannot be parsed for architecture inspection.",
-      "pre_existing": true,
-      "blocks_migration": true,
-      "remediation_phase": "active feature checkpoint",
-      "false_positive_status": "not reviewed",
-      "notes": "",
-      "fingerprint": "5c3c016a12a963eb5357"
     },
     {
       "rule": "python.syntax_unreadable",
