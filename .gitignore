@@ -167,6 +167,11 @@ temappputnam_os.py*
 *-DESKTOP-*.json
 *-LAPTOP-*.json
 
+# Local recovery artifacts and private business evidence
+*.bak
+/patch_cardvector_ebay_existing_listings.py
+/Business/eBay_Store_Items/PIP Insurance Claims/
+
 # Shelved / archived legacy projects
 /Archive/Shelved_Projects/
 
