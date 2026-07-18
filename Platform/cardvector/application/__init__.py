@@ -14,6 +14,11 @@ from .runtime import (
     ServiceRegistry,
 )
 from .pricing import PricingApplication, PricingOperations
+from .capture import (
+    CaptureApplication,
+    CaptureOperations,
+    RecognitionHandoffOperations,
+)
 from .workflows import WorkflowApplication, WorkflowDelegates
 
 __all__ = [
@@ -21,6 +26,8 @@ __all__ = [
     "ApplicationEvent",
     "ApplicationRuntime",
     "CancellationToken",
+    "CaptureApplication",
+    "CaptureOperations",
     "Command",
     "CommandDispatcher",
     "EventPublisher",
@@ -29,6 +36,7 @@ __all__ = [
     "ProgressUpdate",
     "PricingApplication",
     "PricingOperations",
+    "RecognitionHandoffOperations",
     "ServiceRegistry",
     "WorkflowApplication",
     "WorkflowDelegates",

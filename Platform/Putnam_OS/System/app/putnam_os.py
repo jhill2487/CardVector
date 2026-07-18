@@ -1,7 +1,6 @@
 import csv, json, os, shutil, sys, webbrowser, statistics, re, urllib.parse, urllib.request, subprocess, importlib.util, traceback
 from datetime import datetime
 from decimal import Decimal, InvalidOperation, ROUND_HALF_UP
-from io import BytesIO
 from pathlib import Path
 import time
 import threading
@@ -49,6 +48,22 @@ from Platform.cardvector.marketplace_intelligence import (
     PRICING_SERVICE,
     evidence as canonical_evidence,
 )
+from Platform.cardvector.capture import (
+    AUTO_CAPTURE_DEFAULTS as CANONICAL_AUTO_CAPTURE_DEFAULTS,
+    AUTO_CAPTURE_THRESHOLDS as CANONICAL_AUTO_CAPTURE_THRESHOLDS,
+    CaptureService,
+    auto_capture_thresholds as canonical_auto_capture_thresholds,
+    capture_cards_completed as canonical_capture_cards_completed,
+    capture_frame_signature as canonical_capture_frame_signature,
+    capture_pair_rows as canonical_capture_pair_rows,
+    capture_pair_status as canonical_capture_pair_status,
+    load_auto_capture_settings as canonical_load_auto_capture_settings,
+    load_capture_session_file as canonical_load_capture_session_file,
+    normalize_auto_capture_settings as canonical_normalize_auto_capture_settings,
+    resolve_capture_record_image as canonical_resolve_capture_record_image,
+    save_auto_capture_settings as canonical_save_auto_capture_settings,
+    signature_difference as canonical_signature_difference,
+)
 from Platform.Putnam_OS.System.tools.mobile_capture_queue import (
     MOBILE_FAILED_DIR,
     MOBILE_PROCESSING_DIR,
@@ -59,9 +74,13 @@ from Platform.Putnam_OS.System.tools.mobile_capture_queue import (
 )
 from Platform.cardvector.application import (
     ApplicationRuntime,
+    CaptureApplication,
     PricingApplication,
     WorkflowApplication,
     WorkflowDelegates,
+)
+from Platform.cardvector.integrations.carduploader import (
+    CardUploaderRecognitionAdapter,
 )
 import workflow_context as legacy_workflow_context
 
@@ -72,6 +91,24 @@ pricing_application = PricingApplication(PRICING_SERVICE)
 def build_application_runtime():
     runtime = ApplicationRuntime()
     runtime.services.register("pricing", pricing_application)
+    capture = CaptureService(
+        desktop=CaptureStudioService(),
+        mobile=MobileCaptureQueueService(),
+        desktop_factory=lambda *, capture_root, allow_placeholder, obs_manager: CaptureStudioService(
+            capture_root=capture_root,
+            allow_placeholder=allow_placeholder,
+            obs_manager=obs_manager,
+        ),
+    )
+    runtime.services.register(
+        "capture",
+        CaptureApplication(
+            capture,
+            CardUploaderRecognitionAdapter(
+                url_loader=lambda: load_app_config().get("carduploader_url", ""),
+            ),
+        ),
+    )
     runtime.services.register(
         "workflows",
         WorkflowApplication(
@@ -1241,35 +1278,15 @@ def resolve_capture_path(value, session_folder=None):
 
 
 def load_capture_session_file(folder):
-    session_path = Path(folder) / "capture_session.json"
-    if not session_path.exists():
-        return {}
-    try:
-        data = json.loads(session_path.read_text(encoding="utf-8-sig"))
-        return data if isinstance(data, dict) else {}
-    except Exception:
-        return {}
+    return canonical_load_capture_session_file(folder)
 
 
 def resolve_capture_record_image(record, session_folder):
-    metadata_value = record.get("path") or ""
-    filename = str(record.get("filename", "") or "").strip()
-    metadata_path = resolve_capture_path(metadata_value, session_folder)
-    try:
-        if metadata_path and metadata_path.exists():
-            return metadata_path, "", False
-    except OSError:
-        pass
-    if filename:
-        filename_path = resolve_capture_path(filename, session_folder)
-        try:
-            if filename_path and filename_path.exists():
-                diagnostic = metadata_value if metadata_value else ""
-                return filename_path, str(diagnostic), False
-        except OSError:
-            pass
-    unresolved = metadata_value or filename
-    return None, str(unresolved), True
+    return canonical_resolve_capture_record_image(
+        record,
+        Path(session_folder),
+        path_resolver=lambda value, folder=None: resolve_capture_path(value, folder),
+    )
 
 
 def log_capture_thumbnail_path_fallbacks(session_folder, fallbacks):
@@ -1322,96 +1339,13 @@ def capture_session_summary(limit=8):
 
 def capture_pair_rows(folder=None, limit=24):
     session_folder = Path(folder) if folder else latest_capture_session()
-    if not session_folder or not session_folder.exists():
-        return []
-    pairs = {}
-    session_data = load_capture_session_file(session_folder)
-    capture_layout = str(session_data.get("capture_layout") or "").strip().upper()
-    if capture_layout not in {"FRONT_ONLY", "FRONT_BACK"}:
-        is_legacy_mobile_front_only = (
-            str(session_data.get("source") or "").upper() == "MOBILE_WEB"
-            and "front_only" in str(session_data.get("capture_workflow") or "").lower()
-        )
-        capture_layout = "FRONT_ONLY" if is_legacy_mobile_front_only else "FRONT_BACK"
-    session_records = session_data.get("records", [])
-    if not isinstance(session_records, list):
-        session_records = []
-    fallback_paths = []
-    unresolved_paths = []
-    for record in session_records:
-        if not isinstance(record, dict):
-            continue
-        side = str(record.get("side", "")).lower()
-        if side not in {"front", "back"}:
-            continue
-        try:
-            number = int(record.get("card_number") or 0)
-        except Exception:
-            number = 0
-        if number <= 0:
-            match = re.match(r"^(\d{6})_(front|back)\.jpe?g$", str(record.get("filename", "")), re.IGNORECASE)
-            number = int(match.group(1)) if match else 0
-        image, fallback, unresolved = resolve_capture_record_image(record, session_folder)
-        if fallback:
-            fallback_paths.append(fallback)
-        if unresolved:
-            unresolved_paths.append(fallback or record.get("filename") or record.get("path") or "<blank>")
-        if number > 0 and image:
-            item = pairs.setdefault(number, {"pair_number": number, "front": None, "back": None, "timestamp": ""})
-            item[side] = image
-    needs_scan = not session_records or bool(unresolved_paths)
-    if needs_scan:
-        images = []
-        for pattern in ("*.jpg", "*.jpeg"):
-            images.extend([p for p in session_folder.glob(pattern) if p.is_file()])
-        for image in images:
-            match = re.match(r"^(\d{6})_(front|back)\.jpe?g$", image.name, re.IGNORECASE)
-            if not match:
-                continue
-            number = int(match.group(1))
-            side = match.group(2).lower()
-            item = pairs.setdefault(number, {"pair_number": number, "front": None, "back": None, "timestamp": ""})
-            current = item.get(side)
-            try:
-                current_exists = bool(current and current.exists())
-            except OSError:
-                current_exists = False
-            if not current_exists:
-                item[side] = image
-    log_capture_thumbnail_path_fallbacks(session_folder, fallback_paths)
-    rows = []
-    for number, item in pairs.items():
-        paths = [p for p in [item.get("front"), item.get("back")] if p]
-        if not paths:
-            continue
-        mtimes = []
-        for path in paths:
-            try:
-                mtimes.append(path.stat().st_mtime if path.exists() else 0)
-            except OSError:
-                mtimes.append(0)
-        latest_mtime = max(mtimes) if mtimes else 0
-        status = (
-            "Complete"
-            if item.get("front") and (capture_layout == "FRONT_ONLY" or item.get("back"))
-            else "Waiting for Back"
-            if item.get("front")
-            else "Needs Front"
-        )
-        rows.append({
-            "pair_number": number,
-            "front": item.get("front"),
-            "back": item.get("back"),
-            "session_folder": session_folder,
-            "timestamp": datetime.fromtimestamp(latest_mtime).strftime("%H:%M:%S"),
-            "latest_mtime": latest_mtime,
-            "status": status,
-            "capture_layout": capture_layout,
-        })
-    sorted_rows = sorted(rows, key=lambda row: row["latest_mtime"], reverse=True)[:limit]
-    for idx, row in enumerate(sorted_rows):
-        row["latest"] = idx == 0
-    return sorted_rows
+    return canonical_capture_pair_rows(
+        session_folder,
+        limit,
+        session_loader=load_capture_session_file,
+        record_resolver=resolve_capture_record_image,
+        fallback_logger=log_capture_thumbnail_path_fallbacks,
+    )
 
 
 def build_capture_thumbnail_image(path, size=(96, 70)):
@@ -1431,35 +1365,15 @@ def build_capture_thumbnail_image(path, size=(96, 70)):
 
 
 def capture_pair_status(session):
-    if not session:
-        return "Ready"
-    records = session.get("records") or []
-    if not records:
-        return "Ready"
-    try:
-        current_number = int(session.get("current_card_number") or 1)
-    except Exception:
-        current_number = 1
-    current_sides = set()
-    for record in records:
-        try:
-            record_number = int(record.get("card_number") or 0)
-        except Exception:
-            record_number = 0
-        if record_number == current_number:
-            current_sides.add(str(record.get("side", "")).lower())
-    if "front" in current_sides and "back" not in current_sides:
-        return "Waiting for Back"
-    if "back" in current_sides:
-        return "Ready for Next Card"
-    return "Ready"
+    return canonical_capture_pair_status(session)
 
 
 def capture_cards_completed(session):
-    if not session:
-        return 0
-    folder = resolve_capture_path(session.get("folder", "")) or Path(session.get("folder", ""))
-    return sum(1 for row in capture_pair_rows(folder, limit=9999) if row["status"] == "Complete")
+    return canonical_capture_cards_completed(
+        session,
+        path_resolver=lambda value: resolve_capture_path(value) or Path(value),
+        rows_loader=lambda folder, limit: capture_pair_rows(folder, limit=limit),
+    )
 
 
 def obs_status_is_connected(status_text):
@@ -1568,83 +1482,39 @@ def generate_inventory_label_pdf(label_type="ETB Labels", etb_code="", location_
     }
 
 
-AUTO_CAPTURE_DEFAULTS = {
-    "auto_capture_enabled": False,
-    "stability_delay_seconds": 1.0,
-    "duplicate_lockout_seconds": 2.0,
-    "frame_poll_interval_ms": 200,
-    "sensitivity": "Medium",
-}
-
+AUTO_CAPTURE_DEFAULTS = dict(CANONICAL_AUTO_CAPTURE_DEFAULTS)
 AUTO_CAPTURE_THRESHOLDS = {
-    "Low": {"present": 0.14, "empty": 0.07, "stable": 0.026, "changed": 0.085},
-    "Medium": {"present": 0.10, "empty": 0.05, "stable": 0.018, "changed": 0.065},
-    "High": {"present": 0.07, "empty": 0.035, "stable": 0.012, "changed": 0.045},
+    name: dict(values)
+    for name, values in CANONICAL_AUTO_CAPTURE_THRESHOLDS.items()
 }
 
 
 def load_auto_capture_settings():
-    settings = dict(AUTO_CAPTURE_DEFAULTS)
-    if AUTO_CAPTURE_CONFIG.exists():
-        try:
-            data = json.loads(AUTO_CAPTURE_CONFIG.read_text(encoding="utf-8-sig"))
-            if isinstance(data, dict):
-                settings.update({key: value for key, value in data.items() if key in settings})
-        except Exception:
-            pass
-    return normalize_auto_capture_settings(settings)
+    return canonical_load_auto_capture_settings(AUTO_CAPTURE_CONFIG)
 
 
 def normalize_auto_capture_settings(settings):
-    normalized = dict(AUTO_CAPTURE_DEFAULTS)
-    normalized.update(settings or {})
-    normalized["auto_capture_enabled"] = bool(normalized.get("auto_capture_enabled"))
-    try:
-        normalized["stability_delay_seconds"] = max(0.25, min(5.0, float(normalized.get("stability_delay_seconds", 1.0))))
-    except Exception:
-        normalized["stability_delay_seconds"] = AUTO_CAPTURE_DEFAULTS["stability_delay_seconds"]
-    try:
-        normalized["duplicate_lockout_seconds"] = max(0.5, min(10.0, float(normalized.get("duplicate_lockout_seconds", 2.0))))
-    except Exception:
-        normalized["duplicate_lockout_seconds"] = AUTO_CAPTURE_DEFAULTS["duplicate_lockout_seconds"]
-    try:
-        normalized["frame_poll_interval_ms"] = max(100, min(2000, int(float(normalized.get("frame_poll_interval_ms", 200)))))
-    except Exception:
-        normalized["frame_poll_interval_ms"] = AUTO_CAPTURE_DEFAULTS["frame_poll_interval_ms"]
-    sensitivity = str(normalized.get("sensitivity", "Medium")).title()
-    normalized["sensitivity"] = sensitivity if sensitivity in AUTO_CAPTURE_THRESHOLDS else "Medium"
-    return normalized
+    return canonical_normalize_auto_capture_settings(settings)
 
 
 def save_auto_capture_settings(settings):
-    normalized = normalize_auto_capture_settings(settings)
-    AUTO_CAPTURE_CONFIG.parent.mkdir(parents=True, exist_ok=True)
-    AUTO_CAPTURE_CONFIG.write_text(json.dumps(normalized, indent=2) + "\n", encoding="utf-8")
-    return normalized
+    return canonical_save_auto_capture_settings(AUTO_CAPTURE_CONFIG, settings)
 
 
 def capture_frame_signature(image_bytes, size=(48, 48)):
-    try:
-        from PIL import Image, ImageOps
-
-        with Image.open(BytesIO(image_bytes)) as source:
-            image = ImageOps.exif_transpose(source).convert("L")
-        image = image.resize(size)
-        pixels = tuple(image.getdata())
-        return pixels
-    except Exception as exc:
-        raise CaptureStudioError(f"Could not analyze OBS frame: {exc}") from exc
+    return canonical_capture_frame_signature(
+        image_bytes,
+        size,
+        error_factory=CaptureStudioError,
+    )
 
 
 def signature_difference(sig_a, sig_b):
-    if not sig_a or not sig_b or len(sig_a) != len(sig_b):
-        return 1.0
-    total = sum(abs(int(a) - int(b)) for a, b in zip(sig_a, sig_b))
-    return total / (len(sig_a) * 255)
+    return canonical_signature_difference(sig_a, sig_b)
 
 
 def auto_capture_thresholds(settings):
-    return AUTO_CAPTURE_THRESHOLDS.get(str(settings.get("sensitivity", "Medium")).title(), AUTO_CAPTURE_THRESHOLDS["Medium"])
+    return canonical_auto_capture_thresholds(settings)
 
 
 def etb_parent_from_batch(value):
@@ -3537,10 +3407,14 @@ class PutnamOS(BaseTk):
         self.pricing_action_button = None
         self.current_pricing_job = None
         self.current_pricing_reports = {}
-        self.capture_service = CaptureStudioService()
-        self.mobile_capture_queue_service = MobileCaptureQueueService()
         self.capture_queue_rows = []
         self.application_runtime = application_runtime or build_application_runtime()
+        self.capture_application = self.application_runtime.services.resolve(
+            "capture",
+            CaptureApplication,
+        )
+        self.capture_service = self.capture_application
+        self.mobile_capture_queue_service = self.capture_application
         self.workflow_application = self.application_runtime.services.resolve(
             "workflows",
             WorkflowApplication,
@@ -4914,7 +4788,16 @@ class PutnamOS(BaseTk):
     def open_carduploader(self, job=None):
         if job:
             self.active_workflow_job = dict(job)
-        url = load_app_config().get("carduploader_url", "")
+        job = self.active_workflow_job or {}
+        handoff = self.capture_application.prepare_recognition_handoff(
+            capture_folder=job.get("capture_folder", ""),
+            capture_session_id=job.get("capture_session_id", ""),
+            metadata={
+                "capture_type": job.get("capture_type", ""),
+                "etb_location": job.get("etb_location", ""),
+            },
+        )
+        url = handoff.provider_url
         if not url:
             messagebox.showinfo(
                 "CardUploader",
@@ -4923,7 +4806,6 @@ class PutnamOS(BaseTk):
             self.show_page("Settings")
             return
         webbrowser.open(url)
-        job = self.active_workflow_job or {}
         folder = str(job.get("capture_folder") or "")
         if folder and Path(folder).exists():
             self.workflow_application.update_context(
@@ -6784,11 +6666,7 @@ class PutnamOS(BaseTk):
 
     def inventory_conversion_capture_service_for_session(self, session):
         capture_root = inventory_conversion_capture_root(session.get("location_id", "unassigned"))
-        service = CaptureStudioService(
-            capture_root=capture_root,
-            allow_placeholder=self.capture_service.allow_placeholder,
-            obs_manager=self.capture_service.obs_manager,
-        )
+        service = self.capture_application.create_desktop_service(capture_root)
         self.inventory_conversion_capture_service = service
         return service
 
