@@ -13,6 +13,7 @@ from .runtime import (
     ProgressUpdate,
     ServiceRegistry,
 )
+from .pricing import PricingApplication, PricingOperations
 from .workflows import WorkflowApplication, WorkflowDelegates
 
 __all__ = [
@@ -26,6 +27,8 @@ __all__ = [
     "ExecutionContext",
     "ProgressReporter",
     "ProgressUpdate",
+    "PricingApplication",
+    "PricingOperations",
     "ServiceRegistry",
     "WorkflowApplication",
     "WorkflowDelegates",

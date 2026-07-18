@@ -45,8 +45,9 @@ from Platform.putnam_paths import (
 
 from Platform.Putnam_OS.System.app import bulk_price_engine
 
-from Platform.Marketplace_Intelligence.marketplace_intelligence import (
-    pricing_engine as canonical_pricing,
+from Platform.cardvector.marketplace_intelligence import (
+    PRICING_SERVICE,
+    evidence as canonical_evidence,
 )
 from Platform.Putnam_OS.System.tools.mobile_capture_queue import (
     MOBILE_FAILED_DIR,
@@ -58,14 +59,19 @@ from Platform.Putnam_OS.System.tools.mobile_capture_queue import (
 )
 from Platform.cardvector.application import (
     ApplicationRuntime,
+    PricingApplication,
     WorkflowApplication,
     WorkflowDelegates,
 )
 import workflow_context as legacy_workflow_context
 
 
+pricing_application = PricingApplication(PRICING_SERVICE)
+
+
 def build_application_runtime():
     runtime = ApplicationRuntime()
+    runtime.services.register("pricing", pricing_application)
     runtime.services.register(
         "workflows",
         WorkflowApplication(
@@ -302,30 +308,12 @@ BUTTON_ICONS = {
     "View Processing": "\u2192",
 }
 
-EXCLUDE_TERMS = [
-    "world championship", "worlds", "world championship deck", " deck", "theme deck",
-    "battle deck", "starter deck", "psa", "bgs", "cgc", "sgc", "ace", "tag", "slab",
-    "graded", "lot", "bundle", "playset", "4x", "x4", "pack", "booster", "wrapper",
-    "sealed", "proxy", "custom", "reprint", "metal", "gold foil", "jumbo", "oversized",
-    "complete set", "binder", "master set"
-]
-NAME_MATCH_SCORE_THRESHOLD = 90
-GRADED_EXCLUDE_TERMS = {"psa", "bgs", "cgc", "tag", "sgc"}
-NON_SINGLE_EXCLUDE_TERMS = {
-    "lot", "lots", "playset", "pack", "packs", "booster", "box", "deck", "sealed", "case"
-}
-COMP_ANALYTICS_FIELDS = [
-    "Card Name", "Set Name", "Card Number", "Search Query Used", "Total Candidates Returned",
-    "Accepted Candidates", "Rejected Candidates", "Rejected: card name mismatch",
-    "Rejected: card number mismatch", "Rejected: excluded graded term",
-    "Rejected: excluded lot/pack/playset/booster/deck/sealed term", "Rejected: other reason",
-]
-REJECTION_DIAGNOSTIC_FIELDS = [
-    "card_name_expected", "candidate_title", "normalized_card_name", "normalized_candidate_title",
-    "name_match_score", "matched_name_tokens", "missing_name_tokens", "card_number_expected",
-    "card_number_found", "card_number_match", "set_expected", "set_match_score",
-    "excluded_terms_found", "final_rejection_reason", "rejection_details",
-]
+EXCLUDE_TERMS = list(canonical_evidence.PUTNAM_EXCLUDE_TERMS)
+NAME_MATCH_SCORE_THRESHOLD = canonical_evidence.NAME_MATCH_SCORE_THRESHOLD
+GRADED_EXCLUDE_TERMS = set(canonical_evidence.GRADED_EXCLUDE_TERMS)
+NON_SINGLE_EXCLUDE_TERMS = set(canonical_evidence.NON_SINGLE_EXCLUDE_TERMS)
+COMP_ANALYTICS_FIELDS = list(canonical_evidence.COMP_ANALYTICS_FIELDS)
+REJECTION_DIAGNOSTIC_FIELDS = list(canonical_evidence.REJECTION_DIAGNOSTIC_FIELDS)
 
 
 OS_DIR = PUTNAM_OS_DIR
@@ -789,7 +777,7 @@ def ensure_policy_column(row, existing_column, default_column):
 
 
 def optimized_export_price(market_price: Decimal) -> Decimal:
-    return canonical_pricing.optimized_export_price(
+    return pricing_application.optimized_export_price(
         market_price,
         export_floor=EXPORT_FLOOR_PRICE,
     )
@@ -797,11 +785,11 @@ def optimized_export_price(market_price: Decimal) -> Decimal:
 
 
 def calculate_market_value(market_report) -> Decimal:
-    return canonical_pricing.calculate_market_value(market_report)
+    return pricing_application.calculate_market_value(market_report)
 
 
 def apply_pricing_strategy(market_value: Decimal, strategy="market_match") -> Decimal:
-    return canonical_pricing.apply_pricing_strategy(
+    return pricing_application.apply_pricing_strategy(
         market_value,
         strategy,
         export_floor=EXPORT_FLOOR_PRICE,
@@ -888,7 +876,7 @@ def prepare_listing_export_rows(
         r = dict(row)
         original_market_price = decimal_money(r.get(pcol))
         market_report = market_reports_by_row.get(idx, {})
-        pricing_decision = canonical_pricing.build_pricing_decision(
+        pricing_decision = pricing_application.build_pricing_decision(
             original_price=original_market_price,
             market_report=market_report,
             strategy=pricing_strategy,
@@ -2802,267 +2790,82 @@ def fetch_carduploader_sales(q):
 
 
 def normalize_match_text(value):
-    text = str(value or "").lower()
-    text = re.sub(r"[^a-z0-9]+", " ", text)
-    return re.sub(r"\s+", " ", text).strip()
+    return canonical_evidence.normalize_match_text(value)
 
 
 def match_tokens(value):
-    return [token for token in normalize_match_text(value).split() if token]
+    return canonical_evidence.match_tokens(value)
 
 
 def token_match_score(expected, candidate):
-    expected_tokens = match_tokens(expected)
-    candidate_tokens = set(match_tokens(candidate))
-    if not expected_tokens:
-        return 100, [], []
-    matched = [token for token in expected_tokens if token in candidate_tokens]
-    missing = [token for token in expected_tokens if token not in candidate_tokens]
-    score = round((len(matched) / len(expected_tokens)) * 100)
-    return score, matched, missing
+    return canonical_evidence.token_match_score(expected, candidate)
 
 
 def normalized_card_number(value):
-    return re.sub(r"[^a-z0-9]+", "", str(value or "").lower())
+    return canonical_evidence.normalized_card_number(value)
 
 
 def find_card_number(title, number):
-    expected = normalized_card_number(number)
-    if not expected:
-        return "", True
-    normalized_title = normalized_card_number(title)
-    candidates = {expected}
-    if expected.startswith("0"):
-        candidates.add(expected.lstrip("0"))
-    for candidate in candidates:
-        if candidate and candidate in normalized_title:
-            return number, True
-    found = re.findall(r"[a-z]{1,5}\s*-?\s*\d{1,5}|\d{1,5}\s*/\s*\d{1,5}", str(title or "").lower())
-    return "; ".join(dict.fromkeys(s.strip() for s in found)), False
+    return canonical_evidence.find_card_number(title, number)
 
 
 def excluded_terms_found(title):
-    normalized_title = f" {normalize_match_text(title)} "
-    found = []
-    for term in EXCLUDE_TERMS:
-        normalized_term = normalize_match_text(term)
-        if normalized_term and f" {normalized_term} " in normalized_title:
-            found.append(normalized_term)
-    return sorted(set(found))
+    return canonical_evidence.excluded_terms_found(title)
 
 
 def build_rejection_details(card_name, matched, missing, score, reason, card_number, found_number, setname, set_score, excluded):
-    details = []
-    if card_name:
-        details.append(
-            f'Expected "{card_name}"; matched token(s): {", ".join(matched) or "none"}; '
-            f'missing token(s): {", ".join(missing) or "none"}; name score {score}'
-        )
-        if score < NAME_MATCH_SCORE_THRESHOLD:
-            details[-1] += f" below threshold {NAME_MATCH_SCORE_THRESHOLD}."
-        else:
-            details[-1] += f" meets threshold {NAME_MATCH_SCORE_THRESHOLD}."
-    if card_number:
-        details.append(f'Expected card number "{card_number}"; found "{found_number or "none"}".')
-    if setname:
-        details.append(f'Set "{setname}" title-token score: {set_score}.')
-    if excluded:
-        details.append(f"Excluded term(s) found: {', '.join(excluded)}.")
-    if reason and reason != "accepted":
-        details.append(f"Final rejection reason: {reason}.")
-    return " ".join(details)
+    return canonical_evidence.build_rejection_details(
+        card_name,
+        matched,
+        missing,
+        score,
+        reason,
+        card_number,
+        found_number,
+        setname,
+        set_score,
+        excluded,
+    )
 
 
 def comp_match_diagnostics(title, name, setname, number):
-    normalized_name = normalize_match_text(name)
-    normalized_title = normalize_match_text(title)
-    name_score, matched, missing = token_match_score(name, title)
-    set_score, _set_matched, _set_missing = token_match_score(setname, title)
-    found_number, number_match = find_card_number(title, number)
-    excluded = excluded_terms_found(title)
-    excluded_set = set(excluded)
-    final_reason = "accepted"
-    if excluded_set.intersection(GRADED_EXCLUDE_TERMS):
-        final_reason = "excluded graded term"
-    elif excluded_set.intersection(NON_SINGLE_EXCLUDE_TERMS):
-        final_reason = "excluded lot/pack/playset/booster/deck/sealed term"
-    elif any(term in excluded_set for term in ("graded", "slab", "ace")):
-        final_reason = "excluded graded term"
-    elif excluded:
-        final_reason = f"excluded term: {excluded[0]}"
-    elif name and name_score < NAME_MATCH_SCORE_THRESHOLD:
-        final_reason = "card name mismatch"
-    elif number and not number_match:
-        final_reason = "card number mismatch"
-    elif setname:
-        words = [w for w in re.split(r"\W+", str(setname).lower()) if len(w) > 3]
-        if words and not any(w in str(title or "").lower() for w in words):
-            final_reason = "set not evident in title"
-    details = build_rejection_details(
-        name, matched, missing, name_score, final_reason, number, found_number, setname, set_score, excluded
+    return canonical_evidence.comp_match_diagnostics(
+        title,
+        name,
+        setname,
+        number,
     )
-    return {
-        "card_name_expected": name,
-        "candidate_title": title,
-        "normalized_card_name": normalized_name,
-        "normalized_candidate_title": normalized_title,
-        "name_match_score": name_score,
-        "matched_name_tokens": "; ".join(matched),
-        "missing_name_tokens": "; ".join(missing),
-        "card_number_expected": number,
-        "card_number_found": found_number,
-        "card_number_match": "yes" if number_match else "no",
-        "set_expected": setname,
-        "set_match_score": set_score,
-        "excluded_terms_found": "; ".join(excluded),
-        "final_rejection_reason": final_reason,
-        "rejection_details": details,
-    }
 
 
 def comparable_reason(title, name, setname, number):
-    diagnostics = comp_match_diagnostics(title, name, setname, number)
-    reason = diagnostics["final_rejection_reason"]
-    return reason == "accepted", reason, diagnostics
+    return canonical_evidence.comparable_reason(title, name, setname, number)
 
 
 def analytics_bucket(reason):
-    if reason == "card name mismatch":
-        return "Rejected: card name mismatch"
-    if reason == "card number mismatch":
-        return "Rejected: card number mismatch"
-    if reason == "excluded graded term":
-        return "Rejected: excluded graded term"
-    if reason == "excluded lot/pack/playset/booster/deck/sealed term":
-        return "Rejected: excluded lot/pack/playset/booster/deck/sealed term"
-    return "Rejected: other reason"
+    return canonical_evidence.analytics_bucket(reason)
 
 
 def write_comp_search_analytics_summary(path, analytics):
-    total_candidates = sum(int(row.get("Total Candidates Returned") or 0) for row in analytics)
-    total_accepted = sum(int(row.get("Accepted Candidates") or 0) for row in analytics)
-    total_rejected = sum(int(row.get("Rejected Candidates") or 0) for row in analytics)
-    reason_totals = {
-        field: sum(int(row.get(field) or 0) for row in analytics)
-        for field in COMP_ANALYTICS_FIELDS
-        if field.startswith("Rejected:")
-    }
-    top_reasons = sorted(reason_totals.items(), key=lambda item: item[1], reverse=True)
-    lines = [
-        COMP_ENGINE_VERSION,
-        COMP_ENGINE_SUBTITLE,
-        f"Generated: {datetime.now().isoformat(timespec='seconds')}",
-        "",
-        f"Searches: {len(analytics)}",
-        f"Total candidates reviewed: {total_candidates}",
-        f"Total accepted: {total_accepted}",
-        f"Total rejected: {total_rejected}",
-        "",
-        "Top rejection reasons:",
-    ]
-    for reason, count in top_reasons:
-        if count:
-            lines.append(f"- {reason}: {count}")
-    if not any(count for _reason, count in top_reasons):
-        lines.append("- None")
+    lines = canonical_evidence.comp_search_analytics_summary_lines(
+        analytics,
+        engine_version=COMP_ENGINE_VERSION,
+        engine_subtitle=COMP_ENGINE_SUBTITLE,
+        generated_at=datetime.now().isoformat(timespec="seconds"),
+    )
     Path(path).write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
 def market_analyze(rows):
     print(COMP_ENGINE_VERSION)
     print(COMP_ENGINE_SUBTITLE)
-    reports = []
-    rejected = []
-    analytics = []
-    for i, row in enumerate(rows, 1):
-        title, name, setname, number, current = card_fields(row)
-        q = build_query(row)
-        rec = {
-            "row": i, "title": title, "card_name": name, "set": setname, "number": number,
-            "current_price": current, "query": q, "status": "NO_DATA", "accepted_count": 0,
-            "rejected_count": 0, "last_sale": "", "last3_avg": "", "median": "", "confidence": 0,
-            "reason": "",
-        }
-        try:
-            data = fetch_carduploader_sales(q)
-            results = data.get("results", [])
-            accepted = []
-            rejection_counts = {
-                "Rejected: card name mismatch": 0,
-                "Rejected: card number mismatch": 0,
-                "Rejected: excluded graded term": 0,
-                "Rejected: excluded lot/pack/playset/booster/deck/sealed term": 0,
-                "Rejected: other reason": 0,
-            }
-            for r in results:
-                ok, reason, diagnostics = comparable_reason(r.get("title", ""), name, setname, number)
-                if ok:
-                    accepted.append(r)
-                else:
-                    rejection_counts[analytics_bucket(reason)] += 1
-                    rr = dict(rec)
-                    rr.update({
-                        "candidate_title": r.get("title", ""),
-                        "candidate_price": r.get("price", ""),
-                        "reject_reason": reason,
-                    })
-                    rr.update(diagnostics)
-                    rejected.append(rr)
-            prices = [money(r.get("price")) for r in accepted if money(r.get("price")) > 0]
-            rec["accepted_count"] = len(accepted)
-            rec["rejected_count"] = max(0, len(results) - len(accepted))
-            analytics_row = {
-                "Card Name": name,
-                "Set Name": setname,
-                "Card Number": number,
-                "Search Query Used": q,
-                "Total Candidates Returned": len(results),
-                "Accepted Candidates": len(accepted),
-                "Rejected Candidates": rec["rejected_count"],
-            }
-            analytics_row.update(rejection_counts)
-            analytics.append(analytics_row)
-            if prices:
-                last3 = prices[:3]
-                rec["last_sale"] = prices[0]
-                rec["last3_avg"] = round(sum(last3) / len(last3), 2)
-                rec["median"] = round(statistics.median(prices[:min(20, len(prices))]), 2)
-                # Conservative confidence for review only.
-                count_score = min(40, len(prices) * 4)
-                spread_score = 20
-                if len(last3) == 3:
-                    avg = rec["last3_avg"]
-                    spread = max(last3) - min(last3)
-                    spread_score = max(0, 25 - int((spread / max(avg, 0.01)) * 25))
-                query_score = 20 if (name and number and setname) else 10
-                rec["confidence"] = min(100, count_score + spread_score + query_score)
-                if current <= FLOOR and len(prices) >= 3 and rec["last3_avg"] >= 2 * FLOOR and rec["confidence"] >= 70:
-                    rec["status"] = "MARKET_OPPORTUNITY_REVIEW"
-                    rec["reason"] = f"Last 3 avg ${rec['last3_avg']:.2f} is >= 2x floor after validation."
-                else:
-                    rec["status"] = "NO_CHANGE"
-                    rec["reason"] = "Market data did not exceed opportunity threshold."
-            else:
-                rec["reason"] = "No accepted comparables after validation."
-        except Exception as e:
-            rec["status"] = "ERROR"
-            rec["reason"] = str(e)[:200]
-            analytics.append({
-                "Card Name": name,
-                "Set Name": setname,
-                "Card Number": number,
-                "Search Query Used": q,
-                "Total Candidates Returned": 0,
-                "Accepted Candidates": 0,
-                "Rejected Candidates": 0,
-                "Rejected: card name mismatch": 0,
-                "Rejected: card number mismatch": 0,
-                "Rejected: excluded graded term": 0,
-                "Rejected: excluded lot/pack/playset/booster/deck/sealed term": 0,
-                "Rejected: other reason": 0,
-            })
-        reports.append(rec)
-    return reports, rejected, analytics
+    return canonical_evidence.analyze_sales_rows(
+        rows,
+        parse_card_fields=card_fields,
+        build_query=build_query,
+        fetch_sales=fetch_carduploader_sales,
+        parse_money=money,
+        floor=Decimal(str(FLOOR)),
+    )
 
 
 def audit_new_listing(

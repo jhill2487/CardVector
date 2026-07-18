@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from Platform.Marketplace_Intelligence.marketplace_intelligence.models import (
+from Platform.cardvector.marketplace_intelligence.models import (
     PricingDecision,
 )
 

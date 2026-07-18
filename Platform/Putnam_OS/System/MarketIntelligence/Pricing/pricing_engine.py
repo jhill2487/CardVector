@@ -3,8 +3,8 @@ from __future__ import annotations
 from decimal import Decimal
 from typing import Any
 
-from Platform.Marketplace_Intelligence.marketplace_intelligence import (
-    pricing_engine as canonical_pricing,
+from Platform.cardvector.marketplace_intelligence import (
+    pricing as canonical_pricing,
 )
 
 from .pricing_models import PricingDecision

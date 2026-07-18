@@ -23,8 +23,8 @@ def _bootstrap_repo_import_path() -> Path:
 
 _bootstrap_repo_import_path()
 
-from Platform.Marketplace_Intelligence.marketplace_intelligence import (
-    pricing_engine as canonical_pricing,
+from Platform.cardvector.marketplace_intelligence import (
+    pricing as canonical_pricing,
 )
 from Platform.putnam_paths import PUTNAM_OS_DIR, ROOT
 

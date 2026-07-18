@@ -8,10 +8,19 @@ from .csv_import import ImportResult, import_listing_csv
 from .decision_engine import DecisionEngine
 from .listing_parser import ListingMatcher
 from .models import AnalysisResult
-from .pricing_engine import PricingEngine, fair_market_value_from_market_price
 from .providers import build_provider
 from .reports import summarize, write_reports
 from .utils import safe_filename
+try:
+    from Platform.cardvector.marketplace_intelligence.pricing import (
+        PricingEngine,
+        fair_market_value_from_market_price,
+    )
+except ModuleNotFoundError as exc:
+    if exc.name != "Platform":
+        raise
+    # Direct historical launcher compatibility until repository packaging lands.
+    from .pricing_engine import PricingEngine, fair_market_value_from_market_price
 
 
 class MarketplaceIntelligenceEngine:
