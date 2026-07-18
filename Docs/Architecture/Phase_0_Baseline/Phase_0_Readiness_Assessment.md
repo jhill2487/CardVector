@@ -76,7 +76,46 @@ working tree is dirty.
 
 ## Recovery Artifact Record
 
-The final checkpoint branch, documentation commit, patch path/hash, ZIP
-path/hash, and final status are added after checkpoint creation. The reports
-must be compared with the original inventory before Phase 0 is declared
-complete.
+Documentation checkpoint:
+
+- Commit: `4b80201ef4afaa79f6b0dcd63b1f975bb5b02f4c`
+- Subject:
+  `docs(architecture): add CardVector architecture audit and migration standards`
+- Scope: 33 documentation files; no application source or behavior changes
+
+WIP recovery base:
+
+- Local branch:
+  `codex/checkpoint-price-vector-ebay-wip-20260717`
+- Branch commit: `4b80201ef4afaa79f6b0dcd63b1f975bb5b02f4c`
+- The branch was not checked out and was not pushed.
+
+Recovery folder:
+
+`Work_Sessions/Phase_0_Baseline_20260717_235752/`
+
+Tracked WIP patch:
+
+- File: `price_vector_ebay_tracked_wip.patch`
+- Size: 68,404 bytes
+- SHA-256:
+  `A1C06980EC9179B2BA2689128DFC7E508B107DCF54EABC089EC36DE3883AD3C2`
+- `git apply --check --reverse` passed against the preserved current tree.
+
+Untracked WIP archive:
+
+- File: `price_vector_ebay_untracked_wip.zip`
+- Size: 129,861 bytes
+- SHA-256:
+  `3E41E8BD7314F73F419BB25A56E97D1680069D37152548F73FCBB46BD488B1CB`
+- Twelve source files are listed in `untracked_wip_manifest.sha256`.
+- Original and staged-copy hashes matched for all 12 files.
+- ZIP inspection found 15 entries, including directory entries.
+
+Manifest SHA-256:
+
+`EB0C2E4E004C47A077042FB3071C215515133C5789C06D452935875804EEF607`
+
+The three untracked business-evidence JPGs remain unchanged at their original
+locations and are protected by the hashes in the inventory. They were
+intentionally excluded from the code archive.
