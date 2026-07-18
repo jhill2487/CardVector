@@ -15,6 +15,7 @@ import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
 
 
+
 def _bootstrap_repo_import_path() -> Path:
     current = Path(__file__).resolve()
     for candidate in [current.parent, *current.parents]:
@@ -30,21 +31,16 @@ def _bootstrap_repo_import_path() -> Path:
 
 _bootstrap_repo_import_path()
 
+from Platform.Marketplace_Intelligence.marketplace_intelligence import (
+    pricing_engine as canonical_pricing,
+)
 from Platform.putnam_paths import BUSINESS_INVENTORY_DIR, PUTNAM_OS_DIR, ROOT
+from Platform.Putnam_OS.System.app import bulk_price_engine
 
 VERSION = "2.1.0"
 APP_NAME = "Putnam OS"
 
-DEFAULT_LADDER = {
-    "0.99": "0.99",
-    "1.49": "0.99",
-    "1.59": "1.09",
-    "1.69": "1.19",
-    "1.79": "1.29",
-    "1.99": "1.49",
-    "2.49": "1.99",
-    "2.99": "2.49",
-}
+DEFAULT_LADDER = dict(canonical_pricing.LEGACY_DEFAULT_LADDER)
 
 DEFAULT_EBAY_TEMPLATE_INFO = ["#INFO", "Version=1.0.0", "Template= eBay-active-revise-price-quantity-download_US", "", "", "", "", "", "", "", "", ""]
 DEFAULT_EBAY_TEMPLATE_HEADER = [
@@ -130,7 +126,11 @@ def load_rules() -> dict:
 
 def normalized_ladder(rules: dict) -> dict[str, str]:
     ladder = rules.get("price_ladder", DEFAULT_LADDER)
-    return {money_str(money(k)): money_str(money(v)) for k, v in ladder.items()}
+    return canonical_pricing.normalize_price_ladder(
+        ladder,
+        parse_money=money,
+        format_money=money_str,
+    )
 
 
 def open_folder(path: Path) -> None:
@@ -153,18 +153,50 @@ def sniff_rows(path: Path):
 
 
 def detect_file(rows):
+    """
+    Identify supported CSV types.
+
+    eBay exports may include informational rows before the actual column
+    headers, so inspect the first several rows rather than assuming that
+    the header is always row zero.
+    """
     if not rows:
         return None, None
-    first = [c.strip() for c in rows[0]]
-    if "Item number" in first and ("Current price" in first or "Start price" in first):
-        return "active_listings", 0
-    for idx, row in enumerate(rows[:8]):
-        h = [c.strip() for c in row]
-        if "Action" in h and "Item number" in h and "Start price" in h:
+
+    # Inspect enough rows to handle eBay metadata/information rows.
+    for idx, row in enumerate(rows[:20]):
+        header = [str(cell).strip() for cell in row]
+
+        item_i = find_col(header, ITEM_NUMBER_CANDIDATES, False)
+        title_i = find_col(header, TITLE_CANDIDATES, False)
+        price_i = find_col(header, PRICE_COLUMN_CANDIDATES, False)
+        action_i = find_col(header, ["Action"], False)
+
+        # eBay bulk revise/upload template.
+        if (
+            action_i is not None
+            and item_i is not None
+            and find_col(header, ["Start price"], False) is not None
+        ):
             return "bulk_template", idx
-    # generic/CardUploader/new-listing CSV: must have a title-ish column and a price-ish column
-    if find_col(first, TITLE_CANDIDATES, False) is not None and find_col(first, PRICE_COLUMN_CANDIDATES, False) is not None:
+
+        # eBay Active Listings export.
+        #
+        # Item number is the key distinction between an existing listing
+        # export and a CardUploader/new-listing CSV.
+        if item_i is not None and price_i is not None:
+            return "active_listings", idx
+
+    # CardUploader/new-listing exports normally have title and price,
+    # but may not yet have an eBay item number.
+    first = [str(cell).strip() for cell in rows[0]]
+
+    if (
+        find_col(first, TITLE_CANDIDATES, False) is not None
+        and find_col(first, PRICE_COLUMN_CANDIDATES, False) is not None
+    ):
         return "new_listing_csv", 0
+
     return None, None
 
 
@@ -209,28 +241,31 @@ def choose_template_rows():
 def normalize_existing_records(rows, header_index, file_type):
     header = [c.strip() for c in rows[header_index]]
     data = rows[header_index + 1:]
+
     if file_type == "active_listings":
-        item_i = find_col(header, ["Item number"])
-        title_i = find_col(header, ["Title"])
-        price_i = find_col(header, ["Current price", "Start price"])
-        qty_i = find_col(header, QTY_CANDIDATES, False)
-        curr_i = find_col(header, CURRENCY_CANDIDATES, False)
+        item_i = find_col(header, ITEM_NUMBER_CANDIDATES)
+        title_i = find_col(header, TITLE_CANDIDATES, False)
+        price_i = find_col(header, PRICE_COLUMN_CANDIDATES)
         catn_i = find_col(header, CATEGORY_NAME_CANDIDATES, False)
         catid_i = find_col(header, CATEGORY_NUMBER_CANDIDATES, False)
-        sku_i = find_col(header, SKU_CANDIDATES, False)
+
     else:
-        item_i = find_col(header, ["Item number"])
-        title_i = find_col(header, ["Title"])
+        item_i = find_col(header, ITEM_NUMBER_CANDIDATES)
+        title_i = find_col(header, TITLE_CANDIDATES, False)
         price_i = find_col(header, ["Start price"])
-        qty_i = find_col(header, QTY_CANDIDATES, False)
-        curr_i = find_col(header, CURRENCY_CANDIDATES, False)
         catn_i = find_col(header, ["Category name"], False)
         catid_i = None
-        sku_i = find_col(header, SKU_CANDIDATES, False)
+
+    qty_i = find_col(header, QTY_CANDIDATES, False)
+    curr_i = find_col(header, CURRENCY_CANDIDATES, False)
+    sku_i = find_col(header, SKU_CANDIDATES, False)
+
     records = []
+
     for line_no, row in enumerate(data, start=header_index + 2):
         if not any(str(x).strip() for x in row):
             continue
+
         records.append({
             "line_no": line_no,
             "item_number": get_cell(row, item_i),
@@ -242,35 +277,17 @@ def normalize_existing_records(rows, header_index, file_type):
             "category_number": get_cell(row, catid_i),
             "sku": get_cell(row, sku_i),
         })
+
     return records
 
 
 def apply_existing_ladder(records, ladder):
-    processed = []
-    invalid = []
-    for rec in records:
-        try:
-            old = money(rec["old_price_raw"])
-        except Exception as e:
-            rec2 = dict(rec)
-            rec2.update({"status": "INVALID_PRICE", "old_price": "", "new_price": "", "change": "", "reason": str(e)})
-            invalid.append(rec2)
-            continue
-        key = money_str(old)
-        if key in ladder:
-            new = money(ladder[key])
-            changed = new != old
-            status = "CHANGE" if changed else "UNCHANGED"
-            reason = f"ladder {key} -> {money_str(new)}" if changed else "ladder leaves price unchanged"
-        else:
-            new = old
-            changed = False
-            status = "UNCHANGED"
-            reason = "price not in ladder"
-        rec2 = dict(rec)
-        rec2.update({"old_price": money_str(old), "new_price": money_str(new), "change": money_str(new - old), "status": status, "reason": reason})
-        processed.append(rec2)
-    return processed, invalid
+    return canonical_pricing.apply_exact_price_ladder(
+        records,
+        ladder,
+        parse_money=money,
+        format_money=money_str,
+    )
 
 
 def write_dict_csv(path: Path, rows: list[dict], header: list[str]):
@@ -420,24 +437,21 @@ def review_new_listing_prices(source_path: Path) -> tuple[Path, dict]:
         title = get_cell(row, title_i) if title_i is not None else ""
         sku = get_cell(row, sku_i) if sku_i is not None else ""
         item = get_cell(row, item_i) if item_i is not None else ""
-        status = "UNCHANGED"
-        reason = "CardUploader/source price accepted"
         try:
-            old = money(old_raw)
-            new = old
-            if money_str(old) in ladder and money(ladder[money_str(old)]) != old:
-                new = money(ladder[money_str(old)])
-                status = "CHANGE"
-                reason = f"Putnam ladder {money_str(old)} -> {money_str(new)}"
-            if new < floor:
-                new = floor
-                status = "CHANGE"
-                reason = f"raised to minimum floor ${money_str(floor)}"
-            if old >= high_review:
+            pricing = canonical_pricing.evaluate_new_listing_price(
+                old_raw,
+                ladder,
+                floor=floor,
+                high_review_threshold=high_review,
+                parse_money=money,
+                format_money=money_str,
+            )
+            old = pricing["old_price"]
+            new = pricing["new_price"]
+            status = pricing["status"]
+            reason = pricing["reason"]
+            if pricing["high_review"]:
                 flagged += 1
-                reason = reason + f"; review high-value listing >= ${money_str(high_review)}"
-                if status == "UNCHANGED":
-                    status = "REVIEW"
             if new != old:
                 changed += 1
                 output_rows[offset][price_i] = money_str(new)
@@ -604,29 +618,88 @@ class PutnamOS(tk.Tk):
         return var
 
     def _existing_tab(self, tab):
-        tk.Label(tab, text="Use this after changing store pricing strategy for active eBay listings.", bg="white", fg="#444", font=("Arial", 11)).pack(anchor="w", padx=20, pady=(20, 4))
-        var = self.file_row(tab, "eBay Active Listings CSV or eBay price/quantity template")
-        info = tk.Label(tab, text="Output: eBay upload candidate, review CSV, rollback CSV, report.", bg="white", fg="#666")
+        tk.Label(
+            tab,
+            text="Use this after changing store pricing strategy for active eBay listings.",
+            bg="white",
+            fg="#444",
+            font=("Arial", 11),
+        ).pack(anchor="w", padx=20, pady=(20, 4))
+
+        var = self.file_row(
+            tab,
+            "eBay Active Listings CSV or eBay price/quantity template",
+        )
+
+        info = tk.Label(
+            tab,
+            text="Output: eBay upload candidate, review CSV, rollback CSV, report.",
+            bg="white",
+            fg="#666",
+        )
         info.pack(anchor="w", padx=20, pady=8)
+
         result = tk.Text(tab, height=9, wrap="word")
         result.pack(fill="x", padx=20, pady=10)
+
         def run():
             try:
                 src = Path(var.get().strip().strip('"'))
-                job, summary = existing_price_revision(src)
+
+                if not src.exists():
+                    raise FileNotFoundError(f"CSV not found:\n{src}")
+
+                summary = bulk_price_engine.run_revision(
+                    source_path=src,
+                    root=ROOT,
+                    config_path=CONFIG_PATH,
+                    output_base=COMPLETED_DIR,
+                )
+
+                job = Path(summary["job_dir"])
                 self.last_job_dir = job
+
                 result.delete("1.0", tk.END)
-                result.insert(tk.END, f"Complete.\n\nRows read: {summary['read']}\nChanged: {summary['changed']}\nTotal reduction: ${summary['reduction']}\nInvalid: {summary['invalid']}\n\nOutput folder:\n{job}")
-                messagebox.showinfo("Price Revision Complete", f"Changed {summary['changed']} rows.\nOutput folder opened.")
+                result.insert(
+                    tk.END,
+                    f"Complete.\n\n"
+                    f"Rows read: {summary['total_rows']}\n"
+                    f"Changed: {summary['changed_rows']}\n"
+                    f"Unchanged: {summary['unchanged_rows']}\n"
+                    f"Invalid: {summary['invalid_rows']}\n"
+                    f"Total reduction: ${summary['total_reduction']}\n\n"
+                    f"Upload CSV:\n{summary['upload_csv']}\n\n"
+                    f"Output folder:\n{job}",
+                )
+
+                messagebox.showinfo(
+                    "Price Revision Complete",
+                    f"Changed {summary['changed_rows']} rows.\n"
+                    "Output folder opened.",
+                )
+
                 open_folder(job)
+
             except Exception as e:
                 result.delete("1.0", tk.END)
                 result.insert(tk.END, traceback.format_exc())
                 messagebox.showerror("Error", str(e))
+
         btns = tk.Frame(tab, bg="white")
         btns.pack(fill="x", padx=20, pady=10)
-        tk.Button(btns, text="Generate Existing Listing Revision", font=("Arial", 12, "bold"), command=run).pack(side="left")
-        tk.Button(btns, text="Open Completed Jobs", command=lambda: open_folder(COMPLETED_DIR)).pack(side="left", padx=10)
+
+        tk.Button(
+            btns,
+            text="Generate Existing Listing Revision",
+            font=("Arial", 12, "bold"),
+            command=run,
+        ).pack(side="left")
+
+        tk.Button(
+            btns,
+            text="Open Completed Jobs",
+            command=lambda: open_folder(COMPLETED_DIR),
+        ).pack(side="left", padx=10)
 
     def _new_listing_tab(self, tab):
         tk.Label(tab, text="Use this after CardUploader generates a CSV for new eBay listings.", bg="white", fg="#444", font=("Arial", 11)).pack(anchor="w", padx=20, pady=(20, 4))

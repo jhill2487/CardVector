@@ -1,5 +1,11 @@
 {
   "putnam_os": {
-    "carduploader_url": ""
+    "carduploader_url": "https://carduploader.com/dashboard/history",
+    "mobile_capture_url": "https://cardvector.app/capture",
+    "ebay_seller_hub_url": "https://www.ebay.com/sh/ovw",
+    "ebay_upload_url": "https://www.ebay.com/sh/reports/uploads",
+    "pricing_strategy": "fast_sell",
+    "pricing_review_threshold": 60,
+    "pricing_auto_apply_threshold": 80
   }
 }

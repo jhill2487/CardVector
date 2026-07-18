@@ -1,16 +1,7 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
-from decimal import Decimal
+from Platform.Marketplace_Intelligence.marketplace_intelligence.models import (
+    PricingDecision,
+)
 
-
-@dataclass(frozen=True)
-class PricingDecision:
-    original_price: Decimal
-    market_value: Decimal
-    recommended_price: Decimal
-    accepted_count: int
-    confidence: int
-    strategy: str
-    pricing_basis: str
-    review_status: str
+__all__ = ["PricingDecision"]

@@ -24,7 +24,7 @@ def bulk_revise_rows(results: list[AnalysisResult]) -> list[dict[str, str]]:
         rows.append({
             "Action": "Revise",
             "ItemID": result.listing.item_id,
-            "StartPrice": money_text(result.pricing.recommended_price),
+            "StartPrice": money_text(result.pricing.final_listing_price),
             "Title": result.listing.title,
             "CustomLabel": result.listing.sku,
             "MarketplaceIntelligenceReason": result.decision.reason,
@@ -34,4 +34,3 @@ def bulk_revise_rows(results: list[AnalysisResult]) -> list[dict[str, str]]:
 
 def write_bulk_revise_csv(path: Path, results: list[AnalysisResult]) -> Path:
     return write_csv(path, bulk_revise_rows(results), BULK_REVISE_FIELDS)
-

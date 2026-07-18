@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from datetime import datetime
 from decimal import Decimal
 from pathlib import Path
@@ -39,7 +40,14 @@ ANALYSIS_FIELDS = [
     "reference_only",
     "accepted_comps",
     "rejected_comps",
+    "normalized_market_evidence",
+    "market_evidence_reference",
+    "fair_market_value",
+    "fair_market_value_confidence",
+    "fair_market_value_reasoning",
     "recommended_price",
+    "recommended_listing_price",
+    "final_listing_price",
     "difference",
     "percent_change",
     "recommendation",
@@ -52,6 +60,34 @@ ANALYSIS_FIELDS = [
 
 
 def result_row(result: AnalysisResult) -> dict[str, str]:
+    fair_market_value = result.fair_market_value
+    evidence = (
+        fair_market_value.evidence
+        if fair_market_value is not None
+        else result.pricing.market_evidence
+    )
+    evidence_reference = (
+        fair_market_value.evidence_reference
+        if fair_market_value is not None
+        else result.pricing.market_evidence_reference
+    )
+    evidence_json = json.dumps(
+        [
+            {
+                "source": item.source,
+                "evidence_type": item.evidence_type,
+                "marketplace": item.marketplace,
+                "condition": item.condition,
+                "value": money_text(item.value),
+                "captured_at": item.captured_at,
+                "source_reference": item.source_reference,
+                "accepted_for_fmv": item.accepted_for_fmv,
+                "reason": item.reason,
+            }
+            for item in evidence
+        ],
+        separators=(",", ":"),
+    )
     return {
         "row_number": str(result.listing.row_number),
         "source_type": result.listing.source_type,
@@ -80,7 +116,26 @@ def result_row(result: AnalysisResult) -> dict[str, str]:
         "reference_only": "TRUE" if result.market.metadata.get("reference_only") else "FALSE",
         "accepted_comps": str(result.market.metadata.get("accepted_comps", "")),
         "rejected_comps": str(result.market.metadata.get("rejected_comps", "")),
+        "normalized_market_evidence": evidence_json,
+        "market_evidence_reference": evidence_reference,
+        "fair_market_value": money_text(
+            fair_market_value.value
+            if fair_market_value is not None
+            else result.pricing.fair_market_value
+        ),
+        "fair_market_value_confidence": (
+            fair_market_value.confidence
+            if fair_market_value is not None
+            else result.pricing.fair_market_value_confidence
+        ),
+        "fair_market_value_reasoning": (
+            fair_market_value.reasoning
+            if fair_market_value is not None
+            else result.pricing.fair_market_value_reasoning
+        ),
         "recommended_price": money_text(result.pricing.recommended_price),
+        "recommended_listing_price": money_text(result.pricing.recommended_listing_price),
+        "final_listing_price": money_text(result.pricing.final_listing_price),
         "difference": money_text(result.pricing.difference),
         "percent_change": str(result.pricing.percent_change),
         "recommendation": result.decision.recommendation,
@@ -168,7 +223,7 @@ def write_reports(
         underpriced_rows = [
             row for row, result in zip(rows, results)
             if result.listing.current_price <= Decimal("0.99")
-            or result.pricing.recommended_price > result.listing.current_price
+            or result.pricing.recommended_listing_price > result.listing.current_price
             or result.decision.review_required
         ]
         recommendation_rows = [row for row in rows if row["recommendation"] != "No Change" or row["review_required"] == "TRUE"]

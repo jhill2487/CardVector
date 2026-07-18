@@ -8,7 +8,7 @@ from .csv_import import ImportResult, import_listing_csv
 from .decision_engine import DecisionEngine
 from .listing_parser import ListingMatcher
 from .models import AnalysisResult
-from .pricing_engine import PricingEngine
+from .pricing_engine import PricingEngine, fair_market_value_from_market_price
 from .providers import build_provider
 from .reports import summarize, write_reports
 from .utils import safe_filename
@@ -38,9 +38,22 @@ class MarketplaceIntelligenceEngine:
         for listing in imported.listings:
             identity = self.matcher.identify(listing)
             market = self.provider.get_market_price(identity)
-            pricing = self.pricing_engine.recommend(listing, market)
+            fair_market_value = fair_market_value_from_market_price(market)
+            pricing = self.pricing_engine.recommend_from_fmv(
+                listing,
+                fair_market_value,
+            )
             decision = self.decision_engine.decide(listing, market, pricing)
-            results.append(AnalysisResult(listing, identity, market, pricing, decision))
+            results.append(
+                AnalysisResult(
+                    listing,
+                    identity,
+                    market,
+                    pricing,
+                    decision,
+                    fair_market_value=fair_market_value,
+                )
+            )
         return results
 
     def analyze_file(

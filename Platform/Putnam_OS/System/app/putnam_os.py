@@ -43,7 +43,11 @@ from Platform.putnam_paths import (
     WORK_SESSIONS_DIR,
 )
 
-from Platform.Putnam_OS.System.MarketIntelligence.Pricing import build_pricing_decision
+from Platform.Putnam_OS.System.app import bulk_price_engine
+
+from Platform.Marketplace_Intelligence.marketplace_intelligence import (
+    pricing_engine as canonical_pricing,
+)
 from Platform.Putnam_OS.System.tools.mobile_capture_queue import (
     MOBILE_FAILED_DIR,
     MOBILE_PROCESSING_DIR,
@@ -785,66 +789,22 @@ def ensure_policy_column(row, existing_column, default_column):
 
 
 def optimized_export_price(market_price: Decimal) -> Decimal:
-    # Listing Optimizer v1.2 cart-sweetener ladder:
-    # <= $1.50 lists at $0.99, $1.51-$2.99 lists at $1.49,
-    # $3.00-$4.99 lists at $2.99, and $5.00+ keeps market-based pricing.
-    if market_price <= Decimal("1.50"):
-        final_price = Decimal("0.99")
-    elif market_price <= Decimal("2.99"):
-        final_price = Decimal("1.49")
-    elif market_price <= Decimal("4.99"):
-        final_price = Decimal("2.99")
-    else:
-        final_price = market_price
-    return max(final_price, EXPORT_FLOOR_PRICE).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
+    return canonical_pricing.optimized_export_price(
+        market_price,
+        export_floor=EXPORT_FLOOR_PRICE,
+    )
 
 
 
 def calculate_market_value(market_report) -> Decimal:
-    market_report = market_report or {}
-    accepted_count = int(market_report.get("accepted_count") or 0)
-    if accepted_count < 3:
-        return Decimal("0.00")
-
-    median = decimal_money(market_report.get("median"))
-    last3_avg = decimal_money(market_report.get("last3_avg"))
-    last_sale = decimal_money(market_report.get("last_sale"))
-
-    weighted_parts = []
-    if median > 0:
-        weighted_parts.append((median, Decimal("0.60")))
-    if last3_avg > 0:
-        weighted_parts.append((last3_avg, Decimal("0.30")))
-    if last_sale > 0:
-        weighted_parts.append((last_sale, Decimal("0.10")))
-
-    if not weighted_parts:
-        return Decimal("0.00")
-
-    total_weight = sum((weight for _value, weight in weighted_parts), Decimal("0.00"))
-    weighted_value = sum((value * weight for value, weight in weighted_parts), Decimal("0.00"))
-    return (weighted_value / total_weight).quantize(
-        Decimal("0.01"),
-        rounding=ROUND_HALF_UP,
-    )
+    return canonical_pricing.calculate_market_value(market_report)
 
 
 def apply_pricing_strategy(market_value: Decimal, strategy="market_match") -> Decimal:
-    value = max(decimal_money(market_value), EXPORT_FLOOR_PRICE)
-    normalized = str(strategy or "market_match").strip().lower()
-
-    if normalized == "market_match":
-        recommended = value
-    elif normalized == "fast_sell":
-        recommended = value * Decimal("0.95")
-    elif normalized == "profit":
-        recommended = value * Decimal("1.05")
-    else:
-        raise ValueError(f"Unknown pricing strategy: {strategy}")
-
-    return max(recommended, EXPORT_FLOOR_PRICE).quantize(
-        Decimal("0.01"),
-        rounding=ROUND_HALF_UP,
+    return canonical_pricing.apply_pricing_strategy(
+        market_value,
+        strategy,
+        export_floor=EXPORT_FLOOR_PRICE,
     )
 
 def summarize_final_prices(final_prices, batch_location, output_csv_path, policies):
@@ -928,7 +888,7 @@ def prepare_listing_export_rows(
         r = dict(row)
         original_market_price = decimal_money(r.get(pcol))
         market_report = market_reports_by_row.get(idx, {})
-        pricing_decision = build_pricing_decision(
+        pricing_decision = canonical_pricing.build_pricing_decision(
             original_price=original_market_price,
             market_report=market_report,
             strategy=pricing_strategy,
@@ -938,8 +898,9 @@ def prepare_listing_export_rows(
         )
         accepted_count = pricing_decision.accepted_count
         confidence = pricing_decision.confidence
-        market_value = pricing_decision.market_value
-        final_price = pricing_decision.recommended_price
+        market_value = pricing_decision.fair_market_value
+        recommended_price = pricing_decision.recommended_listing_price
+        final_price = pricing_decision.final_listing_price
         pricing_basis = pricing_decision.pricing_basis
         pricing_review_status = pricing_decision.review_status
 
@@ -974,11 +935,16 @@ def prepare_listing_export_rows(
                 "market_accepted_count": accepted_count,
                 "market_confidence": confidence,
                 "market_value": format_decimal_money(market_value) if market_value > 0 else "",
+                "fair_market_value": format_decimal_money(market_value) if market_value > 0 else "",
+                "fair_market_value_confidence": pricing_decision.fair_market_value_confidence,
+                "fair_market_value_reasoning": pricing_decision.fair_market_value_reasoning,
+                "market_evidence_reference": pricing_decision.market_evidence_reference,
                 "pricing_strategy": pricing_strategy if market_value > 0 else "retain_source",
                 "pricing_review_threshold": review_threshold,
                 "pricing_auto_apply_threshold": auto_apply_threshold,
                 "pricing_review_status": pricing_review_status,
-                "recommended_price": format_decimal_money(final_price),
+                "recommended_price": format_decimal_money(recommended_price),
+                "recommended_listing_price": format_decimal_money(recommended_price),
                 "pricing_basis": pricing_basis,
                 "final_export_price": format_decimal_money(final_price),
                 "cart_sweetener": "TRUE" if cart_sweetener else "FALSE",
@@ -8749,13 +8715,56 @@ Goal: Capture the real listing workflow for process improvement and content crea
             self.browse()
             if not self.loaded:
                 return
+        if self.detected == "active_listings":
+            try:
+                self.status.set("Generating existing-listing price revision...")
+
+                summary = bulk_price_engine.run_revision(
+                    source_path=self.loaded,
+                    root=ROOT,
+                )
+
+                job_dir = Path(summary["job_dir"])
+                self.set_current_pricing_job(job_dir)
+
+                self.status.set(
+                    f"Existing-listing revision complete: "
+                    f"{summary['changed_rows']} listing(s) changed."
+                )
+
+                messagebox.showinfo(
+                    "Price Revision Complete",
+                    "Existing-listing price revision completed.\n\n"
+                    f"Rows read: {summary['total_rows']}\n"
+                    f"Changed: {summary['changed_rows']}\n"
+                    f"Unchanged: {summary['unchanged_rows']}\n"
+                    f"Invalid: {summary['invalid_rows']}\n"
+                    f"Total reduction: ${summary['total_reduction']}\n\n"
+                    f"Output folder:\n{job_dir}",
+                )
+
+                os.startfile(job_dir)
+
+            except Exception as exc:
+                self.status.set(f"Existing-listing revision failed: {exc}")
+                messagebox.showerror(
+                    "CardVector OS",
+                    f"Existing-listing revision failed.\n\n{exc}",
+                )
+
+            return
+
         if self.detected != "carduploader_new":
             append_pricing_performance_log(
-                pricing_performance_record(self.loaded, row_count=len(self.rows or []), status="unsupported_type")
+                pricing_performance_record(
+                    self.loaded,
+                    row_count=len(self.rows or []),
+                    status="unsupported_type",
+                )
             )
             messagebox.showwarning(
                 "CardVector OS",
-                "This workflow currently analyzes CardUploader new-listing CSVs. Existing listing revision support remains available through the pricing engine.",
+                "Unsupported CSV format.",
             )
             return
 

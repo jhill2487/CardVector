@@ -23,20 +23,14 @@ def _bootstrap_repo_import_path() -> Path:
 
 _bootstrap_repo_import_path()
 
+from Platform.Marketplace_Intelligence.marketplace_intelligence import (
+    pricing_engine as canonical_pricing,
+)
 from Platform.putnam_paths import PUTNAM_OS_DIR, ROOT
 
 VERSION = "2.0.0"
 
-DEFAULT_LADDER = {
-    "0.99": "0.99",
-    "1.49": "0.99",
-    "1.59": "1.09",
-    "1.69": "1.19",
-    "1.79": "1.29",
-    "1.99": "1.49",
-    "2.49": "1.99",
-    "2.99": "2.49"
-}
+DEFAULT_LADDER = dict(canonical_pricing.LEGACY_DEFAULT_LADDER)
 
 DEFAULT_INFO = ["#INFO", "Version=1.0.0", "Template= eBay-active-revise-price-quantity-download_US", "", "", "", "", "", "", "", "", ""]
 DEFAULT_HEADER = [
@@ -73,7 +67,11 @@ def load_ladder(config_path: Path | None = None) -> dict[str, str]:
         ladder = data.get("price_ladder", data)
     else:
         ladder = DEFAULT_LADDER
-    return {money_str(money(k)): money_str(money(v)) for k, v in ladder.items()}
+    return canonical_pricing.normalize_price_ladder(
+        ladder,
+        parse_money=money,
+        format_money=money_str,
+    )
 
 
 def read_csv_rows(path: Path) -> list[list[str]]:
@@ -88,15 +86,33 @@ def read_csv_rows(path: Path) -> list[list[str]]:
 
 
 def detect_file(rows: list[list[str]]):
+    """Detect eBay Active Listings exports and bulk revise templates."""
     if not rows:
         return None, None
-    h0 = [c.strip() for c in rows[0]]
-    if "Item number" in h0 and ("Current price" in h0 or "Start price" in h0):
-        return "active_listings", 0
-    for i, row in enumerate(rows[:8]):
-        h = [c.strip() for c in row]
-        if "Action" in h and "Item number" in h and "Start price" in h:
-            return "bulk_template", i
+
+    item_names = {"item number", "item id", "itemid", "item_number"}
+    price_names = {
+        "current price",
+        "start price",
+        "price",
+        "buy it now price",
+        "listing price",
+        "list price",
+    }
+
+    for index, row in enumerate(rows[:20]):
+        normalized = {str(cell).strip().lower() for cell in row}
+        has_item = bool(normalized & item_names)
+        has_price = bool(normalized & price_names)
+        has_action = "action" in normalized
+        has_start_price = "start price" in normalized
+
+        if has_action and has_item and has_start_price:
+            return "bulk_template", index
+
+        if has_item and has_price:
+            return "active_listings", index
+
     return None, None
 
 
@@ -109,27 +125,56 @@ def col(header: list[str], name: str, required=True):
         return None
 
 
+def col_any(header: list[str], names: list[str], required: bool = True):
+    normalized = {
+        str(value).strip().lower(): index
+        for index, value in enumerate(header)
+    }
+
+    for name in names:
+        index = normalized.get(name.strip().lower())
+        if index is not None:
+            return index
+
+    if required:
+        raise ValueError(
+            "Required column missing. Expected one of: " + ", ".join(names)
+        )
+
+    return None
+
+
 def normalize_active(rows, header_index):
     header = [c.strip() for c in rows[header_index]]
     data = rows[header_index + 1:]
+
     cols = {
-        "item": col(header, "Item number"),
-        "title": col(header, "Title"),
-        "sku": col(header, "Custom label (SKU)", False),
-        "qty": col(header, "Available quantity", False),
-        "currency": col(header, "Currency", False),
-        "start": col(header, "Start price", False),
-        "current": col(header, "Current price", False),
-        "cat_name": col(header, "eBay category 1 name", False),
-        "cat_num": col(header, "eBay category 1 number", False),
+        "item": col_any(header, ["Item number", "Item ID", "ItemID", "item_number"]),
+        "title": col_any(header, ["Title", "Item title", "Listing title"], False),
+        "sku": col_any(header, ["Custom label (SKU)", "SKU", "Custom Label", "Custom label"], False),
+        "qty": col_any(header, ["Available quantity", "Quantity", "Qty"], False),
+        "currency": col_any(header, ["Currency"], False),
+        "start": col_any(header, ["Start price", "Price", "Listing price", "List price"], False),
+        "current": col_any(header, ["Current price", "Buy It Now price"], False),
+        "cat_name": col_any(header, ["eBay category 1 name", "Category name", "Category"], False),
+        "cat_num": col_any(header, ["eBay category 1 number", "Category number", "Category ID"], False),
     }
+
+    if cols["current"] is None and cols["start"] is None:
+        raise ValueError(
+            "Required price column missing. Expected Current price, Start price, "
+            "Price, Buy It Now price, Listing price, or List price."
+        )
+
     out = []
     for line_no, row in enumerate(data, header_index + 2):
         if not any(str(x).strip() for x in row):
             continue
-        def get(k, default=""):
-            i = cols.get(k)
-            return row[i].strip() if i is not None and i < len(row) else default
+
+        def get(key, default=""):
+            index = cols.get(key)
+            return row[index].strip() if index is not None and index < len(row) else default
+
         out.append({
             "line_no": line_no,
             "item_number": get("item"),
@@ -141,6 +186,7 @@ def normalize_active(rows, header_index):
             "category_name": get("cat_name") or "CCG Individual Cards",
             "category_number": get("cat_num") or "183454",
         })
+
     return out
 
 
@@ -184,28 +230,12 @@ def normalize_bulk(rows, header_index):
 
 
 def apply_ladder(records, ladder):
-    processed, invalid = [], []
-    for rec in records:
-        try:
-            old = money(rec["old_price_raw"])
-            key = money_str(old)
-        except Exception as e:
-            r = dict(rec)
-            r.update({"status": "INVALID_PRICE", "old_price": "", "new_price": "", "change": "", "reason": str(e)})
-            invalid.append(r)
-            continue
-        if key in ladder:
-            new = money(ladder[key])
-            status = "CHANGE" if new != old else "UNCHANGED"
-            reason = f"ladder {key} -> {money_str(new)}" if status == "CHANGE" else "ladder leaves price unchanged"
-        else:
-            new = old
-            status = "UNCHANGED"
-            reason = "price not in ladder"
-        r = dict(rec)
-        r.update({"status": status, "old_price": money_str(old), "new_price": money_str(new), "change": money_str(new - old), "reason": reason})
-        processed.append(r)
-    return processed, invalid
+    return canonical_pricing.apply_exact_price_ladder(
+        records,
+        ladder,
+        parse_money=money,
+        format_money=money_str,
+    )
 
 
 def category_string(r):
