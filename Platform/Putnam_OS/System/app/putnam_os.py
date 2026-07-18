@@ -75,11 +75,15 @@ from Platform.Putnam_OS.System.tools.mobile_capture_queue import (
 from Platform.cardvector.application import (
     ApplicationRuntime,
     CaptureApplication,
+    InventoryApplication,
+    InventoryProjectionDelegates,
     PricingApplication,
     WorkflowApplication,
     WorkflowDelegates,
 )
 from Platform.cardvector.integrations.carduploader import (
+    CARDUPLOADER_INVENTORY_COLUMNS as CANONICAL_CARDUPLOADER_INVENTORY_COLUMNS,
+    CardUploaderInventoryService,
     CardUploaderRecognitionAdapter,
 )
 import workflow_context as legacy_workflow_context
@@ -91,6 +95,7 @@ pricing_application = PricingApplication(PRICING_SERVICE)
 def build_application_runtime():
     runtime = ApplicationRuntime()
     runtime.services.register("pricing", pricing_application)
+    runtime.services.register("inventory", inventory_application)
     capture = CaptureService(
         desktop=CaptureStudioService(),
         mobile=MobileCaptureQueueService(),
@@ -442,15 +447,57 @@ from inventory_locations import (
     ETB_LOCATION_CODES,
     ETB_LOCATION_REGISTRY,
     LOCATION_STATUSES,
-    create_etb_location,
-    etb_location_rows,
-    mark_location_complete,
-    next_etb_code,
-    qr_resolution_text,
-    resolve_cardvector_qr_payload,
-    update_etb_status,
+    create_etb_location as legacy_create_etb_location,
+    etb_location_rows as legacy_etb_location_rows,
+    mark_location_complete as legacy_mark_location_complete,
+    next_etb_code as legacy_next_etb_code,
+    qr_resolution_text as legacy_qr_resolution_text,
+    resolve_cardvector_qr_payload as legacy_resolve_cardvector_qr_payload,
+    update_etb_status as legacy_update_etb_status,
 )
 from orders_fulfillment import PICK_LIST_ROOT, generate_pick_slips
+
+
+inventory_application = InventoryApplication(
+    CardUploaderInventoryService(),
+    InventoryProjectionDelegates(
+        list_locations=legacy_etb_location_rows,
+        create_location=legacy_create_etb_location,
+        update_location_status=legacy_update_etb_status,
+        complete_location=legacy_mark_location_complete,
+        next_location_code=legacy_next_etb_code,
+        resolve_qr=legacy_resolve_cardvector_qr_payload,
+        format_qr=legacy_qr_resolution_text,
+    ),
+)
+
+
+def etb_location_rows(*args, **kwargs):
+    return inventory_application.list_location_projection(*args, **kwargs)
+
+
+def create_etb_location(*args, **kwargs):
+    return inventory_application.create_location_projection(*args, **kwargs)
+
+
+def update_etb_status(*args, **kwargs):
+    return inventory_application.update_location_projection(*args, **kwargs)
+
+
+def mark_location_complete(*args, **kwargs):
+    return inventory_application.complete_location_projection(*args, **kwargs)
+
+
+def next_etb_code(*args, **kwargs):
+    return inventory_application.next_location_projection_code(*args, **kwargs)
+
+
+def resolve_cardvector_qr_payload(*args, **kwargs):
+    return inventory_application.resolve_location_qr(*args, **kwargs)
+
+
+def qr_resolution_text(resolved):
+    return inventory_application.format_location_qr(resolved)
 
 
 LABEL_GENERATOR_SCRIPT = SYSTEM / "tools" / "generate_etb_qr_labels.py"
@@ -1781,46 +1828,15 @@ def inventory_conversion_dashboard_stats():
     }
 
 
-CARDUPLOADER_INVENTORY_COLUMNS = [
-    "Title",
-    "User SKU",
-    "Catalog SKU",
-    "TCGplayer SKU",
-    "TCGplayer Product ID",
-    "TCG",
-    "Set",
-    "Card Number",
-    "Rarity",
-    "Condition",
-    "Variant",
-    "Finish",
-    "Price",
-    "Qty",
-    "Status",
-    "Grading Company",
-    "Cert Number",
-    "Grade",
-]
+CARDUPLOADER_INVENTORY_COLUMNS = list(CANONICAL_CARDUPLOADER_INVENTORY_COLUMNS)
 
 
 def require_carduploader_inventory_columns(rows):
-    if not rows:
-        raise ValueError("Inventory CSV is empty.")
-    available = set(rows[0].keys())
-    missing = [c for c in CARDUPLOADER_INVENTORY_COLUMNS if c not in available]
-    if missing:
-        raise ValueError("Missing CardUploader inventory columns: " + ", ".join(missing))
+    inventory_application.require_export_columns(rows)
 
 
 def normalize_carduploader_inventory_row(row):
-    normalized = {column: str(row.get(column, "") or "").strip() for column in CARDUPLOADER_INVENTORY_COLUMNS}
-    normalized["Price"] = f"{money(normalized.get('Price')):.2f}"
-    try:
-        qty = int(float(str(normalized.get("Qty") or "0").replace(",", "").strip()))
-    except Exception:
-        qty = 0
-    normalized["Qty"] = str(max(0, qty))
-    return normalized
+    return inventory_application.normalize_export_row(row)
 
 
 def write_counter_csv(path, rows, headers):
@@ -1836,7 +1852,7 @@ def import_carduploader_inventory(path):
     source = Path(path)
     rows = read_csv(source)
     require_carduploader_inventory_columns(rows)
-    normalized = [normalize_carduploader_inventory_row(r) for r in rows]
+    normalized = inventory_application.normalize_export_rows(rows)
     DATA.mkdir(parents=True, exist_ok=True)
     write_csv(INVENTORY_SNAPSHOT, normalized, CARDUPLOADER_INVENTORY_COLUMNS)
     copied_source = copy_to_folder(source, CARDUPLOADER_INVENTORY_IMPORTS)
@@ -3412,6 +3428,10 @@ class PutnamOS(BaseTk):
         self.capture_application = self.application_runtime.services.resolve(
             "capture",
             CaptureApplication,
+        )
+        self.inventory_application = self.application_runtime.services.resolve(
+            "inventory",
+            InventoryApplication,
         )
         self.capture_service = self.capture_application
         self.mobile_capture_queue_service = self.capture_application
