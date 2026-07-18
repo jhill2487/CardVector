@@ -10,6 +10,9 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+from Platform.cardvector.integrations.carduploader import (
+    CardUploaderInventoryService,
+)
 from Platform.putnam_paths import DATA_EXPORTS_DIR
 
 
@@ -17,25 +20,6 @@ PROVIDER_CARDUPLOADER = "carduploader_inventory"
 PROVIDER_EBAY = "ebay_active_listings"
 RECONCILIATION_EXPORT_DIR = DATA_EXPORTS_DIR / "Reconciliation"
 
-
-CARDUPLOADER_COLUMNS = {
-    "title": ["Title", "Listing Title", "Name"],
-    "carduploader_custom_sku": ["Custom SKU", "Custom label (SKU)", "Custom Label", "CustomLabel"],
-    "carduploader_user_sku": ["User SKU", "UserSKU", "SKU"],
-    "catalog_sku": ["Catalog SKU", "CatalogSKU"],
-    "tcgplayer_sku": ["TCGplayer SKU", "TCGPlayer SKU", "TCGplayerSKU"],
-    "tcgplayer_product_id": ["TCGplayer Product ID", "TCGPlayer Product ID", "Product ID"],
-    "tcg": ["TCG", "Game"],
-    "set_name": ["Set", "Set Name"],
-    "card_number": ["Card Number", "Number", "Card #"],
-    "variant": ["Variant", "Printing", "Rarity"],
-    "finish": ["Finish", "Foil"],
-    "condition": ["Condition"],
-    "quantity": ["Qty", "Quantity"],
-    "price": ["Price", "Listing Price", "Current Price"],
-    "status": ["Status"],
-    "carduploader_source_id": ["CardUploader ID", "Source ID", "Inventory ID", "ID"],
-}
 
 EBAY_COLUMNS = {
     "ebay_item_id": ["Item number", "Item Number", "Item ID", "ItemID", "ItemId"],
@@ -274,43 +258,42 @@ class CardUploaderInventorySource:
         self.path = Path(path)
 
     def load(self) -> SourceImport:
-        rows, fieldnames = read_csv_rows(self.path)
-        mapping = {field: find_column(fieldnames, candidates) for field, candidates in CARDUPLOADER_COLUMNS.items()}
-        timestamp = datetime.now().isoformat(timespec="seconds")
-        records = []
-        errors = []
-        if not mapping.get("title"):
-            errors.append("CardUploader file is missing a title/name column.")
-        for index, row in enumerate(rows, start=1):
-            title = value(row, mapping.get("title"))
-            records.append(
-                InventoryCandidate(
-                    row_number=index,
-                    raw=row,
-                    title=title,
-                    card_name=title,
-                    set_name=value(row, mapping.get("set_name")),
-                    card_number=value(row, mapping.get("card_number")),
-                    variant=value(row, mapping.get("variant")),
-                    finish=value(row, mapping.get("finish")),
-                    condition=value(row, mapping.get("condition")),
-                    quantity=value(row, mapping.get("quantity")),
-                    price=value(row, mapping.get("price")),
-                    tcgplayer_product_id=value(row, mapping.get("tcgplayer_product_id")),
-                    tcgplayer_sku=value(row, mapping.get("tcgplayer_sku")),
-                    catalog_sku=value(row, mapping.get("catalog_sku")),
-                    carduploader_source_id=value(row, mapping.get("carduploader_source_id")),
-                    # External SKU fields are retained only as source references, never as CardVector location IDs.
-                    carduploader_custom_sku=value(row, mapping.get("carduploader_custom_sku")),
-                    carduploader_user_sku=value(row, mapping.get("carduploader_user_sku")),
-                    inventory_status=value(row, mapping.get("status")),
-                    source_provider=self.provider,
-                    source_file=str(self.path),
-                    import_timestamp=timestamp,
-                    source_row_hash=row_hash(row),
-                )
+        result = CardUploaderInventoryService().load_inventory(self.path)
+        records = [
+            InventoryCandidate(
+                row_number=item.row_number,
+                raw=dict(item.raw),
+                title=item.title,
+                card_name=item.title,
+                set_name=item.set_name,
+                card_number=item.card_number,
+                variant=item.variant or item.rarity,
+                finish=item.finish,
+                condition=item.condition,
+                quantity=item.quantity,
+                price=item.price,
+                tcgplayer_product_id=item.tcgplayer_product_id,
+                tcgplayer_sku=item.tcgplayer_sku,
+                catalog_sku=item.catalog_sku,
+                carduploader_source_id=item.source_id,
+                # External SKU fields remain source references, never CardVector IDs.
+                carduploader_custom_sku=item.custom_sku,
+                carduploader_user_sku=item.user_sku,
+                inventory_status=item.status,
+                source_provider=self.provider,
+                source_file=item.source_file,
+                import_timestamp=item.imported_at,
+                source_row_hash=item.source_row_hash,
             )
-        return SourceImport(self.provider, self.path, records, fieldnames, errors)
+            for item in result.items
+        ]
+        return SourceImport(
+            self.provider,
+            self.path,
+            records,
+            list(result.fieldnames),
+            list(result.errors),
+        )
 
 
 class EbayActiveListingsSource:

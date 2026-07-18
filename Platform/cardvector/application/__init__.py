@@ -14,6 +14,11 @@ from .runtime import (
     ServiceRegistry,
 )
 from .pricing import PricingApplication, PricingOperations
+from .inventory import (
+    InventoryApplication,
+    InventoryOperations,
+    InventoryProjectionDelegates,
+)
 from .capture import (
     CaptureApplication,
     CaptureOperations,
@@ -32,6 +37,9 @@ __all__ = [
     "CommandDispatcher",
     "EventPublisher",
     "ExecutionContext",
+    "InventoryApplication",
+    "InventoryOperations",
+    "InventoryProjectionDelegates",
     "ProgressReporter",
     "ProgressUpdate",
     "PricingApplication",
