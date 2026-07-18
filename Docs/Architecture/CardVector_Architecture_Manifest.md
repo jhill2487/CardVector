@@ -1,13 +1,16 @@
 # CardVector Architecture Manifest
 
-**Status:** Proposed for owner approval
+**Status:** Approved for Phase 1 standards enforcement; target migration remains subject to accepted ADRs
 **Prepared:** 2026-07-17
 **Scope:** Permanent architecture and migration policy
 **Evidence baseline:** The eight completed reports in `Docs/Reports`
 
 ## Authority
 
-After explicit owner approval, this package becomes the architectural source of truth for CardVector. Until approval, it is a design proposal and does not authorize implementation, file movement, or cleanup.
+The project owner's Phase 1 authorization makes this manifest and the operational
+standards identified in `Docs/Architecture/README.md` binding for new repository
+changes. It does not by itself accept every proposed target-state ADR or authorize
+production file movement, decomposition, cleanup, or Phase 2 work.
 
 The evidence baseline is:
 

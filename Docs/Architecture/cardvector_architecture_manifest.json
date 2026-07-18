@@ -1,0 +1,229 @@
+{
+  "schema_version": "1.0",
+  "architecture_version": "1.0",
+  "approval_status": "phase_1_standards_accepted_target_migration_proposed",
+  "current_migration_phase": "phase_1_architecture_manifest_and_standards",
+  "current_production_launcher": "Platform/Putnam_OS/Run CardVector OS Production.vbs",
+  "current_production_python_target": "Platform/Putnam_OS/System/app/putnam_os.py",
+  "proposed_future_python_entry_point": "py -m cardvector",
+  "proposed_package_root": "Platform/cardvector",
+  "canonical_subsystem_ownership": {
+    "application_startup": "cardvector.bootstrap",
+    "desktop_shell": "cardvector.presentation.desktop",
+    "navigation": "cardvector.presentation.desktop",
+    "workflow_orchestration": "cardvector.application",
+    "shared_domain_models": "cardvector.shared.domain",
+    "capture": "cardvector.capture",
+    "scanner_recognition": "external:CardUploader",
+    "inventory": "cardvector.inventory",
+    "marketplace_intelligence": "Platform/Marketplace_Intelligence",
+    "fair_market_value": "Platform/Marketplace_Intelligence",
+    "price_vector": "Platform/Marketplace_Intelligence",
+    "listings": "cardvector.listings",
+    "orders": "cardvector.orders",
+    "shipping": "cardvector.shipping",
+    "reporting": "cardvector.reporting",
+    "analytics": "cardvector.analytics",
+    "content": "cardvector.content",
+    "configuration": "cardvector.infrastructure.config",
+    "paths": "cardvector.infrastructure.paths",
+    "logging": "cardvector.infrastructure.logging",
+    "persistence": "cardvector.infrastructure.persistence",
+    "external_integrations": "cardvector.integrations",
+    "compatibility": "cardvector.compatibility"
+  },
+  "approved_top_level_folders": [
+    ".github",
+    "Archive",
+    "Business",
+    "Capture",
+    "Collectr",
+    "Data",
+    "Docs",
+    "MobileCapture",
+    "Platform",
+    "Putnam_Content",
+    "Shared",
+    "supabase",
+    "Tools",
+    "Tests",
+    "Work_Sessions"
+  ],
+  "approved_production_package_roots": [
+    "Platform/Marketplace_Intelligence/marketplace_intelligence",
+    "Platform/Putnam_OS/System/app",
+    "Platform/Putnam_OS/System/MarketIntelligence",
+    "Platform/Putnam_OS/Putnam_Seller_Tools",
+    "Platform/Putnam_Platform/capture",
+    "Platform/Pokemon_Live_Price_Lookup"
+  ],
+  "proposed_production_package_roots": [
+    "Platform/cardvector"
+  ],
+  "approved_documentation_roots": [
+    "Docs",
+    "Docs/Architecture",
+    "Docs/Reports",
+    "Docs/PriceVector",
+    "Docs/Reference"
+  ],
+  "approved_runtime_data_roots": [
+    "Business",
+    "Capture",
+    "Data",
+    "MobileCapture",
+    "Work_Sessions"
+  ],
+  "legacy_runtime_data_roots": [
+    "Platform/Putnam_OS/System/cache",
+    "Platform/Putnam_OS/System/data",
+    "Platform/Putnam_OS/System/logs"
+  ],
+  "approved_archive_roots": [
+    "Archive"
+  ],
+  "forbidden_production_filename_patterns": [
+    "(^|[_ .-])(old|backup|copy|final|new|temp)([_ .-]|$)",
+    "(^|[_ .-])v[0-9]+([_ .-]|$)",
+    "\\.(bak|backup|orig|tmp)$"
+  ],
+  "forbidden_import_relationships": [
+    {
+      "source": "domain",
+      "target": "presentation_or_tkinter"
+    },
+    {
+      "source": "canonical_packages",
+      "target": "compatibility"
+    },
+    {
+      "source": "production",
+      "target": "Archive"
+    },
+    {
+      "source": "production",
+      "target": "runtime_data_roots"
+    }
+  ],
+  "temporary_presentation_paths": [
+    "Platform/Putnam_OS/System/app/putnam_os.py",
+    "Platform/Putnam_OS/System/app/main.py",
+    "Platform/Marketplace_Intelligence/marketplace_intelligence/ui.py",
+    "Platform/Putnam_Platform/capture/Putnam_Capture.py"
+  ],
+  "temporary_compatibility_modules": [
+    {
+      "id": "CV-COMP-001",
+      "legacy_interface": "Platform.putnam_paths",
+      "canonical_target": "cardvector.infrastructure.paths",
+      "status": "planned"
+    },
+    {
+      "id": "CV-COMP-002",
+      "legacy_interface": "Platform/Putnam_OS/System/MarketIntelligence/Pricing",
+      "canonical_target": "Platform/Marketplace_Intelligence",
+      "status": "planned"
+    },
+    {
+      "id": "CV-COMP-003",
+      "legacy_interface": "Platform/Putnam_OS/System/app/bulk_price_engine.py",
+      "canonical_target": "Platform/Marketplace_Intelligence",
+      "status": "planned"
+    },
+    {
+      "id": "CV-COMP-005",
+      "legacy_interface": "Platform/Putnam_OS/System/app/main.py",
+      "canonical_target": "unresolved_pending_caller_inventory",
+      "status": "planned_candidate"
+    }
+  ],
+  "active_deprecations": [],
+  "planned_deprecation_candidates": [
+    {
+      "path": "Platform/Putnam_OS/System/app/main.py",
+      "status": "candidate_not_deprecated",
+      "decision": "CV-ADR-012"
+    }
+  ],
+  "open_architecture_questions": [
+    "CV-OQ-001",
+    "CV-OQ-002",
+    "CV-OQ-003",
+    "CV-OQ-004",
+    "CV-OQ-005",
+    "CV-OQ-006",
+    "CV-OQ-007",
+    "CV-OQ-008",
+    "CV-OQ-009",
+    "CV-OQ-010",
+    "CV-OQ-011",
+    "CV-OQ-012",
+    "CV-OQ-013",
+    "CV-OQ-014",
+    "CV-OQ-015",
+    "CV-OQ-016",
+    "CV-OQ-017",
+    "CV-OQ-018",
+    "CV-OQ-019",
+    "CV-OQ-020"
+  ],
+  "required_architecture_documents": [
+    "Docs/Architecture/README.md",
+    "Docs/Architecture/CardVector_Architecture_Manifest.md",
+    "Docs/Architecture/CardVector_Architecture_Decision_Log.md",
+    "Docs/Architecture/CardVector_Layering_and_Dependency_Rules.md",
+    "Docs/Architecture/CardVector_Subsystem_Ownership_Matrix.md",
+    "Docs/Architecture/CardVector_Development_Standards.md",
+    "Docs/Architecture/CardVector_Architecture_Guardrails.md",
+    "Docs/Architecture/ADR_Template.md",
+    "Docs/Architecture/Deprecation_Register.md",
+    "Docs/Architecture/Compatibility_Adapter_Register.md",
+    "Docs/Architecture/New_File_Request_Template.md",
+    "Docs/Architecture/Architecture_Change_Checklist.md",
+    "Docs/Architecture/Subsystem_Change_Checklist.md",
+    "Docs/Architecture/Small_Change_Checklist.md",
+    "CONTRIBUTING.md",
+    "AGENTS.md",
+    ".github/CODEOWNERS",
+    "Tools/architecture/check_architecture.py",
+    "Tools/architecture/test_check_architecture.py"
+  ],
+  "baseline_violation_snapshot": "Docs/Architecture/Phase_1_Standards/Phase_1_Architecture_Baseline.json",
+  "required_validation_commands": [
+    "py Tools\\architecture\\check_architecture.py",
+    "py Tools\\architecture\\check_architecture.py --strict",
+    "py -m unittest discover -s Tools\\architecture -p \"test_*.py\""
+  ],
+  "enforcement_policy": {
+    "default_mode": "warning",
+    "warning_exit_code": 0,
+    "strict_new_violation_exit_code": 1,
+    "checker_error_exit_code": 2,
+    "existing_baseline_violations_block_phase_1": false,
+    "new_unbaselined_violations_block_strict_mode": true
+  },
+  "decision_log_references": {
+    "accepted": [
+      "CV-ADR-017"
+    ],
+    "proposed": [
+      "CV-ADR-001",
+      "CV-ADR-002",
+      "CV-ADR-003",
+      "CV-ADR-004",
+      "CV-ADR-005",
+      "CV-ADR-006",
+      "CV-ADR-007",
+      "CV-ADR-008",
+      "CV-ADR-009",
+      "CV-ADR-010",
+      "CV-ADR-011",
+      "CV-ADR-012",
+      "CV-ADR-013",
+      "CV-ADR-014",
+      "CV-ADR-015",
+      "CV-ADR-016"
+    ]
+  },
+  "last_updated": "2026-07-18T01:30:32-04:00"
+}

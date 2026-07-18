@@ -1,0 +1,19 @@
+# CardVector has one current repository owner. More specific rules document
+# review-sensitive areas without introducing fictional teams.
+* @jhill2487
+
+/Docs/Architecture/ @jhill2487
+/Platform/Putnam_OS/Run\ CardVector\ OS\ Production.vbs @jhill2487
+/Platform/Putnam_OS/ @jhill2487
+/Platform/Marketplace_Intelligence/ @jhill2487
+/Platform/Putnam_Platform/capture/ @jhill2487
+/Platform/Pokemon_Live_Price_Lookup/ @jhill2487
+/Platform/Putnam_OS/Putnam_Seller_Tools/ @jhill2487
+/Platform/Putnam_OS/System/MarketIntelligence/ @jhill2487
+/Platform/Putnam_OS/System/config/ @jhill2487
+/Platform/Putnam_OS/System/data/ @jhill2487
+/supabase/ @jhill2487
+/Tools/architecture/ @jhill2487
+/Tools/ @jhill2487
+/.github/ @jhill2487
+/Docs/ @jhill2487

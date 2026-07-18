@@ -188,3 +188,22 @@
 - **Rejected:** Considered and not selected.
 
 Only the project owner changes approval status to Accepted.
+
+## CV-ADR-017 - Enforce Architecture Standards Before Migration
+
+- **Decision:** Adopt the Architecture Manifest, ownership rules, development
+  standards, contribution rules, and warning-mode architecture checker as the
+  binding standards for new repository changes.
+- **Status:** Accepted.
+- **Evidence:** Phase 0 preserved the current repository state and the project
+  owner explicitly authorized Phase 1 on 2026-07-18.
+- **Rationale:** New work must stop adding architectural debt before production
+  code is migrated.
+- **Alternatives considered:** defer standards until after migration; immediately
+  enforce all rules against known legacy debt.
+- **Consequences:** Existing violations are baselined and reported. New violations
+  are reviewable in strict mode. Target-state ADRs CV-ADR-001 through CV-ADR-016
+  retain their recorded status until individually approved or superseded.
+- **Migration impact:** Phase 1 only. No production code, launcher, or runtime
+  behavior changes are authorized by this decision.
+- **Approval status:** Approved by project owner through the Phase 1 authorization.

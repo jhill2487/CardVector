@@ -1,19 +1,38 @@
-# Putnam Collectibles Agent Instructions
+# CardVector Agent Instructions
 
-The full project standards are maintained at:
+Before changing this repository, read `Docs/Architecture/README.md`, the
+Architecture Manifest, accepted ADRs, and the subsystem ownership matrix.
 
-Docs/AGENTS.md
+## Mandatory Rules
 
-Before modifying this repository, read:
+- Search before creating files.
+- Extend the canonical subsystem owner; never create a parallel implementation.
+- Never add an alternate launcher or entry point without accepted architecture
+  approval.
+- Never place business logic in UI modules.
+- Never import Tkinter or UI concerns into domain logic.
+- Never import production code from `Archive/` or runtime-data folders.
+- Never mutate `sys.path` without explicit architecture approval.
+- Never create production filenames containing `old`, `backup`, `copy`, `final`,
+  `new`, `temp`, or version suffixes.
+- Preserve backward compatibility only through registered, tested adapters.
+- Add focused tests for production changes.
+- Update architecture documents when ownership or dependency rules change.
+- Stop and explain uncertainty when architecture evidence is incomplete.
+- Distinguish observed facts from assumptions and recommendations.
+- Preserve unrelated working-tree changes.
 
-1. Docs/Putnam_Standards/PUTNAM_PRINCIPLES.md
-2. Docs/Putnam_Standards/PUTNAM_PLATFORM_STANDARDS.md
-3. Docs/AGENTS.md
-4. Docs/PROJECT_STATUS.md
-5. Docs/ROADMAP.md
-6. Docs/CHANGELOG.md
-7. Docs/README.md
+## Before Editing Code
 
-If guidance conflicts, follow the highest-level governing document.
+Confirm:
 
-This root stub exists so Codex and other agents can find the documentation entry point.
+1. The responsibility and canonical owner are identified.
+2. Existing implementations and callers were searched.
+3. The change is classified as small, subsystem, or architecture.
+4. A new file is necessary under the pre-file-creation checklist.
+5. Tests, manual validation, and rollback are defined.
+6. The target path is allowed by the machine-readable manifest.
+7. The change does not create a second implementation or entry point.
+
+Use `CONTRIBUTING.md` and the checklists in `Docs/Architecture/` for the full
+process.
