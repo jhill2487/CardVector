@@ -1,8 +1,8 @@
 {
   "schema_version": "1.0",
-  "architecture_version": "1.0",
-  "approval_status": "phase_2_application_layer_accepted_remaining_target_migration_proposed",
-  "current_migration_phase": "phase_2_application_layer_extraction",
+  "architecture_version": "1.1",
+  "approval_status": "phase_3_marketplace_intelligence_accepted_remaining_target_migration_proposed",
+  "current_migration_phase": "phase_3_marketplace_intelligence_consolidation",
   "current_production_launcher": "Platform/Putnam_OS/Run CardVector OS Production.vbs",
   "current_production_python_target": "Platform/Putnam_OS/System/app/putnam_os.py",
   "proposed_future_python_entry_point": "py -m cardvector",
@@ -16,9 +16,9 @@
     "capture": "cardvector.capture",
     "scanner_recognition": "external:CardUploader",
     "inventory": "cardvector.inventory",
-    "marketplace_intelligence": "Platform/Marketplace_Intelligence",
-    "fair_market_value": "Platform/Marketplace_Intelligence",
-    "price_vector": "Platform/Marketplace_Intelligence",
+    "marketplace_intelligence": "Platform/cardvector/marketplace_intelligence",
+    "fair_market_value": "Platform/cardvector/marketplace_intelligence",
+    "price_vector": "Platform/cardvector/marketplace_intelligence",
     "listings": "cardvector.listings",
     "orders": "cardvector.orders",
     "shipping": "cardvector.shipping",
@@ -51,6 +51,7 @@
   ],
   "approved_production_package_roots": [
     "Platform/cardvector/application",
+    "Platform/cardvector/marketplace_intelligence",
     "Platform/Marketplace_Intelligence/marketplace_intelligence",
     "Platform/Putnam_OS/System/app",
     "Platform/Putnam_OS/System/MarketIntelligence",
@@ -122,14 +123,14 @@
     {
       "id": "CV-COMP-002",
       "legacy_interface": "Platform/Putnam_OS/System/MarketIntelligence/Pricing",
-      "canonical_target": "Platform/Marketplace_Intelligence",
-      "status": "planned"
+      "canonical_target": "Platform/cardvector/marketplace_intelligence",
+      "status": "active"
     },
     {
       "id": "CV-COMP-003",
       "legacy_interface": "Platform/Putnam_OS/System/app/bulk_price_engine.py",
-      "canonical_target": "Platform/Marketplace_Intelligence",
-      "status": "planned"
+      "canonical_target": "Platform/cardvector/marketplace_intelligence",
+      "status": "active"
     },
     {
       "id": "CV-COMP-005",
@@ -141,6 +142,18 @@
       "id": "CV-COMP-012",
       "legacy_interface": "Platform/Putnam_OS/System/app/putnam_os.py workflow methods",
       "canonical_target": "Platform/cardvector/application/workflows.py",
+      "status": "active"
+    },
+    {
+      "id": "CV-COMP-013",
+      "legacy_interface": "Platform/Marketplace_Intelligence/marketplace_intelligence implementation paths",
+      "canonical_target": "Platform/cardvector/marketplace_intelligence",
+      "status": "active"
+    },
+    {
+      "id": "CV-COMP-014",
+      "legacy_interface": "Platform/Marketplace_Intelligence/run_marketplace_intelligence.py direct execution",
+      "canonical_target": "Platform/cardvector/marketplace_intelligence",
       "status": "active"
     }
   ],
@@ -213,7 +226,8 @@
   "decision_log_references": {
     "accepted": [
       "CV-ADR-017",
-      "CV-ADR-018"
+      "CV-ADR-018",
+      "CV-ADR-019"
     ],
     "proposed": [
       "CV-ADR-001",
@@ -234,5 +248,5 @@
       "CV-ADR-016"
     ]
   },
-  "last_updated": "2026-07-18T11:44:32-04:00"
+  "last_updated": "2026-07-18T15:49:27-04:00"
 }

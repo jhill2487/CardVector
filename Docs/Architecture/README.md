@@ -24,16 +24,18 @@ evidence; a recommendation in an audit is not a binding decision.
 
 ## Current State
 
-- **Current phase:** Phase 2 - Application Layer Extraction
+- **Current phase:** Phase 3 - Marketplace Intelligence Consolidation
 - **Current production launcher:** `Platform/Putnam_OS/Run CardVector OS Production.vbs`
 - **Current Python target:** `Platform/Putnam_OS/System/app/putnam_os.py`
 - **Proposed future entry point:** `py -m cardvector`
 - **Proposed future package root:** `Platform/cardvector/`
-- **Migration status:** `Platform/cardvector/application` is active as the
-  canonical orchestration layer; all other target packages remain proposed
+- **Migration status:** `Platform/cardvector/application` is the canonical
+  orchestration layer and `Platform/cardvector/marketplace_intelligence` is the
+  canonical pricing, FMV, evidence, and marketplace-pricing API
 - **Phase 0:** Preserved with commits, a recovery branch, and patch/ZIP artifacts
-- **Phase 2:** Application layer authorized; bootstrap, paths, entry-point, UI,
-  and subsystem migrations are not authorized
+- **Phase 3:** Marketplace Intelligence ownership authorized; bootstrap, paths,
+  entry-point, UI, capture, inventory, listings, orders, and shipping migrations
+  are not authorized
 
 ## Canonical Owners
 
@@ -41,11 +43,11 @@ evidence; a recommendation in an audit is not a binding decision.
 | --- | --- |
 | Production startup | Current launcher plus future bootstrap composition root |
 | Desktop presentation | Future `cardvector.presentation.desktop` |
-| Workflow orchestration | Future `cardvector.application` |
+| Workflow orchestration | `Platform/cardvector/application` |
 | Shared business types | Future `cardvector.shared.domain` |
 | Capture | Future `cardvector.capture` |
 | Inventory and locations | Future `cardvector.inventory` |
-| FMV, Price Vector, pricing intelligence | `Platform/Marketplace_Intelligence` |
+| FMV, Price Vector, pricing intelligence | `Platform/cardvector/marketplace_intelligence` |
 | Listings and eBay export records | Future `cardvector.listings` |
 | Orders and fulfillment | Future `cardvector.orders` |
 | Shipping | Future `cardvector.shipping` |
@@ -111,6 +113,8 @@ ADR Accepted.
 - [Phase 1 Standards](Phase_1_Standards/)
 - [Phase 1.5 Baseline Remediation](Phase_1_5_Baseline_Remediation/)
 - [Phase 2 Application Layer](Phase_2_Application/)
+- [Price Vector Integration Gate](Price_Vector_Integration_Gate/)
+- [Phase 3 Marketplace Intelligence](Phase_3_Marketplace_Intelligence/)
 
 ## Change Approval
 

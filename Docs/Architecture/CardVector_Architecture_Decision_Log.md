@@ -229,3 +229,26 @@ Only the project owner changes approval status to Accepted.
   Bootstrap, paths, entry points, and remaining package roots stay proposed.
 - **Migration impact:** Phase 2 only. Creates active adapter `CV-COMP-012`.
 - **Approval status:** Approved by project owner through the Phase 2 authorization.
+
+## CV-ADR-019 - Establish Canonical Marketplace Intelligence Ownership
+
+- **Decision:** Adopt `Platform/cardvector/marketplace_intelligence` as the
+  canonical public owner of FMV, Price Vector, pricing confidence, normalized
+  market evidence, pricing persistence contracts, and marketplace-pricing
+  adapters. Preserve proven algorithms at their historical path behind tested
+  aliases during delegation-first migration.
+- **Status:** Accepted.
+- **Evidence:** The project owner explicitly authorized Phase 3 on 2026-07-18;
+  the Price Vector Integration Gate established separate FMV, recommendation,
+  and final-price contracts; Phase 3 characterization proves exact output
+  equivalence.
+- **Rationale:** New callers require one stable owner without risking a
+  simultaneous physical relocation and algorithm rewrite.
+- **Alternatives considered:** rename/move the historical package immediately;
+  retain both paths as peer owners; rewrite pricing; leave pricing in the UI.
+- **Consequences:** `putnam_os.py` calls injected application pricing and pure
+  evidence services. Legacy paths remain registered compatibility adapters
+  with removal criteria. New code may not import the historical pricing path.
+- **Migration impact:** Phase 3 only. No launcher, UI, capture, inventory,
+  listings, orders, shipping, or live marketplace behavior changes.
+- **Approval status:** Approved by project owner through the Phase 3 authorization.
