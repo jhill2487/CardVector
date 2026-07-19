@@ -24,7 +24,8 @@ evidence; a recommendation in an audit is not a binding decision.
 
 ## Current State
 
-- **Current phase:** Phase 6 - Batch Workflow and Price Review Consolidation
+- **Current phase:** Phase 7 - Marketplace Intelligence Accuracy,
+  Explainability, and Existing Listing Readiness
 - **Current production launcher:** `Platform/Putnam_OS/Run CardVector OS Production.vbs`
 - **Current Python target:** `Platform/Putnam_OS/System/app/putnam_os.py`
 - **Proposed future entry point:** `py -m cardvector`
@@ -39,6 +40,10 @@ evidence; a recommendation in an audit is not a binding decision.
   write, reservation, allocation, picking, or synchronization API is claimed.
 - **Phase 6:** `Platform/cardvector/batch_workflow` owns batch milestone status
   only. It does not store batch contents or any card-level inventory fields.
+- **Phase 7:** The existing canonical Marketplace Intelligence owner now
+  exposes deterministic pricing explanations, configurable advisory review
+  thresholds, benchmark fixtures, and a read-only existing-listing evaluation
+  contract. Price Vector mathematics and marketplace ownership are unchanged.
 
 ## Canonical Owners
 
@@ -123,6 +128,7 @@ ADR Accepted.
 - [Phase 4 Capture and Recognition](Phase_4_Capture_and_Recognition/)
 - [Phase 5 CardUploader Inventory](Phase_5_CardUploader_Inventory/)
 - [Phase 6 Batch Workflow and Price Review](Phase_6_Batch_Workflow_and_Price_Review/)
+- [Phase 7 Marketplace Intelligence](Phase_7_Marketplace_Intelligence/)
 
 ## Change Approval
 

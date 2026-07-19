@@ -1,8 +1,8 @@
 {
   "schema_version": "1.0",
   "architecture_version": "1.3",
-  "approval_status": "phase_6_batch_workflow_accepted_remaining_target_migration_proposed",
-  "current_migration_phase": "phase_6_batch_workflow_and_price_review",
+  "approval_status": "phase_7_marketplace_intelligence_feature_accepted_remaining_target_migration_proposed",
+  "current_migration_phase": "phase_7_marketplace_intelligence_accuracy_explainability_and_existing_listing_readiness",
   "current_production_launcher": "Platform/Putnam_OS/Run CardVector OS Production.vbs",
   "current_production_python_target": "Platform/Putnam_OS/System/app/putnam_os.py",
   "proposed_future_python_entry_point": "py -m cardvector",
@@ -256,7 +256,8 @@
     "py Tools\\architecture\\check_architecture.py",
     "py Tools\\architecture\\check_architecture.py --strict",
     "py -m unittest discover -s Tools\\architecture -p \"test_*.py\"",
-    "py -m unittest discover -s Tests\\application -p \"test_*.py\""
+    "py -m unittest discover -s Tests\\application -p \"test_*.py\"",
+    "py -m unittest Tests.marketplace_intelligence.test_phase7_marketplace_intelligence"
   ],
   "enforcement_policy": {
     "default_mode": "warning",
@@ -294,5 +295,5 @@
       "CV-ADR-016"
     ]
   },
-  "last_updated": "2026-07-19T12:00:00-04:00"
+  "last_updated": "2026-07-19T16:00:00-04:00"
 }

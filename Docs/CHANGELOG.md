@@ -1,5 +1,31 @@
 # Changelog
 
+## Marketplace Intelligence Explainability
+
+### Added
+
+- Added a deterministic canonical pricing pipeline that exposes FMV,
+  recommendation, confidence, comparable statistics, review guidance, and
+  stable reason codes without changing Price Vector calculations.
+- Added configurable advisory thresholds for low data, stale evidence,
+  variance, confidence, and material price movement.
+- Added a 17-case synthetic pricing benchmark covering representative modern,
+  vintage, promotional, rarity, value, and volatility scenarios.
+- Added a read-only existing-listing evaluation contract for future review
+  workflows.
+
+### Changed
+
+- Analysis exports now append explanation fields while retaining every legacy
+  field and the existing six-column bulk-revision contract.
+- CardUploader/eBay sold-cache reads now use an mtime-aware in-memory document
+  cache without changing comparable filtering or pricing outputs.
+
+### Safety
+
+- No pricing formulas, inventory records, Capture behavior, batch workflow,
+  launcher behavior, or live marketplace data changed.
+
 ## CardVector Mobile Capture Photo Modes
 
 ### Added

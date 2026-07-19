@@ -1,6 +1,6 @@
 # CardVector Architecture Manifest
 
-**Status:** Approved through Phase 6 batch workflow consolidation; remaining target migration requires separate approval
+**Status:** Approved through Phase 7 Marketplace Intelligence feature readiness; remaining target migration requires separate approval
 **Prepared:** 2026-07-17
 **Scope:** Permanent architecture and migration policy
 **Evidence baseline:** The eight completed reports in `Docs/Reports`
@@ -37,6 +37,13 @@ The project owner authorized `Platform/cardvector/batch_workflow` on 2026-07-19.
 It owns batch-level Capture, CardUploader handoff, marketplace-confirmation,
 CSV-export, and price-review status only. CardUploader continues to own every
 card-level inventory and batch-association fact.
+
+The project owner authorized the Phase 7 Marketplace Intelligence feature
+milestone on 2026-07-19. The canonical pricing owner now coordinates one
+deterministic pricing pipeline, adds an explanation contract and configurable
+advisory review thresholds, and supports read-only existing-listing
+evaluation. This milestone does not change Price Vector mathematics, inventory
+ownership, Capture ownership, batch workflow ownership, or launcher behavior.
 
 ## Architectural Mission
 
