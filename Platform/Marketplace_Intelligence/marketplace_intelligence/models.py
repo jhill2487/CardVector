@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 from pathlib import Path
 from typing import Any
 
@@ -90,6 +90,144 @@ class FairMarketValue:
         return self.value is not None and self.value > 0
 
 
+@dataclass(frozen=True)
+class ReviewThresholds:
+    """Configurable advisory thresholds that do not alter Price Vector math."""
+
+    auto_approve_confidence: int = 80
+    manual_review_below_confidence: int = 60
+    warning_below_confidence: int = 70
+    insufficient_data_comps: int = 3
+    stale_market_days: int = 30
+    price_spike_percent: Decimal = Decimal("40.00")
+    price_collapse_percent: Decimal = Decimal("40.00")
+    high_variance_percent: Decimal = Decimal("35.00")
+    review_price_over: Decimal = Decimal("100.00")
+
+    @classmethod
+    def from_profile(cls, profile: dict[str, Any] | None) -> "ReviewThresholds":
+        values = profile or {}
+
+        def integer(key: str, default: int) -> int:
+            try:
+                return int(str(values.get(key, default)))
+            except (TypeError, ValueError):
+                return default
+
+        def decimal(key: str, default: str) -> Decimal:
+            try:
+                return Decimal(str(values.get(key, default)))
+            except (InvalidOperation, TypeError, ValueError):
+                return Decimal(default)
+
+        return cls(
+            auto_approve_confidence=integer("auto_approve_confidence", 80),
+            manual_review_below_confidence=integer(
+                "manual_review_below_confidence",
+                60,
+            ),
+            warning_below_confidence=integer("warning_below_confidence", 70),
+            insufficient_data_comps=integer("insufficient_data_comps", 3),
+            stale_market_days=integer("stale_market_days", 30),
+            price_spike_percent=decimal("price_spike_percent", "40.00"),
+            price_collapse_percent=decimal("price_collapse_percent", "40.00"),
+            high_variance_percent=decimal("high_variance_percent", "35.00"),
+            review_price_over=decimal("review_price_over", "100.00"),
+        )
+
+
+@dataclass(frozen=True)
+class PricingExplanation:
+    """Human- and machine-readable evidence for one recommendation."""
+
+    recommended_price: Decimal
+    confidence: str
+    primary_market: str
+    comparable_count: int
+    median_sold: Decimal | None
+    average_sold: Decimal | None
+    market_trend: str
+    price_range_low: Decimal | None
+    price_range_high: Decimal | None
+    outliers_removed: int
+    review_required: bool
+    review_decision: str
+    review_priority: str
+    reason_codes: tuple[str, ...]
+    summary: str
+    evidence_reference: str = ""
+
+    def to_dict(self) -> dict[str, Any]:
+        def money(value: Decimal | None) -> str:
+            return "" if value is None else str(value)
+
+        return {
+            "recommended_price": money(self.recommended_price),
+            "confidence": self.confidence,
+            "primary_market": self.primary_market,
+            "comparable_count": self.comparable_count,
+            "median_sold": money(self.median_sold),
+            "average_sold": money(self.average_sold),
+            "market_trend": self.market_trend,
+            "price_range_low": money(self.price_range_low),
+            "price_range_high": money(self.price_range_high),
+            "outliers_removed": self.outliers_removed,
+            "review_required": self.review_required,
+            "review_decision": self.review_decision,
+            "review_priority": self.review_priority,
+            "reason_codes": list(self.reason_codes),
+            "summary": self.summary,
+            "evidence_reference": self.evidence_reference,
+        }
+
+
+@dataclass(frozen=True)
+class ExistingListingRequest:
+    """Read-only existing-listing evaluation input."""
+
+    marketplace: str
+    listing_title: str
+    current_price: Decimal
+    quantity: str = ""
+    sku: str = ""
+    condition: str = ""
+    listing_id: str = ""
+    set_name: str = ""
+    card_number: str = ""
+    variant: str = ""
+    finish: str = ""
+
+
+@dataclass(frozen=True)
+class ExistingListingEvaluation:
+    """Read-only readiness result; it never mutates a marketplace listing."""
+
+    marketplace: str
+    listing_reference: str
+    matched_card: str
+    match_confidence: str
+    recommended_price: Decimal
+    price_delta: Decimal
+    review_priority: str
+    review_decision: str
+    reason_codes: tuple[str, ...]
+    explanation: PricingExplanation
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "marketplace": self.marketplace,
+            "listing_reference": self.listing_reference,
+            "matched_card": self.matched_card,
+            "match_confidence": self.match_confidence,
+            "recommended_price": str(self.recommended_price),
+            "price_delta": str(self.price_delta),
+            "review_priority": self.review_priority,
+            "review_decision": self.review_decision,
+            "reason_codes": list(self.reason_codes),
+            "explanation": self.explanation.to_dict(),
+        }
+
+
 @dataclass
 class PriceRecommendation:
     recommended_price: Decimal
@@ -105,6 +243,8 @@ class PriceRecommendation:
     final_listing_price: Decimal | None = None
     market_evidence: tuple[MarketEvidence, ...] = ()
     market_evidence_reference: str = ""
+    reason_codes: tuple[str, ...] = ()
+    explanation: PricingExplanation | None = None
 
     def __post_init__(self) -> None:
         # recommended_price remains the compatibility name for existing callers.
@@ -191,6 +331,7 @@ class AnalysisResult:
     pricing: PriceRecommendation
     decision: Decision
     fair_market_value: FairMarketValue | None = None
+    explanation: PricingExplanation | None = None
 
 
 @dataclass

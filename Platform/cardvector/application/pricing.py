@@ -35,6 +35,8 @@ class PricingOperations(Protocol):
         export_floor: Decimal,
     ) -> Any: ...
 
+    def evaluate_existing_listing(self, request, *, engine=None) -> Any: ...
+
 
 class PricingApplication:
     """Coordinates pricing requests without containing pricing mathematics."""
@@ -89,6 +91,12 @@ class PricingApplication:
             review_threshold=review_threshold,
             auto_apply_threshold=auto_apply_threshold,
             export_floor=export_floor,
+        )
+
+    def evaluate_existing_listing(self, request, *, engine=None) -> Any:
+        return self._pricing.evaluate_existing_listing(
+            request,
+            engine=engine,
         )
 
 

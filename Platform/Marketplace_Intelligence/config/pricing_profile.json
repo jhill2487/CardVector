@@ -12,6 +12,14 @@
   "rounding_rule": "nearest_cent",
   "review_price_over": "100.00",
   "review_change_percent_over": "40.00",
+  "auto_approve_confidence": 80,
+  "manual_review_below_confidence": 60,
+  "warning_below_confidence": 70,
+  "insufficient_data_comps": 3,
+  "stale_market_days": 30,
+  "price_spike_percent": "40.00",
+  "price_collapse_percent": "40.00",
+  "high_variance_percent": "35.00",
   "shipping_assumption": "buyer_pays_shipping",
   "flat_shipping_cost": "0.00"
 }

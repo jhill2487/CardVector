@@ -6,7 +6,7 @@ from decimal import Decimal
 from typing import Any
 
 from . import pricing
-from .models import FairMarketValue, Listing, MarketPrice
+from .models import ExistingListingRequest, FairMarketValue, Listing, MarketPrice
 
 
 class PricingService:
@@ -139,6 +139,22 @@ class PricingService:
             parse_money=parse_money,
             format_money=format_money,
         )
+
+    def evaluate_existing_listing(
+        self,
+        request: ExistingListingRequest,
+        *,
+        engine=None,
+    ):
+        """Evaluate an existing listing without performing marketplace writes."""
+
+        if engine is None:
+            from Platform.Marketplace_Intelligence.marketplace_intelligence.engine import (
+                MarketplaceIntelligenceEngine,
+            )
+
+            engine = MarketplaceIntelligenceEngine()
+        return engine.evaluate_existing_listing(request)
 
 
 PRICING_SERVICE = PricingService()

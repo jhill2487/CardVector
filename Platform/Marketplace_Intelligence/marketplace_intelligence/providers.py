@@ -256,6 +256,9 @@ class CardUploaderSalesCacheProvider(MarketProvider):
         self.minimum_accepted = int(config.get("minimum_accepted_comps", 3))
         self.minimum_confidence = int(config.get("minimum_confidence", 65))
         self.cache_dirs = [resolve_path(path) for path in config.get("cache_dirs", [])]
+        self._data_cache: dict[Path, tuple[int, dict[str, Any]]] = {}
+        self.cache_hits = 0
+        self.cache_misses = 0
 
     def get_market_price(self, identity: ListingIdentity) -> MarketPrice:
         details = identity.details
@@ -281,7 +284,7 @@ class CardUploaderSalesCacheProvider(MarketProvider):
                 reason="No local CardUploader sales cache file found.",
             )
         try:
-            data = json.loads(cache_path.read_text(encoding="utf-8-sig"))
+            data = self._load_cache_data(cache_path)
         except Exception as exc:
             return MarketPrice(
                 matched=False,
@@ -292,11 +295,28 @@ class CardUploaderSalesCacheProvider(MarketProvider):
             )
         accepted = []
         rejected = 0
+        duplicate_comps = 0
+        accepted_signatures: set[str] = set()
         for row in data.get("results", []):
             ok, _reason = comparable_reason(str(row.get("title", "")), name, set_name, number)
             price = decimal_money(row.get("price"))
             if ok and price is not None and price > 0:
                 accepted.append(price)
+                signature = "|".join(
+                    [
+                        normalize_title(str(row.get("title", ""))),
+                        str(price),
+                        str(
+                            row.get("sold_at")
+                            or row.get("sale_date")
+                            or row.get("date")
+                            or ""
+                        ),
+                    ]
+                )
+                if signature in accepted_signatures:
+                    duplicate_comps += 1
+                accepted_signatures.add(signature)
             else:
                 rejected += 1
         if len(accepted) < self.minimum_accepted:
@@ -311,6 +331,15 @@ class CardUploaderSalesCacheProvider(MarketProvider):
         median_price = Decimal(str(statistics.median(accepted[:20]))).quantize(Decimal("0.01"))
         last3 = accepted[:3]
         last3_avg = (sum(last3) / Decimal(len(last3))).quantize(Decimal("0.01")) if last3 else median_price
+        average_price = (sum(accepted) / Decimal(len(accepted))).quantize(
+            Decimal("0.01")
+        )
+        captured_at = str(
+            data.get("captured_at")
+            or data.get("fetched_at")
+            or data.get("as_of")
+            or ""
+        )
         confidence = self._confidence(len(accepted), last3_avg, last3, bool(set_name))
         if confidence < self.minimum_confidence:
             return MarketPrice(
@@ -325,6 +354,13 @@ class CardUploaderSalesCacheProvider(MarketProvider):
                     "rejected_comps": rejected,
                     "last3_avg": str(last3_avg),
                     "median": str(median_price),
+                    "average": str(average_price),
+                    "price_low": str(min(accepted)),
+                    "price_high": str(max(accepted)),
+                    "outliers_removed": 0,
+                    "duplicate_comps": duplicate_comps,
+                    "captured_at": captured_at,
+                    "marketplace": "ebay",
                 },
             )
         return MarketPrice(
@@ -342,8 +378,28 @@ class CardUploaderSalesCacheProvider(MarketProvider):
                 "last_sale": str(accepted[0]),
                 "last3_avg": str(last3_avg),
                 "median": str(median_price),
+                "average": str(average_price),
+                "price_low": str(min(accepted)),
+                "price_high": str(max(accepted)),
+                "outliers_removed": 0,
+                "duplicate_comps": duplicate_comps,
+                "captured_at": captured_at,
+                "marketplace": "ebay",
             },
         )
+
+    def _load_cache_data(self, path: Path) -> dict[str, Any]:
+        modified = path.stat().st_mtime_ns
+        cached = self._data_cache.get(path)
+        if cached is not None and cached[0] == modified:
+            self.cache_hits += 1
+            return cached[1]
+        data = json.loads(path.read_text(encoding="utf-8-sig"))
+        if not isinstance(data, dict):
+            raise ValueError("Sales cache must contain a JSON object.")
+        self._data_cache[path] = (modified, data)
+        self.cache_misses += 1
+        return data
 
     def _find_cache_file(self, query: str) -> Path | None:
         safe = re.sub(r"[^A-Za-z0-9_.-]+", "_", query)[:120]
@@ -439,6 +495,23 @@ def excluded_terms_found(title: str) -> set[str]:
 
 
 def comparable_reason(title: str, name: str, set_name: str, number: str) -> tuple[bool, str]:
+    try:
+        from Platform.cardvector.marketplace_intelligence.evidence import (
+            comparable_reason as canonical_comparable_reason,
+        )
+    except ModuleNotFoundError as exc:
+        if exc.name != "Platform":
+            raise
+    else:
+        accepted, reason, _diagnostics = canonical_comparable_reason(
+            title,
+            name,
+            set_name,
+            number,
+        )
+        return accepted, reason
+
+    # Historical direct-launch compatibility until repository packaging lands.
     excluded = excluded_terms_found(title)
     if excluded.intersection(GRADED_EXCLUDE_TERMS):
         return False, "excluded graded term"

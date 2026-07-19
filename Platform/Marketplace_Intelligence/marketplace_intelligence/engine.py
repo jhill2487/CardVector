@@ -12,6 +12,7 @@ from .providers import build_provider
 from .reports import summarize, write_reports
 from .utils import safe_filename
 try:
+    from Platform.cardvector.marketplace_intelligence.pipeline import PricingPipeline
     from Platform.cardvector.marketplace_intelligence.pricing import (
         PricingEngine,
         fair_market_value_from_market_price,
@@ -22,6 +23,8 @@ except ModuleNotFoundError as exc:
     # Direct historical launcher compatibility until repository packaging lands.
     from .pricing_engine import PricingEngine, fair_market_value_from_market_price
 
+    PricingPipeline = None
+
 
 class MarketplaceIntelligenceEngine:
     def __init__(self, config: AppConfig | None = None):
@@ -30,6 +33,18 @@ class MarketplaceIntelligenceEngine:
         self.provider = build_provider(self.config.market_provider)
         self.pricing_engine = PricingEngine(self.config.pricing_profile)
         self.decision_engine = DecisionEngine(self.config.business_profile)
+        self.pipeline = self._build_pipeline()
+
+    def _build_pipeline(self):
+        if PricingPipeline is None:
+            return None
+        return PricingPipeline(
+            identity=self.matcher,
+            market=self.provider,
+            price_vector=self.pricing_engine,
+            decision=self.decision_engine,
+            pricing_profile=self.config.pricing_profile,
+        )
 
     def import_csv(
         self,
@@ -43,6 +58,12 @@ class MarketplaceIntelligenceEngine:
     def analyze_import(self, imported: ImportResult) -> list[AnalysisResult]:
         if imported.missing_required_fields:
             raise ValueError("Missing required columns: " + ", ".join(imported.missing_required_fields))
+        self.pipeline = self._build_pipeline()
+        if self.pipeline is not None:
+            return self.pipeline.analyze_listings(imported.listings)
+
+        # Historical direct-launch compatibility until repository packaging
+        # makes Platform.cardvector imports available from every entry path.
         results: list[AnalysisResult] = []
         for listing in imported.listings:
             identity = self.matcher.identify(listing)
@@ -64,6 +85,15 @@ class MarketplaceIntelligenceEngine:
                 )
             )
         return results
+
+    def evaluate_existing_listing(self, request):
+        self.pipeline = self._build_pipeline()
+        if self.pipeline is None:
+            raise RuntimeError(
+                "Existing-listing evaluation requires the canonical repository "
+                "package path. Launch Marketplace Intelligence from CardVector."
+            )
+        return self.pipeline.evaluate_existing_listing(request)
 
     def analyze_file(
         self,

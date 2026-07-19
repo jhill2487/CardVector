@@ -56,6 +56,18 @@ ANALYSIS_FIELDS = [
     "reason",
     "pricing_reason",
     "provider",
+    "primary_market",
+    "comparable_count",
+    "median_sold",
+    "average_sold",
+    "market_trend",
+    "price_range_low",
+    "price_range_high",
+    "outliers_removed",
+    "review_decision",
+    "review_priority",
+    "reason_codes",
+    "pricing_explanation",
 ]
 
 
@@ -87,6 +99,12 @@ def result_row(result: AnalysisResult) -> dict[str, str]:
             for item in evidence
         ],
         separators=(",", ":"),
+    )
+    explanation = result.explanation or result.pricing.explanation
+    explanation_json = (
+        json.dumps(explanation.to_dict(), separators=(",", ":"))
+        if explanation is not None
+        else ""
     )
     return {
         "row_number": str(result.listing.row_number),
@@ -144,6 +162,32 @@ def result_row(result: AnalysisResult) -> dict[str, str]:
         "reason": result.decision.reason,
         "pricing_reason": result.pricing.pricing_reason,
         "provider": result.market.provider,
+        "primary_market": explanation.primary_market if explanation else "",
+        "comparable_count": (
+            str(explanation.comparable_count) if explanation else ""
+        ),
+        "median_sold": (
+            money_text(explanation.median_sold) if explanation else ""
+        ),
+        "average_sold": (
+            money_text(explanation.average_sold) if explanation else ""
+        ),
+        "market_trend": explanation.market_trend if explanation else "",
+        "price_range_low": (
+            money_text(explanation.price_range_low) if explanation else ""
+        ),
+        "price_range_high": (
+            money_text(explanation.price_range_high) if explanation else ""
+        ),
+        "outliers_removed": (
+            str(explanation.outliers_removed) if explanation else ""
+        ),
+        "review_decision": explanation.review_decision if explanation else "",
+        "review_priority": explanation.review_priority if explanation else "",
+        "reason_codes": (
+            ";".join(explanation.reason_codes) if explanation else ""
+        ),
+        "pricing_explanation": explanation_json,
     }
 
 
