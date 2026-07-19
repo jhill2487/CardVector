@@ -25,13 +25,13 @@ HEADER = [
 ]
 
 CASES = [
-    ("price 0.50", "0.50", "0.99", "TRUE"),
-    ("price 1.49", "1.49", "0.99", "TRUE"),
-    ("price 1.50", "1.50", "0.99", "TRUE"),
-    ("price 1.51", "1.51", "1.49", "FALSE"),
-    ("price 2.99", "2.99", "1.49", "FALSE"),
-    ("price 3.00", "3.00", "2.99", "FALSE"),
-    ("price 4.99", "4.99", "2.99", "FALSE"),
+    ("price 0.50", "0.50", "1.77", "FALSE"),
+    ("price 1.49", "1.49", "1.77", "FALSE"),
+    ("price 1.50", "1.50", "1.77", "FALSE"),
+    ("price 1.51", "1.51", "1.77", "FALSE"),
+    ("price 2.99", "2.99", "2.99", "FALSE"),
+    ("price 3.00", "3.00", "3.00", "FALSE"),
+    ("price 4.99", "4.99", "4.99", "FALSE"),
     ("price 5.00", "5.00", "5.00", "FALSE"),
 ]
 
@@ -97,18 +97,18 @@ def main() -> int:
     review = read_csv(job / "optimization_review.csv")
 
     assert rows == len(CASES)
-    assert changes == 7
+    assert changes == 4
     assert opp == 0
     assert list(exported[0].keys()) == HEADER, "eBay CSV column structure changed."
     assert [row["*StartPrice"] for row in exported] == [case[2] for case in CASES]
     assert [row["cart_sweetener"] for row in review] == [case[3] for case in CASES]
-    assert summary["cart_sweetener_count"] == 3
-    assert summary["average_final_price"] == "2.12"
-    assert summary["min_final_price"] == "0.99"
+    assert summary["cart_sweetener_count"] == 0
+    assert summary["average_final_price"] == "2.88"
+    assert summary["min_final_price"] == "1.77"
     assert summary["max_final_price"] == "5.00"
     assert all(row["User SKU"] == "ETB-01-A" for row in exported)
     assert all(row["Inventory Location"] == "ETB-01-A" for row in exported)
-    assert all(row["*ShippingProfileName"] == "Buyer Pays Shipping" for row in exported)
+    assert all(row["*ShippingProfileName"] == "Free Ship Singles" for row in exported)
     assert all(row["Promotion Profile"] == "Free Shipping on 3+ Cards" for row in exported)
     assert log_row_count() == before_success + 1, "Successful export did not append exactly one history row."
 
