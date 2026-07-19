@@ -24,12 +24,18 @@ from .capture import (
     CaptureOperations,
     RecognitionHandoffOperations,
 )
+from .batch_workflow import (
+    BatchWorkflowApplication,
+    BatchWorkflowOperations,
+)
 from .workflows import WorkflowApplication, WorkflowDelegates
 
 __all__ = [
     "ApplicationCancelled",
     "ApplicationEvent",
     "ApplicationRuntime",
+    "BatchWorkflowApplication",
+    "BatchWorkflowOperations",
     "CancellationToken",
     "CaptureApplication",
     "CaptureOperations",
