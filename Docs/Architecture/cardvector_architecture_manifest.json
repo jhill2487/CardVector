@@ -1,8 +1,8 @@
 {
   "schema_version": "1.0",
-  "architecture_version": "1.2",
-  "approval_status": "phase_5_carduploader_inventory_accepted_remaining_target_migration_proposed",
-  "current_migration_phase": "phase_5_carduploader_inventory_integration",
+  "architecture_version": "1.3",
+  "approval_status": "phase_6_batch_workflow_accepted_remaining_target_migration_proposed",
+  "current_migration_phase": "phase_6_batch_workflow_and_price_review",
   "current_production_launcher": "Platform/Putnam_OS/Run CardVector OS Production.vbs",
   "current_production_python_target": "Platform/Putnam_OS/System/app/putnam_os.py",
   "proposed_future_python_entry_point": "py -m cardvector",
@@ -12,6 +12,8 @@
     "desktop_shell": "cardvector.presentation.desktop",
     "navigation": "cardvector.presentation.desktop",
     "workflow_orchestration": "cardvector.application",
+    "batch_workflow": "Platform/cardvector/batch_workflow",
+    "batch_workflow_orchestration": "Platform/cardvector/application",
     "shared_domain_models": "cardvector.shared.domain",
     "capture": "cardvector.capture",
     "scanner_recognition": "external:CardUploader",
@@ -53,6 +55,7 @@
   ],
   "approved_production_package_roots": [
     "Platform/cardvector/application",
+    "Platform/cardvector/batch_workflow",
     "Platform/cardvector/capture",
     "Platform/cardvector/integrations/carduploader",
     "Platform/cardvector/marketplace_intelligence",
@@ -161,6 +164,12 @@
       "status": "active"
     },
     {
+      "id": "CV-COMP-017",
+      "legacy_interface": "Platform/Putnam_OS/System/app/workflow_context.py and cardvector_workflow.json",
+      "canonical_target": "Platform/cardvector/batch_workflow through Platform/cardvector/application",
+      "status": "active"
+    },
+    {
       "id": "CV-COMP-005",
       "legacy_interface": "Platform/Putnam_OS/System/app/main.py",
       "canonical_target": "unresolved_pending_caller_inventory",
@@ -263,7 +272,8 @@
       "CV-ADR-018",
       "CV-ADR-019",
       "CV-ADR-020",
-      "CV-ADR-021"
+      "CV-ADR-021",
+      "CV-ADR-022"
     ],
     "proposed": [
       "CV-ADR-001",
@@ -284,5 +294,5 @@
       "CV-ADR-016"
     ]
   },
-  "last_updated": "2026-07-18T19:30:00-04:00"
+  "last_updated": "2026-07-19T12:00:00-04:00"
 }

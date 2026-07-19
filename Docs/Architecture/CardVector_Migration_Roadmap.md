@@ -1,5 +1,15 @@
 # CardVector Migration Roadmap
 
+## Authorized Execution Addendum - Phase 6 Batch Workflow
+
+The project owner's 2026-07-19 authorization supersedes the older sequence
+labels below for the current execution milestone. Phase 6 establishes
+`Platform/cardvector/batch_workflow` as the owner of batch-level Capture,
+CardUploader handoff, marketplace-confirmation, CSV-export, and price-review
+status. CardUploader remains the owner of batch-to-card association and all
+card-level inventory. This addendum does not authorize Orders, Listings,
+Shipping, presentation, entry-point, or runtime-data migration.
+
 **Status:** Proposed
 **Rule:** Approval of this document does not approve all implementation phases. Each phase has its own gate.
 

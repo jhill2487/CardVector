@@ -60,6 +60,11 @@ PutnamCollectibles/
 |   |   |   |-- domain/
 |   |   |   |-- application/
 |   |   |   `-- ports/
+|   |   |-- batch_workflow/
+|   |   |   |-- models.py
+|   |   |   |-- status.py
+|   |   |   |-- service.py
+|   |   |   `-- repository.py
 |   |   |-- marketplace_intelligence/
 |   |   |   |-- domain/
 |   |   |   |-- application/
@@ -243,6 +248,32 @@ Belongs:
 - queue claim/download contracts,
 - dated-routing policy,
 - thumbnail/pair metadata contracts.
+
+### `cardvector.batch_workflow`
+
+Purpose:
+
+- batch-level physical conversion and price-review milestone state.
+
+Belongs:
+
+- batch IDs and display labels,
+- Capture, CardUploader handoff, marketplace-confirmation, CSV, and price-review statuses,
+- timestamps, operator notes, and artifact references,
+- legal status transitions and batch queries.
+
+Must not belong:
+
+- card identity, SKU, quantity, per-card location, images, listing IDs, order
+  state, pricing formulas, or CardUploader marketplace assignments.
+
+May depend on:
+
+- Python standard library and injected repository interfaces.
+
+May be used by:
+
+- `cardvector.application`, presentation, and reporting.
 
 Must not belong:
 

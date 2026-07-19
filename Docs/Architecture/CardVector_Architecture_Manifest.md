@@ -1,6 +1,6 @@
 # CardVector Architecture Manifest
 
-**Status:** Approved through Phase 5 CardUploader inventory integration; remaining target migration requires separate approval
+**Status:** Approved through Phase 6 batch workflow consolidation; remaining target migration requires separate approval
 **Prepared:** 2026-07-17
 **Scope:** Permanent architecture and migration policy
 **Evidence baseline:** The eight completed reports in `Docs/Reports`
@@ -33,13 +33,18 @@ implementations during migration. This approval does not authorize the proposed
 bootstrap, `__main__`, path/configuration infrastructure, presentation,
 Listings, Shipping, or launcher migrations.
 
+The project owner authorized `Platform/cardvector/batch_workflow` on 2026-07-19.
+It owns batch-level Capture, CardUploader handoff, marketplace-confirmation,
+CSV-export, and price-review status only. CardUploader continues to own every
+card-level inventory and batch-association fact.
+
 ## Architectural Mission
 
 CardVector is a workflow platform for trading card operations. It coordinates:
 
 `Capture -> CardUploader -> Processing and Price Vector -> eBay handoff`
 
-CardVector owns workflow orchestration, capture preparation, pricing
+CardVector owns workflow orchestration, batch milestone visibility, capture preparation, pricing
 intelligence, supported exports, and operator guidance. CardUploader owns card
 recognition and managed inventory. CardVector consumes that inventory through
 application and integration contracts; it does not maintain a competing source

@@ -24,7 +24,7 @@ evidence; a recommendation in an audit is not a binding decision.
 
 ## Current State
 
-- **Current phase:** Phase 5 - CardUploader Inventory Ownership and Integration
+- **Current phase:** Phase 6 - Batch Workflow and Price Review Consolidation
 - **Current production launcher:** `Platform/Putnam_OS/Run CardVector OS Production.vbs`
 - **Current Python target:** `Platform/Putnam_OS/System/app/putnam_os.py`
 - **Proposed future entry point:** `py -m cardvector`
@@ -37,6 +37,8 @@ evidence; a recommendation in an audit is not a binding decision.
 - **Phase 5:** CardVector uses a read-only CardUploader snapshot service and
   registered legacy ETB projection adapters. No live CardUploader inventory
   write, reservation, allocation, picking, or synchronization API is claimed.
+- **Phase 6:** `Platform/cardvector/batch_workflow` owns batch milestone status
+  only. It does not store batch contents or any card-level inventory fields.
 
 ## Canonical Owners
 
@@ -45,6 +47,7 @@ evidence; a recommendation in an audit is not a binding decision.
 | Production startup | Current launcher plus future bootstrap composition root |
 | Desktop presentation | Future `cardvector.presentation.desktop` |
 | Workflow orchestration | `Platform/cardvector/application` |
+| Batch physical-conversion and price-review status | `Platform/cardvector/batch_workflow` through `Platform/cardvector/application` |
 | Shared business types | Future `cardvector.shared.domain` |
 | Capture | `Platform/cardvector/capture` |
 | Inventory records, quantities, locations, allocation, and picking state | CardUploader |
@@ -119,6 +122,7 @@ ADR Accepted.
 - [Phase 3 Marketplace Intelligence](Phase_3_Marketplace_Intelligence/)
 - [Phase 4 Capture and Recognition](Phase_4_Capture_and_Recognition/)
 - [Phase 5 CardUploader Inventory](Phase_5_CardUploader_Inventory/)
+- [Phase 6 Batch Workflow and Price Review](Phase_6_Batch_Workflow_and_Price_Review/)
 
 ## Change Approval
 

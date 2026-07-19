@@ -298,3 +298,25 @@ Only the project owner changes approval status to Accepted.
 - **Migration impact:** Phase 5 establishes read-only snapshot contracts and
   application delegation. Data migration and schema changes are excluded.
 - **Approval status:** Approved by project owner through the Phase 5 authorization.
+
+## CV-ADR-022 - CardVector Owns Batch Workflow Status Only
+
+- **Decision:** CardVector owns batch-level physical-inventory-conversion and
+  price-review workflow status. CardUploader continues to own card-level
+  inventory and batch-to-card associations.
+- **Status:** Accepted.
+- **Evidence:** Existing `workflow_context.py` and `putnam_os.py` callbacks
+  already expose Capture, CardUploader, CSV, and price-review milestones
+  without requiring batch contents. Phase 5 established CardUploader ownership.
+- **Rationale:** CardVector needs resumable workflow visibility, not a second
+  inventory truth.
+- **Alternatives considered:** store batch contents in CardVector; store
+  CardVector status in CardUploader without a supported API; keep status only
+  in Tkinter memory.
+- **Consequences:** `Platform/cardvector/batch_workflow` persists only batch
+  milestones, timestamps, notes, confirmations, and artifact references.
+  Card-level fields are forbidden.
+- **Migration impact:** Phase 6 adds an application facade and registers the
+  existing dashboard context as temporary adapter `CV-COMP-017`.
+- **Approval status:** Approved by the project owner through the Phase 6 authorization.
+- **Full ADR:** `CV-ADR-022-batch-workflow-ownership.md`

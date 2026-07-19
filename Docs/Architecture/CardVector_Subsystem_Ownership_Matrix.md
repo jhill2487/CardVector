@@ -11,6 +11,7 @@
 | Desktop shell | `putnam_os.py`, overlapping `main.py` | `cardvector.presentation.desktop` | Required | Existing classes remain during extraction |
 | Navigation | `PutnamOS.build_ui`, `show_page` | `cardvector.presentation.desktop.navigation` | Required | No external adapter expected |
 | Cross-workflow orchestration | `cardvector.application.workflows` delegates to existing `putnam_os.py`/`workflow_context.py` behavior | `cardvector.application.workflows` | Phase 2 foundation implemented; further callback migration required | `CV-COMP-012`: existing UI methods delegate |
+| Batch workflow status | `workflow_context.py`, conversion-session JSON, pricing callbacks in `putnam_os.py` | `cardvector.batch_workflow` through `cardvector.application.batch_workflow` | Phase 6 canonical milestone model implemented | `CV-COMP-017`: legacy dashboard context remains |
 | Background jobs | UI threads/callbacks, mobile queue loops | `cardvector.application.background_jobs` plus subsystem workers | Required | Existing scheduling methods delegate |
 | Capture domain | UI functions, `capture_studio.py` | `cardvector.capture` | Required | Old module forwards |
 | OBS connection | `obs_connection_manager.py` | `cardvector.integrations.obs` implementing Capture port | Required | Old import path forwards |
@@ -25,6 +26,7 @@
 | Bulk repricing | MI plus `bulk_price_engine.py`, `main.py` | MI pricing; Listings owns export preparation | Required | Preserve CLI/UI result shapes |
 | Pricing persistence | Active untracked MI repository/migration | `cardvector.marketplace_intelligence` ports + infrastructure repository | Required | Existing API adapter |
 | Managed inventory domain | CardUploader export and managed-inventory workflow; CardVector snapshot/audit helpers | External CardUploader | Phase 5 ownership accepted; live API unavailable | `CardUploaderInventoryService` snapshot adapter |
+| Batch-to-card association and card-level marketplace state | CardUploader managed inventory | External CardUploader | No CardVector migration | No synthetic adapter permitted |
 | Inventory UI/orchestration | `putnam_os.py`, `cardvector.application.inventory` | `cardvector.application` | Phase 5 facade implemented | Current UI callbacks remain |
 | Location cloud sync | `mobile_capture_queue.py`, Supabase migration | Capture-location compatibility projection; eventual CardUploader location adapter | Required after a supported API exists | Queue command compatibility |
 | Conversion sessions | `putnam_os.py`, runtime JSON | Capture/application workflow; CardUploader receives completed recognition handoff | Required | Current UI/session functions delegate |
