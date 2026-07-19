@@ -74,12 +74,17 @@ from Platform.Putnam_OS.System.tools.mobile_capture_queue import (
 )
 from Platform.cardvector.application import (
     ApplicationRuntime,
+    BatchWorkflowApplication,
     CaptureApplication,
     InventoryApplication,
     InventoryProjectionDelegates,
     PricingApplication,
     WorkflowApplication,
     WorkflowDelegates,
+)
+from Platform.cardvector.batch_workflow import (
+    BatchWorkflowService,
+    JsonBatchWorkflowRepository,
 )
 from Platform.cardvector.integrations.carduploader import (
     CARDUPLOADER_INVENTORY_COLUMNS as CANONICAL_CARDUPLOADER_INVENTORY_COLUMNS,
@@ -96,6 +101,16 @@ def build_application_runtime():
     runtime = ApplicationRuntime()
     runtime.services.register("pricing", pricing_application)
     runtime.services.register("inventory", inventory_application)
+    runtime.services.register(
+        "batch_workflow",
+        BatchWorkflowApplication(
+            BatchWorkflowService(
+                JsonBatchWorkflowRepository(
+                    INVENTORY_CONVERSION_DIR / "batch_workflows"
+                )
+            )
+        ),
+    )
     capture = CaptureService(
         desktop=CaptureStudioService(),
         mobile=MobileCaptureQueueService(),
@@ -3433,6 +3448,10 @@ class PutnamOS(BaseTk):
             "inventory",
             InventoryApplication,
         )
+        self.batch_workflow_application = self.application_runtime.services.resolve(
+            "batch_workflow",
+            BatchWorkflowApplication,
+        )
         self.capture_service = self.capture_application
         self.mobile_capture_queue_service = self.capture_application
         self.workflow_application = self.application_runtime.services.resolve(
@@ -4128,6 +4147,35 @@ class PutnamOS(BaseTk):
     def workflow_job_by_id(self, job_id):
         return self.workflow_application.job_by_id(self.workflow_jobs, job_id)
 
+    def record_batch_workflow(self, operation, job=None, batch_id="", **kwargs):
+        """Record a batch milestone without making it part of UI success."""
+        active = dict(job or self.active_workflow_job or {})
+        location_label = str(
+            active.get("etb_location")
+            or batch_id
+            or ""
+        ).strip()
+        resolved_id = str(
+            batch_id
+            or active.get("etb_location")
+            or active.get("capture_session_id")
+            or ""
+        ).strip()
+        if not resolved_id:
+            return None
+        try:
+            self.batch_workflow_application.ensure_batch(
+                resolved_id,
+                location_label=location_label,
+            )
+            handler = getattr(self.batch_workflow_application, operation)
+            return handler(resolved_id, **kwargs)
+        except Exception as exc:
+            append_activity(
+                f"Batch workflow milestone unavailable for {resolved_id}: {exc}"
+            )
+            return None
+
     def run_workflow_action(self, job, action=None):
         job = dict(job or {})
         if job:
@@ -4619,6 +4667,15 @@ class PutnamOS(BaseTk):
                     last_error="",
                 )
                 self.workflow_application.invalidate()
+            batch_id = str(
+                session.get("etb_location")
+                or session.get("etb_location_id")
+                or session_id
+            )
+            self.record_batch_workflow(
+                "mark_capture_complete",
+                batch_id=batch_id,
+            )
             append_activity(f"Mobile capture auto-staged: {session_id} -> {folder}")
             self.status.set(f"Mobile capture ready: {Path(folder).name if folder else session_id}")
             if hasattr(self, "capture_queue_selected_var"):
@@ -4839,6 +4896,10 @@ class PutnamOS(BaseTk):
             )
             self.workflow_application.invalidate()
             self.active_workflow_job = {**job, "carduploader_handoff_status": "opened", "stage": "Awaiting CSV Import", "state": "Ready", "action": "Import CardUploader CSV"}
+        self.record_batch_workflow(
+            "mark_carduploader_upload_started",
+            job=job,
+        )
         self.status.set("Opened CardUploader.")
 
     def open_mobile_capture_website(self):
@@ -5059,7 +5120,9 @@ class PutnamOS(BaseTk):
             "capture_folder": "",
             "session_folder": Path(path).name,
             "capture_type": "",
-            "etb_location": "",
+            "etb_location": str(
+                (acquisition_entry or {}).get("batch_location") or ""
+            ),
             "image_count": 0,
             "source": "CardUploader Import",
         }
@@ -5086,6 +5149,15 @@ class PutnamOS(BaseTk):
             "action": "Review Pricing",
             "updated_timestamp": datetime.now().isoformat(timespec="seconds"),
         }
+        self.record_batch_workflow(
+            "mark_carduploader_upload_complete",
+            job=self.active_workflow_job,
+        )
+        self.record_batch_workflow(
+            "mark_csv_exported",
+            job=self.active_workflow_job,
+            csv_reference=str(path),
+        )
         if hasattr(self, "import_summary_var"):
             self.import_summary_var.set(format_carduploader_import_summary(summary))
         self.load(path, rows=rows)
@@ -6902,6 +6974,10 @@ class PutnamOS(BaseTk):
             session["cards_captured"] = count
             session = save_inventory_conversion_session(session)
             updated_etb = mark_location_complete(session["etb"], session["location"], captured_count=count)
+            self.record_batch_workflow(
+                "mark_capture_complete",
+                batch_id=session.get("location_id", ""),
+            )
             self.inventory_conversion_session = session
             self.inventory_conversion_capture_session = capture_session
             self.inventory_conversion_sync_capture_state(session, capture_session)
@@ -8497,6 +8573,15 @@ Goal: Capture the real listing workflow for process improvement and content crea
             batch_location = self.prompt_listing_export_batch(game_hint)
             if not batch_location:
                 raise ExportCancelled("Export canceled because batch/location was blank.")
+            self.active_workflow_job = {
+                **(self.active_workflow_job or {}),
+                "etb_location": batch_location,
+            }
+            self.record_batch_workflow(
+                "start_price_review",
+                job=self.active_workflow_job,
+                batch_id=batch_location,
+            )
         except ExportCancelled as exc:
             self.finish_pricing_failure(exc, status="canceled")
             return
@@ -8533,6 +8618,11 @@ Goal: Capture the real listing workflow for process improvement and content crea
         accepted = int(export_summary.get("comp_total_accepted") or 0)
         rejected = int(export_summary.get("comp_total_rejected") or 0)
         self.set_current_pricing_job(job, export_summary)
+        self.record_batch_workflow(
+            "complete_price_review",
+            job=self.active_workflow_job,
+            output_reference=str(job),
+        )
         self.update_pricing_progress("Complete", percent=100, current=rows, total=rows)
         comp_status = f"Search complete: {accepted} accepted, {rejected} rejected."
         if accepted == 0:
@@ -8574,6 +8664,11 @@ Goal: Capture the real listing workflow for process improvement and content crea
         )
         if not canceled:
             append_ui_bugfix_log(f"Runtime UI error: {error}")
+            self.record_batch_workflow(
+                "fail_price_review",
+                job=self.active_workflow_job,
+                message=str(error),
+            )
         self.set_pricing_busy(False)
         self.pricing_started_at = None
         if canceled:
