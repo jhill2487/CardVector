@@ -15,6 +15,20 @@ MIGRATION_PATH = (
     / "migrations"
     / "001_price_vector_pricing_decisions.sql"
 )
+BUSINESS_COLUMNS = {
+    "marketplace": "text not null default ''",
+    "estimated_fees": "text",
+    "estimated_shipping": "text",
+    "estimated_packaging": "text",
+    "acquisition_cost": "text",
+    "other_costs": "text",
+    "estimated_net_profit": "text",
+    "profit_margin": "text",
+    "minimum_viable_price": "text",
+    "business_rule_adjustments": "text not null default ''",
+    "business_recommendation": "text not null default ''",
+    "business_profile_version": "text not null default ''",
+}
 
 
 def utc_now() -> str:
@@ -32,6 +46,7 @@ def pricing_record_from_result(
     created_at: str | None = None,
 ) -> PersistedPricingRecord:
     fmv = result.fair_market_value
+    profitability = result.pricing.profitability
     return PersistedPricingRecord(
         decision_id=decision_id or str(uuid4()),
         listing_reference=(
@@ -56,6 +71,36 @@ def pricing_record_from_result(
             else result.pricing.market_evidence_reference
         ),
         created_at=created_at or (fmv.calculated_at if fmv is not None else "") or utc_now(),
+        marketplace=result.pricing.marketplace,
+        estimated_fees=(
+            profitability.estimated_fees if profitability is not None else None
+        ),
+        estimated_shipping=(
+            profitability.estimated_shipping if profitability is not None else None
+        ),
+        estimated_packaging=(
+            profitability.estimated_packaging if profitability is not None else None
+        ),
+        acquisition_cost=(
+            profitability.acquisition_cost if profitability is not None else None
+        ),
+        other_costs=(
+            profitability.other_costs if profitability is not None else None
+        ),
+        estimated_net_profit=(
+            profitability.estimated_net_profit if profitability is not None else None
+        ),
+        profit_margin=(
+            profitability.profit_margin if profitability is not None else None
+        ),
+        minimum_viable_price=(
+            profitability.minimum_viable_price if profitability is not None else None
+        ),
+        business_rule_adjustments=";".join(
+            result.pricing.business_rule_adjustments
+        ),
+        business_recommendation=result.pricing.business_recommendation,
+        business_profile_version=result.pricing.business_profile_version,
     )
 
 
@@ -81,6 +126,18 @@ class PricingDecisionRepository:
         with closing(self.connect()) as connection:
             with connection:
                 connection.executescript(migration)
+                existing = {
+                    row["name"]
+                    for row in connection.execute(
+                        "pragma table_info(price_vector_pricing_decisions)"
+                    )
+                }
+                for name, declaration in BUSINESS_COLUMNS.items():
+                    if name not in existing:
+                        connection.execute(
+                            f"alter table price_vector_pricing_decisions "
+                            f"add column {name} {declaration}"
+                        )
 
     def save(self, record: PersistedPricingRecord) -> PersistedPricingRecord:
         self.migrate()
@@ -97,9 +154,21 @@ class PricingDecisionRepository:
                       final_listing_price,
                       pricing_reasoning,
                       market_evidence_reference,
-                      created_at
+                      created_at,
+                      marketplace,
+                      estimated_fees,
+                      estimated_shipping,
+                      estimated_packaging,
+                      acquisition_cost,
+                      other_costs,
+                      estimated_net_profit,
+                      profit_margin,
+                      minimum_viable_price,
+                      business_rule_adjustments,
+                      business_recommendation,
+                      business_profile_version
                     )
-                    values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     """,
                     (
                         record.decision_id,
@@ -111,6 +180,18 @@ class PricingDecisionRepository:
                         record.pricing_reasoning,
                         record.market_evidence_reference,
                         record.created_at or utc_now(),
+                        record.marketplace,
+                        decimal_text(record.estimated_fees),
+                        decimal_text(record.estimated_shipping),
+                        decimal_text(record.estimated_packaging),
+                        decimal_text(record.acquisition_cost),
+                        decimal_text(record.other_costs),
+                        decimal_text(record.estimated_net_profit),
+                        decimal_text(record.profit_margin),
+                        decimal_text(record.minimum_viable_price),
+                        record.business_rule_adjustments,
+                        record.business_recommendation,
+                        record.business_profile_version,
                     ),
                 )
         return record
@@ -129,7 +210,19 @@ class PricingDecisionRepository:
                   final_listing_price,
                   pricing_reasoning,
                   market_evidence_reference,
-                  created_at
+                  created_at,
+                  marketplace,
+                  estimated_fees,
+                  estimated_shipping,
+                  estimated_packaging,
+                  acquisition_cost,
+                  other_costs,
+                  estimated_net_profit,
+                  profit_margin,
+                  minimum_viable_price,
+                  business_rule_adjustments,
+                  business_recommendation,
+                  business_profile_version
                 from price_vector_pricing_decisions
                 where decision_id = ?
                 """,
@@ -151,4 +244,48 @@ class PricingDecisionRepository:
             pricing_reasoning=row["pricing_reasoning"],
             market_evidence_reference=row["market_evidence_reference"],
             created_at=row["created_at"],
+            marketplace=row["marketplace"],
+            estimated_fees=(
+                Decimal(row["estimated_fees"])
+                if row["estimated_fees"] is not None
+                else None
+            ),
+            estimated_shipping=(
+                Decimal(row["estimated_shipping"])
+                if row["estimated_shipping"] is not None
+                else None
+            ),
+            estimated_packaging=(
+                Decimal(row["estimated_packaging"])
+                if row["estimated_packaging"] is not None
+                else None
+            ),
+            acquisition_cost=(
+                Decimal(row["acquisition_cost"])
+                if row["acquisition_cost"] is not None
+                else None
+            ),
+            other_costs=(
+                Decimal(row["other_costs"])
+                if row["other_costs"] is not None
+                else None
+            ),
+            estimated_net_profit=(
+                Decimal(row["estimated_net_profit"])
+                if row["estimated_net_profit"] is not None
+                else None
+            ),
+            profit_margin=(
+                Decimal(row["profit_margin"])
+                if row["profit_margin"] is not None
+                else None
+            ),
+            minimum_viable_price=(
+                Decimal(row["minimum_viable_price"])
+                if row["minimum_viable_price"] is not None
+                else None
+            ),
+            business_rule_adjustments=row["business_rule_adjustments"],
+            business_recommendation=row["business_recommendation"],
+            business_profile_version=row["business_profile_version"],
         )

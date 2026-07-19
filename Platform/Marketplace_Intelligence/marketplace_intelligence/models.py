@@ -30,6 +30,9 @@ class Listing:
     tcgplayer_sku: str = ""
     catalog_sku: str = ""
     status: str = ""
+    acquisition_cost: Decimal | None = None
+    acquisition_method: str = ""
+    acquisition_cost_confidence: str = ""
     warnings: list[str] = field(default_factory=list)
 
     @property
@@ -212,9 +215,11 @@ class ExistingListingEvaluation:
     review_decision: str
     reason_codes: tuple[str, ...]
     explanation: PricingExplanation
+    estimated_profitability: "ProfitabilityAnalysis | None" = None
+    recommendation: str = ""
 
     def to_dict(self) -> dict[str, Any]:
-        return {
+        data = {
             "marketplace": self.marketplace,
             "listing_reference": self.listing_reference,
             "matched_card": self.matched_card,
@@ -225,6 +230,50 @@ class ExistingListingEvaluation:
             "review_decision": self.review_decision,
             "reason_codes": list(self.reason_codes),
             "explanation": self.explanation.to_dict(),
+            "recommendation": self.recommendation,
+        }
+        data["estimated_profitability"] = (
+            self.estimated_profitability.to_dict()
+            if self.estimated_profitability is not None
+            else None
+        )
+        return data
+
+
+@dataclass(frozen=True)
+class ProfitabilityAnalysis:
+    """Estimated seller economics for one recommended listing price."""
+
+    marketplace: str
+    estimated_fees: Decimal
+    estimated_shipping: Decimal
+    estimated_packaging: Decimal
+    acquisition_cost: Decimal
+    other_costs: Decimal
+    estimated_net_profit: Decimal
+    profit_margin: Decimal
+    minimum_viable_price: Decimal
+    shipping_profile: str = ""
+    free_shipping: bool = False
+    fee_components: dict[str, Decimal] = field(default_factory=dict)
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "marketplace": self.marketplace,
+            "estimated_fees": str(self.estimated_fees),
+            "estimated_shipping": str(self.estimated_shipping),
+            "estimated_packaging": str(self.estimated_packaging),
+            "acquisition_cost": str(self.acquisition_cost),
+            "other_costs": str(self.other_costs),
+            "estimated_net_profit": str(self.estimated_net_profit),
+            "profit_margin": str(self.profit_margin),
+            "minimum_viable_price": str(self.minimum_viable_price),
+            "shipping_profile": self.shipping_profile,
+            "free_shipping": self.free_shipping,
+            "fee_components": {
+                key: str(value)
+                for key, value in self.fee_components.items()
+            },
         }
 
 
@@ -245,6 +294,11 @@ class PriceRecommendation:
     market_evidence_reference: str = ""
     reason_codes: tuple[str, ...] = ()
     explanation: PricingExplanation | None = None
+    marketplace: str = ""
+    profitability: ProfitabilityAnalysis | None = None
+    business_recommendation: str = ""
+    business_rule_adjustments: tuple[str, ...] = ()
+    business_profile_version: str = ""
 
     def __post_init__(self) -> None:
         # recommended_price remains the compatibility name for existing callers.
@@ -276,6 +330,11 @@ class PricingDecision:
     final_listing_price: Decimal | None = None
     market_evidence_reference: str = ""
     created_at: str = ""
+    marketplace: str = ""
+    profitability: ProfitabilityAnalysis | None = None
+    business_recommendation: str = ""
+    business_rule_adjustments: tuple[str, ...] = ()
+    business_profile_version: str = ""
 
     def __post_init__(self) -> None:
         # market_value and recommended_price are retained compatibility names.
@@ -313,6 +372,18 @@ class PersistedPricingRecord:
     pricing_reasoning: str
     market_evidence_reference: str = ""
     created_at: str = ""
+    marketplace: str = ""
+    estimated_fees: Decimal | None = None
+    estimated_shipping: Decimal | None = None
+    estimated_packaging: Decimal | None = None
+    acquisition_cost: Decimal | None = None
+    other_costs: Decimal | None = None
+    estimated_net_profit: Decimal | None = None
+    profit_margin: Decimal | None = None
+    minimum_viable_price: Decimal | None = None
+    business_rule_adjustments: str = ""
+    business_recommendation: str = ""
+    business_profile_version: str = ""
 
 
 @dataclass

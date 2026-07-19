@@ -6,6 +6,8 @@ from datetime import datetime, timezone
 from decimal import Decimal, InvalidOperation
 from typing import Callable, Iterable, Protocol
 
+from .business_profile import BusinessProfile
+from .business_rules import BusinessRulesEngine
 from .explainability import build_pricing_explanation
 from .models import (
     AnalysisResult,
@@ -42,6 +44,15 @@ class DecisionOperations(Protocol):
     ) -> Decision: ...
 
 
+class BusinessRuleOperations(Protocol):
+    def apply(
+        self,
+        listing: Listing,
+        fair_market_value,
+        recommendation: PriceRecommendation,
+    ) -> PriceRecommendation: ...
+
+
 class PricingPipeline:
     """Coordinates the one approved pricing path without owning provider math."""
 
@@ -53,12 +64,17 @@ class PricingPipeline:
         price_vector: PriceVectorOperations,
         decision: DecisionOperations,
         pricing_profile: dict | None = None,
+        business_profile: BusinessProfile | dict | None = None,
+        business_rules: BusinessRuleOperations | None = None,
         now_provider: Callable[[], datetime] | None = None,
     ) -> None:
         self._identity = identity
         self._market = market
         self._price_vector = price_vector
         self._decision = decision
+        self._business_rules = business_rules or BusinessRulesEngine(
+            business_profile
+        )
         self._thresholds = ReviewThresholds.from_profile(pricing_profile)
         self._now_provider = now_provider or (lambda: datetime.now(timezone.utc))
 
@@ -73,6 +89,11 @@ class PricingPipeline:
         pricing = self._price_vector.recommend_from_fmv(
             listing,
             fair_market_value,
+        )
+        pricing = self._business_rules.apply(
+            listing,
+            fair_market_value,
+            pricing,
         )
         decision = self._decision.decide(listing, market, pricing)
         explanation = build_pricing_explanation(
@@ -163,10 +184,13 @@ class PricingPipeline:
             review_decision=explanation.review_decision,
             reason_codes=explanation.reason_codes,
             explanation=explanation,
+            estimated_profitability=result.pricing.profitability,
+            recommendation=result.pricing.business_recommendation,
         )
 
 
 __all__ = [
+    "BusinessRuleOperations",
     "DecisionOperations",
     "IdentityOperations",
     "MarketOperations",

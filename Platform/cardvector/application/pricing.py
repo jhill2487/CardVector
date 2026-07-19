@@ -33,6 +33,8 @@ class PricingOperations(Protocol):
         review_threshold: int,
         auto_apply_threshold: int,
         export_floor: Decimal,
+        listing=None,
+        business_profile=None,
     ) -> Any: ...
 
     def evaluate_existing_listing(self, request, *, engine=None) -> Any: ...
@@ -83,6 +85,8 @@ class PricingApplication:
         review_threshold: int,
         auto_apply_threshold: int,
         export_floor: Decimal,
+        listing=None,
+        business_profile=None,
     ) -> Any:
         return self._pricing.build_pricing_decision(
             original_price=original_price,
@@ -91,6 +95,8 @@ class PricingApplication:
             review_threshold=review_threshold,
             auto_apply_threshold=auto_apply_threshold,
             export_floor=export_floor,
+            listing=listing,
+            business_profile=business_profile,
         )
 
     def evaluate_existing_listing(self, request, *, engine=None) -> Any:

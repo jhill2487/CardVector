@@ -1,4 +1,6 @@
 {
+  "_compatibility_status": "read_only_legacy_fallback",
+  "_canonical_profile": "business_profile.json",
   "profile_name": "Community Beta Conservative",
   "minimum_price": "1.49",
   "market_strategy": "match_market",

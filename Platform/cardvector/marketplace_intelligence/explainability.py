@@ -190,7 +190,7 @@ def build_pricing_explanation(
     if trend not in {"rising", "falling", "stable", "unknown"}:
         trend = "unknown"
 
-    codes: list[str] = []
+    codes: list[str] = list(pricing.reason_codes)
     if not fair_market_value.available:
         codes.append(PricingReasonCode.NO_MARKET_DATA.value)
     if comparable_count < thresholds.insufficient_data_comps:

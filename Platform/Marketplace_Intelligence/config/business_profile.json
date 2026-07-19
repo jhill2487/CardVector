@@ -1,16 +1,193 @@
 {
-  "business_name": "Community Seller",
-  "primary_goal": "Identify active listings that deserve attention today.",
-  "default_recommendations": [
-    "No Change",
-    "Increase",
-    "Decrease",
-    "Review"
-  ],
-  "future_recommendations": [
-    "Move Marketplace",
-    "Hold",
-    "Clearance",
-    "Opportunity"
-  ]
+  "schema_version": "1.0",
+  "profile_version": "2026.07.19",
+  "business_name": "Putnam Collectibles",
+  "currency": "USD",
+  "business_rules_enabled": true,
+  "tax_configuration": {
+    "status": "future",
+    "estimated_tax_rate": "0.00"
+  },
+  "seller_preferences": {
+    "pricing_strategy": "competitive_turnover",
+    "inventory_ownership": "100_percent_putnam_collectibles"
+  },
+  "acquisition": {
+    "default_cost_per_card": "0.05",
+    "default_cost_confidence": "default",
+    "override_precedence": [
+      "card",
+      "batch",
+      "supplier",
+      "default"
+    ]
+  },
+  "packaging": {
+    "profiles": {
+      "standard_envelope": {
+        "components": {
+          "penny_sleeve": "0.00",
+          "top_loader": "0.00",
+          "semi_rigid": "0.00",
+          "team_bag": "0.03",
+          "envelope": "0.03",
+          "shipping_label": "0.02",
+          "tape": "0.00",
+          "other_shipping_shield": "0.07"
+        }
+      }
+    }
+  },
+  "shipping_profiles": {
+    "ebay_standard_envelope_1oz": {
+      "service": "eBay Standard Envelope",
+      "weight_oz": 1,
+      "postage_cost": "0.78",
+      "packaging_profile": "standard_envelope",
+      "enabled": true
+    },
+    "ebay_standard_envelope_2oz": {
+      "service": "eBay Standard Envelope",
+      "weight_oz": 2,
+      "postage_cost": "1.07",
+      "packaging_profile": "standard_envelope",
+      "enabled": true
+    },
+    "ebay_standard_envelope_3oz": {
+      "service": "eBay Standard Envelope",
+      "weight_oz": 3,
+      "postage_cost": "1.36",
+      "packaging_profile": "standard_envelope",
+      "enabled": true
+    }
+  },
+  "marketplaces": {
+    "ebay": {
+      "active": true,
+      "account_type": "conservative_trading_card_default",
+      "commission_tiers": [
+        {
+          "rate": "0.1325",
+          "up_to": "7500.00"
+        },
+        {
+          "rate": "0.0235",
+          "up_to": null
+        }
+      ],
+      "commission_cap_per_item": null,
+      "processing_rate": "0.0000",
+      "fixed_order_fee": "0.30",
+      "fixed_order_fee_over_threshold": "0.40",
+      "fixed_fee_threshold": "10.00",
+      "fee_rounding": "half_up",
+      "default_shipping_profile": "ebay_standard_envelope_1oz",
+      "packaging_profile": "standard_envelope",
+      "seller_pays_shipping_below_threshold": true,
+      "free_shipping_threshold": "20.00",
+      "pricing_overrides": {}
+    },
+    "tcgplayer": {
+      "active": true,
+      "account_type": "marketplace_seller_level_1_4",
+      "commission_tiers": [
+        {
+          "rate": "0.1075",
+          "up_to": null
+        }
+      ],
+      "commission_cap_per_item": "75.00",
+      "processing_rate": "0.0250",
+      "fixed_order_fee": "0.30",
+      "fixed_order_fee_over_threshold": "0.30",
+      "fixed_fee_threshold": "999999.00",
+      "fee_rounding": "half_even",
+      "default_shipping_profile": "",
+      "packaging_profile": "standard_envelope",
+      "seller_pays_shipping_below_threshold": false,
+      "free_shipping_threshold": "0.00",
+      "pricing_overrides": {}
+    },
+    "whatnot": {
+      "active": false,
+      "account_type": "placeholder",
+      "commission_tiers": [
+        {
+          "rate": "0.0000",
+          "up_to": null
+        }
+      ],
+      "processing_rate": "0.0000",
+      "fixed_order_fee": "0.00",
+      "fixed_order_fee_over_threshold": "0.00",
+      "fixed_fee_threshold": "999999.00",
+      "fee_rounding": "half_up",
+      "default_shipping_profile": "",
+      "packaging_profile": "",
+      "seller_pays_shipping_below_threshold": false,
+      "free_shipping_threshold": "0.00",
+      "pricing_overrides": {}
+    },
+    "direct_website": {
+      "active": false,
+      "account_type": "placeholder",
+      "commission_tiers": [
+        {
+          "rate": "0.0000",
+          "up_to": null
+        }
+      ],
+      "processing_rate": "0.0000",
+      "fixed_order_fee": "0.00",
+      "fixed_order_fee_over_threshold": "0.00",
+      "fixed_fee_threshold": "999999.00",
+      "fee_rounding": "half_up",
+      "default_shipping_profile": "",
+      "packaging_profile": "",
+      "seller_pays_shipping_below_threshold": false,
+      "free_shipping_threshold": "0.00",
+      "pricing_overrides": {}
+    }
+  },
+  "pricing_policy": {
+    "minimum_price": "1.49",
+    "minimum_profit": "0.25",
+    "minimum_profit_margin": "0.00",
+    "other_costs": "0.00",
+    "rounding_rule": "nearest_cent",
+    "default_marketplace": "ebay",
+    "price_vector": {
+      "profile_name": "Putnam Collectibles Competitive Turnover",
+      "minimum_price": "1.49",
+      "market_strategy": "match_market",
+      "undercut_amount": "0.00",
+      "hold_band_percent": "5.00",
+      "maximum_increase_percent": "50.00",
+      "maximum_decrease_percent": "35.00",
+      "maximum_increase_amount": "25.00",
+      "maximum_decrease_amount": "10.00",
+      "ignore_changes_under": "0.25",
+      "rounding_rule": "nearest_cent",
+      "review_price_over": "100.00",
+      "review_change_percent_over": "40.00",
+      "auto_approve_confidence": 80,
+      "manual_review_below_confidence": 60,
+      "warning_below_confidence": 70,
+      "insufficient_data_comps": 3,
+      "stale_market_days": 30,
+      "price_spike_percent": "40.00",
+      "price_collapse_percent": "40.00",
+      "high_variance_percent": "35.00",
+      "shipping_assumption": "buyer_pays_shipping",
+      "flat_shipping_cost": "0.00"
+    }
+  },
+  "metadata": {
+    "packaging_source": "Data/Config/fulfillment_profiles.json",
+    "shipping_rates_effective": "2026-07-12",
+    "shipping_rate_source": "https://community.ebay.com/t5/Announcements/USPS-Rate-Update/ba-p/35617599",
+    "ebay_fee_source": "https://www.ebay.com/help/selling/selling-fees?id=4822",
+    "tcgplayer_fee_source": "https://help.tcgplayer.com/hc/en-us/articles/201357836-TCGplayer-Fees",
+    "fee_defaults_require_periodic_review": true
+  }
 }

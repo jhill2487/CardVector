@@ -45,8 +45,13 @@ from Platform.putnam_paths import (
 from Platform.Putnam_OS.System.app import bulk_price_engine
 
 from Platform.cardvector.marketplace_intelligence import (
+    BusinessProfile,
+    Listing as MarketplaceListing,
     PRICING_SERVICE,
     evidence as canonical_evidence,
+)
+from Platform.Marketplace_Intelligence.marketplace_intelligence.config import (
+    load_app_config as load_marketplace_intelligence_config,
 )
 from Platform.cardvector.capture import (
     AUTO_CAPTURE_DEFAULTS as CANONICAL_AUTO_CAPTURE_DEFAULTS,
@@ -963,6 +968,26 @@ def prepare_listing_export_rows(
     pricing_strategy = pricing_config.get("pricing_strategy", "market_match")
     review_threshold = int(pricing_config.get("pricing_review_threshold", 60))
     auto_apply_threshold = int(pricing_config.get("pricing_auto_apply_threshold", 80))
+    marketplace_config = load_marketplace_intelligence_config()
+    business_profile = BusinessProfile.from_mapping(
+        marketplace_config.business_profile,
+        marketplace_config.pricing_profile,
+    )
+    title_col = find_column(fieldnames, ["Title", "*Title", "Listing Title"])
+    item_id_col = find_column(fieldnames, ["Item ID", "ItemID", "eBay Item ID"])
+    sku_col = find_column(fieldnames, ["SKU", "Custom Label", "*CustomLabel"])
+    acquisition_cost_col = find_column(
+        fieldnames,
+        ["Acquisition Cost", "Cost Basis", "Card Cost"],
+    )
+    acquisition_method_col = find_column(
+        fieldnames,
+        ["Acquisition Method", "Acquisition Source"],
+    )
+    acquisition_confidence_col = find_column(
+        fieldnames,
+        ["Acquisition Cost Confidence", "Cost Confidence"],
+    )
 
     for idx, row in enumerate(rows, 1):
         if progress_callback:
@@ -975,6 +1000,35 @@ def prepare_listing_export_rows(
         r = dict(row)
         original_market_price = decimal_money(r.get(pcol))
         market_report = market_reports_by_row.get(idx, {})
+        raw_acquisition_cost = (
+            str(r.get(acquisition_cost_col) or "").strip()
+            if acquisition_cost_col
+            else ""
+        )
+        listing = MarketplaceListing(
+            row_number=idx,
+            raw={**r, "Marketplace": "ebay"},
+            item_id=str(r.get(item_id_col) or "") if item_id_col else "",
+            title=str(r.get(title_col) or "") if title_col else "",
+            current_price=original_market_price,
+            source_type="carduploader_ebay_export",
+            sku=str(r.get(sku_col) or "") if sku_col else "",
+            acquisition_cost=(
+                decimal_money(raw_acquisition_cost)
+                if raw_acquisition_cost
+                else None
+            ),
+            acquisition_method=(
+                str(r.get(acquisition_method_col) or "")
+                if acquisition_method_col
+                else ""
+            ),
+            acquisition_cost_confidence=(
+                str(r.get(acquisition_confidence_col) or "")
+                if acquisition_confidence_col
+                else ""
+            ),
+        )
         pricing_decision = pricing_application.build_pricing_decision(
             original_price=original_market_price,
             market_report=market_report,
@@ -982,6 +1036,8 @@ def prepare_listing_export_rows(
             review_threshold=review_threshold,
             auto_apply_threshold=auto_apply_threshold,
             export_floor=EXPORT_FLOOR_PRICE,
+            listing=listing,
+            business_profile=business_profile,
         )
         accepted_count = pricing_decision.accepted_count
         confidence = pricing_decision.confidence
@@ -1035,6 +1091,47 @@ def prepare_listing_export_rows(
                 "pricing_basis": pricing_basis,
                 "final_export_price": format_decimal_money(final_price),
                 "cart_sweetener": "TRUE" if cart_sweetener else "FALSE",
+                "marketplace": pricing_decision.marketplace,
+                "estimated_fees": (
+                    format_decimal_money(pricing_decision.profitability.estimated_fees)
+                    if pricing_decision.profitability
+                    else ""
+                ),
+                "estimated_shipping": (
+                    format_decimal_money(pricing_decision.profitability.estimated_shipping)
+                    if pricing_decision.profitability
+                    else ""
+                ),
+                "estimated_packaging": (
+                    format_decimal_money(pricing_decision.profitability.estimated_packaging)
+                    if pricing_decision.profitability
+                    else ""
+                ),
+                "acquisition_cost": (
+                    format_decimal_money(pricing_decision.profitability.acquisition_cost)
+                    if pricing_decision.profitability
+                    else ""
+                ),
+                "estimated_net_profit": (
+                    format_decimal_money(pricing_decision.profitability.estimated_net_profit)
+                    if pricing_decision.profitability
+                    else ""
+                ),
+                "profit_margin": (
+                    str(pricing_decision.profitability.profit_margin)
+                    if pricing_decision.profitability
+                    else ""
+                ),
+                "minimum_viable_price": (
+                    format_decimal_money(pricing_decision.profitability.minimum_viable_price)
+                    if pricing_decision.profitability
+                    else ""
+                ),
+                "business_rule_adjustments": ";".join(
+                    pricing_decision.business_rule_adjustments
+                ),
+                "business_recommendation": pricing_decision.business_recommendation,
+                "business_profile_version": pricing_decision.business_profile_version,
             }
         )
         out_rows.append(r)

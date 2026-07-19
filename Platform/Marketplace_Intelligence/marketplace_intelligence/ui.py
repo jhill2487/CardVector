@@ -15,7 +15,13 @@ except Exception:
     DND_FILES = None
 
 from . import __version__
-from .config import CONFIG_DIR, load_app_config, load_recent_files, remember_recent_file, save_json
+from .config import (
+    CONFIG_DIR,
+    load_app_config,
+    load_recent_files,
+    remember_recent_file,
+    save_pricing_profile,
+)
 from .csv_import import SOURCE_CARDUPLOADER, SOURCE_CUSTOM, SOURCE_EBAY
 from .engine import MarketplaceIntelligenceEngine
 from .reports import result_row
@@ -539,9 +545,12 @@ class MarketplaceIntelligenceApp(BaseTk):
     def save_pricing_settings(self):
         if not self.apply_pricing_settings(show_success=False):
             return
-        save_json(CONFIG_DIR / "pricing_profile.json", self.pricing_profile)
+        save_pricing_profile(self.pricing_profile)
         self.status.set("Pricing profile saved.")
-        messagebox.showinfo("Pricing Settings", f"Pricing profile saved:\n{CONFIG_DIR / 'pricing_profile.json'}")
+        messagebox.showinfo(
+            "Pricing Settings",
+            f"Pricing profile saved:\n{CONFIG_DIR / 'business_profile.json'}",
+        )
 
     def open_output_folder(self):
         if not self.output_dir:

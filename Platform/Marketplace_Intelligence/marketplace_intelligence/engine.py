@@ -12,6 +12,9 @@ from .providers import build_provider
 from .reports import summarize, write_reports
 from .utils import safe_filename
 try:
+    from Platform.cardvector.marketplace_intelligence.business_profile import (
+        BusinessProfile,
+    )
     from Platform.cardvector.marketplace_intelligence.pipeline import PricingPipeline
     from Platform.cardvector.marketplace_intelligence.pricing import (
         PricingEngine,
@@ -23,12 +26,26 @@ except ModuleNotFoundError as exc:
     # Direct historical launcher compatibility until repository packaging lands.
     from .pricing_engine import PricingEngine, fair_market_value_from_market_price
 
+    BusinessProfile = None
     PricingPipeline = None
 
 
 class MarketplaceIntelligenceEngine:
     def __init__(self, config: AppConfig | None = None):
         self.config = config or load_app_config()
+        self.business_profile = (
+            BusinessProfile.from_mapping(
+                self.config.business_profile,
+                self.config.pricing_profile,
+            )
+            if BusinessProfile is not None
+            else None
+        )
+        if self.business_profile is not None:
+            self.config.business_profile = self.business_profile.to_dict()
+            self.config.pricing_profile = (
+                self.business_profile.price_vector_profile()
+            )
         self.matcher = ListingMatcher()
         self.provider = build_provider(self.config.market_provider)
         self.pricing_engine = PricingEngine(self.config.pricing_profile)
@@ -44,6 +61,7 @@ class MarketplaceIntelligenceEngine:
             price_vector=self.pricing_engine,
             decision=self.decision_engine,
             pricing_profile=self.config.pricing_profile,
+            business_profile=self.business_profile,
         )
 
     def import_csv(

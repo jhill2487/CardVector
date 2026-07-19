@@ -43,6 +43,12 @@ CARDUPLOADER_COLUMNS = {
     "current_price": ["Price", "Listing Price", "Current Price"],
     "quantity": ["Qty", "Quantity"],
     "status": ["Status"],
+    "acquisition_cost": ["Acquisition Cost", "Cost Basis", "Card Cost"],
+    "acquisition_method": ["Acquisition Method", "Acquisition Source"],
+    "acquisition_cost_confidence": [
+        "Acquisition Cost Confidence",
+        "Cost Confidence",
+    ],
 }
 
 PROFILE_DIR = CONFIG_DIR / "source_profiles"
@@ -85,6 +91,15 @@ def _mapped_value(row: dict[str, str], mapping: dict[str, str | None], field: st
 
 def _money(row: dict[str, str], mapping: dict[str, str | None], field: str = "current_price"):
     return decimal_money(_mapped_value(row, mapping, field), decimal_money("0.00"))
+
+
+def _optional_money(
+    row: dict[str, str],
+    mapping: dict[str, str | None],
+    field: str,
+):
+    value = _mapped_value(row, mapping, field)
+    return decimal_money(value) if value else None
 
 
 def detect_ebay_columns(fieldnames: list[str]) -> dict[str, str | None]:
@@ -217,6 +232,21 @@ def carduploader_export_adapter(path: Path, rows: list[dict[str, str]], fieldnam
                 tcgplayer_sku=_mapped_value(row, mapping, "tcgplayer_sku"),
                 catalog_sku=_mapped_value(row, mapping, "catalog_sku"),
                 status=_mapped_value(row, mapping, "status"),
+                acquisition_cost=_optional_money(
+                    row,
+                    mapping,
+                    "acquisition_cost",
+                ),
+                acquisition_method=_mapped_value(
+                    row,
+                    mapping,
+                    "acquisition_method",
+                ),
+                acquisition_cost_confidence=_mapped_value(
+                    row,
+                    mapping,
+                    "acquisition_cost_confidence",
+                ),
                 warnings=row_warnings,
             )
             listings.append(listing)
@@ -270,6 +300,21 @@ def custom_csv_adapter(
                     variant=_mapped_value(row, mapping, "variant"),
                     finish=_mapped_value(row, mapping, "finish"),
                     status=_mapped_value(row, mapping, "status"),
+                    acquisition_cost=_optional_money(
+                        row,
+                        mapping,
+                        "acquisition_cost",
+                    ),
+                    acquisition_method=_mapped_value(
+                        row,
+                        mapping,
+                        "acquisition_method",
+                    ),
+                    acquisition_cost_confidence=_mapped_value(
+                        row,
+                        mapping,
+                        "acquisition_cost_confidence",
+                    ),
                 )
             )
     warnings = []

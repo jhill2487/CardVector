@@ -1,6 +1,7 @@
 {
   "version": "0.1",
-  "status": "foundation_only",
+  "status": "legacy_reference_only",
+  "canonical_profile": "Platform/Marketplace_Intelligence/config/business_profile.json",
   "profiles": {
     "Standard Envelope": {
       "Shipping Shield": 0.07,
@@ -18,7 +19,7 @@
     }
   },
   "notes": [
-    "Foundation config only.",
-    "Do not connect to live profit calculations until Profit Dashboard work begins."
+    "Retained as the historical packaging-cost reference.",
+    "Marketplace Intelligence business_profile.json is the canonical live pricing configuration."
   ]
 }

@@ -68,6 +68,20 @@ ANALYSIS_FIELDS = [
     "review_priority",
     "reason_codes",
     "pricing_explanation",
+    "marketplace",
+    "estimated_fees",
+    "estimated_shipping",
+    "estimated_packaging",
+    "acquisition_cost",
+    "other_costs",
+    "estimated_net_profit",
+    "profit_margin",
+    "minimum_viable_price",
+    "shipping_profile",
+    "free_shipping",
+    "business_rule_adjustments",
+    "business_recommendation",
+    "business_profile_version",
 ]
 
 
@@ -106,6 +120,7 @@ def result_row(result: AnalysisResult) -> dict[str, str]:
         if explanation is not None
         else ""
     )
+    profitability = result.pricing.profitability
     return {
         "row_number": str(result.listing.row_number),
         "source_type": result.listing.source_type,
@@ -188,6 +203,42 @@ def result_row(result: AnalysisResult) -> dict[str, str]:
             ";".join(explanation.reason_codes) if explanation else ""
         ),
         "pricing_explanation": explanation_json,
+        "marketplace": result.pricing.marketplace,
+        "estimated_fees": (
+            money_text(profitability.estimated_fees) if profitability else ""
+        ),
+        "estimated_shipping": (
+            money_text(profitability.estimated_shipping) if profitability else ""
+        ),
+        "estimated_packaging": (
+            money_text(profitability.estimated_packaging) if profitability else ""
+        ),
+        "acquisition_cost": (
+            money_text(profitability.acquisition_cost) if profitability else ""
+        ),
+        "other_costs": (
+            money_text(profitability.other_costs) if profitability else ""
+        ),
+        "estimated_net_profit": (
+            money_text(profitability.estimated_net_profit) if profitability else ""
+        ),
+        "profit_margin": (
+            str(profitability.profit_margin) if profitability else ""
+        ),
+        "minimum_viable_price": (
+            money_text(profitability.minimum_viable_price) if profitability else ""
+        ),
+        "shipping_profile": (
+            profitability.shipping_profile if profitability else ""
+        ),
+        "free_shipping": (
+            "TRUE" if profitability and profitability.free_shipping else "FALSE"
+        ),
+        "business_rule_adjustments": ";".join(
+            result.pricing.business_rule_adjustments
+        ),
+        "business_recommendation": result.pricing.business_recommendation,
+        "business_profile_version": result.pricing.business_profile_version,
     }
 
 

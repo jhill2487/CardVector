@@ -13,6 +13,18 @@ REPORTS_DIR = PACKAGE_ROOT / "reports"
 RECENT_FILES = CONFIG_DIR / "recent_files.json"
 
 
+def _business_profile_type():
+    try:
+        from Platform.cardvector.marketplace_intelligence.business_profile import (
+            BusinessProfile,
+        )
+    except ModuleNotFoundError as exc:
+        if exc.name != "Platform":
+            raise
+        return None
+    return BusinessProfile
+
+
 @dataclass
 class AppConfig:
     pricing_profile: dict[str, Any]
@@ -34,11 +46,55 @@ def save_json(path: Path, data: dict[str, Any]) -> Path:
 
 def load_app_config(config_dir: Path | None = None) -> AppConfig:
     directory = config_dir or CONFIG_DIR
+    legacy_pricing = load_json(directory / "pricing_profile.json")
+    business_data = load_json(directory / "business_profile.json")
+    BusinessProfile = _business_profile_type()
+    if BusinessProfile is not None:
+        business_profile = BusinessProfile.from_mapping(
+            business_data,
+            legacy_pricing,
+        )
+        business_data = business_profile.to_dict()
+        legacy_pricing = business_profile.price_vector_profile()
     return AppConfig(
-        pricing_profile=load_json(directory / "pricing_profile.json"),
-        business_profile=load_json(directory / "business_profile.json"),
+        pricing_profile=legacy_pricing,
+        business_profile=business_data,
         market_provider=load_json(directory / "market_provider.json"),
     )
+
+
+def save_pricing_profile(
+    pricing_profile: dict[str, Any],
+    config_dir: Path | None = None,
+) -> Path:
+    """Persist pricing settings into the canonical Business Profile."""
+
+    directory = config_dir or CONFIG_DIR
+    business_path = directory / "business_profile.json"
+    business_data = load_json(business_path)
+    BusinessProfile = _business_profile_type()
+    if BusinessProfile is None:
+        return save_json(directory / "pricing_profile.json", pricing_profile)
+    normalized = BusinessProfile.from_mapping(
+        business_data,
+        load_json(directory / "pricing_profile.json"),
+    ).to_dict()
+    normalized.setdefault("pricing_policy", {})["price_vector"] = dict(
+        pricing_profile
+    )
+    normalized["pricing_policy"]["minimum_price"] = str(
+        pricing_profile.get(
+            "minimum_price",
+            normalized["pricing_policy"].get("minimum_price", "0.01"),
+        )
+    )
+    normalized["pricing_policy"]["rounding_rule"] = str(
+        pricing_profile.get(
+            "rounding_rule",
+            normalized["pricing_policy"].get("rounding_rule", "nearest_cent"),
+        )
+    )
+    return save_json(business_path, normalized)
 
 
 def decimal_setting(data: dict[str, Any], key: str, default: str) -> Decimal:
