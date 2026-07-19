@@ -30,9 +30,17 @@
 
 Phase 6 does not touch either implementation.
 
+The legacy Listing Optimizer test was not read-only: it changed three tracked
+runtime records and created
+`Completed Jobs/Pricing_Analysis_20260719_003544`. Post-test verification caught
+the side effects. The three files were restored to the clean starting baseline
+and the verified timestamped test folder was removed. The test must not be
+included in future read-only gates until it uses a temporary root.
+
 `test_inventory_audit_mode_v1_0.py` was not run because earlier baselines
 identified a OneDrive test-artifact permission/mutation risk. Phase 5
 read-only inventory contracts passed instead.
 
-No test uses a production batch record, database, CardUploader account, live
-marketplace, camera, OBS instance, or user Capture folder.
+No test used a production batch record, database, CardUploader account, live
+marketplace, camera, OBS instance, or user Capture folder. Final runtime state
+matches the pre-test Git baseline.
