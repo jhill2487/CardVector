@@ -24,8 +24,7 @@ evidence; a recommendation in an audit is not a binding decision.
 
 ## Current State
 
-- **Current phase:** Phase 7 - Marketplace Intelligence Accuracy,
-  Explainability, and Existing Listing Readiness
+- **Current phase:** Phase 8 - Pricing Intelligence and Business Profile
 - **Current production launcher:** `Platform/Putnam_OS/Run CardVector OS Production.vbs`
 - **Current Python target:** `Platform/Putnam_OS/System/app/putnam_os.py`
 - **Proposed future entry point:** `py -m cardvector`
@@ -44,6 +43,10 @@ evidence; a recommendation in an audit is not a binding decision.
   exposes deterministic pricing explanations, configurable advisory review
   thresholds, benchmark fixtures, and a read-only existing-listing evaluation
   contract. Price Vector mathematics and marketplace ownership are unchanged.
+- **Phase 8:** The canonical Marketplace Intelligence Business Profile now
+  owns acquisition, packaging, shipping-estimate, marketplace-fee, minimum
+  viable price, and profitability policy. Existing and new inventory use the
+  same mandatory business-rules stage after FMV and Price Vector.
 
 ## Canonical Owners
 
@@ -57,7 +60,7 @@ evidence; a recommendation in an audit is not a binding decision.
 | Capture | `Platform/cardvector/capture` |
 | Inventory records, quantities, locations, allocation, and picking state | CardUploader |
 | Inventory UI and workflow orchestration | `Platform/cardvector/application` through `Platform/cardvector/integrations/carduploader` |
-| FMV, Price Vector, pricing intelligence | `Platform/cardvector/marketplace_intelligence` |
+| FMV, Price Vector, Business Profile, business rules, pricing intelligence | `Platform/cardvector/marketplace_intelligence` |
 | Listings and eBay export records | Future `cardvector.listings` |
 | Orders and fulfillment | Future `cardvector.orders` |
 | Shipping | Future `cardvector.shipping` |
@@ -129,6 +132,7 @@ ADR Accepted.
 - [Phase 5 CardUploader Inventory](Phase_5_CardUploader_Inventory/)
 - [Phase 6 Batch Workflow and Price Review](Phase_6_Batch_Workflow_and_Price_Review/)
 - [Phase 7 Marketplace Intelligence](Phase_7_Marketplace_Intelligence/)
+- [Phase 8 Pricing Intelligence](Phase_8_Pricing_Intelligence/)
 
 ## Change Approval
 

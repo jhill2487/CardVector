@@ -320,3 +320,28 @@ Only the project owner changes approval status to Accepted.
   existing dashboard context as temporary adapter `CV-COMP-017`.
 - **Approval status:** Approved by the project owner through the Phase 6 authorization.
 - **Full ADR:** `CV-ADR-022-batch-workflow-ownership.md`
+
+## CV-ADR-023 - Canonical Business Profile And Business-Aware Pricing
+
+- **Decision:** Extend the existing Marketplace Intelligence Business Profile
+  as the single source of seller economics. Every canonical pricing
+  recommendation passes through a Business Rules Engine after FMV and Price
+  Vector.
+- **Status:** Accepted.
+- **Evidence:** Marketplace Intelligence already owns FMV and Price Vector;
+  repository packaging and postage foundations exist; the other business
+  profiles are partial or legacy.
+- **Rationale:** Acquisition, packaging, shipping, marketplace fees, and profit
+  policy must produce one explainable seller recommendation without creating a
+  second pricing or configuration system.
+- **Alternatives considered:** A separate Business Intelligence package; Putnam
+  OS profile ownership; hard-coded costs; independently writable pricing and
+  business profiles.
+- **Consequences:** `business_profile.json` is canonical,
+  `pricing_profile.json` is a read-only fallback, reports and pricing
+  persistence gain additive profitability fields, and shipping values remain
+  estimates rather than fulfillment execution.
+- **Migration impact:** Phase 8 only. No launcher, inventory, Capture,
+  recognition, batch, publication, or live marketplace behavior changes.
+- **Approval status:** Approved by the project owner through Phase 8 authorization.
+- **Full ADR:** `CV-ADR-023-business-profile-and-pricing-intelligence.md`

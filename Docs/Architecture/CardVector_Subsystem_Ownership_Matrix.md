@@ -25,6 +25,8 @@
 | Price Vector | MI pricing engine | `cardvector.marketplace_intelligence` | Required | Putnam OS/optimizer adapters |
 | Bulk repricing | MI plus `bulk_price_engine.py`, `main.py` | MI pricing; Listings owns export preparation | Required | Preserve CLI/UI result shapes |
 | Pricing persistence | Active untracked MI repository/migration | `cardvector.marketplace_intelligence` ports + infrastructure repository | Required | Existing API adapter |
+| Pricing Business Profile | Marketplace Intelligence business/pricing profiles plus partial Putnam OS profile | `cardvector.marketplace_intelligence` | Phase 8 canonical profile implemented | `CV-COMP-018` and `CV-COMP-019` |
+| Business pricing rules and profitability | Packaging foundation, historical BI constants, and no prior canonical calculation | `cardvector.marketplace_intelligence` | Phase 8 implemented after FMV/Price Vector | Flat-profile compatibility mode |
 | Managed inventory domain | CardUploader export and managed-inventory workflow; CardVector snapshot/audit helpers | External CardUploader | Phase 5 ownership accepted; live API unavailable | `CardUploaderInventoryService` snapshot adapter |
 | Batch-to-card association and card-level marketplace state | CardUploader managed inventory | External CardUploader | No CardVector migration | No synthetic adapter permitted |
 | Inventory UI/orchestration | `putnam_os.py`, `cardvector.application.inventory` | `cardvector.application` | Phase 5 facade implemented | Current UI callbacks remain |

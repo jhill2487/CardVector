@@ -1,6 +1,6 @@
 # CardVector Architecture Manifest
 
-**Status:** Approved through Phase 7 Marketplace Intelligence feature readiness; remaining target migration requires separate approval
+**Status:** Approved through Phase 8 business-aware pricing; remaining target migration requires separate approval
 **Prepared:** 2026-07-17
 **Scope:** Permanent architecture and migration policy
 **Evidence baseline:** The eight completed reports in `Docs/Reports`
@@ -44,6 +44,11 @@ deterministic pricing pipeline, adds an explanation contract and configurable
 advisory review thresholds, and supports read-only existing-listing
 evaluation. This milestone does not change Price Vector mathematics, inventory
 ownership, Capture ownership, batch workflow ownership, or launcher behavior.
+
+The project owner authorized Phase 8 on 2026-07-19. Marketplace Intelligence
+now owns the canonical Business Profile and mandatory Business Rules Engine.
+FMV remains distinct from the seller recommendation. Shipping profiles in this
+boundary estimate pricing cost only and do not own fulfillment execution.
 
 ## Architectural Mission
 
@@ -114,6 +119,8 @@ the external vertical owner for managed inventory.
 - Price Vector,
 - pricing recommendations,
 - pricing decision persistence,
+- the pricing Business Profile,
+- business-aware price constraints and profitability estimates,
 - marketplace price analysis.
 
 No UI, Listing Optimizer, Seller Tool, or Putnam OS adapter may calculate a competing price.

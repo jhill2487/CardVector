@@ -5,8 +5,10 @@
 Fulfillment profiles define packaging-cost assumptions for future Putnam OS
 Profit per Envelope reporting.
 
-This is a configuration foundation only. The profiles are not connected to live
-pricing, export, shipping, or profit calculations yet.
+This file is the historical source for the initial packaging assumptions.
+Phase 8 copied the approved values into the canonical Marketplace Intelligence
+Business Profile. `Data/Config/fulfillment_profiles.json` is now a read-only
+compatibility reference and is not a second live configuration source.
 
 ## Config Location
 
@@ -52,6 +54,10 @@ Revenue
 
 ## Current Status
 
-Status: Backlog foundation.
+Status: Historical reference.
 
-No live business logic uses these profiles yet.
+Live business-aware pricing reads:
+
+```text
+Platform/Marketplace_Intelligence/config/business_profile.json
+```
