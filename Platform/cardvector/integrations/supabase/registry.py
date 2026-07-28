@@ -272,7 +272,7 @@ class SupabaseRegistryClient:
         return self.request_json(
             "POST",
             f"/rest/v1/{CANONICAL_LOCATIONS_TABLE}?on_conflict=id",
-            [_remove_empty_strings(dict(row)) for row in rows],
+            _normalize_bulk_rows(rows),
             prefer="resolution=merge-duplicates,return=representation",
         ) or []
 
@@ -285,7 +285,7 @@ class SupabaseRegistryClient:
         return self.request_json(
             "POST",
             f"/rest/v1/{CANONICAL_CAPTURE_SESSIONS_TABLE}?on_conflict=id",
-            [_remove_empty_strings(dict(row)) for row in rows],
+            _normalize_bulk_rows(rows),
             prefer="resolution=merge-duplicates,return=representation",
         ) or []
 
@@ -298,7 +298,7 @@ class SupabaseRegistryClient:
         return self.request_json(
             "POST",
             f"/rest/v1/{CANONICAL_CAPTURE_IMAGES_TABLE}?on_conflict=id",
-            [_remove_empty_strings(dict(row)) for row in rows],
+            _normalize_bulk_rows(rows),
             prefer="resolution=merge-duplicates,return=representation",
         ) or []
 
@@ -461,6 +461,12 @@ def _optional_int(value: Any) -> int | None:
 
 def _remove_empty_strings(payload: dict[str, Any]) -> dict[str, Any]:
     return {key: value for key, value in payload.items() if value != ""}
+
+
+def _normalize_bulk_rows(rows: list[Mapping[str, Any]]) -> list[dict[str, Any]]:
+    cleaned = [_remove_empty_strings(dict(row)) for row in rows]
+    keys = sorted({key for row in cleaned for key in row})
+    return [{key: row.get(key) for key in keys} for row in cleaned]
 
 
 def _sanitize(value: str) -> str:

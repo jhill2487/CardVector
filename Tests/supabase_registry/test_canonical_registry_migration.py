@@ -7,6 +7,7 @@ from pathlib import Path
 
 from Platform.cardvector.integrations.supabase.registry import (
     CanonicalLocation,
+    SupabaseRegistryClient,
     canonical_rows_to_legacy_etb_rows,
     legacy_status_to_canonical,
 )
@@ -321,6 +322,38 @@ class CanonicalSupabaseRegistryMigrationTests(unittest.TestCase):
             path.write_text(json.dumps({"resolutions": [{"action": "wing_it"}]}), encoding="utf-8")
             with self.assertRaises(ValueError):
                 migration.load_resolution_file(path)
+
+    def test_bulk_upsert_payloads_use_matching_object_keys(self):
+        class RecordingClient(SupabaseRegistryClient):
+            def __init__(self):
+                super().__init__("https://example.supabase.co", "service-role-key")
+                self.body = None
+
+            def request_json(self, method, path, body=None, *, prefer=None):
+                self.body = body
+                return []
+
+        client = RecordingClient()
+        client.upsert_locations(
+            [
+                {
+                    "id": "slot-a",
+                    "name": "ETB-001-A",
+                    "parent_location_id": "etb-001",
+                    "legacy_location_code": "A",
+                },
+                {
+                    "id": "etb-001",
+                    "name": "ETB-001",
+                    "parent_location_id": "",
+                },
+            ]
+        )
+        self.assertIsNotNone(client.body)
+        key_sets = {tuple(sorted(row.keys())) for row in client.body}
+        self.assertEqual(len(key_sets), 1)
+        self.assertIsNone(client.body[1]["parent_location_id"])
+        self.assertIsNone(client.body[1]["legacy_location_code"])
 
 
 if __name__ == "__main__":
