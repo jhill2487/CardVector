@@ -96,6 +96,17 @@ class MobileLocationDatabaseContractTests(unittest.TestCase):
         ):
             self.assertIn(contract, self.app_js)
 
+    def test_mobile_capture_allows_operator_to_select_camera_device(self):
+        for contract in (
+            'id="camera-device-select"',
+            "navigator.mediaDevices.enumerateDevices",
+            'device.kind === "videoinput"',
+            "deviceId: { exact: deviceId }",
+            "saveSelectedCameraDeviceId",
+            "Switching camera...",
+        ):
+            self.assertIn(contract, self.app_js)
+
     def test_mobile_creation_uses_restricted_rpc(self):
         self.assertIn('client.rpc("cardvector_create_next_location"', self.app_js)
         self.assertIn("p_expected_location_code", self.app_js)

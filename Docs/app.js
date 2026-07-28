@@ -664,6 +664,11 @@
         </div>
         <div class="capture-operator" id="capture-operator" aria-live="polite">Operator: not signed in</div>
         <div class="capture-auth" id="capture-auth"></div>
+        <div class="camera-controls" id="camera-controls" hidden>
+          <label for="camera-device-select">Camera</label>
+          <select id="camera-device-select" aria-label="Choose camera for capture"></select>
+          <span id="camera-device-status" aria-live="polite">Camera selection appears after permission is granted.</span>
+        </div>
         <div class="camera-shell">
           <video id="capture-video" playsinline muted autoplay></video>
           <canvas id="capture-canvas" hidden></canvas>
@@ -1422,7 +1427,95 @@
     cameraController = null;
   }
 
-  async function startCamera() {
+  const cameraPreferenceKey = "cardvector.mobileCapture.cameraDeviceId";
+
+  function selectedCameraDeviceId() {
+    try {
+      return localStorage.getItem(cameraPreferenceKey) || "";
+    } catch (_exc) {
+      return "";
+    }
+  }
+
+  function saveSelectedCameraDeviceId(deviceId) {
+    try {
+      if (deviceId) {
+        localStorage.setItem(cameraPreferenceKey, deviceId);
+      } else {
+        localStorage.removeItem(cameraPreferenceKey);
+      }
+    } catch (_exc) {
+      // Camera choice is a convenience preference; capture should continue.
+    }
+  }
+
+  function cameraVideoConstraints(deviceId = "") {
+    const base = {
+      width: { ideal: 1920 },
+      height: { ideal: 2560 }
+    };
+    if (deviceId) {
+      return { ...base, deviceId: { exact: deviceId } };
+    }
+    return { ...base, facingMode: { ideal: "environment" } };
+  }
+
+  async function listCameraDevices() {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
+      return [];
+    }
+    const devices = await navigator.mediaDevices.enumerateDevices();
+    return devices.filter((device) => device.kind === "videoinput");
+  }
+
+  function cameraDeviceLabel(device, index) {
+    return device.label || `Camera ${index + 1}`;
+  }
+
+  function updateCameraPicker(devices, activeDeviceId = "") {
+    const controls = document.getElementById("camera-controls");
+    const select = document.getElementById("camera-device-select");
+    const status = document.getElementById("camera-device-status");
+    if (!controls || !select || !status) {
+      return;
+    }
+    if (!devices.length) {
+      controls.hidden = true;
+      select.innerHTML = "";
+      status.textContent = "No camera devices found.";
+      return;
+    }
+    controls.hidden = false;
+    select.innerHTML = devices.map((device, index) => {
+      const value = escapeHtml(device.deviceId || "");
+      const selected = device.deviceId && device.deviceId === activeDeviceId ? " selected" : "";
+      return `<option value="${value}"${selected}>${escapeHtml(cameraDeviceLabel(device, index))}</option>`;
+    }).join("");
+    if (activeDeviceId && Array.from(select.options).some((option) => option.value === activeDeviceId)) {
+      select.value = activeDeviceId;
+    }
+    select.disabled = devices.length <= 1;
+    status.textContent = devices.length > 1
+      ? "Choose the camera to use for this capture session."
+      : "Only one camera is available.";
+  }
+
+  function bindCameraPicker() {
+    const select = document.getElementById("camera-device-select");
+    if (!select || select.dataset.bound === "true") {
+      return;
+    }
+    select.dataset.bound = "true";
+    select.addEventListener("change", async () => {
+      const deviceId = select.value || "";
+      saveSelectedCameraDeviceId(deviceId);
+      select.disabled = true;
+      setProgress(0, "Switching camera...");
+      await startCamera(deviceId);
+    });
+  }
+
+  async function startCamera(preferredDeviceId = selectedCameraDeviceId()) {
     const video = document.getElementById("capture-video");
     const fallback = document.getElementById("camera-fallback");
     if (!video || !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
@@ -1435,15 +1528,21 @@
     try {
       stopCamera();
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: {
-          facingMode: { ideal: "environment" },
-          width: { ideal: 1920 },
-          height: { ideal: 2560 }
-        },
+        video: cameraVideoConstraints(preferredDeviceId),
         audio: false
       });
       video.srcObject = stream;
       cameraController = { stream };
+      const activeDeviceId = stream.getVideoTracks()[0]?.getSettings?.().deviceId || preferredDeviceId || "";
+      if (activeDeviceId) {
+        saveSelectedCameraDeviceId(activeDeviceId);
+      }
+      try {
+        updateCameraPicker(await listCameraDevices(), activeDeviceId);
+      } catch (_deviceExc) {
+        updateCameraPicker([], "");
+      }
+      bindCameraPicker();
       if (fallback) {
         fallback.hidden = true;
         fallback.textContent = "";
@@ -1453,6 +1552,12 @@
         fallback.hidden = false;
         fallback.textContent = `Camera unavailable: ${sanitizeErrorMessage(exc.message || exc)}. Use Photo Library instead.`;
       }
+      try {
+        updateCameraPicker(await listCameraDevices(), preferredDeviceId);
+      } catch (_deviceExc) {
+        updateCameraPicker([], "");
+      }
+      bindCameraPicker();
     }
   }
 
