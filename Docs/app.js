@@ -247,7 +247,8 @@
     return {
       supabaseUrl: String(cfg.supabaseUrl || "").trim(),
       supabaseAnonKey: String(cfg.supabaseAnonKey || "").trim(),
-      originalImageBucket: String(cfg.originalImageBucket || "mobile-capture-originals").trim()
+      originalImageBucket: String(cfg.originalImageBucket || "mobile-capture-originals").trim(),
+      requireCanonicalRegistry: Boolean(cfg.requireCanonicalRegistry)
     };
   }
 
@@ -742,7 +743,59 @@
     }
   }
 
+  function isMissingCanonicalRegistry(error) {
+    const text = `${error && (error.code || error.status || error.statusCode || error.message || error.details) || error}`.toLowerCase();
+    return text.includes("404") || text.includes("42p01") || text.includes("not found") || text.includes("does not exist");
+  }
+
+  function canonicalStatusFromLegacy(value) {
+    const normalized = String(value || "").trim().toLowerCase().replace(/[-_]+/g, " ");
+    if (normalized === "location complete") return "location_complete";
+    if (normalized === "needs review") return "needs_review";
+    if (normalized === "full") return "full";
+    if (normalized === "empty") return "empty";
+    if (normalized === "mobile capture staged") return "staged";
+    return "active";
+  }
+
+  async function listCanonicalEtbs(client, user) {
+    const result = await client
+      .from("cardvector_storage_locations")
+      .select("id,name,display_code,status,capacity,metadata,updated_at")
+      .eq("location_type", "etb")
+      .is("archived_at", null)
+      .order("display_code", { ascending: true });
+    if (result.error) {
+      throw result.error;
+    }
+    return (result.data || []).map((item) => ({
+      canonical_location_uuid: item.id,
+      etb_id: item.display_code || item.name,
+      status: item.status,
+      capacity: item.capacity || 400,
+      active_location_code: item.metadata && (item.metadata.current_active_location || item.metadata.active_location) || "",
+      updated_at: item.updated_at
+    })).filter((item) => {
+      try {
+        mobileCore.normalizeEtbId(item.etb_id);
+        return true;
+      } catch (_exc) {
+        return false;
+      }
+    });
+  }
+
   async function listCloudEtbs(client, user) {
+    try {
+      const canonical = await listCanonicalEtbs(client, user);
+      if (canonical.length) {
+        return canonical;
+      }
+    } catch (error) {
+      if (!isMissingCanonicalRegistry(error)) {
+        throw new Error(supabaseErrorDetails("Load canonical ETBs", error, user));
+      }
+    }
     const result = await client
       .from("cardvector_etbs")
       .select("etb_id,status,capacity,active_location_code,updated_at")
@@ -760,8 +813,68 @@
     });
   }
 
+  async function findCanonicalEtb(client, etbId) {
+    const canonicalEtb = mobileCore.normalizeEtbId(etbId);
+    const result = await client
+      .from("cardvector_storage_locations")
+      .select("id,display_code")
+      .eq("location_type", "etb")
+      .eq("display_code", canonicalEtb)
+      .is("archived_at", null)
+      .limit(1);
+    if (result.error) {
+      throw result.error;
+    }
+    return result.data && result.data.length ? result.data[0] : null;
+  }
+
+  async function listCanonicalLocations(client, user, etbId) {
+    const canonicalEtb = mobileCore.normalizeEtbId(etbId);
+    const etb = await findCanonicalEtb(client, canonicalEtb);
+    if (!etb) {
+      return [];
+    }
+    const result = await client
+      .from("cardvector_storage_locations")
+      .select("id,display_code,legacy_etb_id,legacy_location_code,status,capacity,stored_count,metadata,updated_at")
+      .eq("parent_location_id", etb.id)
+      .eq("location_type", "slot")
+      .is("archived_at", null)
+      .order("legacy_location_code", { ascending: true });
+    if (result.error) {
+      throw result.error;
+    }
+    return (result.data || []).map((item) => ({
+      canonical_location_uuid: item.id,
+      location_id: item.display_code || mobileCore.canonicalLocationId(canonicalEtb, item.legacy_location_code),
+      etb_id: canonicalEtb,
+      location_code: item.legacy_location_code,
+      status: item.status,
+      capacity: item.capacity || 40,
+      stored_count: item.stored_count || 0,
+      assigned_batch: item.metadata && item.metadata.assigned_batch || "",
+      updated_at: item.updated_at
+    })).filter((item) => {
+      try {
+        return item.location_id === mobileCore.canonicalLocationId(item.etb_id, item.location_code);
+      } catch (_exc) {
+        return false;
+      }
+    });
+  }
+
   async function listCloudLocations(client, user, etbId) {
     const canonicalEtb = mobileCore.normalizeEtbId(etbId);
+    try {
+      const canonical = await listCanonicalLocations(client, user, canonicalEtb);
+      if (canonical.length) {
+        return canonical;
+      }
+    } catch (error) {
+      if (!isMissingCanonicalRegistry(error)) {
+        throw new Error(supabaseErrorDetails("Load canonical locations", error, user));
+      }
+    }
     const result = await client
       .from("cardvector_locations")
       .select("location_id,etb_id,location_code,status,capacity,stored_count,assigned_batch,updated_at")
@@ -782,6 +895,33 @@
   async function createCloudNextLocation(client, user, etbId, expectedCode) {
     const canonicalEtb = mobileCore.normalizeEtbId(etbId);
     const expected = mobileCore.normalizeLocationCode(expectedCode);
+    try {
+      const canonicalResult = await client.rpc("cardvector_create_next_etb_slot", {
+        p_etb_display_code: canonicalEtb,
+        p_expected_slot_code: expected
+      });
+      if (canonicalResult.error) {
+        throw canonicalResult.error;
+      }
+      const canonicalRow = Array.isArray(canonicalResult.data) ? canonicalResult.data[0] : canonicalResult.data;
+      if (!canonicalRow || canonicalRow.location_id !== mobileCore.canonicalLocationId(canonicalEtb, canonicalRow.location_code)) {
+        throw new Error("Canonical location creation returned an invalid location.");
+      }
+      return {
+        canonical_location_uuid: canonicalRow.id,
+        location_id: canonicalRow.location_id,
+        etb_id: canonicalRow.etb_id,
+        location_code: canonicalRow.location_code,
+        status: canonicalRow.status,
+        capacity: canonicalRow.capacity,
+        stored_count: canonicalRow.stored_count,
+        updated_at: canonicalRow.updated_at
+      };
+    } catch (error) {
+      if (!isMissingCanonicalRegistry(error)) {
+        throw new Error(supabaseErrorDetails("Create canonical next location", error, user));
+      }
+    }
     const result = await client.rpc("cardvector_create_next_location", {
       p_etb_id: canonicalEtb,
       p_expected_location_code: expected
@@ -1340,6 +1480,103 @@
     throw new Error(storageErrorDetails("Upload original image", response, body, user, session));
   }
 
+  async function findCanonicalLocationByDisplayCode(client, displayCode) {
+    const result = await client
+      .from("cardvector_storage_locations")
+      .select("id,display_code")
+      .eq("display_code", displayCode)
+      .is("archived_at", null)
+      .limit(1);
+    if (result.error) {
+      throw result.error;
+    }
+    return result.data && result.data.length ? result.data[0] : null;
+  }
+
+  async function upsertCanonicalCaptureSession(client, session, images, user, status) {
+    const location = await findCanonicalLocationByDisplayCode(client, session.etb_location);
+    const payload = {
+      owner_user_id: user.id,
+      source_application: "CardVector.app",
+      originating_device: session.device || {},
+      location_id: location ? location.id : null,
+      status,
+      photo_count: images.length,
+      processed_count: 0,
+      recognized_count: 0,
+      failed_count: 0,
+      sync_state: "synced",
+      legacy_session_id: session.capture_session_id,
+      legacy_capture_type: normalizeCaptureType(session.capture_type),
+      legacy_etb_location_id: session.etb_location,
+      migration_metadata: {
+        compatibility_table: "mobile_capture_sessions"
+      },
+      created_by: user.id,
+      updated_by: user.id,
+      created_at: session.created_at,
+      updated_at: new Date().toISOString()
+    };
+    const result = await client
+      .from("cardvector_capture_sessions")
+      .upsert(payload, { onConflict: "owner_user_id,legacy_session_id" })
+      .select("id")
+      .single();
+    if (result.error) {
+      throw result.error;
+    }
+    return result.data;
+  }
+
+  async function upsertCanonicalCaptureImage(client, canonicalSession, image, uploaded, user, index) {
+    if (!canonicalSession || !canonicalSession.id) {
+      return;
+    }
+    const result = await client
+      .from("cardvector_capture_images")
+      .upsert({
+        capture_session_id: canonicalSession.id,
+        owner_user_id: user.id,
+        storage_bucket: uploaded.bucket,
+        storage_object_path: uploaded.path,
+        original_filename: image.name,
+        sequence_number: index + 1,
+        upload_status: "uploaded",
+        processing_status: "pending",
+        byte_size: image.size || 0,
+        legacy_image_id: image.id,
+        migration_metadata: {
+          compatibility_table: "mobile_capture_images",
+          side: uploaded.side,
+          card_number: uploaded.card_number
+        },
+        created_by: user.id,
+        updated_by: user.id,
+        created_at: new Date().toISOString()
+      }, { onConflict: "owner_user_id,storage_bucket,storage_object_path" });
+    if (result.error) {
+      throw result.error;
+    }
+  }
+
+  async function tryCanonicalRegistry(operation, cfg, user, fallbackValue) {
+    try {
+      return await operation();
+    } catch (error) {
+      if (cfg.requireCanonicalRegistry || !isMissingCanonicalRegistry(error)) {
+        throw new Error(supabaseErrorDetails("Canonical registry sync", error, user));
+      }
+      return fallbackValue;
+    }
+  }
+
+  function tolerateLegacyCompatibilityWrite(operation, error, user, canonicalSession) {
+    if (canonicalSession && isMissingCanonicalRegistry(error)) {
+      return;
+    }
+    throw new Error(supabaseErrorDetails(operation, error, user));
+  }
+
   async function submitCapture(client, session, images, cfg, user, authSession) {
     const captureLayout = normalizeCaptureLayout(session.capture_layout);
     const orderedImages = orderedCaptureImages(images, captureLayout);
@@ -1349,9 +1586,15 @@
     setProgress(5, "Creating capture session...");
     const sessionPayload = buildSessionPayload(session, orderedImages, user);
     const now = sessionPayload.updated_at;
+    let canonicalSession = await tryCanonicalRegistry(
+      () => upsertCanonicalCaptureSession(client, session, orderedImages, user, "uploading"),
+      cfg,
+      user,
+      null
+    );
     const upsert = await client.from("mobile_capture_sessions").upsert(sessionPayload, { onConflict: "capture_session_id" });
     if (upsert.error) {
-      throw new Error(supabaseErrorDetails("Create capture session", upsert.error, user));
+      tolerateLegacyCompatibilityWrite("Create capture session", upsert.error, user, canonicalSession);
     }
     const uploaded = [];
     for (let index = 0; index < orderedImages.length; index += 1) {
@@ -1377,21 +1620,34 @@
         removed_at: null,
         user_id: user ? user.id : null
       };
-      const imageInsert = await client.from("mobile_capture_images").upsert(row, { onConflict: "image_id" });
-      if (imageInsert.error) {
-        throw new Error(supabaseErrorDetails("Record uploaded image", imageInsert.error, user));
-      }
-      uploaded.push({
+      const uploadedRecord = {
         bucket: cfg.originalImageBucket,
         path,
         image_id: image.id,
         sequence_number: index + 1,
         card_number: position.cardNumber,
         side: position.side
-      });
+      };
+      uploaded.push(uploadedRecord);
+      await tryCanonicalRegistry(
+        () => upsertCanonicalCaptureImage(client, canonicalSession, image, uploadedRecord, user, index),
+        cfg,
+        user,
+        null
+      );
+      const imageInsert = await client.from("mobile_capture_images").upsert(row, { onConflict: "image_id" });
+      if (imageInsert.error) {
+        tolerateLegacyCompatibilityWrite("Record uploaded image", imageInsert.error, user, canonicalSession);
+      }
     }
     setProgress(90, "Submitting for conversion...");
     const submittedAt = new Date().toISOString();
+    canonicalSession = await tryCanonicalRegistry(
+      () => upsertCanonicalCaptureSession(client, session, orderedImages, user, "pending_processing"),
+      cfg,
+      user,
+      canonicalSession
+    );
     const update = await client
       .from("mobile_capture_sessions")
       .update({
@@ -1406,7 +1662,7 @@
       .eq("capture_session_id", session.capture_session_id)
       .in("status", ["UPLOADING", "PENDING_CONVERSION"]);
     if (update.error) {
-      throw new Error(supabaseErrorDetails("Submit capture session", update.error, user));
+      tolerateLegacyCompatibilityWrite("Submit capture session", update.error, user, canonicalSession);
     }
     session.status = "PENDING_CONVERSION";
     session.submitted_at = submittedAt;

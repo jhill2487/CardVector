@@ -50,6 +50,13 @@ now owns the canonical Business Profile and mandatory Business Rules Engine.
 FMV remains distinct from the seller recommendation. Shipping profiles in this
 boundary estimate pricing cost only and do not own fulfillment execution.
 
+The project owner authorized the Supabase capture/location registry migration on
+2026-07-25. Supabase is the canonical source of truth for shared capture
+batches, ETBs/storage locations, capture images, and their relationships.
+CardUploader remains the managed-inventory owner under CV-ADR-021. Production
+schema apply, production legacy import, and final cutover remain gated by dry-run
+review and explicit approval.
+
 ## Architectural Mission
 
 CardVector is a workflow platform for trading card operations. It coordinates:
@@ -165,6 +172,17 @@ Until a supported live CardUploader API is available, exported snapshots are
 read-only evidence. Existing CardVector ETB JSON and Supabase location data are
 temporary capture/location projections, not authoritative card inventory.
 
+### A14. Supabase owns the shared capture/location registry
+
+Supabase is authoritative for shared CardVector capture batches, ETBs/storage
+locations, capture images, and capture-to-location relationships. ETBs are
+canonical storage-location rows with `location_type = 'etb'`; ETB slots are child
+location rows with `location_type = 'slot'`.
+
+The legacy ETB JSON registry remains a migration input, comparison source,
+fallback cache, export, and historical audit artifact only after cutover
+validation. It must not silently overwrite newer Supabase records.
+
 ## Canonical Package Owners
 
 | Responsibility | Permanent owner |
@@ -174,6 +192,7 @@ temporary capture/location projections, not authoritative card inventory.
 | Cross-subsystem workflow | `cardvector.application` |
 | Common value objects and errors | `cardvector.shared.domain` |
 | Capture | `cardvector.capture` |
+| Shared capture/location registry | `cardvector.integrations.supabase` |
 | Managed inventory | External CardUploader |
 | Inventory orchestration and views | `cardvector.application` through `cardvector.integrations.carduploader` |
 | Marketplace evidence, FMV, Price Vector | `cardvector.marketplace_intelligence` |

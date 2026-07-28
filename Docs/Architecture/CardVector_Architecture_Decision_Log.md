@@ -345,3 +345,27 @@ Only the project owner changes approval status to Accepted.
   recognition, batch, publication, or live marketplace behavior changes.
 - **Approval status:** Approved by the project owner through Phase 8 authorization.
 - **Full ADR:** `CV-ADR-023-business-profile-and-pricing-intelligence.md`
+
+## CV-ADR-024 - Supabase Owns The Shared Capture And Location Registry
+
+- **Decision:** Supabase is the canonical source for shared capture batches,
+  ETBs/storage locations, capture images, and their relationships. ETBs are
+  canonical storage-location rows; ETB slots are child location rows. CardUploader
+  remains the managed-inventory owner.
+- **Status:** Accepted; production schema apply and legacy import remain gated.
+- **Evidence:** Desktop OS reads legacy JSON while mobile capture writes
+  Supabase upload/session artifacts; mobile staged sessions do not reach the
+  local registry projection.
+- **Rationale:** CardVector.app and CardVector OS need one shared registry that
+  does not depend on desktop-local JSON conversion status.
+- **Alternatives considered:** keep JSON authoritative; create separate ETB and
+  location authorities; move managed inventory to CardVector.
+- **Consequences:** Local JSON becomes migration input, comparison source,
+  fallback cache, export, and historical audit. Production apply requires review
+  of schema, mapping, dry-run conflicts, backup path, rollback, and commands.
+- **Migration impact:** Adds canonical Supabase migration, trusted desktop
+  integration, mobile canonical writes, desktop canonical read fallback, and
+  dry-run migration tooling.
+- **Approval status:** Implementation authorized by the project owner through the
+  Supabase registry migration task; production cutover pending explicit approval.
+- **Full ADR:** `CV-ADR-024-supabase-capture-location-registry.md`

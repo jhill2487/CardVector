@@ -1,8 +1,8 @@
 {
   "schema_version": "1.0",
-  "architecture_version": "1.4",
-  "approval_status": "phase_8_business_aware_pricing_accepted_remaining_target_migration_proposed",
-  "current_migration_phase": "phase_8_pricing_intelligence_and_business_profile",
+  "architecture_version": "1.5",
+  "approval_status": "supabase_capture_location_registry_accepted_production_cutover_gated",
+  "current_migration_phase": "supabase_capture_location_registry_migration_gate",
   "current_production_launcher": "Platform/Putnam_OS/Run CardVector OS Production.vbs",
   "current_production_python_target": "Platform/Putnam_OS/System/app/putnam_os.py",
   "proposed_future_python_entry_point": "py -m cardvector",
@@ -16,6 +16,7 @@
     "batch_workflow_orchestration": "Platform/cardvector/application",
     "shared_domain_models": "cardvector.shared.domain",
     "capture": "cardvector.capture",
+    "shared_capture_location_registry": "Platform/cardvector/integrations/supabase",
     "scanner_recognition": "external:CardUploader",
     "inventory": "external:CardUploader",
     "inventory_orchestration": "Platform/cardvector/application",
@@ -60,6 +61,7 @@
     "Platform/cardvector/batch_workflow",
     "Platform/cardvector/capture",
     "Platform/cardvector/integrations/carduploader",
+    "Platform/cardvector/integrations/supabase",
     "Platform/cardvector/marketplace_intelligence",
     "Platform/Marketplace_Intelligence/marketplace_intelligence",
     "Platform/Putnam_OS/System/app",
@@ -181,6 +183,12 @@
       "id": "CV-COMP-019",
       "legacy_interface": "Platform/Putnam_OS/System/config/business_profile.json and Data/Config/fulfillment_profiles.json",
       "canonical_target": "Platform/Marketplace_Intelligence/config/business_profile.json",
+      "status": "active"
+    },
+    {
+      "id": "CV-COMP-020",
+      "legacy_interface": "legacy ETB JSON registry and old mobile Supabase tables",
+      "canonical_target": "Platform/cardvector/integrations/supabase shared capture/location registry",
       "status": "active"
     },
     {

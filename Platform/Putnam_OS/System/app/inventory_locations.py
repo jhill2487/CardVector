@@ -246,6 +246,43 @@ def etb_location_rows(path: Path | None = None) -> list[dict[str, Any]]:
     return sorted(rows, key=location_sort_key)
 
 
+def supabase_etb_location_rows() -> tuple[list[dict[str, Any]], str]:
+    """Return canonical Supabase registry rows in the legacy UI shape.
+
+    The local JSON registry remains the compatibility cache/export path until
+    the production Supabase migration and data import are approved. This helper
+    is intentionally read-only and fail-closed so an unavailable canonical
+    registry cannot erase or override local data.
+    """
+    try:
+        from Platform.cardvector.integrations.supabase import (
+            SupabaseRegistryClient,
+            canonical_rows_to_legacy_etb_rows,
+        )
+
+        rows = canonical_rows_to_legacy_etb_rows(SupabaseRegistryClient().list_locations())
+        return sorted(rows, key=location_sort_key), ""
+    except Exception as exc:
+        return [], str(exc)
+
+
+def shared_etb_location_rows(path: Path | None = None) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    """Read the shared registry when available, otherwise fall back to JSON."""
+    cloud_rows, warning = supabase_etb_location_rows()
+    if cloud_rows:
+        return cloud_rows, {
+            "source": "supabase",
+            "warning": "",
+            "fallback": False,
+        }
+    rows = etb_location_rows(path)
+    return rows, {
+        "source": "legacy_json_cache",
+        "warning": warning,
+        "fallback": True,
+    }
+
+
 def location_is_cloud_provisioned(location: dict[str, Any], active_location: str = "") -> bool:
     """Return whether a local A-J slot represents a real cloud-visible location."""
     try:

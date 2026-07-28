@@ -473,6 +473,7 @@ from inventory_locations import (
     next_etb_code as legacy_next_etb_code,
     qr_resolution_text as legacy_qr_resolution_text,
     resolve_cardvector_qr_payload as legacy_resolve_cardvector_qr_payload,
+    shared_etb_location_rows,
     update_etb_status as legacy_update_etb_status,
 )
 from orders_fulfillment import PICK_LIST_ROOT, generate_pick_slips
@@ -6768,7 +6769,7 @@ class PutnamOS(BaseTk):
     def inventory_conversion_refresh(self):
         if not hasattr(self, "inventory_conversion_etb_combo"):
             return
-        rows = etb_location_rows()
+        rows, _registry_source = shared_etb_location_rows()
         self.inventory_update_etb_registry_status()
         etb_codes = [row["location_code"] for row in rows]
         self.inventory_conversion_etb_combo.configure(values=etb_codes)
@@ -7269,7 +7270,7 @@ class PutnamOS(BaseTk):
         for item in self.etb_location_tree.get_children():
             self.etb_location_tree.delete(item)
         self.etb_location_tree._base_tags = {}
-        rows = etb_location_rows()
+        rows, registry_source = shared_etb_location_rows()
         rollups = completed_session_etb_rollups()
         known = {row["location_code"] for row in rows}
         for code, item in rollups.items():
@@ -7354,10 +7355,15 @@ class PutnamOS(BaseTk):
             self.etb_location_tree.selection_set(selected_item)
             self.etb_location_tree.see(selected_item)
         next_code = next_etb_code()
+        source_label = "Supabase canonical registry" if registry_source.get("source") == "supabase" else "Legacy JSON cache"
+        warning = str(registry_source.get("warning") or "").strip()
+        warning_line = f"\nSync warning: {warning}" if warning else ""
         self.etb_registry_summary_var.set(
-            f"Active ETB Registry: {ETB_LOCATION_REGISTRY}\n"
+            f"Active ETB Registry Source: {source_label}\n"
+            f"Legacy cache/export path: {ETB_LOCATION_REGISTRY}\n"
             f"ETBs: {len(rows)}  |  Next ETB: {next_code}  |  ETB capacity: {DEFAULT_ETB_CAPACITY} cards  |  Location capacity: {DEFAULT_ETB_LOCATION_CAPACITY} cards\n"
             "Each ETB has locations A-J. Counts include completed work sessions rolled up by ETB batch location."
+            f"{warning_line}"
         )
 
     def inventory_create_next_etb(self):

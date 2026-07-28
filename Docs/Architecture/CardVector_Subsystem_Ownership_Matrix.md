@@ -30,7 +30,8 @@
 | Managed inventory domain | CardUploader export and managed-inventory workflow; CardVector snapshot/audit helpers | External CardUploader | Phase 5 ownership accepted; live API unavailable | `CardUploaderInventoryService` snapshot adapter |
 | Batch-to-card association and card-level marketplace state | CardUploader managed inventory | External CardUploader | No CardVector migration | No synthetic adapter permitted |
 | Inventory UI/orchestration | `putnam_os.py`, `cardvector.application.inventory` | `cardvector.application` | Phase 5 facade implemented | Current UI callbacks remain |
-| Location cloud sync | `mobile_capture_queue.py`, Supabase migration | Capture-location compatibility projection; eventual CardUploader location adapter | Required after a supported API exists | Queue command compatibility |
+| Shared capture/location registry | `Docs/app.js`, `mobile_capture_queue.py`, `inventory_locations.py`, local ETB JSON projection, Supabase migrations | `Platform/cardvector/integrations/supabase` for persistence access; `cardvector.capture` and `cardvector.application` orchestrate workflows | Supabase registry migration in progress; production apply gated | Legacy JSON projection and mobile compatibility tables |
+| Location cloud sync | `mobile_capture_queue.py`, Supabase migration | Supabase shared capture/location registry through `Platform/cardvector/integrations/supabase` | Required; local JSON becomes cache/export after validation | Queue command compatibility |
 | Conversion sessions | `putnam_os.py`, runtime JSON | Capture/application workflow; CardUploader receives completed recognition handoff | Required | Current UI/session functions delegate |
 | Reconciliation | `inventory_reconciliation.py` | CardVector reporting over `cardvector.integrations.carduploader` snapshots | Phase 5 CardUploader parser delegated | CLI wrapper |
 | QR payloads/labels | `inventory_locations.py` and label tool | Capture/location compatibility projection; Reporting renders labels | Required after CardUploader location contract exists | Existing tool wrapper |
@@ -91,11 +92,13 @@ Listings must never recalculate FMV or Price Vector.
 
 ### Inventory Versus Capture
 
-Capture records where and how images were acquired. CardUploader owns managed
-inventory and authoritative card locations. Existing ETB/location JSON and
-Supabase rows remain capture/location compatibility projections until a
-supported CardUploader location API can replace them. Cross-system handoff is
-orchestrated through application and integration contracts.
+Capture records where and how images were acquired. Supabase owns the shared
+capture/location registry that CardVector.app and CardVector OS both need to
+coordinate ETBs, storage locations, capture sessions, and capture images.
+CardUploader owns managed card inventory and card-level fulfillment locations.
+Existing ETB/location JSON remains a compatibility cache/export after cutover.
+Cross-system handoff is orchestrated through application and integration
+contracts.
 
 ### Reports Versus Analytics
 

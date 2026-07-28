@@ -91,7 +91,7 @@ class MobileLocationDatabaseContractTests(unittest.TestCase):
             "state.etbId = mobileCore.normalizeEtbId",
             "state.location = mobileCore.normalizeLocationCode",
             "mobileCore.canonicalLocationId",
-            "captureRoute(state.etbId, state.location, state.captureType)",
+            "captureRoute(state.etbId, state.location, state.captureType, state.captureLayout)",
             "Start Capture",
         ):
             self.assertIn(contract, self.app_js)

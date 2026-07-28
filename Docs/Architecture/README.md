@@ -24,7 +24,7 @@ evidence; a recommendation in an audit is not a binding decision.
 
 ## Current State
 
-- **Current phase:** Phase 8 - Pricing Intelligence and Business Profile
+- **Current phase:** Supabase capture/location registry migration gate after Phase 8
 - **Current production launcher:** `Platform/Putnam_OS/Run CardVector OS Production.vbs`
 - **Current Python target:** `Platform/Putnam_OS/System/app/putnam_os.py`
 - **Proposed future entry point:** `py -m cardvector`
@@ -47,6 +47,10 @@ evidence; a recommendation in an audit is not a binding decision.
   owns acquisition, packaging, shipping-estimate, marketplace-fee, minimum
   viable price, and profitability policy. Existing and new inventory use the
   same mandatory business-rules stage after FMV and Price Vector.
+- **Supabase registry migration:** Supabase is the accepted canonical source for
+  shared capture batches, ETBs/storage locations, capture images, and their
+  relationships. CardUploader remains the managed-inventory owner. Production
+  schema apply and legacy import remain gated by dry-run review.
 
 ## Canonical Owners
 
@@ -59,6 +63,7 @@ evidence; a recommendation in an audit is not a binding decision.
 | Shared business types | Future `cardvector.shared.domain` |
 | Capture | `Platform/cardvector/capture` |
 | Inventory records, quantities, locations, allocation, and picking state | CardUploader |
+| Shared capture batches, ETBs/storage locations, and capture images | Supabase through `Platform/cardvector/integrations/supabase` |
 | Inventory UI and workflow orchestration | `Platform/cardvector/application` through `Platform/cardvector/integrations/carduploader` |
 | FMV, Price Vector, Business Profile, business rules, pricing intelligence | `Platform/cardvector/marketplace_intelligence` |
 | Listings and eBay export records | Future `cardvector.listings` |
@@ -133,6 +138,7 @@ ADR Accepted.
 - [Phase 6 Batch Workflow and Price Review](Phase_6_Batch_Workflow_and_Price_Review/)
 - [Phase 7 Marketplace Intelligence](Phase_7_Marketplace_Intelligence/)
 - [Phase 8 Pricing Intelligence](Phase_8_Pricing_Intelligence/)
+- [Supabase Registry Migration](Supabase_Registry_Migration/)
 
 ## Change Approval
 
@@ -157,3 +163,11 @@ py -m unittest discover -s Tools\architecture -p "test_*.py"
 Default mode reports findings and exits successfully unless the checker itself
 cannot run. Strict mode fails for findings that are not in the approved baseline.
 The checker never changes files.
+
+## Active Production Data Gate
+
+The Supabase capture/location registry migration has source changes and a
+dry-run report, but production execution is not approved yet. Before running
+`supabase db push` or `Tools.migrate_legacy_registry_to_supabase --apply`, review
+the schema, mapping, dry-run conflicts, backup path, rollback procedure, and
+exact commands in `Supabase_Registry_Migration/`.

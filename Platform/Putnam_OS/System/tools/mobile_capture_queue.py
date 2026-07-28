@@ -36,6 +36,7 @@ from Platform.Putnam_OS.System.app.inventory_locations import (
     normalize_etb_code,
     normalize_location_code,
 )
+from Platform.cardvector.integrations.supabase import SupabaseRegistryClient
 
 
 MOBILE_CAPTURE_ROOT = ROOT / "MobileCapture"
@@ -375,6 +376,26 @@ def update_session_status(session_id: str, status: str, message: str = "") -> di
     return rows[0]
 
 
+def update_canonical_capture_status(
+    session_id: str,
+    status: str,
+    *,
+    processed_count: int | None = None,
+    failed_count: int | None = None,
+) -> dict[str, Any]:
+    """Best-effort bridge to the canonical Supabase capture session record."""
+    try:
+        rows = SupabaseRegistryClient().update_capture_status_by_legacy_id(
+            session_id,
+            status,
+            processed_count=processed_count,
+            failed_count=failed_count,
+        )
+        return {"updated": bool(rows), "warning": ""}
+    except Exception as exc:
+        return {"updated": False, "warning": sanitize_error_message(exc)}
+
+
 def storage_object_url(base_url: str, bucket: str, storage_path: str) -> str:
     encoded_path = "/".join(urllib.parse.quote(part, safe="") for part in storage_path.split("/"))
     return f"{base_url.rstrip('/')}/storage/v1/object/{urllib.parse.quote(bucket, safe='')}/{encoded_path}"
@@ -619,7 +640,13 @@ class MobileCaptureQueueService:
             manifest = stage_session(session, images)
         except Exception as exc:
             update_session_status(session_id, "FAILED", sanitize_error_message(exc))
+            update_canonical_capture_status(session_id, "failed", failed_count=1)
             raise
+        manifest["canonical_registry_sync"] = update_canonical_capture_status(
+            session_id,
+            "staged",
+            processed_count=len(images),
+        )
         return manifest
 
     def process_next_pending(self) -> dict[str, Any] | None:
