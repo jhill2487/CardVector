@@ -12,7 +12,7 @@ DOCS = ROOT / "Docs"
 APP_PATH = DOCS / "app.js"
 EXPORTER_PATH = ROOT / "Tools" / "export_cardvector_site.py"
 EXPECTED_URLS = {
-    "EBAY_STORE_URL": "https://ebay.io/m/gttiV0",
+    "EBAY_STORE_URL": "https://www.ebay.com/str/jhilltcg?mkcid=1&mkrid=711-53200-19255-0&siteid=0&campid=5339178316&customid=&toolid=10001&mkevt=1",
     "TCGPLAYER_STORE_URL": "https://www.tcgplayer.com/sellers/Putnam-Collectibles/747c057d",
     "WHATNOT_REFERRAL_URL": "https://whatnot.com/invite/putnam_collectibles",
     "WHATNOT_SELLER_REFERRAL_URL": "https://whatnot.com/invite/seller/putnam_collectibles",
@@ -91,6 +91,12 @@ class PublicStorefrontContractTests(unittest.TestCase):
         self.assertIn("any available new-seller promotional bonus", self.source_html)
         self.assertIn("credit eligibility are determined by Whatnot and may change", self.source_html)
         self.assertNotRegex(self.source_html, r"\$\d+[^<]*Whatnot")
+
+    def test_marketplace_affiliate_disclosure_is_present(self):
+        disclosure = "Some marketplace links may be affiliate links."
+        self.assertIn(disclosure, self.source_html)
+        self.assertIn(disclosure, self.output_html)
+        self.assertIn(disclosure, self.output_404)
 
     def test_export_resolves_configuration_and_keeps_links_safe(self):
         for text in (self.output_html, self.output_404, self.output_js):
