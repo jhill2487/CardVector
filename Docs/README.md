@@ -236,8 +236,9 @@ in the live preview. A 63:88 guide helps position a card but is not included in
 the JPEG. Photo Library files are uploaded without applying the live-preview
 crop.
 
-CardVector Mobile has three explicit entry paths: direct location QR, main ETB
-QR, and `/capture` without a QR. Main ETB and no-QR entry use the same existing
+CardVector Mobile has explicit entry paths: direct location QR, main ETB QR,
+`/capture` without a QR, and the bookmark-friendly backup aliases
+`/mobile-capture` and `/mobile`. Main ETB and no-QR entry use the same existing
 camera route after capture type, ETB, and location are reviewed. Supabase owns
 cloud-visible location identity; the desktop ETB JSON registry remains the
 offline operational projection and synchronizes through the Capture Queue

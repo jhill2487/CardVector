@@ -2035,7 +2035,7 @@
     return;
   }
 
-  if (route === "capture" && !parts[1]) {
+  if ((route === "capture" && !parts[1]) || route === "mobile-capture" || route === "mobile") {
     renderQrView(
       "Mobile Capture",
       "Start a CardVector capture session without scanning a location QR.",

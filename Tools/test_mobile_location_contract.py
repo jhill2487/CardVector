@@ -69,7 +69,7 @@ class MobileLocationDatabaseContractTests(unittest.TestCase):
     def test_mobile_routes_do_not_auto_start_camera(self):
         etb_start = self.app_js.index('if (route === "etb"')
         location_start = self.app_js.index('if (route === "location"')
-        no_qr_start = self.app_js.index('if (route === "capture" && !parts[1])')
+        no_qr_start = self.app_js.index('route === "mobile-capture"')
         camera_start = self.app_js.index('if (route === "capture" && parts[1] && parts[2])')
         etb_route = self.app_js[etb_start:location_start]
         no_qr_route = self.app_js[no_qr_start:camera_start]
@@ -77,10 +77,11 @@ class MobileLocationDatabaseContractTests(unittest.TestCase):
         self.assertNotIn("initializeCapture(etbId", etb_route)
         self.assertIn("initializeCaptureEntry();", no_qr_route)
         self.assertNotIn("initializeCapture(etbId", no_qr_route)
+        self.assertIn('route === "mobile"', no_qr_route)
 
     def test_direct_location_route_retains_explicit_capture_type_choice(self):
         location_start = self.app_js.index('if (route === "location"')
-        no_qr_start = self.app_js.index('if (route === "capture" && !parts[1])')
+        no_qr_start = self.app_js.index('route === "mobile-capture"')
         direct_route = self.app_js[location_start:no_qr_start]
         self.assertIn("captureChoiceHtml(etbId, location)", direct_route)
         self.assertNotIn("initializeCapture(etbId", direct_route)
