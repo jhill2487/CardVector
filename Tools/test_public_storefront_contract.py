@@ -69,9 +69,11 @@ class PublicStorefrontContractTests(unittest.TestCase):
             "Whatnot",
             "About",
             "Contact",
+            "Mobile Capture",
         ]
         positions = [nav.group(1).index(label) for label in labels]
         self.assertEqual(positions, sorted(positions))
+        self.assertIn('href="/mobile-capture"', nav.group(1))
 
     def test_sell_and_bulk_routes_share_one_destination(self):
         self.assertIn('new Set(["sell", "bulk", "buylist"])', self.source_js)
@@ -109,6 +111,8 @@ class PublicStorefrontContractTests(unittest.TestCase):
         self.assertIn(".nav-menu[open] > .nav-links", self.source_css)
         self.assertNotIn("overflow-x: auto", self.source_css)
         self.assertIn("min-height: 44px", self.source_css)
+        self.assertIn('"mobile-capture"', EXPORTER_PATH.read_text(encoding="utf-8"))
+        self.assertIn('"mobile"', EXPORTER_PATH.read_text(encoding="utf-8"))
 
     def test_public_export_contains_no_private_credentials(self):
         combined = "\n".join(

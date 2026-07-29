@@ -60,7 +60,20 @@ PROHIBITED_SUFFIXES = {
     ".tmp",
 }
 
-CLIENT_ROUTES = {"about", "buylist", "bulk", "capture", "contact", "events", "etb", "location", "lot", "sell"}
+CLIENT_ROUTES = {
+    "about",
+    "buylist",
+    "bulk",
+    "capture",
+    "contact",
+    "events",
+    "etb",
+    "location",
+    "lot",
+    "mobile",
+    "mobile-capture",
+    "sell",
+}
 
 
 def repo_root() -> Path:
