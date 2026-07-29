@@ -97,6 +97,18 @@ class MobileLocationDatabaseContractTests(unittest.TestCase):
         ):
             self.assertIn(contract, self.app_js)
 
+    def test_no_qr_mobile_entry_uses_streamlined_dropdown_form(self):
+        for contract in (
+            'id="mobile-capture-type"',
+            'id="mobile-capture-etb"',
+            'id="mobile-capture-location"',
+            'id="mobile-capture-layout"',
+            'id="mobile-capture-entry-form"',
+            "renderMobileCaptureForm",
+            "Choose ETB first",
+        ):
+            self.assertIn(contract, self.app_js)
+
     def test_mobile_capture_allows_operator_to_select_camera_device(self):
         for contract in (
             'id="camera-device-select"',
