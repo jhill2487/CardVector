@@ -9,6 +9,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "Docs"
+APP_PATH = DOCS / "app.js"
 EXPORTER_PATH = ROOT / "Tools" / "export_cardvector_site.py"
 EXPECTED_URLS = {
     "EBAY_STORE_URL": "https://ebay.io/m/gttiV0",
@@ -73,7 +74,7 @@ class PublicStorefrontContractTests(unittest.TestCase):
         ]
         positions = [nav.group(1).index(label) for label in labels]
         self.assertEqual(positions, sorted(positions))
-        self.assertIn('href="/mobile-capture"', nav.group(1))
+        self.assertIn('href="/#mobile-capture"', nav.group(1))
 
     def test_sell_and_bulk_routes_share_one_destination(self):
         self.assertIn('new Set(["sell", "bulk", "buylist"])', self.source_js)
@@ -113,6 +114,7 @@ class PublicStorefrontContractTests(unittest.TestCase):
         self.assertIn("min-height: 44px", self.source_css)
         self.assertIn('"mobile-capture"', EXPORTER_PATH.read_text(encoding="utf-8"))
         self.assertIn('"mobile"', EXPORTER_PATH.read_text(encoding="utf-8"))
+        self.assertIn("mobileHashRoutes", APP_PATH.read_text(encoding="utf-8"))
 
     def test_public_export_contains_no_private_credentials(self):
         combined = "\n".join(
