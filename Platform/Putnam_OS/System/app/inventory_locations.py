@@ -82,6 +82,48 @@ def active_location_from_record(location: dict[str, Any]) -> str:
     )
 
 
+def carduploader_batch_events_from_location(location: dict[str, Any]) -> list[dict[str, Any]]:
+    events = location.get("carduploader_batch_events") or []
+    if isinstance(events, list):
+        normalized = [dict(item) for item in events if isinstance(item, dict)]
+    else:
+        normalized = []
+    legacy_id = str(location.get("carduploader_batch_id") or "").strip()
+    legacy_url = str(location.get("carduploader_batch_url") or "").strip()
+    if legacy_id or legacy_url:
+        if not any(
+            str(event.get("carduploader_batch_id") or "") == legacy_id
+            and str(event.get("carduploader_batch_url") or "") == legacy_url
+            for event in normalized
+        ):
+            normalized.append(
+                {
+                    "carduploader_batch_id": legacy_id,
+                    "carduploader_batch_url": legacy_url,
+                    "carduploader_batch_name": str(
+                        location.get("carduploader_batch_name") or ""
+                    ),
+                    "event_type": "unknown",
+                    "source": "legacy_location_field",
+                }
+            )
+    return normalized
+
+
+def latest_carduploader_batch_event(location: dict[str, Any]) -> dict[str, Any]:
+    events = carduploader_batch_events_from_location(location)
+    if not events:
+        return {}
+    return sorted(
+        events,
+        key=lambda item: (
+            str(item.get("batch_date") or ""),
+            str(item.get("scraped_at") or ""),
+            str(item.get("carduploader_batch_id") or ""),
+        ),
+    )[-1]
+
+
 def _default_registry() -> dict[str, Any]:
     now = timestamp()
     return {
@@ -171,6 +213,9 @@ def ensure_etb_location_records(location: dict[str, Any], registry: dict[str, An
             "carduploader_batch_url": item.get("carduploader_batch_url", ""),
             "carduploader_batch_id": item.get("carduploader_batch_id", ""),
             "carduploader_batch_name": item.get("carduploader_batch_name", ""),
+            "carduploader_batch_events": carduploader_batch_events_from_location(item),
+            "carduploader_batch_count": int(item.get("carduploader_batch_count") or len(carduploader_batch_events_from_location(item))),
+            "carduploader_batch_history_updated_at": item.get("carduploader_batch_history_updated_at", ""),
             "created_at": item.get("created_at") or location.get("created_at") or now,
             "updated_at": item.get("updated_at") or location.get("updated_at") or now,
         })
@@ -319,8 +364,9 @@ def location_is_cloud_provisioned(location: dict[str, Any], active_location: str
             "carduploader_batch_id",
             "carduploader_batch_url",
             "carduploader_batch_name",
+            "carduploader_batch_history_updated_at",
         )
-    )
+    ) or bool(carduploader_batch_events_from_location(location))
 
 
 def next_unprovisioned_location_code(existing_codes: list[str] | tuple[str, ...] | set[str]) -> str:
@@ -395,6 +441,12 @@ def cloud_location_registry_snapshot(path: Path | None = None) -> dict[str, list
                 "capacity": capacity,
                 "stored_count": stored_count,
                 "assigned_batch": str(child.get("assigned_batch") or ""),
+                "carduploader_batch_url": str(child.get("carduploader_batch_url") or ""),
+                "carduploader_batch_id": str(child.get("carduploader_batch_id") or ""),
+                "carduploader_batch_name": str(child.get("carduploader_batch_name") or ""),
+                "carduploader_batch_events": carduploader_batch_events_from_location(child),
+                "carduploader_batch_count": int(child.get("carduploader_batch_count") or len(carduploader_batch_events_from_location(child))),
+                "carduploader_batch_history_updated_at": str(child.get("carduploader_batch_history_updated_at") or ""),
                 "source_updated_at": str(child.get("updated_at") or raw_etb.get("updated_at") or ""),
             })
 
@@ -798,6 +850,8 @@ def resolve_cardvector_qr_payload(payload: str, path: Path | None = None) -> dic
         "carduploader_batch_url": location.get("carduploader_batch_url", ""),
         "carduploader_batch_id": location.get("carduploader_batch_id", ""),
         "carduploader_batch_name": location.get("carduploader_batch_name", ""),
+        "carduploader_batch_events": carduploader_batch_events_from_location(location),
+        "carduploader_batch_count": int(location.get("carduploader_batch_count") or len(carduploader_batch_events_from_location(location))),
         "last_updated": location.get("updated_at", ""),
     }
 
@@ -822,6 +876,7 @@ def qr_resolution_text(resolved: dict[str, Any]) -> str:
         f"Status: {resolved.get('status', '')}",
         f"Assigned Batch: {resolved.get('assigned_batch', '') or '(none)'}",
         f"CardUploader Batch: {resolved.get('carduploader_batch_name', '') or resolved.get('carduploader_batch_id', '') or '(none)'}",
+        f"CardUploader Batch Events: {resolved.get('carduploader_batch_count', 0)}",
         f"CardUploader URL: {resolved.get('carduploader_batch_url', '') or '(none)'}",
         f"Last Updated: {resolved.get('last_updated', '') or '(none)'}",
     ])

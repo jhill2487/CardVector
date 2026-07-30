@@ -1,10 +1,12 @@
 """Supabase integration adapters for CardVector shared registry data."""
 
 from .registry import (
+    CANONICAL_CARDUPLOADER_BATCH_EVENTS_TABLE,
     CANONICAL_CAPTURE_IMAGES_TABLE,
     CANONICAL_CAPTURE_SESSIONS_TABLE,
     CANONICAL_INVENTORY_RELATIONSHIPS_TABLE,
     CANONICAL_LOCATIONS_TABLE,
+    CanonicalCardUploaderBatchEvent,
     CanonicalCaptureImage,
     CanonicalCaptureSession,
     CanonicalLocation,
@@ -17,10 +19,12 @@ from .registry import (
 )
 
 __all__ = [
+    "CANONICAL_CARDUPLOADER_BATCH_EVENTS_TABLE",
     "CANONICAL_CAPTURE_IMAGES_TABLE",
     "CANONICAL_CAPTURE_SESSIONS_TABLE",
     "CANONICAL_INVENTORY_RELATIONSHIPS_TABLE",
     "CANONICAL_LOCATIONS_TABLE",
+    "CanonicalCardUploaderBatchEvent",
     "CanonicalCaptureImage",
     "CanonicalCaptureSession",
     "CanonicalLocation",

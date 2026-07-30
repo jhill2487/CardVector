@@ -311,6 +311,15 @@ def canonical_location_rows_from_snapshot(
             "sync_state": "synced",
             "metadata": {
                 "assigned_batch": location.get("assigned_batch") or "",
+                "carduploader_batch_url": location.get("carduploader_batch_url") or "",
+                "carduploader_batch_id": location.get("carduploader_batch_id") or "",
+                "carduploader_batch_name": location.get("carduploader_batch_name") or "",
+                "carduploader_batch_events": location.get("carduploader_batch_events") or [],
+                "carduploader_batch_count": int(
+                    location.get("carduploader_batch_count")
+                    or len(location.get("carduploader_batch_events") or [])
+                ),
+                "carduploader_batch_history_updated_at": location.get("carduploader_batch_history_updated_at") or "",
                 "source_updated_at": location.get("source_updated_at") or "",
                 "inventory_count_source": (
                     "existing_canonical"

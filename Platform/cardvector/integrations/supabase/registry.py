@@ -15,6 +15,7 @@ CANONICAL_LOCATIONS_TABLE = "cardvector_storage_locations"
 CANONICAL_CAPTURE_SESSIONS_TABLE = "cardvector_capture_sessions"
 CANONICAL_CAPTURE_IMAGES_TABLE = "cardvector_capture_images"
 CANONICAL_INVENTORY_RELATIONSHIPS_TABLE = "cardvector_inventory_relationships"
+CANONICAL_CARDUPLOADER_BATCH_EVENTS_TABLE = "cardvector_carduploader_batch_events"
 CANONICAL_REGISTRY_NAMESPACE = uuid.UUID("8a72c321-d53f-4370-8013-0c5659664ac9")
 
 
@@ -226,6 +227,67 @@ class CanonicalCaptureImage:
         )
 
 
+@dataclass(frozen=True)
+class CanonicalCardUploaderBatchEvent:
+    id: str
+    carduploader_batch_id: str
+    carduploader_batch_url: str
+    owner_user_id: str = ""
+    organization_id: str = ""
+    location_id: str = ""
+    location_display_code: str = ""
+    etb_display_code: str = ""
+    carduploader_batch_name: str = ""
+    batch_label: str = ""
+    batch_type: str = "ungraded"
+    game: str = ""
+    language: str = ""
+    event_type: str = "unknown"
+    card_count: int | None = None
+    total_value: float | None = None
+    batch_date: str = ""
+    source: str = "carduploader_history_scrape"
+    scraped_at: str = ""
+    metadata: Mapping[str, Any] = field(default_factory=dict)
+    migration_metadata: Mapping[str, Any] = field(default_factory=dict)
+    created_at: str = ""
+    updated_at: str = ""
+    archived_at: str = ""
+
+    @classmethod
+    def from_row(cls, row: Mapping[str, Any]) -> "CanonicalCardUploaderBatchEvent":
+        return cls(
+            id=str(row.get("id") or ""),
+            owner_user_id=str(row.get("owner_user_id") or ""),
+            organization_id=str(row.get("organization_id") or ""),
+            location_id=str(row.get("location_id") or ""),
+            location_display_code=str(row.get("location_display_code") or ""),
+            etb_display_code=str(row.get("etb_display_code") or ""),
+            carduploader_batch_id=str(row.get("carduploader_batch_id") or ""),
+            carduploader_batch_url=str(row.get("carduploader_batch_url") or ""),
+            carduploader_batch_name=str(row.get("carduploader_batch_name") or ""),
+            batch_label=str(row.get("batch_label") or ""),
+            batch_type=str(row.get("batch_type") or "ungraded"),
+            game=str(row.get("game") or ""),
+            language=str(row.get("language") or ""),
+            event_type=str(row.get("event_type") or "unknown"),
+            card_count=_optional_int(row.get("card_count")),
+            total_value=_optional_float(row.get("total_value")),
+            batch_date=str(row.get("batch_date") or ""),
+            source=str(row.get("source") or "carduploader_history_scrape"),
+            scraped_at=str(row.get("scraped_at") or ""),
+            metadata=dict(row.get("metadata") or {}),
+            migration_metadata=dict(row.get("migration_metadata") or {}),
+            created_at=str(row.get("created_at") or ""),
+            updated_at=str(row.get("updated_at") or ""),
+            archived_at=str(row.get("archived_at") or ""),
+        )
+
+    def to_row(self) -> dict[str, Any]:
+        payload = asdict(self)
+        return _remove_empty_strings(payload)
+
+
 class SupabaseRegistryClient:
     """REST adapter for canonical CardVector registry tables.
 
@@ -304,6 +366,19 @@ class SupabaseRegistryClient:
         return self.request_json(
             "POST",
             f"/rest/v1/{CANONICAL_CAPTURE_IMAGES_TABLE}?on_conflict=id",
+            _normalize_bulk_rows(rows),
+            prefer="resolution=merge-duplicates,return=representation",
+        ) or []
+
+    def upsert_carduploader_batch_events(
+        self,
+        rows: list[Mapping[str, Any]],
+    ) -> list[dict[str, Any]]:
+        if not rows:
+            return []
+        return self.request_json(
+            "POST",
+            f"/rest/v1/{CANONICAL_CARDUPLOADER_BATCH_EVENTS_TABLE}?on_conflict=id",
             _normalize_bulk_rows(rows),
             prefer="resolution=merge-duplicates,return=representation",
         ) or []
@@ -419,6 +494,16 @@ def canonical_rows_to_legacy_etb_rows(
                     "carduploader_batch_name": str(
                         child.metadata.get("carduploader_batch_name", "")
                     ),
+                    "carduploader_batch_events": list(
+                        child.metadata.get("carduploader_batch_events", [])
+                        or []
+                    ),
+                    "carduploader_batch_count": _int(
+                        child.metadata.get("carduploader_batch_count")
+                    ),
+                    "carduploader_batch_history_updated_at": str(
+                        child.metadata.get("carduploader_batch_history_updated_at", "")
+                    ),
                     "cloud_location_uuid": child.id,
                     "sync_state": child.sync_state,
                     "created_at": child.created_at,
@@ -465,6 +550,15 @@ def _optional_int(value: Any) -> int | None:
     return _int(value)
 
 
+def _optional_float(value: Any) -> float | None:
+    if value in (None, ""):
+        return None
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return None
+
+
 def _remove_empty_strings(payload: dict[str, Any]) -> dict[str, Any]:
     return {key: value for key, value in payload.items() if value != ""}
 
@@ -483,10 +577,12 @@ def _sanitize(value: str) -> str:
 
 
 __all__ = [
+    "CANONICAL_CARDUPLOADER_BATCH_EVENTS_TABLE",
     "CANONICAL_CAPTURE_IMAGES_TABLE",
     "CANONICAL_CAPTURE_SESSIONS_TABLE",
     "CANONICAL_INVENTORY_RELATIONSHIPS_TABLE",
     "CANONICAL_LOCATIONS_TABLE",
+    "CanonicalCardUploaderBatchEvent",
     "CanonicalCaptureImage",
     "CanonicalCaptureSession",
     "CanonicalLocation",
