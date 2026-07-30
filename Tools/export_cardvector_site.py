@@ -72,7 +72,9 @@ CLIENT_ROUTES = {
     "lot",
     "mobile",
     "mobile-capture",
+    "operator",
     "sell",
+    "registry",
 }
 
 
