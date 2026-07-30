@@ -24,7 +24,7 @@ Current desktop direction:
 
 - CardVector OS is a workflow conductor, not a replacement for CardUploader or eBay.
 - The production path is Capture -> CardUploader -> Processing -> eBay.
-- Home remains limited to actionable pending work, active-listings freshness, and business alerts.
+- Home remains limited to actionable pending work and active-listings freshness.
 
 ---
 

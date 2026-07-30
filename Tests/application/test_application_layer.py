@@ -31,7 +31,6 @@ def legacy_delegates() -> WorkflowDelegates:
         recent_completed_jobs=legacy_workflow_context.recent_completed_jobs,
         group_processing_jobs=legacy_workflow_context.group_processing_jobs,
         active_listings_summary=legacy_workflow_context.active_listings_summary,
-        business_alerts=legacy_workflow_context.business_alerts,
         update_workflow_context=legacy_workflow_context.update_workflow_context,
     )
 
@@ -116,9 +115,6 @@ class WorkflowApplicationTests(unittest.TestCase):
             recent_completed_jobs=completed,
             group_processing_jobs=lambda jobs: {"Ready": list(jobs)},
             active_listings_summary=lambda path: {"path": str(path)},
-            business_alerts=lambda jobs, listings, **kwargs: [
-                {"severity": "Ready", "text": str(len(list(jobs))), "action": ""}
-            ],
             update_workflow_context=lambda folder, **updates: {
                 "capture_folder": str(folder),
                 **updates,

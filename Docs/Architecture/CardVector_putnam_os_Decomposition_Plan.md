@@ -45,7 +45,7 @@ The production launcher targets this file, so it remains operational throughout 
 | `load_app_config`, `save_app_config` | `infrastructure.configuration.application_settings` | Atomic JSON repository, schema | Medium | 3 | Existing settings round-trip; missing/corrupt config |
 | `money`, `decimal_money`, `format_decimal_money` | `shared.domain.money` | `Decimal` only | Medium | 4 | Boundary/rounding parity |
 | `read_csv`, `write_csv`, `normalize_column_name`, `find_column(s)` | Owner-specific importers plus `infrastructure.serialization.csv` | Paths, encoding policy | Medium | 4 | Existing CSV fixtures and UTF-8/BOM |
-| `run_decision_engine_check`, `decision_engine_summary_text`, `latest_decision_log` | Decision owner pending; likely `marketplace_intelligence.application` or application alerts | Decision port, report repository | High | Deferred | Current Marketplace UI behavior |
+| `run_decision_engine_check`, `decision_engine_summary_text`, `latest_decision_log` | Decision owner pending; likely `marketplace_intelligence.application` or application status/reporting | Decision port, report repository | High | Deferred | Current Marketplace UI behavior |
 | eBay policy functions `load_ebay_business_policies` through `validate_ebay_business_policies` | `shipping.domain.policies` and configuration repository | Validated settings | High | 7 | Policy configuration test; no export column change |
 | `optimized_export_price`, `calculate_market_value`, `apply_pricing_strategy` | `marketplace_intelligence` canonical API | Explicit FMV/pricing models | High | 5 | Pricing consolidation fixtures; formula absence |
 | `prepare_listing_export_rows`, `summarize_final_prices`, `export_summary_text`, `validate_export_price_floor` | `listings.application.export_service` | Pricing result, shipping policies, eBay adapter | High | 7 | Exact eBay headers/rows and cancellation |
@@ -95,7 +95,6 @@ Use `workflow_context.py` as the seed.
 Extract:
 
 - pending-work discovery,
-- actionable alert generation,
 - workflow job lookup and updates.
 
 Keep:

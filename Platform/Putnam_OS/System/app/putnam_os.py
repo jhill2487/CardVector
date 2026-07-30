@@ -144,7 +144,6 @@ def build_application_runtime():
                 recent_completed_jobs=legacy_workflow_context.recent_completed_jobs,
                 group_processing_jobs=legacy_workflow_context.group_processing_jobs,
                 active_listings_summary=legacy_workflow_context.active_listings_summary,
-                business_alerts=legacy_workflow_context.business_alerts,
                 update_workflow_context=legacy_workflow_context.update_workflow_context,
             )
         ),
@@ -4368,28 +4367,6 @@ class PutnamOS(BaseTk):
         refreshed = listings.get("refreshed_at") or "Not available"
         self.label(source, f"Last refreshed: {refreshed}", 8, BRAND["muted2"], False, anchor="w", pady=(2, 0))
         self.primary_button(active_content, "Open eBay Seller Hub", self.open_ebay_seller_hub).pack(side="right", padx=(16, 0), pady=10)
-
-        policy_error = ""
-        policies = load_ebay_business_policies()
-        missing = [label for key, label in (("shipping_policy", "shipping policy"), ("payment_policy", "payment policy"), ("return_policy", "return policy")) if not policies.get(key)]
-        if missing:
-            policy_error = "Required eBay policy setting is missing: " + ", ".join(missing)
-        alerts = self.workflow_application.business_alerts(
-            jobs,
-            listings,
-            policy_error=policy_error,
-        )
-        alert_card = self.card(lower, fill="both", expand=True, ipady=8)
-        self.label(alert_card, "BUSINESS ALERTS", 12, BRAND["gold"], True, anchor="w", padx=18, pady=(14, 6))
-        if not alerts:
-            self.label(alert_card, "No items need attention.", 10, BRAND["muted"], False, anchor="w", padx=18, pady=(4, 14))
-        for alert in alerts[:3]:
-            line = tk.Frame(alert_card, bg=BRAND["panel"])
-            line.pack(fill="x", padx=18, pady=3)
-            color = BRAND["danger"] if alert["severity"] == "Failed" else BRAND["warning"]
-            tk.Label(line, text="!", bg=BRAND["panel"], fg=color, font=self.ui_font("label", True), width=2).pack(side="left")
-            tk.Label(line, text=alert["text"], bg=BRAND["panel"], fg=BRAND["muted"], font=self.ui_font("label"), anchor="w", justify="left", wraplength=560).pack(side="left", fill="x", expand=True)
-            self.action_button(line, alert["action"], lambda item=dict(alert): self.run_workflow_action(self.workflow_job_by_id(item.get("job_id")) or {}, item["action"])).pack(side="right", padx=(8, 0))
 
         self.refresh_workflow_jobs_background()
 

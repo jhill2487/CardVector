@@ -25,9 +25,10 @@ class DesktopWorkflowUIContractTests(unittest.TestCase):
 
     def test_home_contains_only_actionable_section_titles(self):
         home = method_source("home_page", "capture_queue_page")
-        for title in ("PENDING WORK", "ACTIVE LISTINGS", "BUSINESS ALERTS"):
+        for title in ("PENDING WORK", "ACTIVE LISTINGS"):
             self.assertIn(title, home)
         for removed in (
+            "BUSINESS ALERTS",
             "TODAY'S MISSION",
             "CURRENT ACQUISITION",
             "WORKFLOW PROGRESS",

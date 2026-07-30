@@ -16,7 +16,7 @@ Production navigation:
 - Orders
 - Settings
 
-Home is limited to Pending Work, Active Listings, and Business Alerts.
+Home is limited to Pending Work and Active Listings.
 Processing combines CardUploader CSV intake, pricing review, and eBay export
 handoff while retaining the exact capture-folder context. Pricing work runs in
 the background and progress is hidden while idle.

@@ -5,7 +5,6 @@ from pathlib import Path
 
 from workflow_context import (
     active_listings_summary,
-    business_alerts,
     discover_workflow_jobs,
     group_processing_jobs,
     jobs_from_queue_rows,
@@ -48,7 +47,7 @@ class WorkflowContextTests(unittest.TestCase):
             self.assertEqual(jobs[0]["stage"], "Pricing Review")
             self.assertEqual(group_processing_jobs(jobs)["Pricing Review"][0]["row_count"], 1)
 
-    def test_failed_queue_row_creates_actionable_alert(self):
+    def test_failed_queue_row_retains_capture_queue_action(self):
         jobs = jobs_from_queue_rows(
             [
                 {
@@ -61,10 +60,8 @@ class WorkflowContextTests(unittest.TestCase):
                 }
             ]
         )
-        alerts = business_alerts(jobs, {"age_days": 0})
         self.assertEqual(jobs[0]["action"], "Retry Failed Capture")
-        self.assertIn("ETB-002-G", alerts[0]["text"])
-        self.assertEqual(alerts[0]["action"], "Open Capture Queue")
+        self.assertEqual(jobs[0]["etb_location"], "ETB-002-G")
 
     def test_active_listing_summary_is_source_labeled(self):
         with tempfile.TemporaryDirectory() as temp:

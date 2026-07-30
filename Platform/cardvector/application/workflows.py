@@ -16,7 +16,6 @@ class WorkflowDelegates:
     recent_completed_jobs: Callable[..., list[Job]]
     group_processing_jobs: Callable[[Iterable[Job]], dict[str, list[Job]]]
     active_listings_summary: Callable[[Any], dict[str, Any]]
-    business_alerts: Callable[..., list[dict[str, str]]]
     update_workflow_context: Callable[..., dict[str, Any]]
 
 
@@ -98,21 +97,6 @@ class WorkflowApplication:
 
     def active_listings_summary(self, path: Any) -> dict[str, Any]:
         return self._delegates.active_listings_summary(path)
-
-    def business_alerts(
-        self,
-        jobs: Iterable[Job],
-        listings: dict[str, Any],
-        *,
-        policy_error: str = "",
-        limit: int = 6,
-    ) -> list[dict[str, str]]:
-        return self._delegates.business_alerts(
-            jobs,
-            listings,
-            policy_error=policy_error,
-            limit=limit,
-        )
 
     def update_context(self, capture_folder: Any, **updates: Any) -> dict[str, Any]:
         return self._delegates.update_workflow_context(capture_folder, **updates)

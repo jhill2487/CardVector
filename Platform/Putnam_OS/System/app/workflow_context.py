@@ -334,33 +334,6 @@ def active_listings_summary(path: str | Path | None) -> dict[str, Any]:
     }
 
 
-def business_alerts(
-    jobs: Iterable[dict[str, Any]],
-    listings: dict[str, Any],
-    *,
-    policy_error: str = "",
-    limit: int = 6,
-) -> list[dict[str, str]]:
-    alerts: list[dict[str, str]] = []
-    for job in jobs:
-        if job.get("state") == "Failed":
-            location = job.get("etb_location") or job.get("session_folder") or job.get("job_id")
-            detail = str(job.get("last_error") or "Capture needs attention.")
-            alerts.append({"severity": "Failed", "text": f"Mobile capture failed: {location}. {detail}", "action": "Open Capture Queue", "job_id": str(job.get("job_id") or "")})
-        elif job.get("stage") == "Pricing Review":
-            rows = int(job.get("row_count") or 0)
-            suffix = f": {rows} rows" if rows else ""
-            alerts.append({"severity": "Needs Attention", "text": f"Pricing job needs review{suffix}", "action": "Review Pricing", "job_id": str(job.get("job_id") or "")})
-    age_days = listings.get("age_days")
-    if age_days is None:
-        alerts.append({"severity": "Needs Attention", "text": "No verified eBay active-listings source is available.", "action": "Open eBay Seller Hub", "job_id": ""})
-    elif int(age_days) > 7:
-        alerts.append({"severity": "Needs Attention", "text": f"eBay active-listings import is {age_days} days old.", "action": "Open eBay Seller Hub", "job_id": ""})
-    if policy_error:
-        alerts.append({"severity": "Needs Attention", "text": policy_error, "action": "Open Settings", "job_id": ""})
-    return alerts[:limit]
-
-
 def recent_completed_jobs(completed_root: str | Path, limit: int = 5) -> list[dict[str, Any]]:
     root = Path(completed_root)
     if not root.exists():

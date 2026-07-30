@@ -174,9 +174,9 @@ Capture -> CardUploader -> Processing -> eBay Upload
 ```
 
 The production navigation is Home, Capture, Processing, Marketplace, Orders,
-and Settings. Home contains only actionable Pending Work, source-labeled Active
-Listings, and contextual Business Alerts. Processing owns CardUploader CSV
-import, pricing review, and the eBay export handoff.
+and Settings. Home contains only actionable Pending Work and source-labeled
+Active Listings. Processing owns CardUploader CSV import, pricing review, and
+the eBay export handoff.
 
 CardVector does not replace CardUploader recognition, CardUploader managed
 inventory, or eBay fulfillment.

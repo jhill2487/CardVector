@@ -3,8 +3,8 @@
 ## Extraction Summary
 
 Phase 2 extracts only the coordination around the existing workflow-context
-implementation. `workflow_context.py` remains unchanged and retains all current
-job discovery, state derivation, file persistence, and alert behavior.
+implementation. `workflow_context.py` retains current job discovery, state
+derivation, and file persistence behavior.
 
 | Previous `putnam_os.py` orchestration | Application API | Existing implementation called |
 | --- | --- | --- |
@@ -15,7 +15,6 @@ job discovery, state derivation, file persistence, and alert behavior.
 | job lookup by ID | `WorkflowApplication.job_by_id` | list lookup only |
 | Processing queue grouping | `WorkflowApplication.group_processing_jobs` | `group_processing_jobs` |
 | Home active-listing summary | `WorkflowApplication.active_listings_summary` | `active_listings_summary` |
-| Home business-alert query | `WorkflowApplication.business_alerts` | `business_alerts` |
 | workflow handoff persistence | `WorkflowApplication.update_context` | `update_workflow_context` |
 | force local workflow refresh | `WorkflowApplication.invalidate` | invalidates facade cache only |
 

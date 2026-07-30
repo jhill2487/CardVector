@@ -33,7 +33,7 @@ No phase proceeds on "compile passed" alone.
 |---|---|---|
 | Application startup | import/package smoke, configuration failure tests | official VBS launch and clean close |
 | Desktop shell | view construction/source contract | Home, Capture, Processing, Marketplace, Orders, Settings |
-| Dashboard | job/alert query tests | exact actionable jobs and no stale cards |
+| Dashboard | job query tests | exact actionable jobs and no stale cards |
 | Marketplace Intelligence | fixture unit/integration tests | representative analysis report |
 | Pricing | FMV/recommendation/final separation and parity | CardUploader CSV through review |
 | Capture | session/pair/routing/queue tests | desktop/manual/auto/mobile modes as affected |

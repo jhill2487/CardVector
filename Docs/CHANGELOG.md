@@ -1,5 +1,17 @@
 # Changelog
 
+## CardVector OS Business Alerts Removal
+
+### Changed
+
+- Removed Business Alerts from the CardVector OS Home workspace and workflow
+  application surface so Home focuses on Pending Work and Active Listings.
+
+### Safety
+
+- No capture, inventory, pricing, marketplace, Supabase, or launcher behavior
+  changed.
+
 ## Marketplace Intelligence Explainability
 
 ### Added

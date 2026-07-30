@@ -299,10 +299,9 @@ The production navigation is limited to:
 - Orders
 - Settings
 
-Home answers what needs attention next and contains only Pending Work, Active
-Listings, and Business Alerts. Processing owns the CardUploader CSV import,
-pricing review, and eBay export handoff. Progress is visible only while work is
-running.
+Home answers what needs attention next and contains only Pending Work and
+Active Listings. Processing owns the CardUploader CSV import, pricing review,
+and eBay export handoff. Progress is visible only while work is running.
 
 Acquisition tracking and historical inventory-review code may remain for
 backward compatibility, but they are not part of the daily production UI.
