@@ -11,7 +11,7 @@ The permanent source architecture uses one installable Python package at `Platfo
 - supports `python -m cardvector`,
 - eliminates working-directory-dependent imports,
 - allows subsystem ownership without a repository-wide rewrite,
-- supports desktop, CLI, web-service, and automation entry points over the same application services,
+- supports CardVector.app, compatibility desktop, CLI, web-service, and automation entry points over the same application services,
 - allows current paths to survive temporarily as compatibility wrappers.
 
 The repository continues to separate source, business data, runtime data, documentation, tools, and archives.
@@ -35,7 +35,10 @@ PutnamCollectibles/
 |   |   |-- bootstrap.py
 |   |   |
 |   |   |-- presentation/
-|   |   |   `-- desktop/
+|   |   |   |-- web/
+|   |   |   |   |-- contracts/
+|   |   |   |   `-- view_models/
+|   |   |   `-- desktop_admin/
 |   |   |       |-- application.py
 |   |   |       |-- shell.py
 |   |   |       |-- navigation.py
@@ -156,25 +159,59 @@ The tree is a target, not a move instruction. Existing production files stay in 
 
 ## Source Package Folders
 
-### `cardvector.presentation.desktop`
+### CardVector.app
 
 Purpose:
 
-- Tkinter shell, navigation, views, dialogs, view models, and widget styling.
+- primary future operator UI for shared CardVector workflows.
 
 Belongs:
 
-- `PutnamOS` presentation replacement,
-- Home/Capture/Processing/Marketplace/Orders/Settings views,
-- UI-specific background callback dispatch.
+- ETB/location registry views,
+- mobile capture and capture-session review,
+- batch workflow status,
+- price review and pricing explanations,
+- existing-listing review,
+- inventory/search dashboards over CardUploader/eBay truth.
 
 Must not belong:
 
 - price calculations,
 - location mutation,
 - CSV schema parsing,
-- direct JSON/database writes,
-- external API calls.
+- service-role database writes,
+- secrets or private runtime data,
+- duplicated business logic.
+
+May depend on:
+
+- Supabase-authenticated public contracts,
+- exported/static-safe application contracts,
+- browser-safe integrations.
+
+Must not be depended on by:
+
+- domain, subsystem, infrastructure, or integration packages.
+
+### Desktop Compatibility/Admin Presentation
+
+Purpose:
+
+- current CardVector OS compatibility/admin surface while workflows move to
+  CardVector.app.
+
+Belongs:
+
+- legacy/admin tools that have not yet moved,
+- temporary desktop diagnostics,
+- compatibility views around current `putnam_os.py` behavior.
+
+Must not belong:
+
+- new primary workflow UX unless a workstation-only requirement is proven,
+- Scanner/OBS replacement work without a new approved ADR,
+- pricing, inventory, capture, matching, persistence, or marketplace business
+  rules.
 
 May depend on:
 
@@ -182,7 +219,7 @@ May depend on:
 
 Must not be depended on by:
 
-- domain, subsystem, infrastructure, or integration packages.
+- domain, subsystem, infrastructure, integration packages, or CardVector.app.
 
 ### `cardvector.application`
 

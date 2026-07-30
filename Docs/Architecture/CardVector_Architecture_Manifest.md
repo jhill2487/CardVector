@@ -1,6 +1,6 @@
 # CardVector Architecture Manifest
 
-**Status:** Approved through Phase 8 business-aware pricing; remaining target migration requires separate approval
+**Status:** Approved through web-first CardVector.app UI direction; remaining target migration requires separate approval
 **Prepared:** 2026-07-17
 **Scope:** Permanent architecture and migration policy
 **Evidence baseline:** The eight completed reports in `Docs/Reports`
@@ -57,17 +57,24 @@ CardUploader remains the managed-inventory owner under CV-ADR-021. Production
 schema apply, production legacy import, and final cutover remain gated by dry-run
 review and explicit approval.
 
+The project owner accepted CV-ADR-025 on 2026-07-30. CardVector.app is the
+primary future operator UI. CardVector OS remains the current production
+launcher target and a compatibility/admin desktop surface during migration.
+Scanner and OBS workflows are obsolete for the current operator workflow and are
+legacy/retirement candidates, not active roadmap requirements.
+
 ## Architectural Mission
 
 CardVector is a workflow platform for trading card operations. It coordinates:
 
 `Capture -> CardUploader -> Processing and Price Vector -> eBay handoff`
 
-CardVector owns workflow orchestration, batch milestone visibility, capture preparation, pricing
-intelligence, supported exports, and operator guidance. CardUploader owns card
-recognition and managed inventory. CardVector consumes that inventory through
-application and integration contracts; it does not maintain a competing source
-of truth.
+CardVector owns workflow orchestration, batch milestone visibility, capture
+preparation, pricing intelligence, supported exports, and operator guidance.
+CardVector.app is the primary future operator interface for those workflows.
+CardUploader owns card recognition and managed inventory. CardVector consumes
+that inventory through application and integration contracts; it does not
+maintain a competing source of truth.
 
 ## Permanent Architecture Decisions
 
@@ -138,7 +145,11 @@ CardUploader is the current recognition and managed-inventory integration. CardV
 
 ### A7. UI is an adapter
 
-Tkinter code is confined to `cardvector.presentation.desktop`. It may translate operator actions into application commands and render results. It may not contain pricing, inventory, capture, matching, persistence, or marketplace business rules.
+CardVector.app is the primary future presentation adapter. CardVector OS/Tkinter
+is a compatibility/admin presentation adapter during migration. Presentation
+code may translate operator actions into application commands and render
+results. It may not contain pricing, inventory, capture, matching, persistence,
+or marketplace business rules.
 
 ### A8. Bootstrap performs composition
 
@@ -183,12 +194,21 @@ The legacy ETB JSON registry remains a migration input, comparison source,
 fallback cache, export, and historical audit artifact only after cutover
 validation. It must not silently overwrite newer Supabase records.
 
+### A15. CardVector.app is the primary future operator UI
+
+New user-facing workflow UI should default to CardVector.app unless a proven
+workstation-only requirement exists. CardVector OS remains supported as a
+compatibility/admin tool until active workflows are migrated, delegated, or
+explicitly retired. Scanner and OBS workflows are no longer active roadmap
+requirements for the current operator workflow.
+
 ## Canonical Package Owners
 
 | Responsibility | Permanent owner |
 |---|---|
 | Startup and dependency composition | `cardvector.bootstrap` |
-| Desktop shell and navigation | `cardvector.presentation.desktop` |
+| Primary operator UI and navigation | CardVector.app |
+| Desktop compatibility/admin shell | Current CardVector OS; future `cardvector.compatibility` or admin presentation |
 | Cross-subsystem workflow | `cardvector.application` |
 | Common value objects and errors | `cardvector.shared.domain` |
 | Capture | `cardvector.capture` |
@@ -202,7 +222,7 @@ validation. It must not silently overwrite newer Supabase records.
 | Cross-workflow report coordination | `cardvector.reporting` |
 | Analytics and metric definitions | `cardvector.analytics` |
 | Content workflow, if retained | `cardvector.content` |
-| Native scanner, only if approved | `cardvector.scanner` |
+| Native scanner/OBS workflows | Legacy/retirement candidates; future native scanner only by new approval |
 | Configuration, paths, logging, persistence, jobs | `cardvector.infrastructure` |
 | External protocols | `cardvector.integrations` |
 | Temporary legacy surfaces | `cardvector.compatibility` |

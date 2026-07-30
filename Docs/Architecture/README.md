@@ -27,6 +27,8 @@ evidence; a recommendation in an audit is not a binding decision.
 - **Current phase:** Supabase capture/location registry migration gate after Phase 8
 - **Current production launcher:** `Platform/Putnam_OS/Run CardVector OS Production.vbs`
 - **Current Python target:** `Platform/Putnam_OS/System/app/putnam_os.py`
+- **Primary future operator UI:** CardVector.app
+- **CardVector OS future role:** compatibility/admin desktop tool during migration
 - **Proposed future entry point:** `py -m cardvector`
 - **Proposed future package root:** `Platform/cardvector/`
 - **Migration status:** `Platform/cardvector/application` is the canonical
@@ -51,13 +53,19 @@ evidence; a recommendation in an audit is not a binding decision.
   shared capture batches, ETBs/storage locations, capture images, and their
   relationships. CardUploader remains the managed-inventory owner. Production
   schema apply and legacy import remain gated by dry-run review.
+- **Web-first UI decision:** CV-ADR-025 makes CardVector.app the primary future
+  operator UI. CardVector OS remains the current production launcher and a
+  compatibility/admin surface until its workflows are migrated or explicitly
+  retired. Scanner/OBS workflows are no longer active roadmap requirements for
+  the current operator workflow.
 
 ## Canonical Owners
 
 | Responsibility | Canonical owner |
 | --- | --- |
 | Production startup | Current launcher plus future bootstrap composition root |
-| Desktop presentation | Future `cardvector.presentation.desktop` |
+| Primary operator presentation | CardVector.app |
+| Desktop compatibility/admin presentation | Current CardVector OS, future compatibility surface |
 | Workflow orchestration | `Platform/cardvector/application` |
 | Batch physical-conversion and price-review status | `Platform/cardvector/batch_workflow` through `Platform/cardvector/application` |
 | Shared business types | Future `cardvector.shared.domain` |
@@ -73,6 +81,7 @@ evidence; a recommendation in an audit is not a binding decision.
 | External services | Future `cardvector.integrations` |
 | Temporary migration forwarding | Future `cardvector.compatibility` |
 | Card recognition | CardUploader; CardVector only orchestrates the handoff |
+| Scanner/OBS workflows | Legacy/retirement candidates; not active roadmap owners |
 
 The complete current-to-future mapping is in
 `CardVector_Subsystem_Ownership_Matrix.md`.
@@ -139,6 +148,7 @@ ADR Accepted.
 - [Phase 7 Marketplace Intelligence](Phase_7_Marketplace_Intelligence/)
 - [Phase 8 Pricing Intelligence](Phase_8_Pricing_Intelligence/)
 - [Supabase Registry Migration](Supabase_Registry_Migration/)
+- [CV-ADR-025 CardVector.app Primary UI](CV-ADR-025-cardvector-app-primary-ui.md)
 
 ## Change Approval
 

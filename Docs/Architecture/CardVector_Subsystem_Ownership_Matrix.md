@@ -8,16 +8,17 @@
 | Responsibility | Current implementation(s) | Canonical target package | Migration | Adapter |
 |---|---|---|---|---|
 | Application startup | Production VBS -> `putnam_os.py` | `cardvector.__main__`, `cardvector.bootstrap` | Required | Launcher redirect |
-| Desktop shell | `putnam_os.py`, overlapping `main.py` | `cardvector.presentation.desktop` | Required | Existing classes remain during extraction |
-| Navigation | `PutnamOS.build_ui`, `show_page` | `cardvector.presentation.desktop.navigation` | Required | No external adapter expected |
+| Primary operator shell | CardVector.app mobile capture/static app plus current `putnam_os.py` workflows | CardVector.app | Required | CardVector OS remains compatibility/admin surface |
+| Desktop shell | `putnam_os.py`, overlapping `main.py` | Compatibility/admin desktop surface; not primary future UI | Required | Existing classes remain until migrated or retired |
+| Navigation | `PutnamOS.build_ui`, `show_page`, CardVector.app routes | CardVector.app primary navigation; CardVector OS compatibility navigation | Required | Existing desktop navigation remains during transition |
 | Cross-workflow orchestration | `cardvector.application.workflows` delegates to existing `putnam_os.py`/`workflow_context.py` behavior | `cardvector.application.workflows` | Phase 2 foundation implemented; further callback migration required | `CV-COMP-012`: existing UI methods delegate |
 | Batch workflow status | `workflow_context.py`, conversion-session JSON, pricing callbacks in `putnam_os.py` | `cardvector.batch_workflow` through `cardvector.application.batch_workflow` | Phase 6 canonical milestone model implemented | `CV-COMP-017`: legacy dashboard context remains |
 | Background jobs | UI threads/callbacks, mobile queue loops | `cardvector.application.background_jobs` plus subsystem workers | Required | Existing scheduling methods delegate |
 | Capture domain | UI functions, `capture_studio.py` | `cardvector.capture` | Required | Old module forwards |
-| OBS connection | `obs_connection_manager.py` | `cardvector.integrations.obs` implementing Capture port | Required | Old import path forwards |
+| OBS connection | `obs_connection_manager.py` | Legacy/retirement candidate under CV-ADR-025 | Retirement inventory required | Old import path remains until retired |
 | Mobile capture queue | `System/tools/mobile_capture_queue.py` | `cardvector.capture.application` with Supabase adapter | Required | CLI wrapper remains |
 | Thumbnails/pairs | `capture_pair_rows`, UI preview methods | `cardvector.capture` metadata service; UI renders | Required | Current functions delegate |
-| Scanner recognition | CardUploader external; archived scanner research | External CardUploader; future `cardvector.scanner` only by approval | No current migration | CardUploader adapter |
+| Scanner recognition | CardUploader external; archived scanner research | External CardUploader; future `cardvector.scanner` only by new approval | No current migration; Scanner/OBS active roadmap retired | CardUploader adapter |
 | Card identification model | CSV/provider fields, CardUploader data | `cardvector.shared.domain.cards` if shared contract is proven | Discovery required | External identity adapter |
 | Marketplace Intelligence | `Platform/Marketplace_Intelligence` | `cardvector.marketplace_intelligence` | Package migration required | Old package forwards |
 | Market evidence | MI providers plus UI comp helpers | `cardvector.marketplace_intelligence` | Required | UI helper wrappers temporarily |
@@ -57,7 +58,8 @@
 | Error handling | exceptions, message boxes, text logs | domain/app errors + presentation mapping | Required | Legacy exception translation |
 | Validation | scattered functions | Owning domain/application plus shared primitives | Required | Existing function wrappers |
 | Shared models | duplicated dicts/dataclasses | `cardvector.shared.domain` only for proven cross-owner concepts | Discovery required | Shape adapters |
-| Public website | `Docs` and export tool | Static source/export boundary remains | No desktop package migration | Existing deployment workflow |
+| CardVector.app primary UI | `Docs` and export tool, mobile capture app | CardVector.app authenticated workflows over Supabase/application contracts | Required | Existing deployment workflow |
+| Public storefront | `Docs` and export tool | Static source/export boundary remains | No desktop package migration | Existing deployment workflow |
 
 ## Ownership Clarifications
 
@@ -67,12 +69,17 @@ Known:
 
 - current production recognition is CardUploader,
 - scanner/OCR source is archived,
-- CardVector production does not import recognition code.
+- CardVector production does not import recognition code,
+- the project owner confirmed Scanner/OBS workflows are obsolete for the
+  current operator workflow on 2026-07-30.
 
 Decision:
 
 - `cardvector.scanner` is a reserved future owner, not an implementation authorization.
 - Card identity used across imports/listings may become a shared domain contract only after field semantics are documented.
+- Existing Scanner/OBS source is a legacy/retirement candidate, but no code is
+  removed until callers, launchers, tests, and operator references are accounted
+  for.
 
 ### Listings Versus Marketplace Intelligence
 

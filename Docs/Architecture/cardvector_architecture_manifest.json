@@ -1,16 +1,21 @@
 {
   "schema_version": "1.0",
-  "architecture_version": "1.5",
-  "approval_status": "supabase_capture_location_registry_accepted_production_cutover_gated",
+  "architecture_version": "1.6",
+  "approval_status": "web_first_cardvector_app_primary_ui_accepted_supabase_cutover_gated",
   "current_migration_phase": "supabase_capture_location_registry_migration_gate",
   "current_production_launcher": "Platform/Putnam_OS/Run CardVector OS Production.vbs",
   "current_production_python_target": "Platform/Putnam_OS/System/app/putnam_os.py",
+  "primary_future_operator_ui": "CardVector.app",
+  "desktop_os_future_role": "compatibility_admin_tool_during_migration",
+  "scanner_obs_workflow_status": "legacy_retirement_candidate_not_active_roadmap",
   "proposed_future_python_entry_point": "py -m cardvector",
   "proposed_package_root": "Platform/cardvector",
   "canonical_subsystem_ownership": {
     "application_startup": "cardvector.bootstrap",
-    "desktop_shell": "cardvector.presentation.desktop",
-    "navigation": "cardvector.presentation.desktop",
+    "primary_operator_presentation": "CardVector.app",
+    "desktop_compatibility_admin_presentation": "current:CardVector OS; future:cardvector.compatibility_or_admin_presentation",
+    "desktop_shell": "compatibility_admin_surface_until_migrated",
+    "navigation": "CardVector.app primary; CardVector OS compatibility during migration",
     "workflow_orchestration": "cardvector.application",
     "batch_workflow": "Platform/cardvector/batch_workflow",
     "batch_workflow_orchestration": "Platform/cardvector/application",
@@ -18,6 +23,7 @@
     "capture": "cardvector.capture",
     "shared_capture_location_registry": "Platform/cardvector/integrations/supabase",
     "scanner_recognition": "external:CardUploader",
+    "scanner_obs_workflows": "legacy_retirement_candidate",
     "inventory": "external:CardUploader",
     "inventory_orchestration": "Platform/cardvector/application",
     "inventory_integration": "Platform/cardvector/integrations/carduploader",
@@ -228,6 +234,24 @@
       "path": "Platform/Putnam_OS/System/app/main.py",
       "status": "candidate_not_deprecated",
       "decision": "CV-ADR-012"
+    },
+    {
+      "path": "Platform/Putnam_Platform/capture/Putnam_Capture.py",
+      "status": "candidate_not_deprecated",
+      "decision": "CV-ADR-025",
+      "reason": "Scanner/OBS workflows are obsolete for the current operator workflow; caller inventory is required before retirement."
+    },
+    {
+      "path": "Platform/Putnam_Platform/capture/obs_capture_autocrop.py",
+      "status": "candidate_not_deprecated",
+      "decision": "CV-ADR-025",
+      "reason": "OBS capture workflow is obsolete for the current operator workflow; caller inventory is required before retirement."
+    },
+    {
+      "path": "Platform/Putnam_OS/System/app/putnam_os.py",
+      "status": "compatibility_admin_surface",
+      "decision": "CV-ADR-025",
+      "reason": "CardVector.app is the primary future operator UI; CardVector OS remains the current production compatibility/admin surface."
     }
   ],
   "open_architecture_questions": [
@@ -298,7 +322,9 @@
       "CV-ADR-020",
       "CV-ADR-021",
       "CV-ADR-022",
-      "CV-ADR-023"
+      "CV-ADR-023",
+      "CV-ADR-024",
+      "CV-ADR-025"
     ],
     "proposed": [
       "CV-ADR-001",
@@ -319,5 +345,5 @@
       "CV-ADR-016"
     ]
   },
-  "last_updated": "2026-07-19T18:00:00-04:00"
+  "last_updated": "2026-07-30T12:30:00-04:00"
 }

@@ -1,5 +1,29 @@
 # CardVector Migration Roadmap
 
+## Authorized Execution Addendum - Web-First CardVector.app
+
+The project owner's 2026-07-30 approval accepts CV-ADR-025. CardVector.app is
+the primary future operator UI. CardVector OS remains the current production
+launcher target and a compatibility/admin desktop surface during migration.
+
+This addendum supersedes roadmap language that treats the desktop shell as the
+long-term primary presentation target. Scanner and OBS workflows are obsolete
+for the current operator workflow and should be handled as legacy/retirement
+candidates in a later controlled cleanup phase.
+
+Near-term migration should prioritize CardVector.app surfaces for:
+
+- Supabase ETB/location registry and freshness state,
+- mobile capture batch status and capture-session review,
+- batch workflow dashboard,
+- price review and pricing explanation,
+- existing-listing review,
+- inventory/search dashboards over CardUploader and eBay truth.
+
+This addendum does not authorize deleting Scanner/OBS source, changing the
+production launcher, retiring `putnam_os.py`, or moving private source/runtime
+data into the public deployment.
+
 ## Authorized Execution Addendum - Phase 6 Batch Workflow
 
 The project owner's 2026-07-19 authorization supersedes the older sequence

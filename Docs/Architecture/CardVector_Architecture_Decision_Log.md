@@ -369,3 +369,29 @@ Only the project owner changes approval status to Accepted.
 - **Approval status:** Implementation authorized by the project owner through the
   Supabase registry migration task; production cutover pending explicit approval.
 - **Full ADR:** `CV-ADR-024-supabase-capture-location-registry.md`
+
+## CV-ADR-025 - CardVector.app Is The Primary Future Operator UI
+
+- **Decision:** CardVector.app is the primary future operator UI. CardVector OS
+  remains the current production launcher target and a compatibility/admin
+  desktop surface during migration. Scanner/OBS workflows are legacy/retirement
+  candidates for the current workflow.
+- **Status:** Accepted.
+- **Evidence:** The project owner confirmed on 2026-07-30 that Scanner/OBS
+  workflows are obsolete. Supabase, CardUploader, eBay, and Marketplace
+  Intelligence already define the shared source-of-truth boundaries needed for a
+  web-first operator interface.
+- **Rationale:** New workflows should be usable away from the workstation and
+  should not deepen desktop-local state dependency.
+- **Alternatives considered:** Keep CardVector OS as permanent primary UI;
+  immediately rewrite the desktop app; delete Scanner/OBS code immediately;
+  maintain independent desktop and web implementations indefinitely.
+- **Consequences:** New workflow UX defaults to CardVector.app. Desktop code is
+  preserved as compatibility/admin tooling until migrated or retired through a
+  controlled phase.
+- **Migration impact:** Updates presentation ownership and roadmap priority. No
+  production launcher, runtime behavior, code removal, or production data change
+  is authorized by this decision.
+- **Approval status:** Approved by the project owner in conversation on
+  2026-07-30.
+- **Full ADR:** `CV-ADR-025-cardvector-app-primary-ui.md`
