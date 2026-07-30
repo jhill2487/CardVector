@@ -6,6 +6,7 @@ import time
 import urllib.error
 import urllib.parse
 import urllib.request
+import uuid
 from dataclasses import asdict, dataclass, field
 from typing import Any, Callable, Mapping
 
@@ -14,10 +15,15 @@ CANONICAL_LOCATIONS_TABLE = "cardvector_storage_locations"
 CANONICAL_CAPTURE_SESSIONS_TABLE = "cardvector_capture_sessions"
 CANONICAL_CAPTURE_IMAGES_TABLE = "cardvector_capture_images"
 CANONICAL_INVENTORY_RELATIONSHIPS_TABLE = "cardvector_inventory_relationships"
+CANONICAL_REGISTRY_NAMESPACE = uuid.UUID("8a72c321-d53f-4370-8013-0c5659664ac9")
 
 
 class SupabaseRegistryError(RuntimeError):
     """Raised when the canonical Supabase registry cannot be reached safely."""
+
+
+def canonical_registry_uuid(kind: str, legacy_id: str) -> str:
+    return str(uuid.uuid5(CANONICAL_REGISTRY_NAMESPACE, f"{kind}:{legacy_id}"))
 
 
 def environment_config() -> tuple[str, str]:
@@ -487,6 +493,7 @@ __all__ = [
     "SupabaseRegistryClient",
     "SupabaseRegistryError",
     "canonical_rows_to_legacy_etb_rows",
+    "canonical_registry_uuid",
     "environment_config",
     "legacy_status_to_canonical",
 ]

@@ -7,7 +7,6 @@ import json
 import os
 import shutil
 import sys
-import uuid
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Iterable, Mapping
@@ -16,6 +15,7 @@ from Platform.putnam_paths import ROOT, WORK_SESSIONS_DIR
 from Platform.cardvector.integrations.supabase.registry import (
     SupabaseRegistryClient,
     SupabaseRegistryError,
+    canonical_registry_uuid,
     legacy_status_to_canonical,
 )
 
@@ -29,7 +29,6 @@ CONVERSION_SESSIONS = (
     ROOT / "Platform" / "Putnam_OS" / "System" / "data" / "inventory_conversion" / "sessions"
 )
 
-NAMESPACE = uuid.UUID("8a72c321-d53f-4370-8013-0c5659664ac9")
 APPROVED_SUPABASE_PROJECT_REF = "iqdpfgpkagjxzedfxrvn"
 RESOLUTION_ACTIONS = {
     "skip_exact_duplicate",
@@ -43,7 +42,7 @@ RESOLUTION_ACTIONS = {
 
 
 def canonical_uuid(kind: str, legacy_id: str) -> str:
-    return str(uuid.uuid5(NAMESPACE, f"{kind}:{legacy_id}"))
+    return canonical_registry_uuid(kind, legacy_id)
 
 
 def read_json(path: Path) -> Any:

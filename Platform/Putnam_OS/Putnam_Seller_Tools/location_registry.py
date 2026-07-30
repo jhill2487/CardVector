@@ -32,7 +32,7 @@ except Exception:
 
 
 REGISTRY_VERSION = 1
-LOCATION_RE = re.compile(r"^ETB-(\d{2})-([A-Z])$")
+LOCATION_RE = re.compile(r"^ETB-(\d{2,3})-([A-Z])$")
 
 GAME_ALIASES = {
     "magic": "magic",
@@ -93,9 +93,10 @@ def display_game(game: str | None) -> str:
 
 def validate_location(location: str) -> str:
     value = str(location or "").strip().upper()
-    if not LOCATION_RE.match(value):
-        raise ValueError("Batch Location must use ETB-##-Letter format, example ETB-01-A.")
-    return value
+    match = LOCATION_RE.match(value)
+    if not match:
+        raise ValueError("Batch Location must use ETB-###-Letter format, example ETB-001-A.")
+    return f"ETB-{int(match.group(1)):03d}-{match.group(2)}"
 
 
 def _default_registry() -> dict[str, Any]:
@@ -107,25 +108,25 @@ def _default_registry() -> dict[str, Any]:
         "games": {
             "magic": {
                 "display_name": "Magic / MTG",
-                "current_location": "ETB-04-A",
-                "used_locations": ["ETB-04-A"],
+                "current_location": "ETB-004-A",
+                "used_locations": ["ETB-004-A"],
             },
             "one_piece": {
                 "display_name": "One Piece",
-                "current_location": "ETB-05-A",
-                "used_locations": ["ETB-05-A"],
+                "current_location": "ETB-005-A",
+                "used_locations": ["ETB-005-A"],
             },
             "pokemon": {
                 "display_name": "Pokemon",
-                "current_location": "ETB-01-A",
-                "used_locations": ["ETB-01-A"],
+                "current_location": "ETB-001-A",
+                "used_locations": ["ETB-001-A"],
             },
         },
         "history": [
             {
                 "timestamp": now,
                 "game": "magic",
-                "location": "ETB-04-A",
+                "location": "ETB-004-A",
                 "source": "initial_registry_seed",
                 "status": "assigned",
                 "note": "Category location established during SKU repair planning.",
@@ -133,7 +134,7 @@ def _default_registry() -> dict[str, Any]:
             {
                 "timestamp": now,
                 "game": "one_piece",
-                "location": "ETB-05-A",
+                "location": "ETB-005-A",
                 "source": "initial_registry_seed",
                 "status": "assigned",
                 "note": "Category location established during SKU repair planning.",
@@ -154,6 +155,20 @@ def load_registry(root: Path | None = None) -> dict[str, Any]:
     data.setdefault("rule", "User SKU = Batch Location")
     data.setdefault("games", {})
     data.setdefault("history", [])
+    for entry in data.get("games", {}).values():
+        current = str(entry.get("current_location") or "").strip()
+        if current:
+            try:
+                entry["current_location"] = validate_location(current)
+            except ValueError:
+                pass
+        normalized_used = []
+        for location in entry.get("used_locations", []) or []:
+            try:
+                normalized_used.append(validate_location(location))
+            except ValueError:
+                normalized_used.append(str(location or "").strip().upper())
+        entry["used_locations"] = sorted(set(normalized_used), key=location_sort_key)
     return data
 
 
@@ -180,8 +195,8 @@ def next_location_after(location: str) -> str:
     box = int(match.group(1))
     letter = match.group(2)
     if letter < "Z":
-        return f"ETB-{box:02d}-{chr(ord(letter) + 1)}"
-    return f"ETB-{box + 1:02d}-A"
+        return f"ETB-{box:03d}-{chr(ord(letter) + 1)}"
+    return f"ETB-{box + 1:03d}-A"
 
 
 def suggest_next_location(game: str | None, root: Path | None = None) -> str:
@@ -194,7 +209,33 @@ def suggest_next_location(game: str | None, root: Path | None = None) -> str:
     if candidates:
         latest = sorted(set(candidates), key=location_sort_key)[-1]
         return next_location_after(latest)
-    return "ETB-01-A"
+    return "ETB-001-A"
+
+
+def shared_registry_path(root: Path | None = None) -> Path | None:
+    if root is None:
+        return None
+    root = Path(root)
+    if ROOT is not None and root.resolve() == ROOT.resolve():
+        return None
+    return root / "Platform" / "Putnam_OS" / "System" / "data" / "inventory" / "etb_location_registry.json"
+
+
+def sync_shared_registry_if_configured() -> None:
+    url = os.environ.get("CARDVECTOR_SUPABASE_URL") or os.environ.get("SUPABASE_URL") or ""
+    key = (
+        os.environ.get("CARDVECTOR_SUPABASE_SERVICE_ROLE_KEY")
+        or os.environ.get("SUPABASE_SERVICE_ROLE_KEY")
+        or ""
+    )
+    if not url.strip() or not key.strip():
+        return
+    try:
+        from Platform.Putnam_OS.System.tools.mobile_capture_queue import sync_cloud_location_registry
+
+        sync_cloud_location_registry()
+    except Exception:
+        pass
 
 
 def record_location(
@@ -234,7 +275,24 @@ def record_location(
     if total_listings is not None:
         event["total_listings"] = int(total_listings)
     registry.setdefault("history", []).append(event)
-    return save_registry(registry, root)
+    path = save_registry(registry, root)
+    if total_listings is not None:
+        try:
+            from Platform.Putnam_OS.System.app.inventory_locations import record_completed_batch_location
+
+            record_completed_batch_location(
+                value,
+                int(total_listings),
+                game=canonical,
+                source=source,
+                note=note,
+                path=shared_registry_path(root),
+            )
+            if root is None or (ROOT is not None and Path(root).resolve() == ROOT.resolve()):
+                sync_shared_registry_if_configured()
+        except Exception:
+            pass
+    return path
 
 
 def registry_rows(root: Path | None = None) -> list[dict[str, str]]:

@@ -1783,7 +1783,7 @@ def attach_inventory_conversion_capture_session(session, capture_session):
     session["capture_session_file"] = str(folder / "capture_session.json")
     session["cards_captured"] = inventory_conversion_capture_count(capture_session)
     location_finished = session.get("status") == "Location Complete" or bool(capture_session.get("finished_at"))
-    if location_finished or session["cards_captured"] >= int(session.get("expected_capacity", DEFAULT_ETB_LOCATION_CAPACITY) or DEFAULT_ETB_LOCATION_CAPACITY):
+    if location_finished:
         session["status"] = "Location Complete"
         session.setdefault("workflow_state", {})["current"] = "Location Complete"
     else:
@@ -1842,10 +1842,9 @@ def sync_completed_inventory_conversion_session_to_registry(session):
         return False
     try:
         _etb, location = inventory_conversion_location_record(etb_code, location_code)
-        capacity = int(location.get("capacity", DEFAULT_ETB_LOCATION_CAPACITY) or DEFAULT_ETB_LOCATION_CAPACITY)
         stored = int(location.get("stored_count", 0) or 0)
         status = str(location.get("status") or "")
-        desired = min(capacity, captured)
+        desired = captured
         if stored >= desired and status == "Location Complete":
             return False
         mark_location_complete(etb_code, location_code, captured_count=captured)
@@ -1919,9 +1918,8 @@ def next_suggested_conversion_location():
         for location in etb.get("locations", []):
             if str(location.get("location_code", "")).upper() != active:
                 continue
-            capacity = int(location.get("capacity", DEFAULT_ETB_LOCATION_CAPACITY) or DEFAULT_ETB_LOCATION_CAPACITY)
-            stored = int(location.get("stored_count", 0) or 0)
-            if stored < capacity:
+            status = str(location.get("status") or "")
+            if status not in {"Location Complete", "Full", "Archived"}:
                 return f"{etb['location_code']}-{active}"
     return ""
 
@@ -3409,7 +3407,7 @@ def create_work_session(
     planned_cards="100",
     capture_method="iPhone camera",
     game="pokemon",
-    batch_location="ETB-01-A",
+    batch_location="ETB-001-A",
 ):
     batch_location = validate_location(batch_location)
     stamp = nowstamp()
@@ -6695,11 +6693,11 @@ class PutnamOS(BaseTk):
         occupancy = "Select a location"
         try:
             _etb, _location, capacity, stored, remaining = self.inventory_conversion_selected_counts()
-            occupancy = f"{stored}/{capacity}"
+            occupancy = f"{stored} captured"
         except Exception:
             pass
         captured = inventory_conversion_capture_count(capture_session)
-        expected = int(session.get("expected_capacity", capacity) or capacity)
+        expected = max(captured, int(session.get("expected_capacity", capacity) or capacity))
         return {
             "session": session,
             "capture_session": capture_session,
@@ -6758,7 +6756,7 @@ class PutnamOS(BaseTk):
         )
         self.inventory_workstation_inventory_preview_var.set(
             f"Cards Expected: {data['expected']}\n"
-            f"Cards Captured: {data['captured']}/{data['expected']}\n"
+            f"Cards Captured: {data['captured']}\n"
             "Cards Recognized: Placeholder\n"
             "Cards Reviewed: Placeholder\n"
             "Cards Imported: Placeholder\n"
@@ -6820,10 +6818,10 @@ class PutnamOS(BaseTk):
         try:
             etb, location, capacity, stored, remaining = self.inventory_conversion_selected_counts()
             self.inventory_conversion_capacity_var.set(
-                f"Location capacity: {capacity} cards  |  Converted: {stored}/{capacity}  |  Remaining capacity: {remaining}"
+                f"Location {etb['location_code']}-{location['location_code']}  |  Captured: {stored} cards"
             )
         except Exception:
-            self.inventory_conversion_capacity_var.set("Select an ETB and location to view conversion capacity.")
+            self.inventory_conversion_capacity_var.set("Select an ETB and location to view captured count.")
         self.inventory_conversion_update_dashboard()
         self.inventory_conversion_refresh_workstation()
 
@@ -6845,8 +6843,7 @@ class PutnamOS(BaseTk):
             "Conversion Dashboard\n"
             f"Current ETB: {current_etb}\n"
             f"Current Location: {current_location}\n"
-            f"Location capacity: {capacity}\n"
-            f"Converted count: {stored}/{capacity}\n"
+            f"Captured count: {stored}\n"
             f"Locations completed: {stats['locations_completed']}\n"
             f"Cards converted today: {stats['cards_converted']}\n"
             f"Next available location: {stats['next_suggested_location'] or 'None'}\n"
@@ -6875,12 +6872,11 @@ class PutnamOS(BaseTk):
         session = session or getattr(self, "inventory_conversion_session", None) or {}
         capture_session = capture_session or getattr(self, "inventory_conversion_capture_session", None) or {}
         count = inventory_conversion_capture_count(capture_session)
-        expected = int(session.get("expected_capacity", DEFAULT_ETB_LOCATION_CAPACITY) or DEFAULT_ETB_LOCATION_CAPACITY)
         folder = capture_session.get("folder") or session.get("capture_folder") or "(not started)"
         status = session.get("status") or "Ready"
         return (
             f"Current session status: {status}\n"
-            f"Location: {session.get('location_id', '(none)')}  |  Converted: {count}/{expected}\n"
+            f"Location: {session.get('location_id', '(none)')}  |  Captured: {count}\n"
             f"Capture folder: {folder}"
         )
 
@@ -6975,9 +6971,6 @@ class PutnamOS(BaseTk):
     def inventory_start_conversion_session(self):
         try:
             etb, location, capacity, stored, remaining = self.inventory_conversion_selected_counts()
-            if remaining <= 0:
-                messagebox.showwarning("Physical Inventory Conversion", f"{etb['location_code']}-{location['location_code']} is already full.")
-                return
             session = create_inventory_conversion_session(etb["location_code"], location["location_code"])
             service = self.inventory_conversion_capture_service_for_session(session)
             capture_session = service.start_session()
@@ -7008,10 +7001,6 @@ class PutnamOS(BaseTk):
             if not session or not capture_session or not service:
                 return
             count = inventory_conversion_capture_count(capture_session)
-            expected = int(session.get("expected_capacity", DEFAULT_ETB_LOCATION_CAPACITY) or DEFAULT_ETB_LOCATION_CAPACITY)
-            if count >= expected:
-                messagebox.showinfo("Physical Inventory Conversion", f"{session.get('location_id', 'This location')} already has {count}/{expected} front captures.")
-                return
             status = service.obs_status()
             if not obs_status_is_connected(status) and not service.allow_placeholder:
                 self.status.set("OBS Not Connected. Cannot capture inventory front.")
@@ -7057,10 +7046,9 @@ class PutnamOS(BaseTk):
             return
         capture_session = getattr(self, "inventory_conversion_capture_session", None) or load_inventory_conversion_capture_session(session)
         count = inventory_conversion_capture_count(capture_session)
-        expected = int(session.get("expected_capacity", DEFAULT_ETB_LOCATION_CAPACITY) or DEFAULT_ETB_LOCATION_CAPACITY)
-        if count < expected and not messagebox.askyesno(
+        if count <= 0 and not messagebox.askyesno(
             "Finish Location",
-            f"This location has {count}/{expected} front captures.\n\nFinish the location anyway?",
+            "This location has no front captures.\n\nFinish the location anyway?",
         ):
             return
         try:
@@ -7081,8 +7069,8 @@ class PutnamOS(BaseTk):
             self.inventory_conversion_sync_capture_state(session, capture_session)
             self.inventory_refresh_etb_locations(select_code=updated_etb["location_code"])
             self.inventory_conversion_refresh()
-            append_activity(f"Physical inventory location finished: {session.get('location_id')} {count}/{expected}")
-            self.status.set(f"Location conversion finished: {session.get('location_id')} ({count}/{expected}).")
+            append_activity(f"Physical inventory location finished: {session.get('location_id')} {count} cards")
+            self.status.set(f"Location conversion finished: {session.get('location_id')} ({count} cards).")
         except Exception as exc:
             messagebox.showerror("Physical Inventory Conversion", str(exc))
 
@@ -7361,7 +7349,7 @@ class PutnamOS(BaseTk):
         self.etb_registry_summary_var.set(
             f"Active ETB Registry Source: {source_label}\n"
             f"Legacy cache/export path: {ETB_LOCATION_REGISTRY}\n"
-            f"ETBs: {len(rows)}  |  Next ETB: {next_code}  |  ETB capacity: {DEFAULT_ETB_CAPACITY} cards  |  Location capacity: {DEFAULT_ETB_LOCATION_CAPACITY} cards\n"
+            f"ETBs: {len(rows)}  |  Next ETB: {next_code}  |  ETB capacity: {DEFAULT_ETB_CAPACITY} cards\n"
             "Each ETB has locations A-J. Counts include completed work sessions rolled up by ETB batch location."
             f"{warning_line}"
         )

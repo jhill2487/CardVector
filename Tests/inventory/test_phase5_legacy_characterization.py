@@ -152,7 +152,7 @@ class Phase5LegacyCharacterizationTests(unittest.TestCase):
         self.assertEqual(updated["stored_count"], 12)
         self.assertEqual(rows[0]["total_capacity"], 400)
         self.assertEqual(rows[0]["locations"][0]["stored_count"], 12)
-        self.assertEqual(rows[0]["locations"][0]["status"], "Needs Review")
+        self.assertEqual(rows[0]["locations"][0]["status"], "Location Complete")
 
     def test_pick_slip_generation_is_file_only_and_preserves_ordering(self):
         with tempfile.TemporaryDirectory() as tmp:

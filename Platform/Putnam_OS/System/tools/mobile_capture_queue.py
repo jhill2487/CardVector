@@ -37,6 +37,7 @@ from Platform.Putnam_OS.System.app.inventory_locations import (
     normalize_location_code,
 )
 from Platform.cardvector.integrations.supabase import SupabaseRegistryClient
+from Platform.cardvector.integrations.supabase import canonical_registry_uuid, legacy_status_to_canonical
 
 
 MOBILE_CAPTURE_ROOT = ROOT / "MobileCapture"
@@ -214,6 +215,107 @@ def request_json(method: str, path: str, body: Any | None = None, prefer: str | 
     return json.loads(payload)
 
 
+def canonical_location_rows_from_snapshot(
+    snapshot: dict[str, list[dict[str, Any]]],
+    existing_rows: list[Any],
+) -> tuple[list[dict[str, Any]], str]:
+    existing_by_display = {
+        str(getattr(item, "display_code", "") or "").upper(): item
+        for item in existing_rows or []
+        if str(getattr(item, "display_code", "") or "").strip()
+    }
+    existing_owner = next(
+        (
+            str(getattr(item, "owner_user_id", "") or "")
+            for item in existing_rows or []
+            if str(getattr(item, "owner_user_id", "") or "")
+        ),
+        "",
+    )
+    rows: list[dict[str, Any]] = []
+    warnings: list[str] = []
+    parent_ids: dict[str, str] = {}
+    for etb in snapshot.get("etbs", []) or []:
+        etb_id = normalize_etb_code(etb.get("etb_id", ""))
+        existing = existing_by_display.get(etb_id)
+        owner_id = str(getattr(existing, "owner_user_id", "") or existing_owner)
+        if existing is None and not owner_id:
+            warnings.append(f"Skipped {etb_id}: owner_user_id unavailable for new canonical location.")
+            continue
+        row_id = str(getattr(existing, "id", "") or canonical_registry_uuid("location", etb_id))
+        parent_ids[etb_id] = row_id
+        row = {
+            "id": row_id,
+            "name": etb_id,
+            "location_type": "etb",
+            "status": legacy_status_to_canonical(etb.get("status", "")),
+            "source": "CardVector OS",
+            "legacy_id": etb_id,
+            "legacy_etb_id": etb_id,
+            "display_code": etb_id,
+            "capacity": int(etb.get("capacity") or 400),
+            "stored_count": 0,
+            "sync_state": "synced",
+            "metadata": {
+                "active_location": etb.get("active_location_code") or "",
+                "current_active_location": etb.get("active_location_code") or "",
+                "source_updated_at": etb.get("source_updated_at") or "",
+            },
+        }
+        if owner_id:
+            row["owner_user_id"] = owner_id
+        rows.append(row)
+
+    stored_by_etb: dict[str, int] = {}
+    for location in snapshot.get("locations", []) or []:
+        etb_id = normalize_etb_code(location.get("etb_id", ""))
+        location_code = normalize_location_code(location.get("location_code", ""))
+        display_code = f"{etb_id}-{location_code}"
+        existing = existing_by_display.get(display_code)
+        owner_id = str(getattr(existing, "owner_user_id", "") or existing_owner)
+        if existing is None and not owner_id:
+            warnings.append(f"Skipped {display_code}: owner_user_id unavailable for new canonical location.")
+            continue
+        stored_count = max(0, int(location.get("stored_count") or 0))
+        stored_by_etb[etb_id] = stored_by_etb.get(etb_id, 0) + stored_count
+        row = {
+            "id": str(getattr(existing, "id", "") or canonical_registry_uuid("location", display_code)),
+            "parent_location_id": parent_ids.get(etb_id) or canonical_registry_uuid("location", etb_id),
+            "name": display_code,
+            "location_type": "slot",
+            "status": legacy_status_to_canonical(location.get("status", "")),
+            "source": "CardVector OS",
+            "legacy_id": display_code,
+            "legacy_etb_id": etb_id,
+            "legacy_location_code": location_code,
+            "display_code": display_code,
+            "capacity": int(location.get("capacity") or DEFAULT_ETB_LOCATION_CAPACITY),
+            "stored_count": stored_count,
+            "sync_state": "synced",
+            "metadata": {
+                "assigned_batch": location.get("assigned_batch") or "",
+                "source_updated_at": location.get("source_updated_at") or "",
+            },
+        }
+        if owner_id:
+            row["owner_user_id"] = owner_id
+        rows.append(row)
+
+    for row in rows:
+        if row.get("location_type") != "etb":
+            continue
+        stored_count = stored_by_etb.get(str(row.get("display_code") or ""), 0)
+        row["stored_count"] = stored_count
+        capacity = int(row.get("capacity") or 400)
+        if stored_count <= 0:
+            row["status"] = "empty"
+        elif stored_count >= capacity:
+            row["status"] = "full"
+        else:
+            row["status"] = "active"
+    return rows, "; ".join(warnings)
+
+
 def download_storage_object(bucket: str, storage_path: str, destination: Path) -> None:
     base_url, key = supabase_config()
     url = storage_object_url(base_url, bucket, storage_path)
@@ -258,6 +360,17 @@ def list_pending_sessions(limit: int = 25) -> list[dict[str, Any]]:
 def sync_cloud_location_registry() -> dict[str, Any]:
     """Synchronize cloud identity with the desktop offline registry projection."""
     snapshot = cloud_location_registry_snapshot()
+    canonical_published = 0
+    canonical_warning = ""
+    try:
+        canonical_client = SupabaseRegistryClient()
+        existing = canonical_client.list_locations()
+        canonical_rows, canonical_warning = canonical_location_rows_from_snapshot(snapshot, existing)
+        if canonical_rows:
+            canonical_client.upsert_locations(canonical_rows)
+            canonical_published = len(canonical_rows)
+    except Exception as exc:
+        canonical_warning = sanitize_error_message(exc)
     if snapshot["etbs"]:
         request_json(
             "POST",
@@ -283,6 +396,8 @@ def sync_cloud_location_registry() -> dict[str, Any]:
     result = merge_cloud_location_registry(cloud_etbs, cloud_locations)
     result["etbs_published"] = len(snapshot["etbs"])
     result["locations_published"] = len(snapshot["locations"])
+    result["canonical_locations_published"] = canonical_published
+    result["canonical_sync_warning"] = canonical_warning
     return result
 
 

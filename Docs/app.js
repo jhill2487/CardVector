@@ -905,6 +905,11 @@
     });
   }
 
+  function locationStoredLabel(location) {
+    const stored = Number(location && location.stored_count || 0);
+    return stored === 1 ? "1 card" : `${stored} cards`;
+  }
+
   async function createCloudNextLocation(client, user, etbId, expectedCode) {
     const canonicalEtb = mobileCore.normalizeEtbId(etbId);
     const expected = mobileCore.normalizeLocationCode(expectedCode);
@@ -1069,8 +1074,7 @@
         `<option value="${escapeHtml(etb.etb_id)}"${state.etbId === etb.etb_id ? " selected" : ""}>${escapeHtml(etb.etb_id)}${etb.status ? ` (${escapeHtml(etb.status)})` : ""}</option>`
       )).join("");
       const locationOptions = state.locations.map((location) => {
-        const occupancy = `${Number(location.stored_count || 0)}/${Number(location.capacity || 40)}`;
-        const label = `Location ${location.location_code} (${occupancy}, ${location.status || "Empty"})`;
+        const label = `Location ${location.location_code} (${locationStoredLabel(location)}, ${location.status || "Empty"})`;
         return `<option value="${escapeHtml(location.location_code)}"${state.location === location.location_code ? " selected" : ""}>${escapeHtml(label)}</option>`;
       }).join("");
       const layoutOptions = Object.entries(captureLayoutConfig).map(([value, config]) => (
@@ -1233,7 +1237,7 @@
     function renderLocationSelection() {
       state.location = "";
       const cards = state.locations.map((location) => {
-        const occupancy = `${Number(location.stored_count || 0)}/${Number(location.capacity || 40)}`;
+        const occupancy = locationStoredLabel(location);
         if (state.viewOnly) {
           return `<article class="entry-card static"><strong>Location ${escapeHtml(location.location_code)}</strong><span>${escapeHtml(occupancy)} · ${escapeHtml(location.status || "Empty")}</span></article>`;
         }

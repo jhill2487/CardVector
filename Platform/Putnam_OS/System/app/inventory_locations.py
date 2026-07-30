@@ -14,7 +14,8 @@ DEFAULT_ETB_CAPACITY = 400
 DEFAULT_ETB_LOCATION_CAPACITY = 40
 ETB_LOCATION_CODES = tuple("ABCDEFGHIJ")
 LOCATION_STATUSES = ["Empty", "Active", "Full", "Location Complete", "Needs Review", "Archived"]
-ETB_RE = re.compile(r"^ETB-(\d{3})$")
+ETB_RE = re.compile(r"^ETB-(\d{2,3})$")
+ETB_LOCATION_RE = re.compile(r"^ETB-(\d{2,3})-([A-Z])$")
 CARDVECTOR_WEB_BASE_URL = "https://cardvector.app"
 ETB_OPERATIONAL_DATA_DIR = PUTNAM_OS_DIR / "System" / "data" / "inventory"
 OLD_ETB_LOCATION_REGISTRY = DATA_CONFIG_DIR / "etb_location_registry.json"
@@ -52,6 +53,16 @@ def normalize_location_code(value: str) -> str:
 
 def etb_location_id(etb_code: str, location_code: str) -> str:
     return f"{normalize_etb_code(etb_code)}-{normalize_location_code(location_code)}"
+
+
+def parse_etb_location_id(value: str) -> tuple[str, str, str]:
+    code = str(value or "").strip().upper()
+    match = ETB_LOCATION_RE.match(code)
+    if not match:
+        raise ValueError("ETB location must use ETB-###-Letter format, example ETB-001-A.")
+    etb_code = f"ETB-{int(match.group(1)):03d}"
+    location_code = normalize_location_code(match.group(2))
+    return etb_code, location_code, etb_location_id(etb_code, location_code)
 
 
 def etb_qr_payload(etb_code: str) -> str:
@@ -374,7 +385,7 @@ def cloud_location_registry_snapshot(path: Path | None = None) -> dict[str, list
             if code not in provisioned_codes:
                 continue
             capacity = int(child.get("capacity") or DEFAULT_ETB_LOCATION_CAPACITY)
-            stored_count = max(0, min(capacity, int(child.get("stored_count") or 0)))
+            stored_count = max(0, int(child.get("stored_count") or 0))
             status = normalize_status(child.get("status") or "Empty")
             locations.append({
                 "location_id": etb_location_id(etb_id, code),
@@ -530,6 +541,97 @@ def create_etb_location(path: Path | None = None, capacity: int = DEFAULT_ETB_CA
     return location
 
 
+def ensure_etb_record(code: str, registry: dict[str, Any]) -> dict[str, Any]:
+    normalized_code = normalize_etb_code(code)
+    for location in registry.get("locations", []):
+        try:
+            if normalize_etb_code(location.get("location_code", "")) == normalized_code:
+                return location
+        except ValueError:
+            continue
+    now = timestamp()
+    location = {
+        "location_code": normalized_code,
+        "etb_id": normalized_code,
+        "qr_payload": etb_qr_payload(normalized_code),
+        "status": "Empty",
+        "total_capacity": DEFAULT_ETB_CAPACITY,
+        "stored_count": 0,
+        "remaining_space": DEFAULT_ETB_CAPACITY,
+        "active_location": "A",
+        "current_active_location": "A",
+        "created_at": now,
+        "updated_at": now,
+        "locations": [],
+    }
+    ensure_etb_location_records(location, registry)
+    registry.setdefault("locations", []).append(location)
+    registry.setdefault("history", []).append({
+        "timestamp": now,
+        "location_code": normalized_code,
+        "action": "created_from_batch_location",
+        "status": "Empty",
+    })
+    return location
+
+
+def record_completed_batch_location(
+    batch_location: str,
+    total_count: int | None,
+    *,
+    game: str = "",
+    source: str = "",
+    note: str = "",
+    path: Path | None = None,
+) -> dict[str, Any]:
+    """Reflect a completed batch/User-SKU location in the shared ETB registry.
+
+    The legacy seller tools use two-digit values such as ``ETB-07-A``. The
+    shared registry and Supabase use ``ETB-007-A``. This bridge keeps the old
+    callers working while ensuring the shared registry receives the canonical
+    identity and the actual completed count.
+    """
+    etb_code, location_code, canonical_location_id = parse_etb_location_id(batch_location)
+    try:
+        count = max(0, int(total_count or 0))
+    except (TypeError, ValueError):
+        count = 0
+    registry = load_etb_registry(path)
+    now = timestamp()
+    etb = ensure_etb_record(etb_code, registry)
+    children = ensure_etb_location_records(etb, registry)
+    for child in children:
+        if normalize_location_code(child.get("location_code", "")) != location_code:
+            continue
+        capacity = int(child.get("capacity") or DEFAULT_ETB_LOCATION_CAPACITY)
+        child["location_id"] = canonical_location_id
+        child["stored_count"] = count
+        child["remaining_capacity"] = max(0, capacity - count)
+        child["status"] = "Location Complete" if count > 0 else "Needs Review"
+        child["assigned_batch"] = canonical_location_id
+        child.setdefault("metadata", {})
+        child["updated_at"] = now
+        break
+    etb["locations"] = children
+    etb["active_location"] = next_available_location_code(children, location_code)
+    etb["current_active_location"] = etb["active_location"]
+    etb["updated_at"] = now
+    registry.setdefault("history", []).append({
+        "timestamp": now,
+        "location_code": etb_code,
+        "location": location_code,
+        "location_id": canonical_location_id,
+        "action": "batch_location_completed",
+        "status": "Location Complete" if count > 0 else "Needs Review",
+        "captured_count": count,
+        "game": str(game or ""),
+        "source": str(source or ""),
+        "note": str(note or ""),
+    })
+    save_etb_registry(registry, path)
+    return normalize_etb_record(etb, registry)
+
+
 def update_etb_status(code: str, status: str, path: Path | None = None) -> dict[str, Any]:
     normalized_code = normalize_etb_code(code)
     normalized_status = normalize_status(status)
@@ -595,10 +697,10 @@ def mark_location_complete(code: str, location_code: str, path: Path | None = No
         for child in children:
             if normalize_location_code(child.get("location_code", "")) == normalized_location:
                 capacity = int(child.get("capacity") or DEFAULT_ETB_LOCATION_CAPACITY)
-                stored_count = capacity if captured_count is None else max(0, min(capacity, int(captured_count or 0)))
+                stored_count = capacity if captured_count is None else max(0, int(captured_count or 0))
                 child["stored_count"] = stored_count
                 child["remaining_capacity"] = max(0, capacity - stored_count)
-                child["status"] = "Location Complete" if stored_count >= capacity else "Needs Review"
+                child["status"] = "Location Complete" if stored_count > 0 else "Needs Review"
                 child["updated_at"] = now
         location["locations"] = children
         location["active_location"] = next_available_location_code(children)

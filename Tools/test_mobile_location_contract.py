@@ -4,12 +4,15 @@ import json
 import tempfile
 import unittest
 from pathlib import Path
+from types import SimpleNamespace
 from unittest import mock
 
 from Platform.Putnam_OS.System.app.inventory_locations import (
     cloud_location_registry_snapshot,
     merge_cloud_location_registry,
     next_unprovisioned_location_code,
+    parse_etb_location_id,
+    record_completed_batch_location,
 )
 from Platform.Putnam_OS.System.tools import mobile_capture_queue as queue
 
@@ -153,6 +156,27 @@ class DesktopLocationSynchronizationTests(unittest.TestCase):
         self.assertEqual([row["location_code"] for row in snapshot["locations"]], list("ABCD"))
         self.assertEqual(snapshot["locations"][-1]["location_id"], "ETB-002-D")
 
+    def test_batch_location_bridge_uses_supabase_format_and_flexible_count(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "registry.json"
+            updated = record_completed_batch_location(
+                "ETB-07-A",
+                49,
+                game="pokemon",
+                source="test",
+                path=path,
+            )
+            snapshot = cloud_location_registry_snapshot(path)
+
+        self.assertEqual(parse_etb_location_id("ETB-07-A"), ("ETB-007", "A", "ETB-007-A"))
+        self.assertEqual(updated["location_code"], "ETB-007")
+        self.assertEqual(updated["stored_count"], 49)
+        self.assertEqual(updated["locations"][0]["location_id"], "ETB-007-A")
+        self.assertEqual(updated["locations"][0]["stored_count"], 49)
+        self.assertEqual(updated["locations"][0]["status"], "Location Complete")
+        self.assertEqual(snapshot["locations"][0]["location_id"], "ETB-007-A")
+        self.assertEqual(snapshot["locations"][0]["stored_count"], 49)
+
     def test_mobile_created_location_merges_into_desktop_projection(self):
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / "registry.json"
@@ -205,6 +229,84 @@ class DesktopLocationSynchronizationTests(unittest.TestCase):
         self.assertTrue(any("on_conflict=etb_id" in call[1] for call in calls))
         self.assertTrue(any("on_conflict=location_id" in call[1] for call in calls))
         merge.assert_called_once()
+
+    def test_canonical_location_rows_inherit_owner_and_preserve_flexible_count(self):
+        owner_id = "11111111-1111-1111-1111-111111111111"
+        existing = [
+            SimpleNamespace(
+                id="etb-uuid",
+                display_code="ETB-007",
+                owner_user_id=owner_id,
+            ),
+            SimpleNamespace(
+                id="slot-uuid",
+                display_code="ETB-007-A",
+                owner_user_id=owner_id,
+            ),
+        ]
+        rows, warning = queue.canonical_location_rows_from_snapshot(
+            {
+                "etbs": [{"etb_id": "ETB-007", "status": "Active", "capacity": 400}],
+                "locations": [{
+                    "location_id": "ETB-007-A",
+                    "etb_id": "ETB-007",
+                    "location_code": "A",
+                    "capacity": 40,
+                    "stored_count": 49,
+                    "status": "Location Complete",
+                    "assigned_batch": "ETB-007-A",
+                }],
+            },
+            existing,
+        )
+        slot = next(row for row in rows if row["display_code"] == "ETB-007-A")
+        etb = next(row for row in rows if row["display_code"] == "ETB-007")
+        self.assertEqual(warning, "")
+        self.assertEqual(slot["id"], "slot-uuid")
+        self.assertEqual(slot["owner_user_id"], owner_id)
+        self.assertEqual(slot["stored_count"], 49)
+        self.assertEqual(slot["status"], "location_complete")
+        self.assertEqual(etb["stored_count"], 49)
+        self.assertEqual(etb["status"], "active")
+
+    def test_canonical_location_rows_update_existing_blank_owner_rows_only(self):
+        existing = [
+            SimpleNamespace(id="etb-uuid", display_code="ETB-007", owner_user_id=""),
+            SimpleNamespace(id="slot-uuid", display_code="ETB-007-A", owner_user_id=""),
+        ]
+        rows, warning = queue.canonical_location_rows_from_snapshot(
+            {
+                "etbs": [
+                    {"etb_id": "ETB-007", "status": "Active", "capacity": 400},
+                    {"etb_id": "ETB-008", "status": "Active", "capacity": 400},
+                ],
+                "locations": [
+                    {
+                        "location_id": "ETB-007-A",
+                        "etb_id": "ETB-007",
+                        "location_code": "A",
+                        "capacity": 40,
+                        "stored_count": 49,
+                        "status": "Location Complete",
+                    },
+                    {
+                        "location_id": "ETB-008-A",
+                        "etb_id": "ETB-008",
+                        "location_code": "A",
+                        "capacity": 40,
+                        "stored_count": 2,
+                        "status": "Location Complete",
+                    },
+                ],
+            },
+            existing,
+        )
+
+        self.assertEqual([row["display_code"] for row in rows], ["ETB-007", "ETB-007-A"])
+        self.assertNotIn("owner_user_id", rows[0])
+        self.assertEqual(rows[1]["stored_count"], 49)
+        self.assertIn("Skipped ETB-008", warning)
+        self.assertIn("Skipped ETB-008-A", warning)
 
     def test_unapplied_location_migration_does_not_break_capture_queue_listing(self):
         service = queue.MobileCaptureQueueService(current_workstation="TEST-PC")

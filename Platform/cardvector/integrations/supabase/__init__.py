@@ -11,6 +11,7 @@ from .registry import (
     SupabaseRegistryClient,
     SupabaseRegistryError,
     canonical_rows_to_legacy_etb_rows,
+    canonical_registry_uuid,
     environment_config,
     legacy_status_to_canonical,
 )
@@ -26,6 +27,7 @@ __all__ = [
     "SupabaseRegistryClient",
     "SupabaseRegistryError",
     "canonical_rows_to_legacy_etb_rows",
+    "canonical_registry_uuid",
     "environment_config",
     "legacy_status_to_canonical",
 ]
