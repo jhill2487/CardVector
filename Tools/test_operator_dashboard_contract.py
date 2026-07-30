@@ -39,6 +39,14 @@ class OperatorDashboardContractTests(unittest.TestCase):
             self.assertIn(table, self.app_js)
         self.assertIn("CardUploader batch-event view is pending migration", self.app_js)
 
+    def test_schema_cache_missing_table_errors_are_optional(self):
+        helper = self.app_js[
+            self.app_js.index("function isMissingCanonicalRegistry"):
+            self.app_js.index("function canonicalStatusFromLegacy")
+        ]
+        self.assertIn("could not find", helper)
+        self.assertIn("schema cache", helper)
+
     def test_operator_registry_is_read_only(self):
         operator_source = self.app_js[
             self.app_js.index("async function loadOperatorRegistry"):
