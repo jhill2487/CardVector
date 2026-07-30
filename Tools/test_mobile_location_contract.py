@@ -308,6 +308,75 @@ class DesktopLocationSynchronizationTests(unittest.TestCase):
         self.assertIn("Skipped ETB-008", warning)
         self.assertIn("Skipped ETB-008-A", warning)
 
+    def test_canonical_location_rows_do_not_erase_existing_nonempty_slot(self):
+        owner_id = "11111111-1111-1111-1111-111111111111"
+        existing = [
+            SimpleNamespace(
+                id="etb-uuid",
+                display_code="ETB-007",
+                owner_user_id=owner_id,
+                stored_count=49,
+            ),
+            SimpleNamespace(
+                id="slot-uuid",
+                display_code="ETB-007-A",
+                owner_user_id=owner_id,
+                stored_count=49,
+            ),
+        ]
+        rows, warning = queue.canonical_location_rows_from_snapshot(
+            {
+                "etbs": [{"etb_id": "ETB-007", "status": "Empty", "capacity": 400}],
+                "locations": [{
+                    "location_id": "ETB-007-A",
+                    "etb_id": "ETB-007",
+                    "location_code": "A",
+                    "capacity": 40,
+                    "stored_count": 0,
+                    "status": "Empty",
+                }],
+            },
+            existing,
+        )
+
+        slot = next(row for row in rows if row["display_code"] == "ETB-007-A")
+        etb = next(row for row in rows if row["display_code"] == "ETB-007")
+        self.assertEqual(slot["stored_count"], 49)
+        self.assertEqual(slot["metadata"]["inventory_count_source"], "existing_canonical")
+        self.assertEqual(etb["stored_count"], 49)
+        self.assertEqual(etb["status"], "active")
+        self.assertIn("Preserved ETB-007-A", warning)
+
+    def test_canonical_location_rows_roll_up_existing_slot_not_in_snapshot(self):
+        owner_id = "11111111-1111-1111-1111-111111111111"
+        existing = [
+            SimpleNamespace(
+                id="etb-uuid",
+                display_code="ETB-007",
+                owner_user_id=owner_id,
+                stored_count=0,
+            ),
+            SimpleNamespace(
+                id="slot-uuid",
+                display_code="ETB-007-A",
+                owner_user_id=owner_id,
+                stored_count=49,
+            ),
+        ]
+        rows, warning = queue.canonical_location_rows_from_snapshot(
+            {
+                "etbs": [{"etb_id": "ETB-007", "status": "Empty", "capacity": 400}],
+                "locations": [],
+            },
+            existing,
+        )
+
+        self.assertEqual(warning, "")
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]["display_code"], "ETB-007")
+        self.assertEqual(rows[0]["stored_count"], 49)
+        self.assertEqual(rows[0]["status"], "active")
+
     def test_unapplied_location_migration_does_not_break_capture_queue_listing(self):
         service = queue.MobileCaptureQueueService(current_workstation="TEST-PC")
         with (

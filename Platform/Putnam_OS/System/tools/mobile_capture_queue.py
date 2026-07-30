@@ -232,6 +232,14 @@ def canonical_location_rows_from_snapshot(
         ),
         "",
     )
+    existing_stored_by_display = {
+        str(getattr(item, "display_code", "") or "").upper(): max(
+            0,
+            int(getattr(item, "stored_count", 0) or 0),
+        )
+        for item in existing_rows or []
+        if str(getattr(item, "display_code", "") or "").strip()
+    }
     rows: list[dict[str, Any]] = []
     warnings: list[str] = []
     parent_ids: dict[str, str] = {}
@@ -276,7 +284,16 @@ def canonical_location_rows_from_snapshot(
         if existing is None and not owner_id:
             warnings.append(f"Skipped {display_code}: owner_user_id unavailable for new canonical location.")
             continue
-        stored_count = max(0, int(location.get("stored_count") or 0))
+        incoming_stored_count = max(0, int(location.get("stored_count") or 0))
+        existing_stored_count = existing_stored_by_display.get(display_code, 0)
+        if incoming_stored_count <= 0 < existing_stored_count:
+            stored_count = existing_stored_count
+            warnings.append(
+                f"Preserved {display_code}: existing canonical stored_count "
+                f"{existing_stored_count} is stronger than an empty desktop projection."
+            )
+        else:
+            stored_count = incoming_stored_count
         stored_by_etb[etb_id] = stored_by_etb.get(etb_id, 0) + stored_count
         row = {
             "id": str(getattr(existing, "id", "") or canonical_registry_uuid("location", display_code)),
@@ -295,11 +312,27 @@ def canonical_location_rows_from_snapshot(
             "metadata": {
                 "assigned_batch": location.get("assigned_batch") or "",
                 "source_updated_at": location.get("source_updated_at") or "",
+                "inventory_count_source": (
+                    "existing_canonical"
+                    if incoming_stored_count <= 0 < existing_stored_count
+                    else "desktop_projection"
+                ),
             },
         }
         if owner_id:
             row["owner_user_id"] = owner_id
         rows.append(row)
+
+    for display_code, existing_stored_count in existing_stored_by_display.items():
+        if existing_stored_count <= 0:
+            continue
+        try:
+            etb_id = normalize_etb_code(display_code.rsplit("-", 1)[0])
+            normalize_location_code(display_code.rsplit("-", 1)[1])
+        except (IndexError, ValueError):
+            continue
+        if not any(row.get("display_code") == display_code for row in rows):
+            stored_by_etb[etb_id] = stored_by_etb.get(etb_id, 0) + existing_stored_count
 
     for row in rows:
         if row.get("location_type") != "etb":
