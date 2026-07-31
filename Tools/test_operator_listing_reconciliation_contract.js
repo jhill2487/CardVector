@@ -19,6 +19,12 @@ const migration = fs.readFileSync(
   "cardvector_marketplace_listing_snapshots",
   "cardvector_inventory_listing_matches",
   "cardvector_ebay_listing_reconciliation_v",
+  "cardvector_carduploader_batch_events",
+  "reconcileListingSnapshots",
+  "missing_from_ebay",
+  "needs_manual_review",
+  "Card-level absence cannot be inferred from batch metadata.",
+  "CardUploader remains inventory truth; eBay remains live listing truth.",
   "This page does not revise, end, publish, or otherwise change live eBay listings.",
   '"owner_user_id,marketplace,marketplace_listing_id"',
 ].forEach((needle) => assert(app.includes(needle), `app.js missing ${needle}`));
@@ -32,6 +38,8 @@ const migration = fs.readFileSync(
   ".listing-file-drop",
   ".listing-reconciliation-row",
   ".listing-summary",
+  ".listing-bucket-summary",
+  ".listing-buckets",
 ].forEach((needle) => assert(css.includes(needle), `style.css missing ${needle}`));
 
 [
