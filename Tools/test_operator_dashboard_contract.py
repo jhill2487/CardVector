@@ -21,12 +21,14 @@ class OperatorDashboardContractTests(unittest.TestCase):
         self.assertIn('href="/#mobile-capture"', self.index_html)
 
     def test_operator_routes_are_static_export_clients(self):
-        for route in ('"operator"', '"registry"', '"mobile-capture"'):
+        for route in ('"operator"', '"registry"', '"mobile-capture"', '"batches"', '"batch-workflow"'):
             self.assertIn(route, self.exporter)
         self.assertIn('route === "operator"', self.app_js)
         self.assertIn('route === "registry"', self.app_js)
+        self.assertIn('route === "batches"', self.app_js)
         self.assertIn("renderOperatorDashboard", self.app_js)
         self.assertIn("renderOperatorRegistry", self.app_js)
+        self.assertIn("renderOperatorBatchWorkflow", self.app_js)
 
     def test_operator_registry_reads_canonical_supabase_tables(self):
         expected_tables = (
@@ -38,6 +40,13 @@ class OperatorDashboardContractTests(unittest.TestCase):
         for table in expected_tables:
             self.assertIn(table, self.app_js)
         self.assertIn("CardUploader batch-event view is pending migration", self.app_js)
+
+    def test_batch_workflow_is_active_and_supabase_backed(self):
+        self.assertIn('href="/operator/batches"', self.app_js)
+        self.assertIn("CardUploader Batch References", self.app_js)
+        self.assertIn("capture-session handoff state", self.app_js)
+        self.assertIn("safeCardUploaderUrl", self.app_js)
+        self.assertIn('"cardvector_location_carduploader_batches_v"', self.app_js)
 
     def test_schema_cache_missing_table_errors_are_optional(self):
         helper = self.app_js[
@@ -61,6 +70,8 @@ class OperatorDashboardContractTests(unittest.TestCase):
             ".registry-layout",
             ".registry-summary",
             ".registry-slot-grid",
+            ".batch-reference-row",
+            ".operator-main-panel",
         ):
             self.assertIn(selector, self.style_css)
         mobile_block = re.search(r"@media \(max-width: 720px\) \{(.*)\n\}", self.style_css, re.S)

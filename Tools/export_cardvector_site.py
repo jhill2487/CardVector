@@ -62,6 +62,8 @@ PROHIBITED_SUFFIXES = {
 
 CLIENT_ROUTES = {
     "about",
+    "batch-workflow",
+    "batches",
     "buylist",
     "bulk",
     "capture",
