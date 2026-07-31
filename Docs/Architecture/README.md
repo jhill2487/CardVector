@@ -148,6 +148,7 @@ ADR Accepted.
 - [Phase 7 Marketplace Intelligence](Phase_7_Marketplace_Intelligence/)
 - [Phase 8 Pricing Intelligence](Phase_8_Pricing_Intelligence/)
 - [Supabase Registry Migration](Supabase_Registry_Migration/)
+- [eBay Listing Reconciliation](Ebay_Listing_Reconciliation.md)
 - [CV-ADR-025 CardVector.app Primary UI](CV-ADR-025-cardvector-app-primary-ui.md)
 
 ## Change Approval

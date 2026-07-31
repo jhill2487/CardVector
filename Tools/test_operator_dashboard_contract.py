@@ -21,14 +21,16 @@ class OperatorDashboardContractTests(unittest.TestCase):
         self.assertIn('href="/#mobile-capture"', self.index_html)
 
     def test_operator_routes_are_static_export_clients(self):
-        for route in ('"operator"', '"registry"', '"mobile-capture"', '"batches"', '"batch-workflow"'):
+        for route in ('"operator"', '"registry"', '"mobile-capture"', '"batches"', '"batch-workflow"', '"listings"', '"listing-reconciliation"'):
             self.assertIn(route, self.exporter)
         self.assertIn('route === "operator"', self.app_js)
         self.assertIn('route === "registry"', self.app_js)
         self.assertIn('route === "batches"', self.app_js)
+        self.assertIn('route === "listings"', self.app_js)
         self.assertIn("renderOperatorDashboard", self.app_js)
         self.assertIn("renderOperatorRegistry", self.app_js)
         self.assertIn("renderOperatorBatchWorkflow", self.app_js)
+        self.assertIn("renderOperatorListingReconciliation", self.app_js)
 
     def test_operator_registry_reads_canonical_supabase_tables(self):
         expected_tables = (
@@ -49,6 +51,23 @@ class OperatorDashboardContractTests(unittest.TestCase):
         self.assertIn("shortBatchId", self.app_js)
         self.assertIn("CardUploader ID:", self.app_js)
         self.assertIn('"cardvector_location_carduploader_batches_v"', self.app_js)
+
+    def test_existing_listing_reconciliation_is_csv_snapshot_only(self):
+        self.assertIn('href="/operator/listings"', self.app_js)
+        self.assertIn("Existing Listing Review", self.app_js)
+        self.assertIn("parseEbayListingsCsv", self.app_js)
+        self.assertIn("cardvector_marketplace_listing_snapshots", self.app_js)
+        self.assertIn("cardvector_inventory_listing_matches", self.app_js)
+        self.assertIn("cardvector_ebay_listing_reconciliation_v", self.app_js)
+        self.assertIn("This page does not revise, end, publish, or otherwise change live eBay listings.", self.app_js)
+        listing_source = self.app_js[
+            self.app_js.index("const ebayListingColumns"):
+            self.app_js.index("function renderOperatorRegistryView")
+        ]
+        self.assertNotIn("revise", listing_source.lower().replace("does not revise", ""))
+        self.assertNotIn("publish_listing", listing_source)
+        self.assertNotIn("end_listing", listing_source)
+        self.assertIn('"owner_user_id,marketplace,marketplace_listing_id"', listing_source)
 
     def test_schema_cache_missing_table_errors_are_optional(self):
         helper = self.app_js[
@@ -75,6 +94,8 @@ class OperatorDashboardContractTests(unittest.TestCase):
             ".batch-reference-row",
             ".operator-main-panel",
             ".batch-technical-id",
+            ".listing-file-drop",
+            ".listing-reconciliation-row",
         ):
             self.assertIn(selector, self.style_css)
         mobile_block = re.search(r"@media \(max-width: 720px\) \{(.*)\n\}", self.style_css, re.S)

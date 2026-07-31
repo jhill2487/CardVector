@@ -72,6 +72,8 @@ CLIENT_ROUTES = {
     "etb",
     "location",
     "lot",
+    "listings",
+    "listing-reconciliation",
     "mobile",
     "mobile-capture",
     "operator",
