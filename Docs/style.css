@@ -1335,6 +1335,14 @@ h3 {
   font-weight: 750;
 }
 
+.operator-list-row .batch-technical-id {
+  margin-top: 3px;
+  color: #7a879a;
+  font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+  font-size: .74rem;
+  font-weight: 700;
+}
+
 .operator-inline-link {
   display: inline-block;
   margin-top: 6px;

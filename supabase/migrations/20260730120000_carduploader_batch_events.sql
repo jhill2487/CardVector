@@ -102,7 +102,8 @@ grant select, insert, update on table public.cardvector_carduploader_batch_event
 grant select, insert, update on table public.cardvector_carduploader_batch_events
   to service_role;
 
-create or replace view public.cardvector_location_carduploader_batches_v as
+create or replace view public.cardvector_location_carduploader_batches_v
+with (security_invoker = true) as
 select
   event.id,
   event.location_id,
@@ -128,3 +129,11 @@ from public.cardvector_carduploader_batch_events event
 left join public.cardvector_storage_locations location
   on location.id = event.location_id
 where event.archived_at is null;
+
+revoke all on table public.cardvector_location_carduploader_batches_v from anon;
+
+grant select on table public.cardvector_location_carduploader_batches_v
+  to authenticated;
+
+grant select on table public.cardvector_location_carduploader_batches_v
+  to service_role;

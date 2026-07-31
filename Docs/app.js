@@ -1123,11 +1123,36 @@
   }
 
   function batchReferenceLabel(batch) {
-    return batch && (
-      batch.batch_label ||
-      batch.carduploader_batch_name ||
-      batch.carduploader_batch_id
-    ) || "CardUploader batch";
+    const location = batchLocationLabel(batch);
+    const eventType = compactStatusLabel(batch && batch.event_type || "batch reference");
+    const date = shortDateLabel(batch && (batch.batch_date || batch.updated_at));
+    if (location && location !== "Unassigned") {
+      return `${location} ${eventType}${date ? ` - ${date}` : ""}`;
+    }
+    return `CardUploader ${eventType}${date ? ` - ${date}` : ""}`;
+  }
+
+  function shortDateLabel(value) {
+    if (!value) {
+      return "";
+    }
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) {
+      return String(value);
+    }
+    return date.toLocaleDateString([], {
+      month: "short",
+      day: "numeric",
+      year: "numeric"
+    });
+  }
+
+  function shortBatchId(value) {
+    const id = String(value || "").trim();
+    if (!id) {
+      return "";
+    }
+    return id.length > 12 ? `${id.slice(0, 8)}...${id.slice(-4)}` : id;
   }
 
   function safeCardUploaderUrl(value) {
@@ -1148,13 +1173,14 @@
         <article class="operator-list-row batch-reference-row">
           <div>
             <strong>${escapeHtml(batchReferenceLabel(batch))}</strong>
-            <span>${escapeHtml(batchLocationLabel(batch))} &middot; ${escapeHtml(compactStatusLabel(batch.event_type || "batch reference"))}</span>
-            ${batch.carduploader_batch_id ? `<span>Batch ID: ${escapeHtml(batch.carduploader_batch_id)}</span>` : ""}
+            <span>${Number(batch.card_count || 0)} cards &middot; ${escapeHtml(batch.game || "CardUploader")}${batch.language ? ` &middot; ${escapeHtml(batch.language)}` : ""}</span>
+            ${batch.batch_label ? `<span>${escapeHtml(batch.batch_label)}</span>` : ""}
+            ${batch.carduploader_batch_id ? `<span class="batch-technical-id" title="${escapeHtml(batch.carduploader_batch_id)}">CardUploader ID: ${escapeHtml(shortBatchId(batch.carduploader_batch_id))}</span>` : ""}
             ${batchUrl ? `<a class="operator-inline-link" href="${escapeHtml(batchUrl)}" target="_blank" rel="noopener noreferrer">Open CardUploader batch</a>` : ""}
           </div>
           <div>
-            <span>${Number(batch.card_count || 0)} cards</span>
-            <strong>${escapeHtml(safeDateLabel(batch.batch_date || batch.updated_at))}</strong>
+            <span>${escapeHtml(batchLocationLabel(batch))}</span>
+            <strong>${escapeHtml(compactStatusLabel(batch.event_type || "batch reference"))}</strong>
           </div>
         </article>`;
     }).join("");

@@ -46,6 +46,8 @@ class OperatorDashboardContractTests(unittest.TestCase):
         self.assertIn("CardUploader Batch References", self.app_js)
         self.assertIn("capture-session handoff state", self.app_js)
         self.assertIn("safeCardUploaderUrl", self.app_js)
+        self.assertIn("shortBatchId", self.app_js)
+        self.assertIn("CardUploader ID:", self.app_js)
         self.assertIn('"cardvector_location_carduploader_batches_v"', self.app_js)
 
     def test_schema_cache_missing_table_errors_are_optional(self):
@@ -72,6 +74,7 @@ class OperatorDashboardContractTests(unittest.TestCase):
             ".registry-slot-grid",
             ".batch-reference-row",
             ".operator-main-panel",
+            ".batch-technical-id",
         ):
             self.assertIn(selector, self.style_css)
         mobile_block = re.search(r"@media \(max-width: 720px\) \{(.*)\n\}", self.style_css, re.S)
