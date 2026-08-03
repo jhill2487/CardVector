@@ -59,6 +59,11 @@ The workflow:
 4. Opens a draft pull request against `main`.
 5. Comments on the issue with the draft PR link.
 
+The importer intentionally rejects raw article text that is not inside a fenced
+`markdown` code block. This prevents placeholder issue text, fact-check notes,
+or TikTok package content from being accidentally published as the website
+article.
+
 The brief does not publish from the issue alone. It publishes only after the
 draft PR is reviewed and merged, which then triggers the normal
 `.github/workflows/pages.yml` deployment to `CardVector-site`.

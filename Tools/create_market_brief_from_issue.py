@@ -3,7 +3,6 @@ from __future__ import annotations
 import argparse
 import json
 import re
-from datetime import date
 from pathlib import Path
 from typing import Any
 
@@ -138,68 +137,21 @@ def build_market_brief_markdown(issue: dict[str, Any], status: str) -> tuple[str
     body = str(issue.get("body", "") or "").strip()
     sections = parse_issue_sections(body)
     fenced_markdown = extract_fenced_markdown(sections.get("article_file", "") or body)
-    if fenced_markdown:
-        frontmatter = validate_article_markdown(fenced_markdown)
-        filename = filename_from_issue(sections, frontmatter, title)
-        report = {
-            "title": frontmatter["title"],
-            "slug": frontmatter["slug"],
-            "date": frontmatter["date"],
-            "status": frontmatter.get("status", status),
-            "filename": filename,
-            "source_issue": issue.get("number"),
-            "source_url": str(issue.get("url", "") or "").strip(),
-            "input_mode": "fenced_markdown",
-        }
-        return filename, fenced_markdown, report
-
-    brief_body = sections.get("body") or body
-    brief_date = sections.get("date") or date.today().isoformat()
-    slug = slugify(sections.get("slug") or title)
-    summary = sections.get("summary") or "Weekly Pokemon market update from Putnam Collectibles."
-    label = sections.get("label") or "Weekly Monday Brief"
-    author = sections.get("author") or "Putnam Collectibles"
-    category = sections.get("category") or "Pokemon Market Brief"
-    tags = parse_tags(sections.get("tags") or "Pokemon, Market Updates, Selling")
-    issue_url = str(issue.get("url", "") or "").strip()
-    issue_number = issue.get("number")
-
-    if not re.match(r"^\d{4}-\d{2}-\d{2}$", brief_date):
-        raise ValueError("Brief date must use YYYY-MM-DD format.")
-    if not brief_body:
-        raise ValueError("Issue body must include draft body content.")
-
-    frontmatter = [
-        "---",
-        f"title: {quoted(title)}",
-        f"slug: {quoted(slug)}",
-        f"date: {quoted(brief_date)}",
-        f"label: {quoted(label)}",
-        f"author: {quoted(author)}",
-        f"category: {quoted(category)}",
-        f"status: {quoted(status)}",
-        f"summary: {quoted(summary)}",
-        "tags:",
-    ]
-    frontmatter.extend(f"  - {tag}" for tag in tags)
-    if issue_number:
-        frontmatter.append(f"sourceIssue: {quoted(f'#{issue_number}')}")
-    if issue_url:
-        frontmatter.append(f"sourceUrl: {quoted(issue_url)}")
-    frontmatter.append("---")
-
-    content = "\n".join(frontmatter) + "\n\n" + brief_body.strip() + "\n"
-    filename = f"{brief_date}-{slug}.md"
+    if not fenced_markdown:
+        raise ValueError("Issue must include the complete article in a fenced ```markdown code block under Article file.")
+    frontmatter = validate_article_markdown(fenced_markdown)
+    filename = filename_from_issue(sections, frontmatter, title)
     report = {
-        "title": title,
-        "slug": slug,
-        "date": brief_date,
-        "status": status,
+        "title": frontmatter["title"],
+        "slug": frontmatter["slug"],
+        "date": frontmatter["date"],
+        "status": frontmatter.get("status", status),
         "filename": filename,
-        "source_issue": issue_number,
-        "source_url": issue_url,
+        "source_issue": issue.get("number"),
+        "source_url": str(issue.get("url", "") or "").strip(),
+        "input_mode": "fenced_markdown",
     }
-    return filename, content, report
+    return filename, fenced_markdown, report
 
 
 def write_market_brief(issue_json: Path, output_dir: Path, status: str, report_json: Path | None) -> Path:
