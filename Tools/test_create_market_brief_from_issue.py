@@ -7,6 +7,7 @@ from create_market_brief_from_issue import (
     build_market_brief_markdown,
     extract_fenced_markdown,
     parse_issue_sections,
+    parse_tags,
     slugify,
     validate_article_markdown,
     write_market_brief,
@@ -37,7 +38,10 @@ Modern singles moved.
         self.assertEqual("Weekly market notes.", sections["summary"])
         self.assertIn("## What moved", sections["body"])
 
-    def test_build_markdown_from_issue(self):
+    def test_parse_tags_keeps_legacy_helper_behavior(self):
+        self.assertEqual(["Pokemon", "Market Updates"], parse_tags("Pokemon, Market Updates"))
+
+    def test_rejects_issue_without_fenced_markdown_article(self):
         issue = {
             "number": 42,
             "title": "Pokemon Market Brief: August 3",
@@ -65,12 +69,8 @@ Pokemon, Market Updates
 Modern singles moved.
 """,
         }
-        filename, content, report = build_market_brief_markdown(issue, "published")
-        self.assertEqual("2026-08-03-pokemon-market-brief-august-3.md", filename)
-        self.assertIn('title: "Pokemon Market Brief: August 3"', content)
-        self.assertIn('sourceIssue: "#42"', content)
-        self.assertIn("## What moved", content)
-        self.assertEqual("pokemon-market-brief-august-3", report["slug"])
+        with self.assertRaisesRegex(ValueError, "fenced ```markdown code block"):
+            build_market_brief_markdown(issue, "published")
 
     def test_build_markdown_from_complete_fenced_article_file(self):
         issue = {
@@ -121,11 +121,21 @@ Keep these in the issue only.
 
 2026-08-03
 
-### Draft body
+### Article file
+
+```markdown
+---
+title: "Pokemon Market Brief"
+slug: "pokemon-market-brief"
+date: "2026-08-03"
+description: "Weekly market notes."
+status: "published"
+---
 
 ## What moved
 
 Modern singles moved.
+```
 """,
         }
         with tempfile.TemporaryDirectory() as temp:
