@@ -1,0 +1,100 @@
+name: Create Market Brief Draft PR
+
+on:
+  issues:
+    types:
+      - labeled
+  workflow_dispatch:
+    inputs:
+      issue_number:
+        description: GitHub issue number containing the market brief draft.
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+concurrency:
+  group: market-brief-draft-${{ github.event.issue.number || inputs.issue_number }}
+  cancel-in-progress: false
+
+jobs:
+  create-market-brief-pr:
+    if: github.event_name == 'workflow_dispatch' || github.event.label.name == 'market-brief-draft'
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Checkout CardVector source
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Resolve issue number
+        id: issue
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "number=${{ inputs.issue_number }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "number=${{ github.event.issue.number }}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Read market brief issue
+        shell: bash
+        run: |
+          gh issue view "${{ steps.issue.outputs.number }}" \
+            --repo "$GITHUB_REPOSITORY" \
+            --json number,title,body,url,author \
+            > market-brief-issue.json
+
+      - name: Create market brief markdown
+        shell: bash
+        run: |
+          python Tools/create_market_brief_from_issue.py \
+            --issue-json market-brief-issue.json \
+            --output-dir Docs/content/market-briefs \
+            --status published \
+            --report-json market-brief-import.json
+
+      - name: Validate generated site artifact
+        shell: bash
+        run: |
+          python Tools/export_cardvector_site.py --output public-site --source-sha "$GITHUB_SHA"
+          test -s public-site/content/market-briefs/index.json
+          git diff --check
+
+      - name: Create draft pull request
+        id: pr
+        shell: bash
+        run: |
+          title="$(python -c "import json; print(json.load(open('market-brief-import.json', encoding='utf-8'))['title'])")"
+          branch="codex/market-brief-issue-${{ steps.issue.outputs.number }}-${GITHUB_RUN_ID}"
+          git config user.name "cardvector-content[bot]"
+          git config user.email "cardvector-content[bot]@users.noreply.github.com"
+          git checkout -b "$branch"
+          git add Docs/content/market-briefs
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "No market brief changes were generated."
+            exit 0
+          fi
+          git commit -m "docs(site): add market brief from issue #${{ steps.issue.outputs.number }}"
+          git push origin "$branch"
+          pr_url="$(gh pr create \
+            --repo "$GITHUB_REPOSITORY" \
+            --base main \
+            --head "$branch" \
+            --draft \
+            --title "Market brief: ${title}" \
+            --body "Creates a CardVector.app market brief from issue #${{ steps.issue.outputs.number }}. Review the Markdown file, mark the PR ready, and merge to trigger the normal public-site deployment.")"
+          echo "url=${pr_url}" >> "$GITHUB_OUTPUT"
+
+      - name: Comment with draft PR link
+        if: steps.pr.outputs.url != ''
+        shell: bash
+        run: |
+          gh issue comment "${{ steps.issue.outputs.number }}" \
+            --repo "$GITHUB_REPOSITORY" \
+            --body "Created draft market brief PR: ${{ steps.pr.outputs.url }}"

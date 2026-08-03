@@ -1,0 +1,57 @@
+name: Market Brief Draft
+description: Create a draft that GitHub Actions can convert into a CardVector.app market brief PR.
+title: "Pokemon Market Brief: YYYY-MM-DD"
+labels:
+  - market-brief-draft
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Paste the reviewed ChatGPT draft here. A GitHub Action will turn this issue into a Markdown post and open a draft PR.
+  - type: input
+    id: brief_date
+    attributes:
+      label: Brief date
+      description: Use YYYY-MM-DD.
+      placeholder: "2026-08-03"
+    validations:
+      required: true
+  - type: input
+    id: slug
+    attributes:
+      label: Slug
+      description: Optional. Leave blank to generate one from the issue title.
+      placeholder: "pokemon-market-brief-2026-08-03"
+    validations:
+      required: false
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: Short teaser shown on the briefs index.
+      placeholder: "A concise weekly Pokemon market update covering recent movement, collector demand, and marketplace signals."
+    validations:
+      required: true
+  - type: input
+    id: tags
+    attributes:
+      label: Tags
+      description: Comma-separated tags.
+      placeholder: "Pokemon, Market Updates, Selling"
+    validations:
+      required: false
+  - type: textarea
+    id: draft_body
+    attributes:
+      label: Draft body
+      description: Use Markdown headings such as "## What moved".
+      placeholder: |
+        ## What moved
+
+        ...
+
+        ## Why it matters
+
+        ...
+    validations:
+      required: true

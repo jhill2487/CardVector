@@ -34,6 +34,42 @@ It runs on:
 - changes to `Tools/export_cardvector_site.py`
 - manual `workflow_dispatch`
 
+## Market Brief Draft Automation
+
+Weekly Pokemon market briefs are source-controlled Markdown files under:
+
+```text
+Docs/content/market-briefs/
+```
+
+The issue template `.github/ISSUE_TEMPLATE/market_brief_draft.yml` provides a
+reviewable draft intake form for ChatGPT-generated Monday briefs.
+
+The workflow `.github/workflows/market-brief-draft.yml` runs when either:
+
+- an issue receives the `market-brief-draft` label
+- the workflow is run manually with an issue number
+
+The workflow:
+
+1. Reads the issue title and Markdown draft body.
+2. Creates one Markdown file in `Docs/content/market-briefs/`.
+3. Validates the public site export.
+4. Opens a draft pull request against `main`.
+5. Comments on the issue with the draft PR link.
+
+The brief does not publish from the issue alone. It publishes only after the
+draft PR is reviewed and merged, which then triggers the normal
+`.github/workflows/pages.yml` deployment to `CardVector-site`.
+
+Recommended recurring-task output:
+
+```text
+Create a GitHub issue in jhill2487/CardVector using the Market Brief Draft
+template. Fill Brief date, Summary, Tags, and Draft body. Do not merge or
+publish anything automatically.
+```
+
 ## Public Artifact Allowlist
 
 The exporter publishes only:
@@ -48,6 +84,7 @@ The exporter publishes only:
 - `.nojekyll`
 - `README.md`
 - `deployment-manifest.json`
+- `content/market-briefs/index.json`
 - `assets/putnam-profile.png`
 - `assets/putnam-profile-onepiece.png`
 - `assets/putnam-ebay-banner.png`

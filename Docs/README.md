@@ -122,6 +122,11 @@ Deployment is handled by `.github/workflows/pages.yml`, which exports an
 allowlisted static artifact with `Tools/export_cardvector_site.py` and pushes it
 to `CardVector-site` using the `CARDVECTOR_SITE_DEPLOY_TOKEN` repository secret.
 
+Pokemon market briefs are edited as Markdown under
+`Docs/content/market-briefs/`. The `market-brief-draft` GitHub issue template
+and `.github/workflows/market-brief-draft.yml` can turn a reviewed draft issue
+into a draft PR. Merging that PR triggers the normal public-site deployment.
+
 Operational details live in `Docs/Reference/PUBLIC_SITE_DEPLOYMENT.md`.
 
 ## Platform Vision
