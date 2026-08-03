@@ -165,6 +165,7 @@
   }
 
   const sellRoutes = new Set(["sell", "bulk", "buylist"]);
+  const marketBriefRoutes = new Set(["market-briefs", "pokemon-market-briefs", "market"]);
   const knownPlaceholderRoutes = new Set(["events", "about"]);
   const main = document.getElementById("main");
   if (!main) {
@@ -265,6 +266,87 @@
         </article>
       </section>`;
     document.title = "Sell Your Collection | Putnam Collectibles";
+  }
+
+  const marketBriefPosts = Object.freeze([
+    {
+      slug: "monday-morning-brief",
+      label: "Weekly Monday Brief",
+      title: "Putnam Collectibles Pokemon Market Brief",
+      dateLabel: "Monday mornings",
+      summary: "A concise weekly Pokemon market update covering recent movement, collector demand, notable products, and marketplace signals.",
+      status: "Template ready",
+      sections: [
+        {
+          heading: "What moved",
+          body: "A short summary of products, eras, or card categories showing meaningful activity."
+        },
+        {
+          heading: "Why it matters",
+          body: "Context for sellers and collectors, including demand signals, supply pressure, and pricing risk."
+        },
+        {
+          heading: "What Putnam Collectibles is watching",
+          body: "A practical watchlist for pricing review, inventory sourcing, and marketplace listing decisions."
+        }
+      ]
+    }
+  ]);
+
+  function renderMarketBriefCard(post) {
+    return `
+      <article class="brief-card">
+        <span class="brief-kicker">${escapeHtml(post.label)}</span>
+        <h2>${escapeHtml(post.title)}</h2>
+        <p>${escapeHtml(post.summary)}</p>
+        <div class="brief-card-footer">
+          <span>${escapeHtml(post.dateLabel)}</span>
+          <a class="button secondary" href="/market-briefs/${escapeHtml(post.slug)}">Open Brief</a>
+        </div>
+      </article>`;
+  }
+
+  function renderMarketBriefsPage() {
+    main.innerHTML = `
+      <section class="blog-shell wrap" aria-labelledby="market-briefs-page-title">
+        <div class="blog-hero">
+          <p class="eyebrow">Pokemon market updates</p>
+          <h1 id="market-briefs-page-title">Pokemon Market Briefs</h1>
+          <p>Weekly Monday morning notes on recent Pokemon market movement, collector demand, and marketplace signals. Briefs are drafted with ChatGPT-assisted research and reviewed before publication.</p>
+        </div>
+        <div class="brief-grid">
+          ${marketBriefPosts.map(renderMarketBriefCard).join("")}
+        </div>
+        <aside class="brief-disclosure">
+          <strong>Editorial note</strong>
+          <p>Market briefs are informational commentary, not financial advice. Prices and demand can change quickly; verify current marketplace data before buying, selling, or repricing.</p>
+        </aside>
+      </section>`;
+    document.title = "Pokemon Market Briefs | Putnam Collectibles";
+  }
+
+  function renderMarketBriefPost(slug) {
+    const post = marketBriefPosts.find((item) => item.slug === slug) || marketBriefPosts[0];
+    main.innerHTML = `
+      <article class="blog-shell blog-post wrap" aria-labelledby="market-brief-post-title">
+        <a class="operator-inline-link" href="/market-briefs">Back to Market Briefs</a>
+        <p class="eyebrow">${escapeHtml(post.label)}</p>
+        <h1 id="market-brief-post-title">${escapeHtml(post.title)}</h1>
+        <p class="blog-meta">${escapeHtml(post.dateLabel)} &middot; ${escapeHtml(post.status)}</p>
+        <p class="hero-lede">${escapeHtml(post.summary)}</p>
+        <div class="brief-post-layout">
+          ${post.sections.map((section) => `
+            <section class="brief-post-section">
+              <h2>${escapeHtml(section.heading)}</h2>
+              <p>${escapeHtml(section.body)}</p>
+            </section>`).join("")}
+        </div>
+        <aside class="brief-disclosure">
+          <strong>How this brief is prepared</strong>
+          <p>Putnam Collectibles uses ChatGPT-assisted research to identify possible market updates, then reviews the brief before publication. Future weekly posts should include dated sources and current marketplace checks.</p>
+        </aside>
+      </article>`;
+    document.title = `${post.title} | Putnam Collectibles`;
   }
 
   function captureConfig() {
@@ -3156,6 +3238,15 @@
 
   if (sellRoutes.has(route)) {
     renderSellCollectionPage();
+    return;
+  }
+
+  if (marketBriefRoutes.has(route)) {
+    if (parts[1]) {
+      renderMarketBriefPost(parts[1].toLowerCase());
+    } else {
+      renderMarketBriefsPage();
+    }
     return;
   }
 

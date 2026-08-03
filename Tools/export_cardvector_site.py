@@ -72,6 +72,8 @@ CLIENT_ROUTES = {
     "etb",
     "location",
     "lot",
+    "market",
+    "market-briefs",
     "listings",
     "listing-reconciliation",
     "mobile",

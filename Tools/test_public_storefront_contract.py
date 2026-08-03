@@ -66,6 +66,7 @@ class PublicStorefrontContractTests(unittest.TestCase):
         labels = [
             "Shop eBay",
             "Shop TCGplayer",
+            "Market Briefs",
             "Sell Your Collection",
             "Whatnot",
             "About",
@@ -97,6 +98,15 @@ class PublicStorefrontContractTests(unittest.TestCase):
         self.assertIn(disclosure, self.source_html)
         self.assertIn(disclosure, self.output_html)
         self.assertIn(disclosure, self.output_404)
+
+    def test_market_briefs_section_and_routes_are_present(self):
+        self.assertIn("Monday Morning Market Brief", self.source_html)
+        self.assertIn('href="/market-briefs"', self.source_html)
+        self.assertIn("renderMarketBriefsPage", self.source_js)
+        self.assertIn("renderMarketBriefPost", self.source_js)
+        self.assertIn('"market-briefs"', EXPORTER_PATH.read_text(encoding="utf-8"))
+        self.assertIn(".brief-card", self.source_css)
+        self.assertIn("ChatGPT-assisted research", self.source_js)
 
     def test_export_resolves_configuration_and_keeps_links_safe(self):
         for text in (self.output_html, self.output_404, self.output_js):
