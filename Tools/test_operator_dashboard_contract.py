@@ -50,6 +50,10 @@ class OperatorDashboardContractTests(unittest.TestCase):
         self.assertIn("safeCardUploaderUrl", self.app_js)
         self.assertIn("shortBatchId", self.app_js)
         self.assertIn("CardUploader ID:", self.app_js)
+        self.assertIn("Location Batch Workboard", self.app_js)
+        self.assertIn("Grouped by canonical ETB slot", self.app_js)
+        self.assertIn("ETB-001-A.2", self.app_js)
+        self.assertIn("Needs Batch Review", self.app_js)
         self.assertIn('"cardvector_location_carduploader_batches_v"', self.app_js)
 
     def test_existing_listing_reconciliation_is_csv_snapshot_only(self):
@@ -92,6 +96,8 @@ class OperatorDashboardContractTests(unittest.TestCase):
             ".registry-summary",
             ".registry-slot-grid",
             ".batch-reference-row",
+            ".batch-location-grid",
+            ".batch-pill",
             ".operator-main-panel",
             ".batch-technical-id",
             ".listing-file-drop",
