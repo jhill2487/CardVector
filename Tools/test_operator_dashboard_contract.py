@@ -80,7 +80,7 @@ class OperatorDashboardContractTests(unittest.TestCase):
     def test_operator_registry_is_read_only(self):
         operator_source = self.app_js[
             self.app_js.index("async function loadOperatorRegistry"):
-            self.app_js.index("async function createCloudNextLocation")
+            self.app_js.index("function renderOperatorDashboard")
         ]
         self.assertNotRegex(operator_source, r"\.(insert|upsert|update|delete)\(")
         self.assertNotIn("service_role", operator_source.lower())

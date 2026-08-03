@@ -45,6 +45,26 @@ physical-location naming convention evolves.
 7. Rows with duplicate eBay item IDs are held for manual review rather than imported.
 8. No live eBay marketplace action occurs.
 
+## Review Buckets
+
+The operator page computes review buckets in the browser without updating the
+imported evidence rows:
+
+- `matched`: a unique nonblank eBay SKU carries an ETB/location hint that has a
+  CardUploader batch reference.
+- `ebay_only`: a unique nonblank eBay SKU has no ETB/location reference.
+- `duplicate_sku`: the normalized SKU appears on more than one active eBay
+  snapshot.
+- `missing_sku`: the eBay snapshot has no SKU.
+- `needs_manual_review`: the snapshot carries an ETB/location hint that is not
+  represented by a CardUploader batch reference.
+- `missing_from_ebay`: a CardUploader batch/location reference has no matched
+  eBay snapshot.
+
+`missing_from_ebay` is a reference-level gap, not proof that an individual
+CardUploader inventory item is absent from eBay. The available Supabase batch
+references contain batch and location metadata, not card-level SKU inventory.
+
 ## Acceptance Criteria
 
 - Existing listing review is reachable from the Operator Dashboard.
