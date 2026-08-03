@@ -27,6 +27,8 @@ PUBLIC_ASSETS = (
 )
 
 SITE_CONFIG_FILE = "site-config.json"
+MARKET_BRIEF_SOURCE_DIR = Path("content") / "market-briefs"
+MARKET_BRIEF_INDEX_FILE = MARKET_BRIEF_SOURCE_DIR / "index.json"
 SITE_CONFIG_KEYS = (
     "EBAY_STORE_URL",
     "TCGPLAYER_STORE_URL",
@@ -166,7 +168,97 @@ def render_site_config(output: Path, config: dict[str, str]) -> None:
         path.write_text(text, encoding="utf-8")
 
 
-def write_generated_files(output: Path, commit: str) -> None:
+def parse_frontmatter_value(value: str) -> object:
+    value = value.strip()
+    if len(value) >= 2 and value[0] == value[-1] and value[0] in {'"', "'"}:
+        return value[1:-1]
+    if value.lower() in {"true", "false"}:
+        return value.lower() == "true"
+    return value
+
+
+def parse_markdown_frontmatter(text: str, path: Path) -> tuple[dict[str, object], str]:
+    if not text.startswith("---\n"):
+        raise ValueError(f"Market brief markdown is missing frontmatter: {path}")
+    end = text.find("\n---", 4)
+    if end == -1:
+        raise ValueError(f"Market brief markdown frontmatter is not closed: {path}")
+    raw_frontmatter = text[4:end].strip().splitlines()
+    body = text[end + 4 :].strip()
+    metadata: dict[str, object] = {}
+    current_list_key = ""
+    for raw_line in raw_frontmatter:
+        line = raw_line.rstrip()
+        if not line.strip():
+            continue
+        if line.startswith("  - ") and current_list_key:
+            values = metadata.setdefault(current_list_key, [])
+            if not isinstance(values, list):
+                raise ValueError(f"Frontmatter key cannot be both scalar and list: {current_list_key}")
+            values.append(str(parse_frontmatter_value(line[4:])))
+            continue
+        if ":" not in line:
+            raise ValueError(f"Invalid frontmatter line in {path}: {line}")
+        key, value = line.split(":", 1)
+        current_list_key = key.strip()
+        if value.strip():
+            metadata[current_list_key] = parse_frontmatter_value(value)
+            current_list_key = ""
+        else:
+            metadata[current_list_key] = []
+    return metadata, body
+
+
+def markdown_sections(body: str) -> list[dict[str, str]]:
+    sections: list[dict[str, str]] = []
+    current_heading = "Brief"
+    current_lines: list[str] = []
+    for line in body.splitlines():
+        if line.startswith("## "):
+            if current_lines:
+                sections.append({"heading": current_heading, "body": "\n".join(current_lines).strip()})
+            current_heading = line[3:].strip()
+            current_lines = []
+        else:
+            current_lines.append(line)
+    if current_lines:
+        sections.append({"heading": current_heading, "body": "\n".join(current_lines).strip()})
+    return [section for section in sections if section["heading"] and section["body"]]
+
+
+def render_market_brief_index(source_root: Path, output: Path) -> list[dict[str, object]]:
+    source_dir = source_root / MARKET_BRIEF_SOURCE_DIR
+    if not source_dir.exists():
+        raise FileNotFoundError(f"Market brief content folder is missing: {source_dir}")
+    posts: list[dict[str, object]] = []
+    for path in sorted(source_dir.glob("*.md")):
+        metadata, body = parse_markdown_frontmatter(path.read_text(encoding="utf-8-sig"), path)
+        slug = str(metadata.get("slug", "") or path.stem).strip()
+        title = str(metadata.get("title", "") or "").strip()
+        summary = str(metadata.get("summary", "") or "").strip()
+        if not slug or not title or not summary:
+            raise ValueError(f"Market brief requires slug, title, and summary: {path}")
+        posts.append({
+            "slug": slug,
+            "label": str(metadata.get("label", "") or "Market Brief").strip(),
+            "title": title,
+            "date": str(metadata.get("date", "") or "").strip(),
+            "author": str(metadata.get("author", "") or "Putnam Collectibles").strip(),
+            "category": str(metadata.get("category", "") or "Pokemon Market Brief").strip(),
+            "status": str(metadata.get("status", "") or "published").strip(),
+            "summary": summary,
+            "tags": metadata.get("tags", []),
+            "source_path": str((MARKET_BRIEF_SOURCE_DIR / path.name).as_posix()),
+            "sections": markdown_sections(body),
+        })
+    posts.sort(key=lambda item: (str(item.get("date", "")), str(item.get("title", ""))), reverse=True)
+    destination = output / MARKET_BRIEF_INDEX_FILE
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    destination.write_text(json.dumps({"posts": posts}, indent=2) + "\n", encoding="utf-8")
+    return posts
+
+
+def write_generated_files(output: Path, commit: str, market_briefs: list[dict[str, object]]) -> None:
     (output / ".nojekyll").write_text("", encoding="utf-8")
     (output / "README.md").write_text(
         "\n".join([
@@ -190,6 +282,8 @@ def write_generated_files(output: Path, commit: str) -> None:
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "public_files": list(PUBLIC_FILES),
         "public_assets": list(PUBLIC_ASSETS),
+        "generated_content": [MARKET_BRIEF_INDEX_FILE.as_posix()],
+        "market_brief_count": len(market_briefs),
     }
     (output / "deployment-manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
 
@@ -262,7 +356,8 @@ def export_site(source: Path, output: Path, commit: str) -> None:
     for relative in PUBLIC_ASSETS:
         copy_file(source, output, relative)
     render_site_config(output, site_config)
-    write_generated_files(output, commit)
+    market_briefs = render_market_brief_index(source, output)
+    write_generated_files(output, commit, market_briefs)
     validate_references(output)
     validate_prohibited_files(output)
 

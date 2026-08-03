@@ -51,6 +51,9 @@ class PublicStorefrontContractTests(unittest.TestCase):
         cls.output_html = (cls.output / "index.html").read_text(encoding="utf-8")
         cls.output_404 = (cls.output / "404.html").read_text(encoding="utf-8")
         cls.output_js = (cls.output / "app.js").read_text(encoding="utf-8")
+        cls.market_brief_index = json.loads(
+            (cls.output / "content" / "market-briefs" / "index.json").read_text(encoding="utf-8")
+        )
 
     @classmethod
     def tearDownClass(cls):
@@ -104,9 +107,30 @@ class PublicStorefrontContractTests(unittest.TestCase):
         self.assertIn('href="/market-briefs"', self.source_html)
         self.assertIn("renderMarketBriefsPage", self.source_js)
         self.assertIn("renderMarketBriefPost", self.source_js)
+        self.assertIn("/content/market-briefs/index.json", self.source_js)
         self.assertIn('"market-briefs"', EXPORTER_PATH.read_text(encoding="utf-8"))
         self.assertIn(".brief-card", self.source_css)
         self.assertIn("ChatGPT-assisted research", self.source_js)
+
+    def test_market_briefs_are_exported_from_markdown_content(self):
+        markdown_path = DOCS / "content" / "market-briefs" / "2026-08-03-monday-market-brief.md"
+        self.assertTrue(markdown_path.exists())
+        markdown = markdown_path.read_text(encoding="utf-8")
+        self.assertIn('slug: "monday-morning-brief"', markdown)
+        self.assertIn("## What moved", markdown)
+
+        posts = self.market_brief_index["posts"]
+        self.assertGreaterEqual(len(posts), 1)
+        post = posts[0]
+        self.assertEqual("monday-morning-brief", post["slug"])
+        self.assertEqual("Putnam Collectibles Pokemon Market Brief", post["title"])
+        self.assertEqual("2026-08-03", post["date"])
+        self.assertEqual("published", post["status"])
+        self.assertEqual("content/market-briefs/2026-08-03-monday-market-brief.md", post["source_path"])
+        self.assertEqual(["Pokemon", "Market Updates", "Selling"], post["tags"])
+        self.assertEqual(["What moved", "Why it matters", "What Putnam Collectibles is watching"], [
+            section["heading"] for section in post["sections"]
+        ])
 
     def test_export_resolves_configuration_and_keeps_links_safe(self):
         for text in (self.output_html, self.output_404, self.output_js):
