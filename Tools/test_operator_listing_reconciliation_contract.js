@@ -36,6 +36,8 @@ const allocationMigration = fs.readFileSync(
   "This page does not update CardUploader inventory or revise, end, publish, sync, or otherwise change live marketplace listings.",
   "parseCardUploaderInventoryCsv",
   "carduploaderInventoryColumns",
+  "dedupeInventorySnapshotRows",
+  "DUPLICATE_INVENTORY_SNAPSHOT_IDENTITY_SKIPPED",
   "cardvector_inventory_quantity_snapshots",
   '"owner_user_id,marketplace,marketplace_listing_id"',
 ].forEach((needle) => assert(app.includes(needle), `app.js missing ${needle}`));

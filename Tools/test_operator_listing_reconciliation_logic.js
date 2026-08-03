@@ -52,6 +52,9 @@ const build = new Function(`
   ${functionSource("reasonBucket")}
   ${functionSource("syntheticMarketplaceListingId")}
   ${functionSource("syntheticInventorySnapshotId")}
+  ${functionSource("inventoryQuantitySnapshotPayload")}
+  ${functionSource("inventorySnapshotConflictKey")}
+  ${functionSource("dedupeInventorySnapshotRows")}
   ${functionSource("summarizeListingRows")}
   ${functionSource("summarizeInventoryRows")}
   ${functionSource("parseMarketplaceListingsCsv")}
@@ -60,13 +63,15 @@ const build = new Function(`
   ${functionSource("listingReferenceLocation")}
   ${functionSource("reconcileListingSnapshots")}
   ${functionSource("buildMarketplaceAllocationLedger")}
-  return { reconcileListingSnapshots, parseMarketplaceListingsCsv, parseEbayListingsCsv, parseCardUploaderInventoryCsv, buildMarketplaceAllocationLedger };
+  return { reconcileListingSnapshots, parseMarketplaceListingsCsv, parseEbayListingsCsv, parseCardUploaderInventoryCsv, inventoryQuantitySnapshotPayload, dedupeInventorySnapshotRows, buildMarketplaceAllocationLedger };
 `);
 const {
   reconcileListingSnapshots: reconcile,
   parseMarketplaceListingsCsv,
   parseEbayListingsCsv,
   parseCardUploaderInventoryCsv,
+  inventoryQuantitySnapshotPayload,
+  dedupeInventorySnapshotRows,
   buildMarketplaceAllocationLedger,
 } = build();
 
@@ -125,6 +130,46 @@ assert.strictEqual(parsedInventory.records[0].external_inventory_provider, "card
 assert.ok(parsedInventory.records[0].external_inventory_id.startsWith("carduploader:snapshot:"));
 assert.strictEqual(parsedInventory.records[0].available_quantity, 1);
 assert.strictEqual(parsedInventory.summary.totalQuantity, 1);
+
+const duplicateProductSkuCsv = [
+  "Title,User SKU,Catalog SKU,Condition,Qty",
+  "Pikachu,ETB-001-A.1,12345,Near Mint,1",
+  "Pikachu,ETB-001-A.2,12345,Near Mint,1",
+].join("\n");
+const parsedDuplicateProductSku = parseCardUploaderInventoryCsv(duplicateProductSkuCsv, { name: "inventory.csv", sha256: "same-file" });
+assert.strictEqual(parsedDuplicateProductSku.errors.length, 0);
+assert.notStrictEqual(
+  parsedDuplicateProductSku.records[0].external_inventory_id,
+  parsedDuplicateProductSku.records[1].external_inventory_id,
+  "Catalog SKU must not collapse separate CardUploader inventory rows"
+);
+
+const duplicateRows = [
+  inventoryQuantitySnapshotPayload(
+    {
+      ...parsedInventory.records[0],
+      external_inventory_id: "stable-carduploader-row-1",
+      condition: "Near Mint",
+    },
+    { id: "user-1" },
+    "batch-1"
+  ),
+  inventoryQuantitySnapshotPayload(
+    {
+      ...parsedInventory.records[0],
+      external_inventory_id: "stable-carduploader-row-1",
+      condition: "Near Mint",
+      row_number: 2,
+      raw_row: { duplicate: "same identity" },
+    },
+    { id: "user-1" },
+    "batch-1"
+  ),
+];
+const dedupedInventory = dedupeInventorySnapshotRows(duplicateRows);
+assert.strictEqual(dedupedInventory.rows.length, 1);
+assert.strictEqual(dedupedInventory.duplicateCount, 1);
+assert.strictEqual(dedupedInventory.rows[0].duplicate_source_rows.length, 1);
 
 const allocation = buildMarketplaceAllocationLedger(
   [
