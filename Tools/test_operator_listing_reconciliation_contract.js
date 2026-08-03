@@ -15,6 +15,10 @@ const allocationMigration = fs.readFileSync(
   path.join(root, "supabase", "migrations", "20260803143000_marketplace_allocation_ledger.sql"),
   "utf8"
 );
+const allocationIdentityMigration = fs.readFileSync(
+  path.join(root, "supabase", "migrations", "20260803201000_marketplace_allocation_identity.sql"),
+  "utf8"
+);
 
 [
   'href="/operator/listings"',
@@ -36,8 +40,10 @@ const allocationMigration = fs.readFileSync(
   "This page does not update CardUploader inventory or revise, end, publish, sync, or otherwise change live marketplace listings.",
   "parseCardUploaderInventoryCsv",
   "carduploaderInventoryColumns",
+  "managedInventorySku",
   "dedupeInventorySnapshotRows",
   "DUPLICATE_INVENTORY_SNAPSHOT_IDENTITY_SKIPPED",
+  "ebay_only_legacy_listing",
   "cardvector_inventory_quantity_snapshots",
   '"owner_user_id,marketplace,marketplace_listing_id"',
 ].forEach((needle) => assert(app.includes(needle), `app.js missing ${needle}`));
@@ -79,6 +85,16 @@ const allocationMigration = fs.readFileSync(
   "revoke all on table public.cardvector_inventory_quantity_snapshots from anon",
   "notify pgrst, 'reload schema'",
 ].forEach((needle) => assert(allocationMigration.includes(needle), `allocation migration missing ${needle}`));
+
+[
+  "create or replace view public.cardvector_marketplace_allocation_ledger_v",
+  "raw_row ->> 'Catalog SKU'",
+  "carduploader_catalog_sku",
+  "ebay_only_legacy_listing",
+  "EBAY_LISTING_NOT_LINKED_TO_CARDUPLOADER_CATALOG_SKU",
+  "latest_inventory_batches",
+  "notify pgrst, 'reload schema'",
+].forEach((needle) => assert(allocationIdentityMigration.includes(needle), `allocation identity migration missing ${needle}`));
 
 const listingSource = app.slice(
   app.indexOf("const ebayListingColumns"),

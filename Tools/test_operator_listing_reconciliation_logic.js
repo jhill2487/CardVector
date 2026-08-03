@@ -49,6 +49,7 @@ const build = new Function(`
   ${functionSource("normalizeSnapshotIdentityPart")}
   ${functionSource("listingLocationHint")}
   ${functionSource("baseLocationHint")}
+  ${functionSource("managedInventorySku")}
   ${functionSource("reasonBucket")}
   ${functionSource("syntheticMarketplaceListingId")}
   ${functionSource("syntheticInventorySnapshotId")}
@@ -133,11 +134,13 @@ assert.strictEqual(parsedInventory.summary.totalQuantity, 1);
 
 const duplicateProductSkuCsv = [
   "Title,User SKU,Catalog SKU,Condition,Qty",
-  "Pikachu,ETB-001-A.1,12345,Near Mint,1",
-  "Pikachu,ETB-001-A.2,12345,Near Mint,1",
+  "Pikachu,ETB-001-A.1,CS-ABC123,Near Mint,1",
+  "Pikachu,ETB-001-A.2,CS-ABC123,Near Mint,1",
 ].join("\n");
 const parsedDuplicateProductSku = parseCardUploaderInventoryCsv(duplicateProductSkuCsv, { name: "inventory.csv", sha256: "same-file" });
 assert.strictEqual(parsedDuplicateProductSku.errors.length, 0);
+assert.strictEqual(parsedDuplicateProductSku.records[0].sku, "CS-ABC123");
+assert.strictEqual(parsedDuplicateProductSku.records[0].location_display_code, "ETB-001-A.1");
 assert.notStrictEqual(
   parsedDuplicateProductSku.records[0].external_inventory_id,
   parsedDuplicateProductSku.records[1].external_inventory_id,
@@ -175,24 +178,40 @@ assert.strictEqual(dedupedInventory.rows[0].raw_row.duplicate_rows.length, 1);
 
 const allocation = buildMarketplaceAllocationLedger(
   [
-    { marketplace: "ebay", sku: "ETB-001-A.1", quantity_available: 1 },
-    { marketplace: "tcgplayer", sku: "etb-001-a.1", quantity_available: 1 },
-    { marketplace: "ebay", sku: "ETB-002-B.1", quantity_available: 1 },
+    { marketplace: "ebay", sku: "CS-ABC123", quantity_available: 1 },
+    { marketplace: "tcgplayer", sku: "cs-abc123", quantity_available: 1 },
+    { marketplace: "ebay", sku: "CS-DEF456", quantity_available: 1 },
   ],
   [
-    { sku: "ETB-001-A.1", inventory_title: "Pikachu", available_quantity: 1 },
-    { sku: "ETB-002-B.1", inventory_title: "Charmander", available_quantity: 3 },
+    { sku: "CS-ABC123", inventory_title: "Pikachu", available_quantity: 1 },
+    { sku: "CS-DEF456", inventory_title: "Charmander", available_quantity: 3 },
   ],
 );
-assert.strictEqual(allocation[0].sku, "ETB-001-A.1");
+assert.strictEqual(allocation[0].sku, "CS-ABC123");
 assert.strictEqual(allocation[0].allocation_status, "oversell_risk");
 assert.ok(allocation[0].reason_codes.includes("LISTED_QUANTITY_EXCEEDS_AVAILABLE"));
-assert.strictEqual(allocation.find((row) => row.sku === "ETB-002-B.1").allocation_status, "safe_capacity");
+assert.strictEqual(allocation.find((row) => row.sku === "CS-DEF456").allocation_status, "safe_capacity");
 
 const missingInventory = buildMarketplaceAllocationLedger(
-  [{ marketplace: "tcgplayer", sku: "NO-SNAPSHOT", quantity_available: 2 }],
+  [{ marketplace: "tcgplayer", sku: "CS-NOSNAP", quantity_available: 2 }],
   [],
 );
 assert.strictEqual(missingInventory[0].allocation_status, "needs_inventory_snapshot");
+
+const legacyEbayOnly = buildMarketplaceAllocationLedger(
+  [{ marketplace: "ebay", sku: "", marketplace_listing_id: "147000", listing_title: "Older no SKU listing", quantity_available: 1 }],
+  [],
+);
+assert.strictEqual(legacyEbayOnly[0].allocation_status, "ebay_only_legacy_listing");
+
+const groupedManagedInventory = buildMarketplaceAllocationLedger(
+  [{ marketplace: "ebay", sku: "CS-GROUP1", quantity_available: 2 }],
+  [
+    { sku: "CS-GROUP1", inventory_title: "Grouped card", available_quantity: 1 },
+    { sku: "CS-GROUP1", inventory_title: "Grouped card", available_quantity: 1 },
+  ],
+);
+assert.strictEqual(groupedManagedInventory[0].available_quantity, 2);
+assert.strictEqual(groupedManagedInventory[0].allocation_status, "fully_allocated");
 
 console.log("Operator listing reconciliation logic passed.");
