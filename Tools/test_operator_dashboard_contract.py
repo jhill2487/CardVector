@@ -60,17 +60,24 @@ class OperatorDashboardContractTests(unittest.TestCase):
         self.assertIn('href="/operator/listings"', self.app_js)
         self.assertIn("Existing Listing Review", self.app_js)
         self.assertIn("parseEbayListingsCsv", self.app_js)
+        self.assertIn("parseMarketplaceListingsCsv", self.app_js)
+        self.assertIn("parseCardUploaderInventoryCsv", self.app_js)
         self.assertIn("cardvector_marketplace_listing_snapshots", self.app_js)
         self.assertIn("cardvector_inventory_listing_matches", self.app_js)
+        self.assertIn("cardvector_marketplace_allocation_ledger_v", self.app_js)
         self.assertIn("cardvector_ebay_listing_reconciliation_v", self.app_js)
-        self.assertIn("This page does not revise, end, publish, or otherwise change live eBay listings.", self.app_js)
+        self.assertIn(
+            "This page does not update CardUploader inventory or revise, end, publish, sync, or otherwise change live marketplace listings.",
+            self.app_js,
+        )
         listing_source = self.app_js[
             self.app_js.index("const ebayListingColumns"):
             self.app_js.index("function renderOperatorRegistryView")
         ]
-        self.assertNotIn("revise", listing_source.lower().replace("does not revise", ""))
+        self.assertNotIn("revise_listing", listing_source)
         self.assertNotIn("publish_listing", listing_source)
         self.assertNotIn("end_listing", listing_source)
+        self.assertNotIn("sync_to_tcgplayer", listing_source)
         self.assertIn('"owner_user_id,marketplace,marketplace_listing_id"', listing_source)
 
     def test_schema_cache_missing_table_errors_are_optional(self):
