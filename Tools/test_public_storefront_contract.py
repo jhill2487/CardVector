@@ -1,4 +1,4 @@
-﻿import importlib.util
+import importlib.util
 import json
 import re
 import tempfile
@@ -113,24 +113,26 @@ class PublicStorefrontContractTests(unittest.TestCase):
         self.assertIn("ChatGPT-assisted research", self.source_js)
 
     def test_market_briefs_are_exported_from_markdown_content(self):
-        markdown_path = DOCS / "content" / "market-briefs" / "2026-08-03-monday-market-brief.md"
+        removed_placeholder = DOCS / "content" / "market-briefs" / "2026-08-03-monday-market-brief.md"
+        self.assertFalse(removed_placeholder.exists())
+        markdown_path = DOCS / "content" / "market-briefs" / "2026-08-03-why-pokemon-card-prices-change.md"
         self.assertTrue(markdown_path.exists())
         markdown = markdown_path.read_text(encoding="utf-8")
-        self.assertIn('slug: "monday-morning-brief"', markdown)
-        self.assertIn("## What moved", markdown)
+        self.assertIn('slug: "why-pokemon-card-prices-change"', markdown)
+        self.assertIn("## Supply Is Usually the Biggest Driver", markdown)
 
         posts = self.market_brief_index["posts"]
         self.assertGreaterEqual(len(posts), 1)
-        post = next(item for item in posts if item["slug"] == "monday-morning-brief")
-        self.assertEqual("monday-morning-brief", post["slug"])
-        self.assertEqual("Putnam Collectibles Pokemon Market Brief", post["title"])
+        post = next(item for item in posts if item["slug"] == "why-pokemon-card-prices-change")
+        self.assertEqual("Why Pokemon Card Prices Change: A Seller's Guide to Smarter Pricing Decisions", post["title"])
         self.assertEqual("2026-08-03", post["date"])
         self.assertEqual("published", post["status"])
-        self.assertEqual("content/market-briefs/2026-08-03-monday-market-brief.md", post["source_path"])
-        self.assertEqual(["Pokemon", "Market Updates", "Selling"], post["tags"])
-        self.assertEqual(["What moved", "Why it matters", "What Putnam Collectibles is watching"], [
-            section["heading"] for section in post["sections"]
-        ])
+        self.assertEqual("content/market-briefs/2026-08-03-why-pokemon-card-prices-change.md", post["source_path"])
+        self.assertEqual(["Pokemon", "eBay", "TCGplayer", "Pricing Strategy", "Inventory Management"], post["tags"])
+
+    def test_market_brief_cards_stack_vertically(self):
+        self.assertIn("grid-template-columns: minmax(0, 1fr)", self.source_css)
+        self.assertIn("max-width: 920px", self.source_css)
 
     def test_export_resolves_configuration_and_keeps_links_safe(self):
         for text in (self.output_html, self.output_404, self.output_js):
