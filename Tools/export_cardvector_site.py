@@ -235,7 +235,7 @@ def render_market_brief_index(source_root: Path, output: Path) -> list[dict[str,
         metadata, body = parse_markdown_frontmatter(path.read_text(encoding="utf-8-sig"), path)
         slug = str(metadata.get("slug", "") or path.stem).strip()
         title = str(metadata.get("title", "") or "").strip()
-        summary = str(metadata.get("summary", "") or "").strip()
+        summary = str(metadata.get("summary", "") or metadata.get("description", "") or "").strip()
         if not slug or not title or not summary:
             raise ValueError(f"Market brief requires slug, title, and summary: {path}")
         posts.append({

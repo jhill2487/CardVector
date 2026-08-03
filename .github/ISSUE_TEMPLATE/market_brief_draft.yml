@@ -1,57 +1,84 @@
 name: Market Brief Draft
 description: Create a draft that GitHub Actions can convert into a CardVector.app market brief PR.
-title: "Pokemon Market Brief: YYYY-MM-DD"
+title: "[Content Draft] Pokemon Card Pricing Strategy - YYYY-MM-DD"
 labels:
-  - market-brief-draft
+  - content-draft
+  - monday-brief
 body:
   - type: markdown
     attributes:
       value: |
-        Paste the reviewed ChatGPT draft here. A GitHub Action will turn this issue into a Markdown post and open a draft PR.
+        Paste the reviewed ChatGPT draft here. Add the `ready-for-pr` label only after the article Markdown is ready to become a draft pull request.
   - type: input
-    id: brief_date
+    id: filename
     attributes:
-      label: Brief date
-      description: Use YYYY-MM-DD.
-      placeholder: "2026-08-03"
+      label: Filename
+      description: Use YYYY-MM-DD-lowercase-slug.md.
+      placeholder: "2026-08-10-pokemon-card-pricing-strategy.md"
     validations:
       required: true
   - type: input
-    id: slug
+    id: status
     attributes:
-      label: Slug
-      description: Optional. Leave blank to generate one from the issue title.
-      placeholder: "pokemon-market-brief-2026-08-03"
+      label: Status
+      description: Use Draft while staging. The PR is still reviewed before publishing.
+      placeholder: "Draft"
     validations:
       required: false
   - type: textarea
-    id: summary
+    id: article_file
     attributes:
-      label: Summary
-      description: Short teaser shown on the briefs index.
-      placeholder: "A concise weekly Pokemon market update covering recent movement, collector demand, and marketplace signals."
-    validations:
-      required: true
-  - type: input
-    id: tags
-    attributes:
-      label: Tags
-      description: Comma-separated tags.
-      placeholder: "Pokemon, Market Updates, Selling"
-    validations:
-      required: false
-  - type: textarea
-    id: draft_body
-    attributes:
-      label: Draft body
-      description: Use Markdown headings such as "## What moved".
+      label: Article file
+      description: Paste the complete Markdown file in a fenced code block.
       placeholder: |
+        ```markdown
+        ---
+        title: "Pokemon Card Pricing Strategy"
+        slug: "pokemon-card-pricing-strategy"
+        date: "2026-08-10"
+        description: "Short SEO description and site teaser."
+        label: "Weekly Monday Brief"
+        author: "Putnam Collectibles"
+        category: "Pokemon Market Brief"
+        status: "published"
+        tags:
+          - Pokemon
+          - Market Updates
+          - Selling
+        ---
+
+        # Pokemon Card Pricing Strategy
+
         ## What moved
 
-        ...
-
-        ## Why it matters
-
-        ...
+        Article content...
+        ```
     validations:
       required: true
+  - type: textarea
+    id: fact_check_notes
+    attributes:
+      label: Fact-check notes
+      description: Keep time-sensitive claim checks here. These notes are not published to the website.
+      placeholder: |
+        Time-sensitive statement:
+        Source:
+        Source date:
+        Verification notes:
+    validations:
+      required: false
+  - type: textarea
+    id: tiktok_package
+    attributes:
+      label: TikTok package
+      description: Optional short-form content package. This is not published to the website.
+      placeholder: |
+        Hook:
+
+        Voiceover:
+
+        B-roll:
+
+        CTA:
+    validations:
+      required: false

@@ -11,15 +11,19 @@ SCRIPT = ROOT / "Tools" / "create_market_brief_from_issue.py"
 class MarketBriefWorkflowContractTests(unittest.TestCase):
     def test_issue_template_exists_with_expected_label(self):
         text = TEMPLATE.read_text(encoding="utf-8")
-        self.assertIn("market-brief-draft", text)
-        self.assertIn("Brief date", text)
-        self.assertIn("Draft body", text)
+        self.assertIn("content-draft", text)
+        self.assertIn("monday-brief", text)
+        self.assertIn("Filename", text)
+        self.assertIn("Article file", text)
+        self.assertIn("Fact-check notes", text)
+        self.assertIn("TikTok package", text)
 
     def test_workflow_creates_draft_pull_request_from_issue(self):
         text = WORKFLOW.read_text(encoding="utf-8")
         self.assertIn("issues:", text)
         self.assertIn("workflow_dispatch:", text)
-        self.assertIn("market-brief-draft", text)
+        self.assertIn("ready-for-pr", text)
+        self.assertNotIn("github.event.label.name == 'market-brief-draft'", text)
         self.assertIn("Tools/create_market_brief_from_issue.py", text)
         self.assertIn("--draft", text)
         self.assertIn("Docs/content/market-briefs", text)

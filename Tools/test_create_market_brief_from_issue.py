@@ -5,8 +5,10 @@ from pathlib import Path
 
 from create_market_brief_from_issue import (
     build_market_brief_markdown,
+    extract_fenced_markdown,
     parse_issue_sections,
     slugify,
+    validate_article_markdown,
     write_market_brief,
 )
 
@@ -69,6 +71,47 @@ Modern singles moved.
         self.assertIn('sourceIssue: "#42"', content)
         self.assertIn("## What moved", content)
         self.assertEqual("pokemon-market-brief-august-3", report["slug"])
+
+    def test_build_markdown_from_complete_fenced_article_file(self):
+        issue = {
+            "number": 84,
+            "title": "[Content Draft] Pokemon Card Pricing Strategy - 2026-08-10",
+            "url": "https://github.com/jhill2487/CardVector/issues/84",
+            "body": """### Filename
+
+`2026-08-10-pokemon-card-pricing-strategy.md`
+
+### Article file
+
+```markdown
+---
+title: "Pokemon Card Pricing Strategy"
+slug: "pokemon-card-pricing-strategy"
+date: "2026-08-10"
+description: "Short SEO description and site teaser."
+status: "published"
+---
+
+# Pokemon Card Pricing Strategy
+
+Article content.
+```
+
+### Fact-check notes
+
+Keep these in the issue only.
+""",
+        }
+        filename, content, report = build_market_brief_markdown(issue, "published")
+        self.assertEqual("2026-08-10-pokemon-card-pricing-strategy.md", filename)
+        self.assertIn('description: "Short SEO description and site teaser."', content)
+        self.assertNotIn("Fact-check notes", content)
+        self.assertEqual("fenced_markdown", report["input_mode"])
+
+    def test_validate_fenced_article_requires_frontmatter(self):
+        with self.assertRaises(ValueError):
+            validate_article_markdown("# Missing frontmatter")
+        self.assertEqual("", extract_fenced_markdown("no fenced article"))
 
     def test_write_refuses_to_overwrite_different_existing_content(self):
         issue = {

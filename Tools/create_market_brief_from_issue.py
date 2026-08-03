@@ -11,12 +11,16 @@ from typing import Any
 KNOWN_SECTION_KEYS = {
     "brief date": "date",
     "date": "date",
+    "filename": "filename",
+    "proposed filename": "filename",
     "slug": "slug",
     "summary": "summary",
+    "description": "summary",
     "label": "label",
     "author": "author",
     "category": "category",
     "tags": "tags",
+    "article file": "article_file",
     "draft body": "body",
     "body": "body",
     "brief": "body",
@@ -68,10 +72,87 @@ def quoted(value: str) -> str:
     return json.dumps(value, ensure_ascii=False)
 
 
+def extract_inline_code(value: str) -> str:
+    match = re.search(r"`([^`]+)`", value)
+    return match.group(1).strip() if match else value.strip()
+
+
+def extract_fenced_markdown(value: str) -> str:
+    match = re.search(r"```(?:markdown|md)?\s*\n(.*?)\n```", value, flags=re.IGNORECASE | re.DOTALL)
+    return match.group(1).strip() + "\n" if match else ""
+
+
+def parse_markdown_frontmatter(text: str) -> dict[str, str]:
+    if not text.startswith("---\n"):
+        raise ValueError("Article markdown must start with YAML front matter.")
+    end = text.find("\n---", 4)
+    if end == -1:
+        raise ValueError("Article markdown front matter is not closed.")
+    frontmatter = text[4:end].strip().splitlines()
+    values: dict[str, str] = {}
+    for raw_line in frontmatter:
+        line = raw_line.strip()
+        if not line or line.startswith("- ") or line.startswith("#"):
+            continue
+        if ":" not in line:
+            raise ValueError(f"Invalid front matter line: {line}")
+        key, value = line.split(":", 1)
+        values[key.strip()] = str(parse_scalar(value.strip()))
+    return values
+
+
+def parse_scalar(value: str) -> object:
+    if len(value) >= 2 and value[0] == value[-1] and value[0] in {'"', "'"}:
+        return value[1:-1]
+    if value.lower() in {"true", "false"}:
+        return value.lower() == "true"
+    return value
+
+
+def validate_article_markdown(content: str) -> dict[str, str]:
+    frontmatter = parse_markdown_frontmatter(content)
+    missing = []
+    for key in ("title", "slug", "date"):
+        if not str(frontmatter.get(key, "")).strip():
+            missing.append(key)
+    if not (str(frontmatter.get("summary", "")).strip() or str(frontmatter.get("description", "")).strip()):
+        missing.append("summary or description")
+    if missing:
+        raise ValueError("Article markdown is missing required front matter: " + ", ".join(missing))
+    if not re.match(r"^\d{4}-\d{2}-\d{2}$", str(frontmatter["date"]).strip()):
+        raise ValueError("Article front matter date must use YYYY-MM-DD format.")
+    return frontmatter
+
+
+def filename_from_issue(sections: dict[str, str], frontmatter: dict[str, str], issue_title: str) -> str:
+    filename = extract_inline_code(sections.get("filename", ""))
+    if not filename:
+        filename = f"{frontmatter.get('date')}-{slugify(frontmatter.get('slug') or issue_title)}.md"
+    if not re.match(r"^[0-9]{4}-[0-9]{2}-[0-9]{2}-[a-z0-9][a-z0-9-]*\.md$", filename):
+        raise ValueError("Filename must use YYYY-MM-DD-lowercase-slug.md format.")
+    return filename
+
+
 def build_market_brief_markdown(issue: dict[str, Any], status: str) -> tuple[str, str, dict[str, Any]]:
     title = str(issue.get("title", "") or "Pokemon Market Brief").strip()
     body = str(issue.get("body", "") or "").strip()
     sections = parse_issue_sections(body)
+    fenced_markdown = extract_fenced_markdown(sections.get("article_file", "") or body)
+    if fenced_markdown:
+        frontmatter = validate_article_markdown(fenced_markdown)
+        filename = filename_from_issue(sections, frontmatter, title)
+        report = {
+            "title": frontmatter["title"],
+            "slug": frontmatter["slug"],
+            "date": frontmatter["date"],
+            "status": frontmatter.get("status", status),
+            "filename": filename,
+            "source_issue": issue.get("number"),
+            "source_url": str(issue.get("url", "") or "").strip(),
+            "input_mode": "fenced_markdown",
+        }
+        return filename, fenced_markdown, report
+
     brief_body = sections.get("body") or body
     brief_date = sections.get("date") or date.today().isoformat()
     slug = slugify(sections.get("slug") or title)

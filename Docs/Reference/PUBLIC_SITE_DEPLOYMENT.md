@@ -43,16 +43,17 @@ Docs/content/market-briefs/
 ```
 
 The issue template `.github/ISSUE_TEMPLATE/market_brief_draft.yml` provides a
-reviewable draft intake form for ChatGPT-generated Monday briefs.
+reviewable draft intake form for ChatGPT-generated Monday briefs. Draft issues
+should start with the labels `content-draft` and `monday-brief`.
 
 The workflow `.github/workflows/market-brief-draft.yml` runs when either:
 
-- an issue receives the `market-brief-draft` label
+- an issue receives the `ready-for-pr` label
 - the workflow is run manually with an issue number
 
 The workflow:
 
-1. Reads the issue title and Markdown draft body.
+1. Reads the issue title and complete fenced Markdown article file.
 2. Creates one Markdown file in `Docs/content/market-briefs/`.
 3. Validates the public site export.
 4. Opens a draft pull request against `main`.
@@ -62,12 +63,16 @@ The brief does not publish from the issue alone. It publishes only after the
 draft PR is reviewed and merged, which then triggers the normal
 `.github/workflows/pages.yml` deployment to `CardVector-site`.
 
+Fact-check notes and TikTok package content remain in the issue as staging
+evidence. They are not copied into the public website article.
+
 Recommended recurring-task output:
 
 ```text
 Create a GitHub issue in jhill2487/CardVector using the Market Brief Draft
-template. Fill Brief date, Summary, Tags, and Draft body. Do not merge or
-publish anything automatically.
+template. Use labels content-draft and monday-brief. Include Filename, Fact-check
+notes, TikTok package, and the complete article as a fenced markdown code block
+under Article file. Do not add ready-for-pr until the draft has been reviewed.
 ```
 
 ## Public Artifact Allowlist

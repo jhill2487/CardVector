@@ -22,7 +22,7 @@ concurrency:
 
 jobs:
   create-market-brief-pr:
-    if: github.event_name == 'workflow_dispatch' || github.event.label.name == 'market-brief-draft'
+    if: github.event_name == 'workflow_dispatch' || github.event.label.name == 'ready-for-pr'
     runs-on: ubuntu-latest
     env:
       GH_TOKEN: ${{ github.token }}
