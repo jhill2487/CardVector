@@ -169,7 +169,9 @@ const duplicateRows = [
 const dedupedInventory = dedupeInventorySnapshotRows(duplicateRows);
 assert.strictEqual(dedupedInventory.rows.length, 1);
 assert.strictEqual(dedupedInventory.duplicateCount, 1);
-assert.strictEqual(dedupedInventory.rows[0].duplicate_source_rows.length, 1);
+assert.strictEqual(Object.prototype.hasOwnProperty.call(dedupedInventory.rows[0], "duplicate_source_rows"), false);
+assert.strictEqual(dedupedInventory.rows[0].raw_row.duplicate_count, 1);
+assert.strictEqual(dedupedInventory.rows[0].raw_row.duplicate_rows.length, 1);
 
 const allocation = buildMarketplaceAllocationLedger(
   [
