@@ -112,6 +112,14 @@ class PublicStorefrontContractTests(unittest.TestCase):
         self.assertIn(".brief-card", self.source_css)
         self.assertIn("ChatGPT-assisted research", self.source_js)
 
+    def test_building_business_update_cards_are_hidden_without_deleting_content(self):
+        hidden_section = re.search(r'<section class="building wrap" id="about"[^>]*hidden[^>]*>(.*?)</section>', self.source_html, re.S)
+        self.assertIsNotNone(hidden_section)
+        self.assertIn("Building the Business", hidden_section.group(1))
+        self.assertIn("YouTube Videos", hidden_section.group(1))
+        self.assertIn("Development Updates", hidden_section.group(1))
+        self.assertIn('<section class="building wrap" id="about" aria-labelledby="building-title" hidden>', self.output_404)
+
     def test_market_briefs_are_exported_from_markdown_content(self):
         removed_placeholder = DOCS / "content" / "market-briefs" / "2026-08-03-monday-market-brief.md"
         self.assertFalse(removed_placeholder.exists())
