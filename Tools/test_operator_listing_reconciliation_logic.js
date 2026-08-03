@@ -50,6 +50,7 @@ const build = new Function(`
   ${functionSource("listingLocationHint")}
   ${functionSource("baseLocationHint")}
   ${functionSource("managedInventorySku")}
+  ${functionSource("isCardUploaderLinked")}
   ${functionSource("reasonBucket")}
   ${functionSource("syntheticMarketplaceListingId")}
   ${functionSource("syntheticInventorySnapshotId")}
@@ -64,7 +65,8 @@ const build = new Function(`
   ${functionSource("listingReferenceLocation")}
   ${functionSource("reconcileListingSnapshots")}
   ${functionSource("buildMarketplaceAllocationLedger")}
-  return { reconcileListingSnapshots, parseMarketplaceListingsCsv, parseEbayListingsCsv, parseCardUploaderInventoryCsv, inventoryQuantitySnapshotPayload, dedupeInventorySnapshotRows, buildMarketplaceAllocationLedger };
+  ${functionSource("allocationLedgerSummary")}
+  return { reconcileListingSnapshots, parseMarketplaceListingsCsv, parseEbayListingsCsv, parseCardUploaderInventoryCsv, inventoryQuantitySnapshotPayload, dedupeInventorySnapshotRows, buildMarketplaceAllocationLedger, allocationLedgerSummary };
 `);
 const {
   reconcileListingSnapshots: reconcile,
@@ -74,6 +76,7 @@ const {
   inventoryQuantitySnapshotPayload,
   dedupeInventorySnapshotRows,
   buildMarketplaceAllocationLedger,
+  allocationLedgerSummary,
 } = build();
 
 const listings = [
@@ -188,9 +191,11 @@ const allocation = buildMarketplaceAllocationLedger(
   ],
 );
 assert.strictEqual(allocation[0].sku, "CS-ABC123");
+assert.strictEqual(allocation[0].allocation_key_type, "carduploader_catalog_sku");
 assert.strictEqual(allocation[0].allocation_status, "oversell_risk");
 assert.ok(allocation[0].reason_codes.includes("LISTED_QUANTITY_EXCEEDS_AVAILABLE"));
 assert.strictEqual(allocation.find((row) => row.sku === "CS-DEF456").allocation_status, "safe_capacity");
+assert.strictEqual(allocationLedgerSummary(allocation).cardUploaderLinked, 2);
 
 const missingInventory = buildMarketplaceAllocationLedger(
   [{ marketplace: "tcgplayer", sku: "CS-NOSNAP", quantity_available: 2 }],
@@ -203,6 +208,7 @@ const legacyEbayOnly = buildMarketplaceAllocationLedger(
   [],
 );
 assert.strictEqual(legacyEbayOnly[0].allocation_status, "ebay_only_legacy_listing");
+assert.strictEqual(allocationLedgerSummary(legacyEbayOnly).cardUploaderLinked, 0);
 
 const groupedManagedInventory = buildMarketplaceAllocationLedger(
   [{ marketplace: "ebay", sku: "CS-GROUP1", quantity_available: 2 }],
