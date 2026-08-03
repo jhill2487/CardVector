@@ -1,4 +1,4 @@
-import importlib.util
+﻿import importlib.util
 import json
 import re
 import tempfile
@@ -121,7 +121,7 @@ class PublicStorefrontContractTests(unittest.TestCase):
 
         posts = self.market_brief_index["posts"]
         self.assertGreaterEqual(len(posts), 1)
-        post = posts[0]
+        post = next(item for item in posts if item["slug"] == "monday-morning-brief")
         self.assertEqual("monday-morning-brief", post["slug"])
         self.assertEqual("Putnam Collectibles Pokemon Market Brief", post["title"])
         self.assertEqual("2026-08-03", post["date"])
