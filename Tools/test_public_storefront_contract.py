@@ -74,11 +74,17 @@ class PublicStorefrontContractTests(unittest.TestCase):
             "Whatnot",
             "About",
             "Contact",
-            "Mobile Capture",
         ]
         positions = [nav.group(1).index(label) for label in labels]
         self.assertEqual(positions, sorted(positions))
-        self.assertIn('href="/#mobile-capture"', nav.group(1))
+        self.assertNotIn('href="/operator"', nav.group(1))
+        self.assertNotIn('href="/#mobile-capture"', nav.group(1))
+
+        footer = re.search(r'<footer class="footer">(.*?)</footer>', self.source_html, re.S)
+        self.assertIsNotNone(footer)
+        self.assertIn('class="footer-admin"', footer.group(1))
+        self.assertIn('href="/operator"', footer.group(1))
+        self.assertIn('href="/#mobile-capture"', footer.group(1))
 
     def test_sell_and_bulk_routes_share_one_destination(self):
         self.assertIn('new Set(["sell", "bulk", "buylist"])', self.source_js)

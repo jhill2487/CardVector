@@ -19,6 +19,19 @@ class OperatorDashboardContractTests(unittest.TestCase):
         self.assertIn('href="/operator"', self.index_html)
         self.assertIn("Open CardVector Operator Dashboard", self.index_html)
         self.assertIn('href="/#mobile-capture"', self.index_html)
+        header = self.index_html[
+            self.index_html.index('<header class="site-header"'):
+            self.index_html.index("</header>")
+        ]
+        footer = self.index_html[
+            self.index_html.index('<footer class="footer"'):
+            self.index_html.index("</footer>")
+        ]
+        self.assertNotIn('href="/operator"', header)
+        self.assertNotIn('href="/#mobile-capture"', header)
+        self.assertIn('class="footer-admin"', footer)
+        self.assertIn('href="/operator"', footer)
+        self.assertIn('href="/#mobile-capture"', footer)
 
     def test_operator_routes_are_static_export_clients(self):
         for route in ('"operator"', '"registry"', '"mobile-capture"', '"batches"', '"batch-workflow"', '"listings"', '"listing-reconciliation"'):
