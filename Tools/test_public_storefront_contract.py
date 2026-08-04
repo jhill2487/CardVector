@@ -86,6 +86,17 @@ class PublicStorefrontContractTests(unittest.TestCase):
         self.assertIn('href="/operator"', footer.group(1))
         self.assertIn('href="/#mobile-capture"', footer.group(1))
 
+    def test_hero_avoids_duplicate_static_marketplace_summary(self):
+        hero = re.search(r'<section class="hero wrap">(.*?)</section>', self.source_html, re.S)
+        self.assertIsNotNone(hero)
+        self.assertIn("Sell Your Collection", hero.group(1))
+        self.assertNotIn("hero-panel", hero.group(1))
+        self.assertNotIn("Online Stores", hero.group(1))
+        self.assertNotIn("Live Shopping", hero.group(1))
+        self.assertNotIn("Powered By", hero.group(1))
+        self.assertNotIn(".hero-panel", self.source_css)
+        self.assertNotIn(".panel-line", self.source_css)
+
     def test_sell_and_bulk_routes_share_one_destination(self):
         self.assertIn('new Set(["sell", "bulk", "buylist"])', self.source_js)
         self.assertIn("renderSellCollectionPage", self.source_js)
