@@ -145,6 +145,8 @@ class PublicStorefrontContractTests(unittest.TestCase):
         markdown = markdown_path.read_text(encoding="utf-8")
         self.assertIn('slug: "why-pokemon-card-prices-change"', markdown)
         self.assertIn("## Supply Is Usually the Biggest Driver", markdown)
+        self.assertIn("affiliateLinks:", markdown)
+        self.assertIn(EXPECTED_URLS["EBAY_STORE_URL"], markdown)
 
         posts = self.market_brief_index["posts"]
         self.assertGreaterEqual(len(posts), 1)
@@ -154,6 +156,18 @@ class PublicStorefrontContractTests(unittest.TestCase):
         self.assertEqual("published", post["status"])
         self.assertEqual("content/market-briefs/2026-08-03-why-pokemon-card-prices-change.md", post["source_path"])
         self.assertEqual(["Pokemon", "eBay", "TCGplayer", "Pricing Strategy", "Inventory Management"], post["tags"])
+        self.assertEqual(
+            [{"label": "Shop Putnam Collectibles on eBay", "url": EXPECTED_URLS["EBAY_STORE_URL"]}],
+            post["affiliateLinks"],
+        )
+
+    def test_market_brief_posts_render_affiliate_links(self):
+        self.assertIn("renderAffiliateLinkPanel", self.source_js)
+        self.assertIn("Shop related picks", self.source_js)
+        self.assertIn("Explore current listings", self.source_js)
+        self.assertIn("target=\"_blank\" rel=\"noopener noreferrer\"", self.source_js)
+        self.assertIn("Marketplace links may be affiliate links.", self.source_js)
+        self.assertIn(".brief-affiliate-panel", self.source_css)
 
     def test_market_brief_cards_stack_vertically(self):
         self.assertIn("grid-template-columns: minmax(0, 1fr)", self.source_css)

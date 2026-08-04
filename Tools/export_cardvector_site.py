@@ -226,6 +226,27 @@ def markdown_sections(body: str) -> list[dict[str, str]]:
     return [section for section in sections if section["heading"] and section["body"]]
 
 
+def parse_affiliate_links(value: object, path: Path) -> list[dict[str, str]]:
+    if not value:
+        return []
+    raw_values = value if isinstance(value, list) else [value]
+    links: list[dict[str, str]] = []
+    for raw_value in raw_values:
+        text = str(raw_value or "").strip()
+        if not text:
+            continue
+        if "|" in text:
+            label, url = [part.strip() for part in text.split("|", 1)]
+        else:
+            label, url = "Shop related cards on eBay", text
+        if not label:
+            raise ValueError(f"Market brief affiliate link is missing a label: {path}")
+        if not url.startswith("https://"):
+            raise ValueError(f"Market brief affiliate link must be a complete https:// URL: {path}")
+        links.append({"label": label, "url": url})
+    return links
+
+
 def render_market_brief_index(source_root: Path, output: Path) -> list[dict[str, object]]:
     source_dir = source_root / MARKET_BRIEF_SOURCE_DIR
     if not source_dir.exists():
@@ -248,6 +269,7 @@ def render_market_brief_index(source_root: Path, output: Path) -> list[dict[str,
             "status": str(metadata.get("status", "") or "published").strip(),
             "summary": summary,
             "tags": metadata.get("tags", []),
+            "affiliateLinks": parse_affiliate_links(metadata.get("affiliateLinks", []), path),
             "source_path": str((MARKET_BRIEF_SOURCE_DIR / path.name).as_posix()),
             "sections": markdown_sections(body),
         })

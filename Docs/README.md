@@ -129,6 +129,12 @@ Adding `ready-for-pr` runs `.github/workflows/market-brief-draft.yml`, which
 turns the fenced Markdown article file into a draft PR. Merging that PR triggers
 the normal public-site deployment.
 
+Brief front matter may include optional affiliate links in the format
+`Label|https://...`. Published brief pages render those links in a related-picks
+panel with the marketplace affiliate disclosure. If a brief does not define a
+custom link, the public page uses the configured Putnam Collectibles eBay
+partner link from `Docs/site-config.json`.
+
 Operational details live in `Docs/Reference/PUBLIC_SITE_DEPLOYMENT.md`.
 
 ## Platform Vision

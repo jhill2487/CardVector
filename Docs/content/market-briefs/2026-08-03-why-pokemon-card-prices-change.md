@@ -18,6 +18,8 @@ featuredImage: "/images/blog/pokemon-card-pricing-guide.webp"
 featuredImageAlt: "Pokemon cards being organized for pricing and inventory management"
 sourceIssue: "#1"
 sourceUrl: "https://github.com/jhill2487/CardVector/issues/1"
+affiliateLinks:
+  - "Shop Putnam Collectibles on eBay|https://www.ebay.com/str/jhilltcg?mkcid=1&mkrid=711-53200-19255-0&siteid=0&campid=5339178316&customid=&toolid=10001&mkevt=1"
 ---
 
 # Why Pokemon Card Prices Change: A Seller's Guide to Smarter Pricing Decisions

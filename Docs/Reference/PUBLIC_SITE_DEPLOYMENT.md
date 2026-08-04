@@ -71,6 +71,17 @@ draft PR is reviewed and merged, which then triggers the normal
 Fact-check notes and TikTok package content remain in the issue as staging
 evidence. They are not copied into the public website article.
 
+Market briefs may include affiliate calls to action through front matter:
+
+```yaml
+affiliateLinks:
+  - "Shop Putnam Collectibles on eBay|https://www.ebay.com/str/jhilltcg?mkcid=1&mkrid=711-53200-19255-0&siteid=0&campid=5339178316&customid=&toolid=10001&mkevt=1"
+```
+
+The public page renders these links as a related-picks panel with the affiliate
+disclosure. If no custom affiliate link is supplied, the brief page uses the
+default eBay partner link configured in `Docs/site-config.json`.
+
 Recommended recurring-task output:
 
 ```text
