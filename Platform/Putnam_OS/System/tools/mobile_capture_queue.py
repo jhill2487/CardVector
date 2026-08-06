@@ -67,6 +67,7 @@ QUEUE_STATUS_LABELS = {
     "DRAFT": "Draft",
     "UPLOADING": "Uploading",
 }
+DOWNLOAD_MANIFEST_FILENAME = "mobile_capture_download_manifest.json"
 
 
 def iso_now() -> str:
@@ -565,6 +566,68 @@ def write_json(path: Path, data: dict[str, Any]) -> None:
     temp.replace(path)
 
 
+def read_json(path: Path) -> dict[str, Any]:
+    if not path.exists():
+        return {}
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    return data if isinstance(data, dict) else {}
+
+
+def download_manifest_path(processing_dir: Path) -> Path:
+    return processing_dir / DOWNLOAD_MANIFEST_FILENAME
+
+
+def download_manifest_key(bucket: str, storage_path: str) -> str:
+    return f"{bucket}/{storage_path}"
+
+
+def cached_original_is_valid(
+    manifest_entries: dict[str, Any],
+    bucket: str,
+    storage_path: str,
+    original_path: Path,
+) -> bool:
+    entry = manifest_entries.get(download_manifest_key(bucket, storage_path))
+    if not isinstance(entry, dict) or not original_path.exists() or not original_path.is_file():
+        return False
+    try:
+        local_size = original_path.stat().st_size
+    except OSError:
+        return False
+    return (
+        entry.get("storage_bucket") == bucket
+        and entry.get("storage_path") == storage_path
+        and entry.get("local_filename") == original_path.name
+        and int(entry.get("local_size") or -1) == local_size
+    )
+
+
+def build_download_manifest_entry(
+    image: dict[str, Any],
+    bucket: str,
+    storage_path: str,
+    original_path: Path,
+    *,
+    downloaded: bool,
+) -> dict[str, Any]:
+    local_size = original_path.stat().st_size if original_path.exists() else 0
+    return {
+        "image_id": image.get("image_id", ""),
+        "storage_bucket": bucket,
+        "storage_path": storage_path,
+        "sequence_number": image.get("sequence_number") or image.get("image_order") or "",
+        "local_filename": original_path.name,
+        "local_path": str(original_path),
+        "local_size": local_size,
+        "source_created_at": image.get("created_at", ""),
+        "downloaded": downloaded,
+        "recorded_at": iso_now(),
+    }
+
+
 def stage_session(session: dict[str, Any], images: list[dict[str, Any]]) -> dict[str, Any]:
     if not images:
         raise MobileCaptureError("Pending mobile capture session has no images.")
@@ -576,6 +639,12 @@ def stage_session(session: dict[str, Any], images: list[dict[str, Any]]) -> dict
     capture_layout = session_capture_layout(session)
     capture_folder = next_capture_folder(capture_type)
     records = []
+    download_manifest_file = download_manifest_path(processing_dir)
+    download_manifest = read_json(download_manifest_file)
+    manifest_entries = download_manifest.get("downloads")
+    if not isinstance(manifest_entries, dict):
+        manifest_entries = {}
+    download_records: list[dict[str, Any]] = []
 
     ordered_images = sorted(
         images,
@@ -588,7 +657,19 @@ def stage_session(session: dict[str, Any], images: list[dict[str, Any]]) -> dict
             raise MobileCaptureError(f"Image record has no storage_path: {image}")
         suffix = Path(storage_path).suffix or ".jpg"
         original_path = originals_dir / f"{index:06d}{suffix}"
-        download_storage_object(bucket, storage_path, original_path)
+        downloaded = False
+        if not cached_original_is_valid(manifest_entries, bucket, storage_path, original_path):
+            download_storage_object(bucket, storage_path, original_path)
+            downloaded = True
+        manifest_entry = build_download_manifest_entry(
+            image,
+            bucket,
+            storage_path,
+            original_path,
+            downloaded=downloaded,
+        )
+        manifest_entries[download_manifest_key(bucket, storage_path)] = manifest_entry
+        download_records.append(manifest_entry)
         card_number, side = capture_record_position(index, capture_layout)
         staged_path = capture_folder / f"{card_number:06d}_{side}{suffix}"
         staged_path.write_bytes(original_path.read_bytes())
@@ -669,7 +750,18 @@ def stage_session(session: dict[str, Any], images: list[dict[str, Any]]) -> dict
         "capture_layout": capture_layout,
         "staged_at": iso_now(),
         "workstation": workstation_name(),
+        "download_manifest_file": str(download_manifest_file),
+        "downloaded_originals": sum(1 for record in download_records if record.get("downloaded")),
+        "reused_originals": sum(1 for record in download_records if not record.get("downloaded")),
     }
+    write_json(
+        download_manifest_file,
+        {
+            "capture_session_id": session_id,
+            "updated_at": iso_now(),
+            "downloads": manifest_entries,
+        },
+    )
     write_json(processing_dir / "mobile_capture_manifest.json", manifest)
     return manifest
 

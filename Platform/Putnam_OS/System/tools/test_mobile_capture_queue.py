@@ -166,6 +166,69 @@ class MobileCaptureQueueTests(unittest.TestCase):
             self.assertIn("Physical_Inventory_Conversion", str(capture_file))
             self.assertNotIn("ETB-001-C", capture_file.parent.name)
 
+    def test_stage_session_reuses_cached_originals_without_redownload(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            session = {"capture_session_id": "session-cache", "etb_location": "ETB-001-C", "created_at": "2026-07-13T12:00:00"}
+            images = [
+                {"image_id": "img-1", "storage_bucket": "mobile-capture-originals", "storage_path": "u/ETB-001-C/session-cache/0001-a.jpg", "created_at": "t1"},
+                {"image_id": "img-2", "storage_bucket": "mobile-capture-originals", "storage_path": "u/ETB-001-C/session-cache/0002-b.jpg", "created_at": "t2"},
+            ]
+            with (
+                mock.patch.object(queue, "MOBILE_PROCESSING_DIR", root / "MobileCapture" / "Processing"),
+                mock.patch.object(queue, "INVENTORY_CONVERSION_CAPTURE_ROOT", root / "Capture" / "Physical_Inventory_Conversion"),
+                mock.patch.object(queue, "INVENTORY_CONVERSION_SESSIONS_DIR", root / "inventory_conversion" / "sessions"),
+                mock.patch.object(queue, "CURRENT_INVENTORY_CONVERSION", root / "inventory_conversion" / "current.json"),
+                mock.patch.object(queue, "download_storage_object", side_effect=self.fake_download) as first_download,
+                mock.patch.object(queue, "workstation_name", return_value="TEST-PC"),
+            ):
+                first_manifest = stage_session(session, images)
+            self.assertEqual(first_download.call_count, 2)
+            self.assertEqual(first_manifest["downloaded_originals"], 2)
+            self.assertEqual(first_manifest["reused_originals"], 0)
+
+            with (
+                mock.patch.object(queue, "MOBILE_PROCESSING_DIR", root / "MobileCapture" / "Processing"),
+                mock.patch.object(queue, "INVENTORY_CONVERSION_CAPTURE_ROOT", root / "Capture" / "Physical_Inventory_Conversion"),
+                mock.patch.object(queue, "INVENTORY_CONVERSION_SESSIONS_DIR", root / "inventory_conversion" / "sessions"),
+                mock.patch.object(queue, "CURRENT_INVENTORY_CONVERSION", root / "inventory_conversion" / "current.json"),
+                mock.patch.object(queue, "download_storage_object", side_effect=AssertionError("unexpected redownload")) as second_download,
+                mock.patch.object(queue, "workstation_name", return_value="TEST-PC"),
+            ):
+                second_manifest = stage_session(session, images)
+            self.assertEqual(second_download.call_count, 0)
+            self.assertEqual(second_manifest["downloaded_originals"], 0)
+            self.assertEqual(second_manifest["reused_originals"], 2)
+            download_manifest = json.loads(Path(second_manifest["download_manifest_file"]).read_text(encoding="utf-8"))
+            self.assertEqual(len(download_manifest["downloads"]), 2)
+
+    def test_stage_session_redownloads_when_cached_original_is_missing(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            session = {"capture_session_id": "session-cache-missing", "etb_location": "ETB-001-C", "created_at": "2026-07-13T12:00:00"}
+            images = [
+                {"image_id": "img-1", "storage_bucket": "mobile-capture-originals", "storage_path": "u/ETB-001-C/session-cache-missing/0001-a.jpg", "created_at": "t1"},
+            ]
+            patches = [
+                mock.patch.object(queue, "MOBILE_PROCESSING_DIR", root / "MobileCapture" / "Processing"),
+                mock.patch.object(queue, "INVENTORY_CONVERSION_CAPTURE_ROOT", root / "Capture" / "Physical_Inventory_Conversion"),
+                mock.patch.object(queue, "INVENTORY_CONVERSION_SESSIONS_DIR", root / "inventory_conversion" / "sessions"),
+                mock.patch.object(queue, "CURRENT_INVENTORY_CONVERSION", root / "inventory_conversion" / "current.json"),
+                mock.patch.object(queue, "workstation_name", return_value="TEST-PC"),
+            ]
+            with patches[0], patches[1], patches[2], patches[3], mock.patch.object(queue, "download_storage_object", side_effect=self.fake_download), patches[4]:
+                first_manifest = stage_session(session, images)
+            first_original = Path(first_manifest["originals_dir"]) / "000001.jpg"
+            self.assertTrue(first_original.exists())
+            first_original.unlink()
+
+            with patches[0], patches[1], patches[2], patches[3], mock.patch.object(queue, "download_storage_object", side_effect=self.fake_download) as redownload, patches[4]:
+                second_manifest = stage_session(session, images)
+            self.assertEqual(redownload.call_count, 1)
+            self.assertEqual(second_manifest["downloaded_originals"], 1)
+            self.assertEqual(second_manifest["reused_originals"], 0)
+            self.assertTrue(first_original.exists())
+
     def test_stage_session_routes_new_capture_to_root_capture_folder(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
