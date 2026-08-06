@@ -109,6 +109,19 @@ class OperatorDashboardContractTests(unittest.TestCase):
         self.assertNotRegex(operator_source, r"\.(insert|upsert|update|delete)\(")
         self.assertNotIn("service_role", operator_source.lower())
 
+    def test_operator_supabase_reads_are_egress_capped_and_cached(self):
+        self.assertIn("const egressSafeMode = true", self.app_js)
+        self.assertIn("egressSafeCacheMs = 5 * 60 * 1000", self.app_js)
+        self.assertIn("registrySessions: 25", self.app_js)
+        self.assertIn("listingSnapshots: 1200", self.app_js)
+        self.assertIn("allocationLedger: 1200", self.app_js)
+        self.assertIn("readEgressCache(\"operatorRegistry\", user)", self.app_js)
+        self.assertIn("writeEgressCache(\"operatorRegistry\", user, data)", self.app_js)
+        self.assertIn("Refresh from Supabase", self.app_js)
+        self.assertIn("Egress saver: registry data is metadata-only", self.app_js)
+        self.assertIn("captureMaxEdge: 1400", self.app_js)
+        self.assertIn("captureJpegQuality: 0.82", self.app_js)
+
     def test_operator_layout_has_mobile_constraints(self):
         for selector in (
             ".operator-grid",

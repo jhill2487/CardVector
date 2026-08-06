@@ -174,6 +174,18 @@ After deployment:
 - `deployment-manifest.json` contains the source CardVector commit SHA.
 - No service-role key or private file paths are present in static files.
 
+## Supabase Egress Controls
+
+CardVector.app operator pages run in egress-safe mode by default. Registry,
+batch, listing, and allocation views use metadata-only Supabase reads, capped
+row limits, and a five-minute browser cache. Operator pages expose a manual
+`Refresh from Supabase` action for cases where current cloud state is required.
+
+Mobile capture writes still upload original images, but browser camera captures
+are downscaled before upload so later downloads cost less egress. Public pages
+must not auto-download Supabase storage originals for previews; use metadata,
+counts, thumbnails, or explicit operator-open actions instead.
+
 ## Troubleshooting
 
 - Missing `CARDVECTOR_SITE_DEPLOY_TOKEN`: add the repository secret in `CardVector`.

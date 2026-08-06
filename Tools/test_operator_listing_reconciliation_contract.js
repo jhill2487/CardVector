@@ -51,6 +51,12 @@ const allocationIdentityMigration = fs.readFileSync(
   "allocation_key_type",
   "cardvector_inventory_quantity_snapshots",
   '"owner_user_id,marketplace,marketplace_listing_id"',
+  "readEgressCache(\"listingSnapshots\", user)",
+  "writeEgressCache(\"allocationLedger\", user, result)",
+  "egressSafeLimits.listingSnapshots",
+  "egressSafeLimits.allocationLedger",
+  "Egress saver: metadata-only reads are capped and cached for five minutes.",
+  "Refresh from Supabase",
 ].forEach((needle) => assert(app.includes(needle), `app.js missing ${needle}`));
 
 [
