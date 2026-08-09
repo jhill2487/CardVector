@@ -10,15 +10,16 @@ const exporter = fs.readFileSync(path.join(root, "Tools", "export_cardvector_sit
 
 [
   'href="/operator/repricing"',
-  "Live CardUploader Repricing",
+  "Batch Import Price Review",
   "renderOperatorRepricingReview",
-  "Open CardUploader Inventory",
-  "carduploader.com/dashboard/inventory/automatic",
-  "Scan visible rows read-only",
-  "CardVector.app cannot read another website tab directly",
+  "Open CardUploader Batches",
+  "carduploader.com/dashboard/history",
+  "Review starting prices before a CardUploader batch is added to automatic inventory",
+  "Automatic inventory is treated as post-approval live state",
   "CardUploader remains inventory truth",
-  "Apply approved changes",
-  "Bulk apply remains capped",
+  "Pre-Live Workflow",
+  "Prepare approved prices",
+  "Bulk preparation remains capped",
 ].forEach((needle) => assert(app.includes(needle), `app.js missing ${needle}`));
 
 [
@@ -57,11 +58,14 @@ const repricingSource = app.slice(
   "Choose repricing plan JSON or CSV",
   "Export reviewed plan",
   "Approve all safe",
+  "Live CardUploader Repricing",
+  "Open CardUploader Inventory",
+  "Scan visible rows read-only",
 ].forEach((needle) => assert(!repricingSource.includes(needle), `repricing page still contains import workflow marker ${needle}`));
 
 assert(
   /id="repricing-apply-live"[^>]*disabled/.test(repricingSource),
-  "live apply button must remain disabled"
+  "price preparation button must remain disabled"
 );
 
-console.log("Operator live repricing contract passed.");
+console.log("Operator batch import price-review contract passed.");
