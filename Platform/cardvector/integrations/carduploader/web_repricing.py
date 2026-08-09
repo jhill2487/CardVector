@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from decimal import Decimal
-from typing import Any, Iterable, Mapping
+from typing import Any, Iterable, Mapping, Sequence
 
 from .price_updates import (
     CardUploaderPriceUpdateError,
@@ -16,6 +16,21 @@ CARDUPLOADER_AUTOMATIC_INVENTORY_URL = "https://carduploader.com/dashboard/inven
 SAVE_MODE_MANUAL = "manual_save"
 SAVE_MODE_AUTOSAVE = "autosave"
 SAVE_MODE_UNKNOWN = "unknown"
+
+
+CARDUPLOADER_AUTOMATIC_INVENTORY_HEADERS = {
+    "card",
+    "status",
+    "platform",
+    "user sku",
+    "catalog sku",
+    "condition",
+    "variant",
+    "price",
+    "market",
+    "qty",
+    "added",
+}
 
 
 @dataclass(frozen=True)
@@ -100,6 +115,148 @@ def _int(value: Any) -> int:
         return max(0, int(float(str(value or "0").replace(",", ""))))
     except (TypeError, ValueError):
         return 0
+
+
+def _text(value: Any) -> str:
+    return " ".join(str(value or "").split()).strip()
+
+
+def _normalized_header(value: Any) -> str:
+    return _text(value).lower()
+
+
+def carduploader_inventory_snapshot_script() -> str:
+    """Return read-only browser JavaScript for CardUploader inventory snapshots."""
+
+    return r"""
+(() => {
+  const clean = (text, max = 400) => String(text || '').replace(/\s+/g, ' ').trim().slice(0, max);
+  const attr = (el, name) => el.getAttribute(name) || '';
+  const isVisible = (el) => {
+    const style = window.getComputedStyle(el);
+    const rect = el.getBoundingClientRect();
+    return style.visibility !== 'hidden' && style.display !== 'none' && rect.width > 0 && rect.height > 0;
+  };
+  const selectorFor = (el) => {
+    if (!el) return '';
+    if (el.id) return `#${CSS.escape(el.id)}`;
+    const name = attr(el, 'name');
+    if (name) return `${el.tagName.toLowerCase()}[name="${CSS.escape(name)}"]`;
+    const dataAttr = Array.from(el.attributes || []).find((candidate) => candidate.name.startsWith('data-'));
+    if (dataAttr) return `${el.tagName.toLowerCase()}[${dataAttr.name}="${CSS.escape(dataAttr.value)}"]`;
+    return el.tagName.toLowerCase();
+  };
+  const controls = Array.from(document.querySelectorAll('button, input[type="button"], input[type="submit"], a'))
+    .filter(isVisible)
+    .map((el) => ({
+      text: clean(el.innerText || el.value, 100),
+      aria_label: attr(el, 'aria-label'),
+      selector: selectorFor(el),
+    }));
+  return {
+    url: location.href,
+    title: document.title,
+    captured_at: new Date().toISOString(),
+    controls,
+    editable_controls: Array.from(document.querySelectorAll('input, textarea, [contenteditable="true"]'))
+      .filter(isVisible)
+      .map((el) => ({
+        value: clean(el.value || el.textContent, 100),
+        name: attr(el, 'name'),
+        id: el.id || '',
+        aria_label: attr(el, 'aria-label'),
+        placeholder: attr(el, 'placeholder'),
+        selector: selectorFor(el),
+      })),
+    tables: Array.from(document.querySelectorAll('table')).map((table, table_index) => ({
+      table_index,
+      headers: Array.from(table.querySelectorAll('th')).map((cell) => clean(cell.innerText, 100)),
+      rows: Array.from(table.querySelectorAll('tbody tr, tr')).map((row, row_index) => ({
+        row_index,
+        text: clean(row.innerText, 800),
+        cells: Array.from(row.querySelectorAll('td, th')).map((cell) => clean(cell.innerText, 300)),
+      })),
+    })),
+  };
+})()
+""".strip()
+
+
+def _looks_like_automatic_inventory_table(headers: Sequence[str]) -> bool:
+    normalized = {_normalized_header(header) for header in headers}
+    return len(normalized.intersection(CARDUPLOADER_AUTOMATIC_INVENTORY_HEADERS)) >= 7
+
+
+def _mapped_cells(headers: Sequence[str], cells: Sequence[str]) -> dict[str, str]:
+    mapped: dict[str, str] = {}
+    for index, header in enumerate(headers):
+        key = _normalized_header(header)
+        if not key or index >= len(cells):
+            continue
+        mapped[key] = _text(cells[index])
+    return mapped
+
+
+def _detect_save_mode(payload: Mapping[str, Any]) -> str:
+    controls = payload.get("controls") or ()
+    control_text = " ".join(
+        _text((control or {}).get("text") or (control or {}).get("aria_label"))
+        for control in controls
+        if isinstance(control, Mapping)
+    ).lower()
+    if "autosave" in control_text or "auto-save" in control_text:
+        return SAVE_MODE_AUTOSAVE
+    if any(word in control_text for word in ("save", "update", "apply")):
+        return SAVE_MODE_MANUAL
+    return SAVE_MODE_UNKNOWN
+
+
+def normalize_carduploader_web_snapshot(payload: Mapping[str, Any]) -> CardUploaderWebPageSnapshot:
+    """Normalize a read-only CardUploader browser payload into a page snapshot."""
+
+    rows: list[CardUploaderWebInventoryRow] = []
+    for table in payload.get("tables") or ():
+        if not isinstance(table, Mapping):
+            continue
+        headers = tuple(_text(header) for header in table.get("headers") or ())
+        if not _looks_like_automatic_inventory_table(headers):
+            continue
+        for row in table.get("rows") or ():
+            if not isinstance(row, Mapping):
+                continue
+            cells = tuple(_text(cell) for cell in row.get("cells") or ())
+            if not cells or cells == headers:
+                continue
+            mapped = _mapped_cells(headers, cells)
+            catalog_sku = mapped.get("catalog sku", "")
+            user_sku = mapped.get("user sku", "")
+            title = mapped.get("card", "")
+            row_index = _int(row.get("row_index"))
+            row_key = catalog_sku or user_sku or f"row-{row_index}"
+            rows.append(
+                CardUploaderWebInventoryRow.from_mapping(
+                    {
+                        "row_key": row_key,
+                        "title": title,
+                        "current_price": mapped.get("price", ""),
+                        "quantity": mapped.get("qty", ""),
+                        "inventory_id": catalog_sku,
+                        "catalog_sku": catalog_sku,
+                        "user_sku": user_sku,
+                        "raw_text": row.get("text", ""),
+                    }
+                )
+            )
+    note = ""
+    if rows and not any(row.price_input_selector for row in rows):
+        note = "Read-only table snapshot; CardUploader price inputs were not visible."
+    return CardUploaderWebPageSnapshot(
+        url=str(payload.get("url") or "").strip(),
+        rows=tuple(rows),
+        save_mode=_detect_save_mode(payload),
+        captured_at=str(payload.get("captured_at") or "").strip(),
+        operator_note=note,
+    )
 
 
 def _identity_values(*values: str) -> set[str]:
@@ -210,5 +367,7 @@ __all__ = [
     "CardUploaderWebPriceEdit",
     "CardUploaderWebSafetyPolicy",
     "build_web_price_edits",
+    "carduploader_inventory_snapshot_script",
+    "normalize_carduploader_web_snapshot",
     "require_web_apply_ready",
 ]

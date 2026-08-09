@@ -31,6 +31,8 @@ from .web_repricing import (
     CardUploaderWebPriceEdit,
     CardUploaderWebSafetyPolicy,
     build_web_price_edits,
+    carduploader_inventory_snapshot_script,
+    normalize_carduploader_web_snapshot,
     require_web_apply_ready,
 )
 
@@ -58,7 +60,9 @@ __all__ = [
     "build_price_update_plan",
     "build_web_price_edits",
     "carduploader_price_identity",
+    "carduploader_inventory_snapshot_script",
     "ebay_sold_search_query",
+    "normalize_carduploader_web_snapshot",
     "require_apply_ready",
     "require_web_apply_ready",
     "write_price_update_plan_csv",

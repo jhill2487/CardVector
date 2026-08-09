@@ -38,11 +38,26 @@ CardUploader edits are not implemented in this step.
 - `CardUploaderWebPageSnapshot`
 - `CardUploaderWebSafetyPolicy`
 - `CardUploaderWebPriceEdit`
+- `carduploader_inventory_snapshot_script(...)`
+- `normalize_carduploader_web_snapshot(...)`
 - `build_web_price_edits(...)`
 - `require_web_apply_ready(...)`
 
 The contract creates browser edit intents only. It performs no browser control,
 network request, CardUploader write, eBay write, or TCGplayer write.
+
+## Read-Only Page Scanner
+
+The scanner script reads the CardUploader automatic-inventory page table without
+clicking controls, typing values, submitting forms, or making network requests.
+It normalizes visible table rows into `CardUploaderWebPageSnapshot` so plans can
+be matched against the exact CardUploader row data visible to the operator.
+
+The current CardUploader automatic inventory page exposes price values in the
+table and a `Set price` control, but not stable visible price inputs until edit
+mode is characterized. Because of that, table snapshots remain blocked from live
+apply by default with `price_input_selector_missing` and unknown save-mode
+guards.
 
 ## Live Apply Remains Future Work
 

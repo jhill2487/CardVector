@@ -20,6 +20,8 @@ from Platform.cardvector.integrations.carduploader.web_repricing import (
     CardUploaderWebPageSnapshot,
     CardUploaderWebSafetyPolicy,
     build_web_price_edits,
+    carduploader_inventory_snapshot_script,
+    normalize_carduploader_web_snapshot,
     require_web_apply_ready,
 )
 
@@ -50,6 +52,122 @@ def snapshot(**overrides):
 
 
 class CardUploaderWebRepricingTests(unittest.TestCase):
+    def test_snapshot_script_is_read_only(self):
+        script = carduploader_inventory_snapshot_script()
+        forbidden_tokens = (
+            ".click(",
+            ".fill(",
+            ".type(",
+            "dispatchEvent",
+            "submit(",
+            "fetch(",
+            "XMLHttpRequest",
+        )
+        for token in forbidden_tokens:
+            self.assertNotIn(token, script)
+        self.assertIn("querySelectorAll('table')", script)
+
+    def test_normalizes_carduploader_automatic_inventory_table(self):
+        payload = {
+            "url": CARDUPLOADER_AUTOMATIC_INVENTORY_URL,
+            "captured_at": "2026-08-09T12:00:00Z",
+            "controls": [{"text": "Set price"}],
+            "tables": [
+                {
+                    "headers": [
+                        "CARD",
+                        "STATUS",
+                        "PLATFORM",
+                        "USER SKU",
+                        "CATALOG SKU",
+                        "CONDITION",
+                        "VARIANT",
+                        "TCG",
+                        "PRICE",
+                        "MARKET",
+                        "QTY",
+                        "ADDED",
+                    ],
+                    "rows": [
+                        {
+                            "row_index": 0,
+                            "cells": [
+                                "CARD",
+                                "STATUS",
+                                "PLATFORM",
+                                "USER SKU",
+                                "CATALOG SKU",
+                                "CONDITION",
+                                "VARIANT",
+                                "TCG",
+                                "PRICE",
+                                "MARKET",
+                                "QTY",
+                                "ADDED",
+                            ],
+                        },
+                        {
+                            "row_index": 1,
+                            "text": (
+                                "King of the Pride (Retro Frame) Modern Horizons x1 "
+                                "Listed ETB-007-H CS-WAVED9 NM Foil Mtg $1.98 $0.71 1 8/7/2026"
+                            ),
+                            "cells": [
+                                "King of the Pride (Retro Frame)",
+                                "Listed",
+                                "eBay",
+                                "ETB-007-H",
+                                "CS-WAVED9",
+                                "NM",
+                                "Foil",
+                                "Mtg",
+                                "$1.98",
+                                "$0.71",
+                                "1",
+                                "8/7/2026",
+                            ],
+                        },
+                    ],
+                }
+            ],
+        }
+        page = normalize_carduploader_web_snapshot(payload)
+        self.assertEqual(page.url, CARDUPLOADER_AUTOMATIC_INVENTORY_URL)
+        self.assertEqual(page.save_mode, SAVE_MODE_UNKNOWN)
+        self.assertEqual(len(page.rows), 1)
+        self.assertEqual(page.rows[0].row_key, "CS-WAVED9")
+        self.assertEqual(page.rows[0].title, "King of the Pride (Retro Frame)")
+        self.assertEqual(page.rows[0].current_price, Decimal("1.98"))
+        self.assertEqual(page.rows[0].quantity, 1)
+        self.assertEqual(page.rows[0].catalog_sku, "CS-WAVED9")
+        self.assertEqual(page.rows[0].user_sku, "ETB-007-H")
+        self.assertIn("price inputs were not visible", page.operator_note)
+
+    def test_read_only_table_snapshot_is_not_apply_ready(self):
+        plan = build_price_update_plan(
+            sample_item(price="1.98", catalog_sku="CS-WAVED9"),
+            sample_evaluation(recommended_price="2.25"),
+            approved=True,
+        )
+        page = CardUploaderWebPageSnapshot(
+            url=CARDUPLOADER_AUTOMATIC_INVENTORY_URL,
+            rows=(
+                CardUploaderWebInventoryRow.from_mapping(
+                    {
+                        "row_key": "CS-WAVED9",
+                        "catalog_sku": "CS-WAVED9",
+                        "current_price": "$1.98",
+                        "quantity": "1",
+                    }
+                ),
+            ),
+            save_mode=SAVE_MODE_UNKNOWN,
+        )
+        edits = build_web_price_edits(page, [plan])
+        self.assertIn("price_input_selector_missing", edits[0].safety_notes)
+        with self.assertRaisesRegex(CardUploaderPriceUpdateError, "carduploader_save_mode_unknown"):
+            require_web_apply_ready(page, edits, confirm_live_sync=True)
+
     def test_builds_edit_from_visible_carduploader_row(self):
         plan = build_price_update_plan(sample_item(), sample_evaluation(), approved=True)
         edits = build_web_price_edits(snapshot(), [plan])
