@@ -60,15 +60,17 @@ class OperatorDashboardContractTests(unittest.TestCase):
 
     def test_batch_workflow_is_active_and_supabase_backed(self):
         self.assertIn('href="/operator/batches"', self.app_js)
-        self.assertIn("CardUploader Batch References", self.app_js)
-        self.assertIn("capture-session handoff state", self.app_js)
+        self.assertIn("Batch References", self.app_js)
+        self.assertIn("CardUploader batch-history links", self.app_js)
+        self.assertIn("safeCardUploaderBatchHistoryUrl", self.app_js)
+        self.assertIn("batchHasCardUploaderHistoryEvidence", self.app_js)
         self.assertIn("safeCardUploaderUrl", self.app_js)
         self.assertIn("shortBatchId", self.app_js)
         self.assertIn("CardUploader ID:", self.app_js)
-        self.assertIn("Location Batch Workboard", self.app_js)
-        self.assertIn("Grouped by canonical ETB slot", self.app_js)
+        self.assertIn("Batches by ETB Slot", self.app_js)
+        self.assertIn("Grouped from CardUploader history records only", self.app_js)
+        self.assertIn("CardUploader Batch History", self.app_js)
         self.assertIn("ETB-001-A.2", self.app_js)
-        self.assertIn("Needs Batch Review", self.app_js)
         self.assertIn('"cardvector_location_carduploader_batches_v"', self.app_js)
 
     def test_operator_dashboard_hides_retired_registry_and_listing_review_cards(self):

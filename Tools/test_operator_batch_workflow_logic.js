@@ -15,9 +15,11 @@ const helperSource = appSource.slice(start, end);
 const helpers = vm.runInNewContext(`(() => {
 ${helperSource}
 return {
+  batchHasCardUploaderHistoryEvidence,
   batchHasSlotLocation,
   batchReviewReason,
   groupBatchReferencesByLocation,
+  safeCardUploaderBatchHistoryUrl,
   sortedBatchReferences
 };
 })()`);
@@ -26,18 +28,21 @@ const batches = [
   {
     canonical_location_display_code: "ETB-001-A",
     carduploader_batch_id: "later",
+    carduploader_batch_url: "https://carduploader.com/dashboard/history/ungraded/later",
     card_count: 12,
     batch_date: "2026-08-03T10:00:00Z"
   },
   {
     canonical_location_display_code: "ETB-001-A",
     carduploader_batch_id: "first",
+    carduploader_batch_url: "https://carduploader.com/dashboard/history/ungraded/first",
     card_count: 40,
     batch_date: "2026-08-01T10:00:00Z"
   },
   {
     canonical_location_display_code: "ETB-001-B",
     carduploader_batch_id: "other-slot",
+    carduploader_batch_url: "https://carduploader.com/dashboard/history/ungraded/other-slot",
     card_count: 5,
     batch_date: "2026-08-02T10:00:00Z"
   },
@@ -74,5 +79,12 @@ assert.strictEqual(secondSlot.batches[0].sequence_label, "ETB-001-B.1");
 assert.strictEqual(helpers.batchHasSlotLocation(batches[3]), false);
 assert.strictEqual(helpers.batchReviewReason(batches[3]), "Linked to an ETB, but not a specific A-J slot.");
 assert.strictEqual(helpers.batchReviewReason(batches[4]), "No ETB slot is linked yet.");
+assert.strictEqual(
+  helpers.safeCardUploaderBatchHistoryUrl("https://carduploader.com/dashboard/history/ungraded/59e96e70-2d06-4c7f-b214-978e6343f7fc"),
+  "https://carduploader.com/dashboard/history/ungraded/59e96e70-2d06-4c7f-b214-978e6343f7fc"
+);
+assert.strictEqual(helpers.safeCardUploaderBatchHistoryUrl("https://carduploader.com/dashboard/inventory/automatic"), "");
+assert.strictEqual(helpers.batchHasCardUploaderHistoryEvidence(batches[0]), true);
+assert.strictEqual(helpers.batchHasCardUploaderHistoryEvidence({ carduploader_batch_id: "local-only" }), false);
 
 console.log("operator batch workflow logic tests passed");
