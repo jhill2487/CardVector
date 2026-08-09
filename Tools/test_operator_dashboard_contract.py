@@ -82,9 +82,12 @@ class OperatorDashboardContractTests(unittest.TestCase):
         self.assertNotIn("ETB / Location Registry", dashboard_source)
         self.assertNotIn('href="/operator/listings"', dashboard_source)
         self.assertNotIn("Existing Listing Review", dashboard_source)
+        self.assertNotIn("Price Review", dashboard_source)
+        self.assertNotIn("operator-card is-disabled", dashboard_source)
         self.assertIn('href="/#mobile-capture"', dashboard_source)
         self.assertIn('href="/operator/batches"', dashboard_source)
         self.assertIn('href="/operator/repricing"', dashboard_source)
+        self.assertIn("Repricing Review", dashboard_source)
 
     def test_existing_listing_reconciliation_is_csv_snapshot_only(self):
         self.assertIn("Existing Listing Review", self.app_js)

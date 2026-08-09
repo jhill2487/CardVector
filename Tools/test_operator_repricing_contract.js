@@ -10,6 +10,7 @@ const exporter = fs.readFileSync(path.join(root, "Tools", "export_cardvector_sit
 
 [
   'href="/operator/repricing"',
+  "Repricing Review",
   "renderOperatorRepricingReview",
   "repricingReviewStorageKey",
   "cardvector.repricingPlan.v1",
