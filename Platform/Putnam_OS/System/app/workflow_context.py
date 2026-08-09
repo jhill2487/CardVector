@@ -12,10 +12,16 @@ PUBLIC_STATES = ("Ready", "In Progress", "Needs Attention", "Complete", "Failed"
 PROCESSING_STAGES = (
     "Ready for CardUploader",
     "Awaiting CSV Import",
+    "Uploaded to CardUploader",
     "Pricing Review",
     "Ready for eBay Upload",
     "Completed Recently",
 )
+CARDUPLOADER_UPLOADED_STATUSES = {
+    "uploaded",
+    "uploaded_to_carduploader",
+    "carduploader_uploaded",
+}
 
 
 def iso_now() -> str:
@@ -82,13 +88,16 @@ def _stage_for_context(context: dict[str, Any], failed: bool = False) -> tuple[s
     if failed or context.get("last_error"):
         return "Failed", "Failed", "Retry Failed Capture"
     explicit = str(context.get("current_workflow_state") or "").strip()
+    handoff_status = str(context.get("carduploader_handoff_status") or "").lower()
     if explicit in PROCESSING_STAGES:
         stage = explicit
     elif _existing_path(context.get("export_csv_path")) or _existing_path(context.get("pricing_job_path")):
         stage = "Ready for eBay Upload"
     elif _existing_path(context.get("imported_csv_path")):
         stage = "Pricing Review"
-    elif str(context.get("carduploader_handoff_status") or "").lower() in {"opened", "awaiting_csv", "complete"}:
+    elif handoff_status in CARDUPLOADER_UPLOADED_STATUSES:
+        stage = "Uploaded to CardUploader"
+    elif handoff_status in {"opened", "awaiting_csv", "complete"}:
         stage = "Awaiting CSV Import"
     else:
         stage = "Ready for CardUploader"
@@ -96,6 +105,7 @@ def _stage_for_context(context: dict[str, Any], failed: bool = False) -> tuple[s
     mapping = {
         "Ready for CardUploader": ("Ready", "Open CardUploader"),
         "Awaiting CSV Import": ("Ready", "Import CardUploader CSV"),
+        "Uploaded to CardUploader": ("Complete", "Open Capture Folder"),
         "Pricing Review": ("Needs Attention", "Review Pricing"),
         "Ready for eBay Upload": ("Ready", "Open Export Folder"),
         "Completed Recently": ("Complete", "Open Export Folder"),
@@ -166,6 +176,9 @@ def _capture_job(
         "action": action,
         "source": source,
         "carduploader_handoff_status": str(context.get("carduploader_handoff_status") or ""),
+        "carduploader_uploaded_at": str(context.get("carduploader_uploaded_at") or ""),
+        "supabase_originals_cleanup_eligible": bool(context.get("supabase_originals_cleanup_eligible", False)),
+        "supabase_originals_cleanup_reason": str(context.get("supabase_originals_cleanup_reason") or ""),
         "imported_csv_path": _path_value(context.get("imported_csv_path")),
         "pricing_job_path": _path_value(context.get("pricing_job_path")),
         "export_csv_path": _path_value(context.get("export_csv_path")),

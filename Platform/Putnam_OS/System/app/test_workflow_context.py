@@ -40,9 +40,25 @@ class WorkflowContextTests(unittest.TestCase):
             jobs = discover_workflow_jobs(root)
             self.assertEqual(jobs[0]["stage"], "Awaiting CSV Import")
 
+            update_workflow_context(
+                folder,
+                capture_session_id="session-1",
+                carduploader_handoff_status="uploaded",
+                carduploader_uploaded_at="2026-07-16T11:00:00",
+                current_workflow_state="Uploaded to CardUploader",
+                supabase_originals_cleanup_eligible=True,
+                supabase_originals_cleanup_reason="carduploader_handoff_confirmed",
+            )
+            jobs = discover_workflow_jobs(root)
+            self.assertEqual(jobs[0]["stage"], "Uploaded to CardUploader")
+            self.assertEqual(jobs[0]["state"], "Complete")
+            self.assertEqual(jobs[0]["action"], "Open Capture Folder")
+            self.assertTrue(jobs[0]["supabase_originals_cleanup_eligible"])
+            self.assertEqual(jobs[0]["supabase_originals_cleanup_reason"], "carduploader_handoff_confirmed")
+
             source = Path(temp) / "carduploader.csv"
             source.write_text("Card Name,Price\nPikachu,1.00\n", encoding="utf-8")
-            update_workflow_context(folder, imported_csv_path=str(source), row_count=1)
+            update_workflow_context(folder, imported_csv_path=str(source), row_count=1, current_workflow_state="Pricing Review")
             jobs = discover_workflow_jobs(root)
             self.assertEqual(jobs[0]["stage"], "Pricing Review")
             self.assertEqual(group_processing_jobs(jobs)["Pricing Review"][0]["row_count"], 1)

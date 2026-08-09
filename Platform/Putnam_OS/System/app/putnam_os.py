@@ -4280,6 +4280,8 @@ class PutnamOS(BaseTk):
             self.open_path_safe(job.get("capture_folder"), "Capture folder")
         elif action == "Open CardUploader":
             self.open_carduploader(job)
+        elif action == "Mark Uploaded to CardUploader":
+            self.mark_carduploader_uploaded(job)
         elif action == "Import CardUploader CSV":
             self.show_page("Processing")
             self.import_carduploader_csv_ui()
@@ -4326,6 +4328,8 @@ class PutnamOS(BaseTk):
         self.label(details, "  |  ".join(bit for bit in bits if bit), 8, BRAND["muted"], False, anchor="w")
         self.status_chip(row, str(job.get("state") or "Ready")).pack(side="left", padx=10)
         self.primary_button(row, str(job.get("action") or "Continue"), lambda item=dict(job): self.run_workflow_action(item)).pack(side="right", padx=(8, 0), pady=7)
+        if str(job.get("stage") or "") == "Awaiting CSV Import":
+            self.action_button(row, "Mark Uploaded", lambda item=dict(job): self.run_workflow_action(item, "Mark Uploaded to CardUploader")).pack(side="right", pady=7)
         if job.get("capture_folder") and Path(str(job.get("capture_folder"))).exists() and not compact:
             self.action_button(row, "Open Folder", lambda item=dict(job): self.run_workflow_action(item, "Open Capture Folder")).pack(side="right", pady=7)
         tk.Frame(parent, bg=BRAND["border_soft"], height=1).pack(fill="x", padx=18)
@@ -4975,6 +4979,53 @@ class PutnamOS(BaseTk):
         )
         self.status.set("Opened CardUploader.")
 
+    def mark_carduploader_uploaded(self, job=None):
+        job = dict(job or self.active_workflow_job or {})
+        folder = str(job.get("capture_folder") or "")
+        if not folder or not Path(folder).exists():
+            messagebox.showinfo("CardUploader", "No local capture folder is associated with this handoff.")
+            return
+        if not messagebox.askyesno(
+            "CardUploader Handoff",
+            (
+                "Mark this capture as uploaded to CardUploader?\n\n"
+                "This does not delete Supabase originals or change marketplace inventory. "
+                "It only marks the local capture as eligible for a future cleanup review."
+            ),
+        ):
+            return
+        uploaded_at = datetime.now().isoformat(timespec="seconds")
+        self.workflow_application.update_context(
+            folder,
+            capture_session_id=job.get("capture_session_id", ""),
+            capture_type=job.get("capture_type", ""),
+            etb_location=job.get("etb_location", ""),
+            carduploader_handoff_status="uploaded",
+            carduploader_uploaded_at=uploaded_at,
+            current_workflow_state="Uploaded to CardUploader",
+            supabase_originals_cleanup_eligible=True,
+            supabase_originals_cleanup_reason="carduploader_handoff_confirmed",
+            last_error="",
+        )
+        self.workflow_application.invalidate()
+        self.active_workflow_job = {
+            **job,
+            "carduploader_handoff_status": "uploaded",
+            "carduploader_uploaded_at": uploaded_at,
+            "stage": "Uploaded to CardUploader",
+            "state": "Complete",
+            "action": "Open Capture Folder",
+            "supabase_originals_cleanup_eligible": True,
+            "supabase_originals_cleanup_reason": "carduploader_handoff_confirmed",
+        }
+        self.record_batch_workflow(
+            "mark_carduploader_upload_complete",
+            job=self.active_workflow_job,
+        )
+        append_activity(f"CardUploader upload confirmed for {job.get('capture_session_id') or Path(folder).name}")
+        self.status.set("Marked capture uploaded to CardUploader. Supabase originals are cleanup-eligible.")
+        self.refresh_workflow_jobs_background(force=True)
+
     def open_mobile_capture_website(self):
         webbrowser.open(load_app_config().get("mobile_capture_url", "https://cardvector.app/capture"))
         self.status.set("Opened CardVector Mobile Capture.")
@@ -5007,7 +5058,7 @@ class PutnamOS(BaseTk):
         self.label(queue_head, "PROCESSING QUEUE", 12, BRAND["gold"], True, side="left")
         self.action_button(queue_head, "Open Capture Queue", lambda: self.show_page("Capture Queue")).pack(side="right")
         visible = 0
-        for stage in ("Ready for CardUploader", "Awaiting CSV Import", "Pricing Review", "Ready for eBay Upload"):
+        for stage in ("Ready for CardUploader", "Awaiting CSV Import", "Uploaded to CardUploader", "Pricing Review", "Ready for eBay Upload"):
             stage_jobs = grouped.get(stage) or []
             if not stage_jobs:
                 continue
