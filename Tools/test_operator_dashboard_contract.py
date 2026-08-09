@@ -34,16 +34,18 @@ class OperatorDashboardContractTests(unittest.TestCase):
         self.assertIn('href="/#mobile-capture"', footer)
 
     def test_operator_routes_are_static_export_clients(self):
-        for route in ('"operator"', '"registry"', '"mobile-capture"', '"batches"', '"batch-workflow"', '"listings"', '"listing-reconciliation"'):
+        for route in ('"operator"', '"registry"', '"mobile-capture"', '"batches"', '"batch-workflow"', '"listings"', '"listing-reconciliation"', '"repricing"', '"price-review"'):
             self.assertIn(route, self.exporter)
         self.assertIn('route === "operator"', self.app_js)
         self.assertIn('route === "registry"', self.app_js)
         self.assertIn('route === "batches"', self.app_js)
         self.assertIn('route === "listings"', self.app_js)
+        self.assertIn('route === "repricing"', self.app_js)
         self.assertIn("renderOperatorDashboard", self.app_js)
         self.assertIn("renderOperatorRegistry", self.app_js)
         self.assertIn("renderOperatorBatchWorkflow", self.app_js)
         self.assertIn("renderOperatorListingReconciliation", self.app_js)
+        self.assertIn("renderOperatorRepricingReview", self.app_js)
 
     def test_operator_registry_reads_canonical_supabase_tables(self):
         expected_tables = (
@@ -135,6 +137,8 @@ class OperatorDashboardContractTests(unittest.TestCase):
             ".batch-technical-id",
             ".listing-file-drop",
             ".listing-reconciliation-row",
+            ".repricing-row",
+            ".repricing-command-bar",
         ):
             self.assertIn(selector, self.style_css)
         mobile_block = re.search(r"@media \(max-width: 720px\) \{(.*)\n\}", self.style_css, re.S)

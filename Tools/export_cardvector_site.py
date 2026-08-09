@@ -81,6 +81,8 @@ CLIENT_ROUTES = {
     "mobile",
     "mobile-capture",
     "operator",
+    "price-review",
+    "repricing",
     "sell",
     "registry",
 }
