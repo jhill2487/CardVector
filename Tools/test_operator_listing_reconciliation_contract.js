@@ -21,7 +21,6 @@ const allocationIdentityMigration = fs.readFileSync(
 );
 
 [
-  'href="/operator/listings"',
   "renderOperatorListingReconciliation",
   "parseEbayListingsCsv",
   "parseMarketplaceListingsCsv",

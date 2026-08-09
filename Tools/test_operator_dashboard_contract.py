@@ -71,8 +71,20 @@ class OperatorDashboardContractTests(unittest.TestCase):
         self.assertIn("Needs Batch Review", self.app_js)
         self.assertIn('"cardvector_location_carduploader_batches_v"', self.app_js)
 
+    def test_operator_dashboard_hides_retired_registry_and_listing_review_cards(self):
+        dashboard_source = self.app_js[
+            self.app_js.index("function renderOperatorDashboard"):
+            self.app_js.index("function registryWarningHtml")
+        ]
+        self.assertNotIn('href="/operator/registry"', dashboard_source)
+        self.assertNotIn("ETB / Location Registry", dashboard_source)
+        self.assertNotIn('href="/operator/listings"', dashboard_source)
+        self.assertNotIn("Existing Listing Review", dashboard_source)
+        self.assertIn('href="/#mobile-capture"', dashboard_source)
+        self.assertIn('href="/operator/batches"', dashboard_source)
+        self.assertIn('href="/operator/repricing"', dashboard_source)
+
     def test_existing_listing_reconciliation_is_csv_snapshot_only(self):
-        self.assertIn('href="/operator/listings"', self.app_js)
         self.assertIn("Existing Listing Review", self.app_js)
         self.assertIn("parseEbayListingsCsv", self.app_js)
         self.assertIn("parseMarketplaceListingsCsv", self.app_js)
