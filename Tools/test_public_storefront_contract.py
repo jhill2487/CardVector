@@ -14,6 +14,7 @@ EXPORTER_PATH = ROOT / "Tools" / "export_cardvector_site.py"
 EXPECTED_URLS = {
     "EBAY_STORE_URL": "https://www.ebay.com/str/jhilltcg?mkcid=1&mkrid=711-53200-19255-0&siteid=0&campid=5339178316&customid=&toolid=10001&mkevt=1",
     "TCGPLAYER_STORE_URL": "https://www.tcgplayer.com/sellers/Putnam-Collectibles/747c057d",
+    "MANAPOOL_STORE_URL": "https://manapool.com/shop/putnamcollectibles",
     "WHATNOT_REFERRAL_URL": "https://whatnot.com/invite/putnam_collectibles",
     "WHATNOT_SELLER_REFERRAL_URL": "https://whatnot.com/invite/seller/putnam_collectibles",
     "COLLECTION_INQUIRY_URL": "https://tally.so/r/ob1ABN",
@@ -71,6 +72,7 @@ class PublicStorefrontContractTests(unittest.TestCase):
         labels = [
             "Shop eBay",
             "Shop TCGplayer",
+            "Manapool",
             "Market Briefs",
             "Sell Your Collection",
             "Whatnot",
@@ -98,6 +100,13 @@ class PublicStorefrontContractTests(unittest.TestCase):
         self.assertNotIn("Powered By", hero.group(1))
         self.assertNotIn(".hero-panel", self.source_css)
         self.assertNotIn(".panel-line", self.source_css)
+
+    def test_manapool_store_link_is_public(self):
+        self.assertIn("{{MANAPOOL_STORE_URL}}", self.source_html)
+        self.assertIn("Manapool", self.source_html)
+        self.assertIn("Magic: The Gathering singles", self.source_html)
+        self.assertIn("Shop Manapool", self.source_html)
+        self.assertIn(EXPECTED_URLS["MANAPOOL_STORE_URL"], self.output_html)
 
     def test_sell_and_bulk_routes_share_one_destination(self):
         self.assertIn('new Set(["sell", "bulk", "buylist"])', self.source_js)
