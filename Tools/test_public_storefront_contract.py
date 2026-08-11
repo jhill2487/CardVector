@@ -104,6 +104,20 @@ class PublicStorefrontContractTests(unittest.TestCase):
         for route_id in ('id="sell"', 'id="bulk"', 'id="buylist"'):
             self.assertIn(route_id, self.source_html)
 
+    def test_direct_contact_section_is_public_and_compliant(self):
+        self.assertIn('<section class="contact-section wrap" id="contact"', self.source_html)
+        self.assertIn("Contact Putnam Collectibles", self.source_html)
+        self.assertIn("Send Direct Message", self.source_html)
+        self.assertIn("For an existing marketplace order or listing-specific transaction", self.source_html)
+        self.assertIn("keep order messages and payment inside the marketplace", self.source_html)
+        self.assertIn('href="/#contact"', self.source_html)
+        self.assertIn("renderContactPage", self.source_js)
+        self.assertIn('route === "contact"', self.source_js)
+        self.assertIn(".contact-section", self.source_css)
+        self.assertIn(".contact-route-notes", self.source_css)
+        self.assertNotIn("window.location.replace(siteLinks.COLLECTION_INQUIRY_URL)", self.source_js)
+        self.assertIn("Send Direct Message", self.output_html)
+
     def test_whatnot_copy_is_clear_and_non_guaranteed(self):
         self.assertIn("Whatnot Referral Bonuses", self.source_html)
         self.assertIn("New to Whatnot?", self.source_html)
