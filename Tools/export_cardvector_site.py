@@ -35,6 +35,7 @@ SITE_CONFIG_KEYS = (
     "WHATNOT_REFERRAL_URL",
     "WHATNOT_SELLER_REFERRAL_URL",
     "COLLECTION_INQUIRY_URL",
+    "CONTACT_EMAIL",
 )
 
 PROHIBITED_PARTS = {
@@ -149,7 +150,10 @@ def load_site_config(source_root: Path) -> dict[str, str]:
     config = {}
     for key in SITE_CONFIG_KEYS:
         value = str(data.get(key, "") or "").strip()
-        if not value.startswith("https://"):
+        if key == "CONTACT_EMAIL":
+            if not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", value):
+                raise ValueError(f"{key} must be a complete email address.")
+        elif not value.startswith("https://"):
             raise ValueError(f"{key} must be a complete https:// URL.")
         if "PASTE_" in value.upper() or "PLACEHOLDER" in value.upper():
             raise ValueError(f"{key} still contains a placeholder value.")

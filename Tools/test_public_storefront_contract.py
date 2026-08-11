@@ -17,6 +17,7 @@ EXPECTED_URLS = {
     "WHATNOT_REFERRAL_URL": "https://whatnot.com/invite/putnam_collectibles",
     "WHATNOT_SELLER_REFERRAL_URL": "https://whatnot.com/invite/seller/putnam_collectibles",
     "COLLECTION_INQUIRY_URL": "https://tally.so/r/ob1ABN",
+    "CONTACT_EMAIL": "Putnam.collects@gmail.com",
 }
 
 
@@ -108,6 +109,9 @@ class PublicStorefrontContractTests(unittest.TestCase):
         self.assertIn('<section class="contact-section wrap" id="contact"', self.source_html)
         self.assertIn("Contact Putnam Collectibles", self.source_html)
         self.assertIn("Send Direct Message", self.source_html)
+        self.assertIn("Email Putnam Collectibles", self.source_html)
+        self.assertIn("{{CONTACT_EMAIL}}", self.source_html)
+        self.assertIn("CONTACT_EMAIL", self.source_js)
         self.assertIn("For an existing marketplace order or listing-specific transaction", self.source_html)
         self.assertIn("keep order messages and payment inside the marketplace", self.source_html)
         self.assertIn('href="/#contact"', self.source_html)
@@ -117,6 +121,8 @@ class PublicStorefrontContractTests(unittest.TestCase):
         self.assertIn(".contact-route-notes", self.source_css)
         self.assertNotIn("window.location.replace(siteLinks.COLLECTION_INQUIRY_URL)", self.source_js)
         self.assertIn("Send Direct Message", self.output_html)
+        self.assertIn("Putnam.collects@gmail.com", self.output_html)
+        self.assertIn("mailto:Putnam.collects@gmail.com?subject=Putnam%20Collectibles%20Inquiry", self.output_html)
 
     def test_whatnot_copy_is_clear_and_non_guaranteed(self):
         self.assertIn("Whatnot Referral Bonuses", self.source_html)
