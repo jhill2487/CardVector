@@ -72,7 +72,7 @@ class PublicStorefrontContractTests(unittest.TestCase):
         labels = [
             "Shop eBay",
             "Shop TCGplayer",
-            "Manapool",
+            "Shop Manapool",
             "Market Briefs",
             "Sell Your Collection",
             "Whatnot",
