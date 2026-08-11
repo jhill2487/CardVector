@@ -18,6 +18,7 @@ EXPECTED_URLS = {
     "WHATNOT_SELLER_REFERRAL_URL": "https://whatnot.com/invite/seller/putnam_collectibles",
     "COLLECTION_INQUIRY_URL": "https://tally.so/r/ob1ABN",
     "CONTACT_EMAIL": "Putnam.collects@gmail.com",
+    "CONTACT_EMAIL_URL": "https://mail.google.com/mail/?view=cm&fs=1&to=Putnam.collects%40gmail.com&su=Putnam%20Collectibles%20Inquiry",
 }
 
 
@@ -112,6 +113,7 @@ class PublicStorefrontContractTests(unittest.TestCase):
         self.assertIn("Email Putnam Collectibles", self.source_html)
         self.assertIn("{{CONTACT_EMAIL}}", self.source_html)
         self.assertIn("CONTACT_EMAIL", self.source_js)
+        self.assertIn("CONTACT_EMAIL_URL", self.source_js)
         self.assertIn("For an existing marketplace order or listing-specific transaction", self.source_html)
         self.assertIn("keep order messages and payment inside the marketplace", self.source_html)
         self.assertIn('href="/#contact"', self.source_html)
@@ -122,7 +124,9 @@ class PublicStorefrontContractTests(unittest.TestCase):
         self.assertNotIn("window.location.replace(siteLinks.COLLECTION_INQUIRY_URL)", self.source_js)
         self.assertIn("Send Direct Message", self.output_html)
         self.assertIn("Putnam.collects@gmail.com", self.output_html)
-        self.assertIn("mailto:Putnam.collects@gmail.com?subject=Putnam%20Collectibles%20Inquiry", self.output_html)
+        self.assertIn("https://mail.google.com/mail/?view=cm", self.output_html)
+        self.assertIn("to=Putnam.collects%40gmail.com", self.output_html)
+        self.assertNotIn("mailto:Putnam.collects@gmail.com", self.output_html)
 
     def test_whatnot_copy_is_clear_and_non_guaranteed(self):
         self.assertIn("Whatnot Referral Bonuses", self.source_html)

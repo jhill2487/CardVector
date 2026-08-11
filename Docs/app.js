@@ -160,7 +160,8 @@
     TCGPLAYER_STORE_URL: "{{TCGPLAYER_STORE_URL}}",
     WHATNOT_REFERRAL_URL: "{{WHATNOT_REFERRAL_URL}}",
     COLLECTION_INQUIRY_URL: "{{COLLECTION_INQUIRY_URL}}",
-    CONTACT_EMAIL: "{{CONTACT_EMAIL}}"
+    CONTACT_EMAIL: "{{CONTACT_EMAIL}}",
+    CONTACT_EMAIL_URL: "{{CONTACT_EMAIL_URL}}"
   });
   const egressSafeMode = true;
   const egressSafeCacheMs = 5 * 60 * 1000;
@@ -297,7 +298,7 @@
           </div>
           <div class="entry-actions sell-route-actions">
             <a class="button primary button-large" href="${siteLinks.COLLECTION_INQUIRY_URL}" target="_blank" rel="noopener noreferrer" aria-label="Send a direct message to Putnam Collectibles">Send Direct Message</a>
-            <a class="button secondary button-large" href="mailto:${escapeHtml(siteLinks.CONTACT_EMAIL)}?subject=Putnam%20Collectibles%20Inquiry" aria-label="Email Putnam Collectibles directly">Email Putnam Collectibles</a>
+            <a class="button secondary button-large" href="${siteLinks.CONTACT_EMAIL_URL}" target="_blank" rel="noopener noreferrer" aria-label="Email Putnam Collectibles directly">Email Putnam Collectibles</a>
             <a class="button secondary" href="/">Return Home</a>
           </div>
         </article>
