@@ -106,6 +106,7 @@ class PublicStorefrontContractTests(unittest.TestCase):
         self.assertIn("{{MANAPOOL_STORE_URL}}", self.source_html)
         self.assertIn("Manapool", self.source_html)
         self.assertIn("Magic: The Gathering singles", self.source_html)
+        self.assertIn("Manapool is our dedicated marketplace for Magic: The Gathering singles.", self.source_html)
         self.assertIn("Shop Manapool", self.source_html)
         self.assertIn(EXPECTED_URLS["MANAPOOL_STORE_URL"], self.output_html)
 
