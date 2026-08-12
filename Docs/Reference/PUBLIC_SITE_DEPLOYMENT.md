@@ -43,8 +43,8 @@ Docs/content/market-briefs/
 ```
 
 The issue template `.github/ISSUE_TEMPLATE/market_brief_draft.yml` provides a
-reviewable draft intake form for ChatGPT-generated Monday briefs. Draft issues
-should start with the labels `content-draft` and `monday-brief`.
+reviewable draft intake form for ChatGPT-generated market briefs. Draft issues
+should start with the labels `content-draft` and `market-brief`.
 
 The workflow `.github/workflows/market-brief-draft.yml` runs when either:
 
@@ -86,7 +86,7 @@ Recommended recurring-task output:
 
 ```text
 Create a GitHub issue in jhill2487/CardVector using the Market Brief Draft
-template. Use labels content-draft and monday-brief. Include Filename, Fact-check
+template. Use labels content-draft and market-brief. Include Filename, Fact-check
 notes, TikTok package, and the complete article as a fenced markdown code block
 under Article file. Do not add ready-for-pr until the draft has been reviewed.
 ```

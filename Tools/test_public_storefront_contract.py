@@ -172,7 +172,7 @@ class PublicStorefrontContractTests(unittest.TestCase):
         self.assertIn(disclosure, self.output_404)
 
     def test_market_briefs_section_and_routes_are_present(self):
-        self.assertIn("Monday Morning Market Brief", self.source_html)
+        self.assertIn("Pokemon Market Briefs", self.source_html)
         self.assertIn('href="/market-briefs"', self.source_html)
         self.assertIn("renderMarketBriefsPage", self.source_js)
         self.assertIn("renderMarketBriefPost", self.source_js)

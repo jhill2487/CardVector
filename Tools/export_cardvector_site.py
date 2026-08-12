@@ -255,7 +255,7 @@ def market_brief_url(post: dict[str, object]) -> str:
 def date_label_for_brief(value: object) -> str:
     raw = str(value or "").strip()
     if not raw:
-        return "Monday mornings"
+        return "Latest brief"
     try:
         parsed = datetime.fromisoformat(raw)
         return f"{parsed:%b} {parsed.day}, {parsed:%Y}"
@@ -463,7 +463,7 @@ def render_market_brief_static_pages(output: Path, posts: list[dict[str, object]
       <div class="blog-hero">
         <p class="eyebrow">Pokemon market updates for sellers</p>
         <h1 id="market-briefs-page-title">Pokemon Market Briefs for Card Sellers</h1>
-        <p>Weekly Monday morning notes on Pokemon card prices, collector demand, eBay and TCGplayer marketplace signals, inventory age, and practical pricing strategy.</p>
+        <p>Seller-focused notes on Pokemon card prices, collector demand, eBay and TCGplayer marketplace signals, inventory age, and practical pricing strategy.</p>
       </div>
       <div class="brief-seo-summary" aria-label="What Pokemon market briefs cover">
         <article>

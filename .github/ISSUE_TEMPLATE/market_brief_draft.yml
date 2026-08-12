@@ -3,7 +3,7 @@ description: Create a draft that GitHub Actions can convert into a CardVector.ap
 title: "[Content Draft] Pokemon Card Pricing Strategy - YYYY-MM-DD"
 labels:
   - content-draft
-  - monday-brief
+  - market-brief
 body:
   - type: markdown
     attributes:
@@ -37,7 +37,7 @@ body:
         slug: "pokemon-card-pricing-strategy"
         date: "2026-08-10"
         description: "Short SEO description and site teaser."
-        label: "Weekly Monday Brief"
+        label: "Market Brief"
         author: "Putnam Collectibles"
         category: "Pokemon Market Brief"
         status: "published"

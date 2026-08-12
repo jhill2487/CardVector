@@ -124,7 +124,7 @@ to `CardVector-site` using the `CARDVECTOR_SITE_DEPLOY_TOKEN` repository secret.
 
 Pokemon market briefs are edited as Markdown under
 `Docs/content/market-briefs/`. The `market-brief-draft` GitHub issue template
-stages ChatGPT-generated drafts with `content-draft` and `monday-brief` labels.
+stages ChatGPT-generated drafts with `content-draft` and `market-brief` labels.
 Adding `ready-for-pr` runs `.github/workflows/market-brief-draft.yml`, which
 turns the fenced Markdown article file into a draft PR. Merging that PR triggers
 the normal public-site deployment.

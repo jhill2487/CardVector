@@ -4,7 +4,7 @@ seoTitle: "Why Pokemon Card Prices Change | A Seller's Guide to Pricing Strategy
 slug: "why-pokemon-card-prices-change"
 date: "2026-08-03"
 description: "Discover the biggest factors that influence Pokemon card prices and learn practical pricing strategies for eBay and TCGplayer sellers."
-label: "Weekly Monday Brief"
+label: "Market Brief"
 author: "CardVector"
 category: "Seller Strategy"
 status: "published"
@@ -213,4 +213,4 @@ Sellers who understand these broader patterns are better positioned to make info
 
 Whether you sell a few cards each week or manage thousands of active listings, developing a disciplined pricing process will almost always outperform relying on instinct alone.
 
-At CardVector, our goal is to help sellers spend less time guessing and more time making informed decisions. Each Monday we'll publish practical insights focused on helping collectors and small businesses navigate the evolving trading card marketplace with confidence.
+At CardVector, our goal is to help sellers spend less time guessing and more time making informed decisions. These briefs publish practical insights focused on helping collectors and small businesses navigate the evolving trading card marketplace with confidence.

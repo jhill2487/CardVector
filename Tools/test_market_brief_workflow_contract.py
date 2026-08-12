@@ -12,7 +12,7 @@ class MarketBriefWorkflowContractTests(unittest.TestCase):
     def test_issue_template_exists_with_expected_label(self):
         text = TEMPLATE.read_text(encoding="utf-8")
         self.assertIn("content-draft", text)
-        self.assertIn("monday-brief", text)
+        self.assertIn("market-brief", text)
         self.assertIn("Filename", text)
         self.assertIn("Article file", text)
         self.assertIn("Fact-check notes", text)
