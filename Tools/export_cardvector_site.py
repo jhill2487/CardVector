@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import html
 import json
 import re
 import shutil
@@ -16,6 +17,8 @@ PUBLIC_FILES = (
     "app.js",
     "style.css",
     "mobile-capture-config.js",
+    "robots.txt",
+    "tools/carduploader/index.html",
     "CNAME",
     "_config.yml",
 )
@@ -29,6 +32,7 @@ PUBLIC_ASSETS = (
 SITE_CONFIG_FILE = "site-config.json"
 MARKET_BRIEF_SOURCE_DIR = Path("content") / "market-briefs"
 MARKET_BRIEF_INDEX_FILE = MARKET_BRIEF_SOURCE_DIR / "index.json"
+SITE_URL = "https://cardvector.app"
 SITE_CONFIG_KEYS = (
     "EBAY_STORE_URL",
     "TCGPLAYER_STORE_URL",
@@ -88,6 +92,7 @@ CLIENT_ROUTES = {
     "price-review",
     "repricing",
     "sell",
+    "tools",
     "registry",
 }
 
@@ -166,13 +171,17 @@ def load_site_config(source_root: Path) -> dict[str, str]:
 
 def render_site_config(output: Path, config: dict[str, str]) -> None:
     token_pattern = re.compile(r"\{\{([A-Z0-9_]+)\}\}")
-    for relative in ("index.html", "404.html", "app.js"):
-        path = output / relative
+    for path in output.rglob("*"):
+        if not path.is_file() or ".git" in path.parts:
+            continue
+        if path.suffix.lower() not in {".html", ".js", ".xml", ".txt"}:
+            continue
         text = path.read_text(encoding="utf-8-sig")
         for key, value in config.items():
             text = text.replace(f"{{{{{key}}}}}", value)
         unresolved = sorted(set(token_pattern.findall(text)))
         if unresolved:
+            relative = path.relative_to(output)
             raise RuntimeError(f"Unresolved public site configuration in {relative}: {', '.join(unresolved)}")
         path.write_text(text, encoding="utf-8")
 
@@ -233,6 +242,212 @@ def markdown_sections(body: str) -> list[dict[str, str]]:
     if current_lines:
         sections.append({"heading": current_heading, "body": "\n".join(current_lines).strip()})
     return [section for section in sections if section["heading"] and section["body"]]
+
+
+def escape_html(value: object) -> str:
+    return html.escape(str(value or ""), quote=True)
+
+
+def market_brief_url(post: dict[str, object]) -> str:
+    return f"{SITE_URL}/market-briefs/{post['slug']}"
+
+
+def date_label_for_brief(value: object) -> str:
+    raw = str(value or "").strip()
+    if not raw:
+        return "Monday mornings"
+    try:
+        parsed = datetime.fromisoformat(raw)
+        return f"{parsed:%b} {parsed.day}, {parsed:%Y}"
+    except Exception:
+        try:
+            parsed = datetime.strptime(raw, "%Y-%m-%d")
+            return f"{parsed:%b} {parsed.day}, {parsed:%Y}"
+        except Exception:
+            return raw
+
+
+def render_json_ld(payload: dict[str, object]) -> str:
+    return json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
+
+
+def render_public_header(title: str, description: str, canonical_url: str) -> str:
+    return f"""<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-WQEKL0NGJ3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){{dataLayer.push(arguments);}}
+    gtag('js', new Date());
+
+    gtag('config', 'G-WQEKL0NGJ3');
+  </script>
+  <meta name="description" content="{escape_html(description)}">
+  <link rel="canonical" href="{escape_html(canonical_url)}">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="{escape_html(title)}">
+  <meta property="og:description" content="{escape_html(description)}">
+  <meta property="og:url" content="{escape_html(canonical_url)}">
+  <meta property="og:image" content="{SITE_URL}/assets/putnam-ebay-banner.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <title>{escape_html(title)}</title>
+  <link rel="stylesheet" href="/style.css?v=20260812-seo">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header" aria-label="Primary">
+    <nav class="nav wrap">
+      <a class="brand" href="/" aria-label="Putnam Collectibles home">
+        <img class="brand-logo" src="/assets/putnam-profile-onepiece.png" alt="" width="42" height="42">
+        <span class="brand-text">Putnam Collectibles</span>
+      </a>
+      <details class="nav-menu" open>
+        <summary aria-label="Open site navigation">Menu</summary>
+        <ul class="nav-links" aria-label="Site navigation">
+          <li><a class="nav-shop nav-cta" href="{{EBAY_STORE_URL}}" target="_blank" rel="noopener noreferrer">Shop eBay</a></li>
+          <li><a class="nav-shop nav-cta-secondary" href="{{TCGPLAYER_STORE_URL}}" target="_blank" rel="noopener noreferrer">Shop TCGplayer</a></li>
+          <li><a class="nav-shop nav-cta-secondary" href="{{MANAPOOL_STORE_URL}}" target="_blank" rel="noopener noreferrer">Shop Manapool</a></li>
+          <li><a href="/market-briefs">Market Briefs</a></li>
+          <li><a href="/sell">Sell Your Collection</a></li>
+          <li><a href="/tools/carduploader">CardUploader</a></li>
+          <li><a href="/#contact">Contact</a></li>
+        </ul>
+      </details>
+    </nav>
+  </header>
+  <main id="main">"""
+
+
+def render_public_footer() -> str:
+    return """  </main>
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <p>&copy; 2026 Putnam Collectibles</p>
+      <ul>
+        <li><a href="/market-briefs">Market Briefs</a></li>
+        <li><a href="/tools/carduploader">CardUploader</a></li>
+        <li><a href="{{EBAY_STORE_URL}}" target="_blank" rel="noopener noreferrer">Shop eBay</a></li>
+        <li><a href="{{TCGPLAYER_STORE_URL}}" target="_blank" rel="noopener noreferrer">Shop TCGplayer</a></li>
+        <li><a href="{{MANAPOOL_STORE_URL}}" target="_blank" rel="noopener noreferrer">Shop Manapool</a></li>
+      </ul>
+    </div>
+  </footer>
+  <script src="/app.js?v=20260812-seo" defer></script>
+</body>
+</html>
+"""
+
+
+def render_brief_section(section: dict[str, str]) -> str:
+    paragraphs = [
+        f"<p>{escape_html(paragraph.strip())}</p>"
+        for paragraph in re.split(r"\n{2,}", section["body"])
+        if paragraph.strip()
+    ]
+    return f"""
+          <section class="brief-post-section">
+            <h2>{escape_html(section["heading"])}</h2>
+            {''.join(paragraphs)}
+          </section>"""
+
+
+def render_market_brief_static_pages(output: Path, posts: list[dict[str, object]]) -> None:
+    brief_dir = output / "market-briefs"
+    brief_dir.mkdir(parents=True, exist_ok=True)
+    cards = []
+    for post in posts:
+        url = f"/market-briefs/{escape_html(post['slug'])}"
+        cards.append(f"""
+        <article class="brief-card">
+          <span class="brief-kicker">{escape_html(post.get("label", "Market Brief"))}</span>
+          <h2>{escape_html(post["title"])}</h2>
+          <p>{escape_html(post["summary"])}</p>
+          <div class="brief-card-footer">
+            <span>{escape_html(date_label_for_brief(post.get("date", "")))}</span>
+            <a class="button secondary" href="{url}">Open Brief</a>
+          </div>
+        </article>""")
+    index_html = render_public_header(
+        "Pokemon Market Briefs | Putnam Collectibles",
+        "Weekly Pokemon card market updates, seller strategy, and trading card inventory notes from Putnam Collectibles.",
+        f"{SITE_URL}/market-briefs",
+    ) + f"""
+    <section class="blog-shell wrap" aria-labelledby="market-briefs-page-title">
+      <div class="blog-hero">
+        <p class="eyebrow">Pokemon market updates</p>
+        <h1 id="market-briefs-page-title">Pokemon Market Briefs</h1>
+        <p>Weekly Monday morning notes on Pokemon market movement, collector demand, seller strategy, and marketplace signals.</p>
+      </div>
+      <div class="brief-grid">
+        {''.join(cards)}
+      </div>
+    </section>
+""" + render_public_footer()
+    (brief_dir / "index.html").write_text(index_html, encoding="utf-8")
+
+    for post in posts:
+        slug_dir = brief_dir / str(post["slug"])
+        slug_dir.mkdir(parents=True, exist_ok=True)
+        post_url = market_brief_url(post)
+        sections = "".join(render_brief_section(section) for section in post.get("sections", []))
+        json_ld = render_json_ld({
+            "@context": "https://schema.org",
+            "@type": "BlogPosting",
+            "headline": post["title"],
+            "description": post["summary"],
+            "datePublished": post.get("date", ""),
+            "dateModified": post.get("date", ""),
+            "author": {"@type": "Organization", "name": "Putnam Collectibles"},
+            "publisher": {
+                "@type": "Organization",
+                "name": "Putnam Collectibles",
+                "url": SITE_URL,
+                "logo": {"@type": "ImageObject", "url": f"{SITE_URL}/assets/putnam-profile-onepiece.png"}
+            },
+            "mainEntityOfPage": {"@type": "WebPage", "@id": post_url},
+        })
+        post_html = render_public_header(
+            f"{post['title']} | Putnam Collectibles",
+            str(post["summary"]),
+            post_url,
+        ) + f"""
+    <script type="application/ld+json">{json_ld}</script>
+    <article class="blog-shell blog-post wrap" aria-labelledby="market-brief-post-title">
+      <a class="operator-inline-link" href="/market-briefs">Back to Market Briefs</a>
+      <p class="eyebrow">{escape_html(post.get("label", "Market Brief"))}</p>
+      <h1 id="market-brief-post-title">{escape_html(post["title"])}</h1>
+      <p class="blog-meta">{escape_html(date_label_for_brief(post.get("date", "")))} &middot; {escape_html(post.get("status", "published"))}</p>
+      <p class="hero-lede">{escape_html(post["summary"])}</p>
+      <div class="brief-post-layout">{sections}</div>
+      <aside class="brief-disclosure">
+        <strong>Editorial note</strong>
+        <p>Market briefs are informational commentary, not financial advice. Verify current marketplace data before buying, selling, or repricing.</p>
+      </aside>
+    </article>
+""" + render_public_footer()
+        (slug_dir / "index.html").write_text(post_html, encoding="utf-8")
+
+
+def render_sitemap(output: Path, posts: list[dict[str, object]]) -> None:
+    urls = [
+        (SITE_URL + "/", "2026-08-12", "weekly", "1.0"),
+        (SITE_URL + "/market-briefs", "2026-08-12", "weekly", "0.8"),
+        (SITE_URL + "/tools/carduploader", "2026-08-12", "monthly", "0.8"),
+    ]
+    for post in posts:
+        urls.append((market_brief_url(post), str(post.get("date", "2026-08-12") or "2026-08-12"), "monthly", "0.7"))
+    entries = "\n".join(
+        f"  <url><loc>{escape_html(loc)}</loc><lastmod>{escape_html(lastmod)}</lastmod><changefreq>{freq}</changefreq><priority>{priority}</priority></url>"
+        for loc, lastmod, freq, priority in urls
+    )
+    (output / "sitemap.xml").write_text(
+        f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{entries}\n</urlset>\n',
+        encoding="utf-8",
+    )
 
 
 def parse_affiliate_links(value: object, path: Path) -> list[dict[str, str]]:
@@ -313,7 +528,12 @@ def write_generated_files(output: Path, commit: str, market_briefs: list[dict[st
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "public_files": list(PUBLIC_FILES),
         "public_assets": list(PUBLIC_ASSETS),
-        "generated_content": [MARKET_BRIEF_INDEX_FILE.as_posix()],
+        "generated_content": [
+            MARKET_BRIEF_INDEX_FILE.as_posix(),
+            "market-briefs/index.html",
+            "market-briefs/<slug>/index.html",
+            "sitemap.xml",
+        ],
         "market_brief_count": len(market_briefs),
     }
     (output / "deployment-manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
@@ -388,6 +608,9 @@ def export_site(source: Path, output: Path, commit: str) -> None:
         copy_file(source, output, relative)
     render_site_config(output, site_config)
     market_briefs = render_market_brief_index(source, output)
+    render_market_brief_static_pages(output, market_briefs)
+    render_sitemap(output, market_briefs)
+    render_site_config(output, site_config)
     write_generated_files(output, commit, market_briefs)
     validate_references(output)
     validate_prohibited_files(output)

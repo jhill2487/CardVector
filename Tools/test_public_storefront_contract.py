@@ -55,6 +55,10 @@ class PublicStorefrontContractTests(unittest.TestCase):
         cls.output_html = (cls.output / "index.html").read_text(encoding="utf-8")
         cls.output_404 = (cls.output / "404.html").read_text(encoding="utf-8")
         cls.output_js = (cls.output / "app.js").read_text(encoding="utf-8")
+        cls.output_robots = (cls.output / "robots.txt").read_text(encoding="utf-8")
+        cls.output_sitemap = (cls.output / "sitemap.xml").read_text(encoding="utf-8")
+        cls.output_carduploader = (cls.output / "tools" / "carduploader" / "index.html").read_text(encoding="utf-8")
+        cls.output_market_briefs = (cls.output / "market-briefs" / "index.html").read_text(encoding="utf-8")
         cls.market_brief_index = json.loads(
             (cls.output / "content" / "market-briefs" / "index.json").read_text(encoding="utf-8")
         )
@@ -114,6 +118,7 @@ class PublicStorefrontContractTests(unittest.TestCase):
         self.assertIn('<section class="carduploader-section wrap" id="carduploader"', self.source_html)
         self.assertIn("{{CARDUPLOADER_REFERRAL_URL}}", self.source_html)
         self.assertIn("Try CardUploader", self.source_html)
+        self.assertIn("Read why we use CardUploader", self.source_html)
         self.assertIn("Unlimited plan at $9.99/month", self.source_html)
         self.assertIn("subject to its fair use policy", self.source_html)
         self.assertIn("Referral link. Putnam Collectibles may earn a commission or account credit", self.source_html)
@@ -175,6 +180,33 @@ class PublicStorefrontContractTests(unittest.TestCase):
         self.assertIn('"market-briefs"', EXPORTER_PATH.read_text(encoding="utf-8"))
         self.assertIn(".brief-card", self.source_css)
         self.assertIn("ChatGPT-assisted research", self.source_js)
+
+    def test_seo_foundation_files_and_metadata_are_present(self):
+        self.assertIn('<link rel="canonical" href="https://cardvector.app/">', self.source_html)
+        self.assertIn('"@type": "Organization"', self.source_html)
+        self.assertIn('"@type": "WebSite"', self.source_html)
+        self.assertIn("Pokemon Cards, MTG Singles & Market Briefs", self.source_html)
+
+        self.assertIn("Sitemap: https://cardvector.app/sitemap.xml", self.output_robots)
+        self.assertIn("<loc>https://cardvector.app/</loc>", self.output_sitemap)
+        self.assertIn("<loc>https://cardvector.app/market-briefs</loc>", self.output_sitemap)
+        self.assertIn("<loc>https://cardvector.app/tools/carduploader</loc>", self.output_sitemap)
+        self.assertIn("<loc>https://cardvector.app/market-briefs/why-pokemon-card-prices-change</loc>", self.output_sitemap)
+
+        self.assertIn("Pokemon Market Briefs | Putnam Collectibles", self.output_market_briefs)
+        post_page = self.output / "market-briefs" / "why-pokemon-card-prices-change" / "index.html"
+        self.assertTrue(post_page.exists())
+        post_html = post_page.read_text(encoding="utf-8")
+        self.assertIn('"@type":"BlogPosting"', post_html)
+        self.assertIn('<link rel="canonical" href="https://cardvector.app/market-briefs/why-pokemon-card-prices-change">', post_html)
+
+    def test_carduploader_landing_page_is_crawlable_and_disclosed(self):
+        self.assertIn("Why Putnam Collectibles Uses CardUploader", self.output_carduploader)
+        self.assertIn('<link rel="canonical" href="https://cardvector.app/tools/carduploader">', self.output_carduploader)
+        self.assertIn('"@type": "Article"', self.output_carduploader)
+        self.assertIn("unlimited card processing", self.output_carduploader)
+        self.assertIn(EXPECTED_URLS["CARDUPLOADER_REFERRAL_URL"], self.output_carduploader)
+        self.assertIn("Referral link. Putnam Collectibles may earn a commission or account credit", self.output_carduploader)
 
     def test_building_business_update_cards_are_hidden_without_deleting_content(self):
         hidden_section = re.search(r'<section class="building wrap" id="about"[^>]*hidden[^>]*>(.*?)</section>', self.source_html, re.S)
