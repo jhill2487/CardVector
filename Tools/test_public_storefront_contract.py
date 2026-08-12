@@ -179,6 +179,9 @@ class PublicStorefrontContractTests(unittest.TestCase):
         self.assertIn("/content/market-briefs/index.json", self.source_js)
         self.assertIn('"market-briefs"', EXPORTER_PATH.read_text(encoding="utf-8"))
         self.assertIn(".brief-card", self.source_css)
+        self.assertIn(".brief-seo-summary", self.source_css)
+        self.assertIn(".brief-answer-box", self.source_css)
+        self.assertIn(".brief-internal-links", self.source_css)
         self.assertIn("ChatGPT-assisted research", self.source_js)
 
     def test_seo_foundation_files_and_metadata_are_present(self):
@@ -193,11 +196,26 @@ class PublicStorefrontContractTests(unittest.TestCase):
         self.assertIn("<loc>https://cardvector.app/tools/carduploader</loc>", self.output_sitemap)
         self.assertIn("<loc>https://cardvector.app/market-briefs/why-pokemon-card-prices-change</loc>", self.output_sitemap)
 
-        self.assertIn("Pokemon Market Briefs | Putnam Collectibles", self.output_market_briefs)
+        self.assertIn("Pokemon Market Briefs for Sellers | Putnam Collectibles", self.output_market_briefs)
+        self.assertIn("Pokemon Market Briefs for Card Sellers", self.output_market_briefs)
+        self.assertIn("What these briefs cover", self.output_market_briefs)
+        self.assertIn("CardUploader workflow", self.output_market_briefs)
+        self.assertIn('"@type":"ItemList"', self.output_market_briefs)
+        self.assertIn('"@type":"BreadcrumbList"', self.output_market_briefs)
         post_page = self.output / "market-briefs" / "why-pokemon-card-prices-change" / "index.html"
         self.assertTrue(post_page.exists())
         post_html = post_page.read_text(encoding="utf-8")
+        self.assertIn("Why Pokemon Card Prices Change | A Seller", post_html)
+        self.assertIn("Pricing Strategy | Putnam Collectibles", post_html)
+        self.assertIn('<meta property="og:type" content="article">', post_html)
+        self.assertIn("Pokemon card pricing strategy", post_html)
+        self.assertIn("Quick answer", post_html)
+        self.assertIn("Help Pokemon card sellers understand why card prices move", post_html)
+        self.assertIn("Shop Putnam Collectibles on eBay", post_html)
+        self.assertIn(EXPECTED_URLS["EBAY_STORE_URL"], post_html)
+        self.assertIn("Marketplace links may be affiliate links.", post_html)
         self.assertIn('"@type":"BlogPosting"', post_html)
+        self.assertIn('"@type":"BreadcrumbList"', post_html)
         self.assertIn('<link rel="canonical" href="https://cardvector.app/market-briefs/why-pokemon-card-prices-change">', post_html)
 
     def test_carduploader_landing_page_is_crawlable_and_disclosed(self):
@@ -233,7 +251,20 @@ class PublicStorefrontContractTests(unittest.TestCase):
         self.assertEqual("Why Pokemon Card Prices Change: A Seller's Guide to Smarter Pricing Decisions", post["title"])
         self.assertEqual("2026-08-03", post["date"])
         self.assertEqual("published", post["status"])
+        self.assertEqual(
+            "Why Pokemon Card Prices Change | A Seller's Guide to Pricing Strategy",
+            post["seoTitle"],
+        )
+        self.assertEqual(
+            "Discover the biggest factors that influence Pokemon card prices and learn practical pricing strategies for eBay and TCGplayer sellers.",
+            post["description"],
+        )
+        self.assertEqual(
+            "Help Pokemon card sellers understand why card prices move and how to build a repeatable pricing review process.",
+            post["searchIntent"],
+        )
         self.assertEqual("content/market-briefs/2026-08-03-why-pokemon-card-prices-change.md", post["source_path"])
+        self.assertIn("how to price Pokemon cards", post["targetKeywords"])
         self.assertEqual(["Pokemon", "eBay", "TCGplayer", "Pricing Strategy", "Inventory Management"], post["tags"])
         self.assertEqual(
             [{"label": "Shop Putnam Collectibles on eBay", "url": EXPECTED_URLS["EBAY_STORE_URL"]}],

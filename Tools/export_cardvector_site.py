@@ -271,7 +271,40 @@ def render_json_ld(payload: dict[str, object]) -> str:
     return json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
 
 
-def render_public_header(title: str, description: str, canonical_url: str) -> str:
+def text_list(value: object) -> list[str]:
+    if isinstance(value, list):
+        return [str(item or "").strip() for item in value if str(item or "").strip()]
+    if value:
+        return [str(value).strip()]
+    return []
+
+
+def breadcrumb_json_ld(items: list[tuple[str, str]]) -> dict[str, object]:
+    return {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": index + 1,
+                "name": name,
+                "item": url,
+            }
+            for index, (name, url) in enumerate(items)
+        ],
+    }
+
+
+def render_public_header(
+    title: str,
+    description: str,
+    canonical_url: str,
+    *,
+    og_type: str = "website",
+    keywords: list[str] | None = None,
+) -> str:
+    keyword_text = ", ".join(keywords or [])
+    keyword_meta = f'\n  <meta name="keywords" content="{escape_html(keyword_text)}">' if keyword_text else ""
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -287,8 +320,9 @@ def render_public_header(title: str, description: str, canonical_url: str) -> st
     gtag('config', 'G-WQEKL0NGJ3');
   </script>
   <meta name="description" content="{escape_html(description)}">
+  {keyword_meta}
   <link rel="canonical" href="{escape_html(canonical_url)}">
-  <meta property="og:type" content="website">
+  <meta property="og:type" content="{escape_html(og_type)}">
   <meta property="og:title" content="{escape_html(title)}">
   <meta property="og:description" content="{escape_html(description)}">
   <meta property="og:url" content="{escape_html(canonical_url)}">
@@ -355,6 +389,33 @@ def render_brief_section(section: dict[str, str]) -> str:
           </section>"""
 
 
+def render_brief_affiliate_panel(post: dict[str, object]) -> str:
+    links = post.get("affiliateLinks", [])
+    if not isinstance(links, list) or not links:
+        return ""
+    rendered_links = []
+    for link in links:
+        if not isinstance(link, dict):
+            continue
+        label = str(link.get("label", "") or "").strip()
+        url = str(link.get("url", "") or "").strip()
+        if label and url.startswith("https://"):
+            rendered_links.append(
+                f'<a class="button primary" href="{escape_html(url)}" target="_blank" rel="noopener noreferrer">{escape_html(label)}</a>'
+            )
+    if not rendered_links:
+        return ""
+    return f"""
+      <aside class="brief-affiliate-panel" aria-label="Related affiliate links">
+        <span class="brief-kicker">Shop related picks</span>
+        <h2>Explore current listings</h2>
+        <div class="brief-affiliate-links">
+          {''.join(rendered_links)}
+        </div>
+        <p class="marketplace-disclosure">Marketplace links may be affiliate links. Putnam Collectibles may earn a commission from qualifying purchases.</p>
+      </aside>"""
+
+
 def render_market_brief_static_pages(output: Path, posts: list[dict[str, object]]) -> None:
     brief_dir = output / "market-briefs"
     brief_dir.mkdir(parents=True, exist_ok=True)
@@ -371,20 +432,58 @@ def render_market_brief_static_pages(output: Path, posts: list[dict[str, object]
             <a class="button secondary" href="{url}">Open Brief</a>
           </div>
         </article>""")
+    item_list_json_ld = render_json_ld({
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        "name": "Pokemon Market Briefs",
+        "description": "Weekly Pokemon card market updates and seller strategy notes from Putnam Collectibles.",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": index + 1,
+                "url": market_brief_url(post),
+                "name": post["title"],
+            }
+            for index, post in enumerate(posts)
+        ],
+    })
+    breadcrumb_index_json_ld = render_json_ld(breadcrumb_json_ld([
+        ("Home", SITE_URL + "/"),
+        ("Pokemon Market Briefs", SITE_URL + "/market-briefs"),
+    ]))
     index_html = render_public_header(
-        "Pokemon Market Briefs | Putnam Collectibles",
-        "Weekly Pokemon card market updates, seller strategy, and trading card inventory notes from Putnam Collectibles.",
+        "Pokemon Market Briefs for Sellers | Putnam Collectibles",
+        "Weekly Pokemon card market briefs for sellers tracking pricing strategy, eBay and TCGplayer signals, inventory age, and collector demand.",
         f"{SITE_URL}/market-briefs",
+        keywords=["Pokemon market briefs", "Pokemon card prices", "Pokemon seller strategy", "eBay Pokemon cards", "TCGplayer pricing"],
     ) + f"""
+    <script type="application/ld+json">{item_list_json_ld}</script>
+    <script type="application/ld+json">{breadcrumb_index_json_ld}</script>
     <section class="blog-shell wrap" aria-labelledby="market-briefs-page-title">
       <div class="blog-hero">
-        <p class="eyebrow">Pokemon market updates</p>
-        <h1 id="market-briefs-page-title">Pokemon Market Briefs</h1>
-        <p>Weekly Monday morning notes on Pokemon market movement, collector demand, seller strategy, and marketplace signals.</p>
+        <p class="eyebrow">Pokemon market updates for sellers</p>
+        <h1 id="market-briefs-page-title">Pokemon Market Briefs for Card Sellers</h1>
+        <p>Weekly Monday morning notes on Pokemon card prices, collector demand, eBay and TCGplayer marketplace signals, inventory age, and practical pricing strategy.</p>
+      </div>
+      <div class="brief-seo-summary" aria-label="What Pokemon market briefs cover">
+        <article>
+          <h2>What these briefs cover</h2>
+          <p>Each brief is written for small trading card sellers who need clear market context before pricing, repricing, or organizing inventory.</p>
+        </article>
+        <article>
+          <h2>How to use them</h2>
+          <p>Use the weekly notes as a starting point for checking recent sold listings, stale inventory, card condition, and listing quality before making price changes.</p>
+        </article>
       </div>
       <div class="brief-grid">
         {''.join(cards)}
       </div>
+      <nav class="brief-internal-links" aria-label="Related Putnam Collectibles pages">
+        <a href="/tools/carduploader">CardUploader workflow</a>
+        <a href="/sell">Sell Pokemon cards</a>
+        <a href="{{EBAY_STORE_URL}}" target="_blank" rel="noopener noreferrer">Shop Pokemon cards on eBay</a>
+        <a href="{{TCGPLAYER_STORE_URL}}" target="_blank" rel="noopener noreferrer">Shop Pokemon cards on TCGplayer</a>
+      </nav>
     </section>
 """ + render_public_footer()
     (brief_dir / "index.html").write_text(index_html, encoding="utf-8")
@@ -393,15 +492,20 @@ def render_market_brief_static_pages(output: Path, posts: list[dict[str, object]
         slug_dir = brief_dir / str(post["slug"])
         slug_dir.mkdir(parents=True, exist_ok=True)
         post_url = market_brief_url(post)
+        seo_title = str(post.get("seoTitle") or post["title"])
+        description = str(post.get("description") or post["summary"])
+        keywords = text_list(post.get("targetKeywords")) + text_list(post.get("tags"))
         sections = "".join(render_brief_section(section) for section in post.get("sections", []))
         json_ld = render_json_ld({
             "@context": "https://schema.org",
             "@type": "BlogPosting",
             "headline": post["title"],
-            "description": post["summary"],
+            "description": description,
             "datePublished": post.get("date", ""),
             "dateModified": post.get("date", ""),
-            "author": {"@type": "Organization", "name": "Putnam Collectibles"},
+            "articleSection": post.get("category", "Pokemon Market Brief"),
+            "keywords": keywords,
+            "author": {"@type": "Organization", "name": post.get("author", "Putnam Collectibles")},
             "publisher": {
                 "@type": "Organization",
                 "name": "Putnam Collectibles",
@@ -410,19 +514,37 @@ def render_market_brief_static_pages(output: Path, posts: list[dict[str, object]
             },
             "mainEntityOfPage": {"@type": "WebPage", "@id": post_url},
         })
+        breadcrumb_post_json_ld = render_json_ld(breadcrumb_json_ld([
+            ("Home", SITE_URL + "/"),
+            ("Pokemon Market Briefs", SITE_URL + "/market-briefs"),
+            (str(post["title"]), post_url),
+        ]))
         post_html = render_public_header(
-            f"{post['title']} | Putnam Collectibles",
-            str(post["summary"]),
+            f"{seo_title} | Putnam Collectibles",
+            description,
             post_url,
+            og_type="article",
+            keywords=keywords,
         ) + f"""
     <script type="application/ld+json">{json_ld}</script>
+    <script type="application/ld+json">{breadcrumb_post_json_ld}</script>
     <article class="blog-shell blog-post wrap" aria-labelledby="market-brief-post-title">
       <a class="operator-inline-link" href="/market-briefs">Back to Market Briefs</a>
       <p class="eyebrow">{escape_html(post.get("label", "Market Brief"))}</p>
       <h1 id="market-brief-post-title">{escape_html(post["title"])}</h1>
       <p class="blog-meta">{escape_html(date_label_for_brief(post.get("date", "")))} &middot; {escape_html(post.get("status", "published"))}</p>
-      <p class="hero-lede">{escape_html(post["summary"])}</p>
+      <p class="hero-lede">{escape_html(description)}</p>
+      <aside class="brief-answer-box">
+        <strong>Quick answer</strong>
+        <p>{escape_html(post.get("searchIntent") or "Use this brief to understand the market signals behind Pokemon card price changes before buying, selling, or repricing inventory.")}</p>
+      </aside>
       <div class="brief-post-layout">{sections}</div>
+      {render_brief_affiliate_panel(post)}
+      <nav class="brief-internal-links" aria-label="Related Putnam Collectibles pages">
+        <a href="/market-briefs">More Pokemon market briefs</a>
+        <a href="/tools/carduploader">CardUploader seller workflow</a>
+        <a href="/sell">Sell a Pokemon card collection</a>
+      </nav>
       <aside class="brief-disclosure">
         <strong>Editorial note</strong>
         <p>Market briefs are informational commentary, not financial advice. Verify current marketplace data before buying, selling, or repricing.</p>
@@ -487,11 +609,15 @@ def render_market_brief_index(source_root: Path, output: Path) -> list[dict[str,
             "slug": slug,
             "label": str(metadata.get("label", "") or "Market Brief").strip(),
             "title": title,
+            "seoTitle": str(metadata.get("seoTitle", "") or title).strip(),
             "date": str(metadata.get("date", "") or "").strip(),
             "author": str(metadata.get("author", "") or "Putnam Collectibles").strip(),
             "category": str(metadata.get("category", "") or "Pokemon Market Brief").strip(),
             "status": str(metadata.get("status", "") or "published").strip(),
             "summary": summary,
+            "description": str(metadata.get("description", "") or summary).strip(),
+            "searchIntent": str(metadata.get("searchIntent", "") or "").strip(),
+            "targetKeywords": text_list(metadata.get("targetKeywords", [])),
             "tags": metadata.get("tags", []),
             "affiliateLinks": parse_affiliate_links(metadata.get("affiliateLinks", []), path),
             "source_path": str((MARKET_BRIEF_SOURCE_DIR / path.name).as_posix()),

@@ -8,6 +8,13 @@ label: "Weekly Monday Brief"
 author: "CardVector"
 category: "Seller Strategy"
 status: "published"
+searchIntent: "Help Pokemon card sellers understand why card prices move and how to build a repeatable pricing review process."
+targetKeywords:
+  - Pokemon card prices
+  - Pokemon card pricing strategy
+  - how to price Pokemon cards
+  - Pokemon seller strategy
+  - eBay Pokemon card pricing
 tags:
   - Pokemon
   - eBay
