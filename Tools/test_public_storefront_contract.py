@@ -15,6 +15,7 @@ EXPECTED_URLS = {
     "EBAY_STORE_URL": "https://www.ebay.com/str/jhilltcg?mkcid=1&mkrid=711-53200-19255-0&siteid=0&campid=5339178316&customid=&toolid=10001&mkevt=1",
     "TCGPLAYER_STORE_URL": "https://www.tcgplayer.com/sellers/Putnam-Collectibles/747c057d",
     "MANAPOOL_STORE_URL": "https://manapool.com/shop/putnamcollectibles",
+    "CARDUPLOADER_REFERRAL_URL": "https://carduploader.com/signup?ref=LIEA0817",
     "WHATNOT_REFERRAL_URL": "https://whatnot.com/invite/putnam_collectibles",
     "WHATNOT_SELLER_REFERRAL_URL": "https://whatnot.com/invite/seller/putnam_collectibles",
     "COLLECTION_INQUIRY_URL": "https://tally.so/r/ob1ABN",
@@ -107,6 +108,18 @@ class PublicStorefrontContractTests(unittest.TestCase):
         self.assertIn("Magic: The Gathering singles", self.source_html)
         self.assertIn("Shop Manapool", self.source_html)
         self.assertIn(EXPECTED_URLS["MANAPOOL_STORE_URL"], self.output_html)
+
+    def test_carduploader_referral_section_is_public_and_disclosed(self):
+        self.assertIn('<section class="carduploader-section wrap" id="carduploader"', self.source_html)
+        self.assertIn("{{CARDUPLOADER_REFERRAL_URL}}", self.source_html)
+        self.assertIn("Try CardUploader", self.source_html)
+        self.assertIn("Unlimited plan at $9.99/month", self.source_html)
+        self.assertIn("subject to its fair use policy", self.source_html)
+        self.assertIn("Referral link. Putnam Collectibles may earn a commission or account credit", self.source_html)
+        self.assertIn(".carduploader-section", self.source_css)
+        self.assertIn(EXPECTED_URLS["CARDUPLOADER_REFERRAL_URL"], self.output_html)
+        self.assertIn("Try CardUploader", self.output_html)
+        self.assertIn("Referral link. Putnam Collectibles may earn a commission or account credit", self.output_html)
 
     def test_sell_and_bulk_routes_share_one_destination(self):
         self.assertIn('new Set(["sell", "bulk", "buylist"])', self.source_js)
