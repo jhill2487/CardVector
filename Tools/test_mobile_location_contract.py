@@ -69,59 +69,34 @@ class MobileLocationDatabaseContractTests(unittest.TestCase):
         self.assertIn("Location availability changed", self.sql)
         self.assertIn("No available location remains", self.sql)
 
-    def test_mobile_routes_do_not_auto_start_camera(self):
+    def test_mobile_capture_routes_are_retired(self):
         etb_start = self.app_js.index('if (route === "etb"')
         location_start = self.app_js.index('if (route === "location"')
         no_qr_start = self.app_js.index('route === "mobile-capture"')
         camera_start = self.app_js.index('if (route === "capture" && parts[1] && parts[2])')
         etb_route = self.app_js[etb_start:location_start]
         no_qr_route = self.app_js[no_qr_start:camera_start]
-        self.assertIn("initializeCaptureEntry", etb_route)
+        camera_route = self.app_js[camera_start:self.app_js.index('if (route === "lot"')]
+        self.assertIn("renderRetiredMobileCapturePage", etb_route)
         self.assertNotIn("initializeCapture(etbId", etb_route)
-        self.assertIn("initializeCaptureEntry();", no_qr_route)
+        self.assertIn("renderRetiredMobileCapturePage", no_qr_route)
         self.assertNotIn("initializeCapture(etbId", no_qr_route)
         self.assertIn('route === "mobile"', no_qr_route)
+        self.assertIn("renderRetiredMobileCapturePage", camera_route)
+        self.assertNotIn("initializeCapture(etbId", camera_route)
 
-    def test_direct_location_route_retains_explicit_capture_type_choice(self):
+    def test_direct_location_route_is_retired(self):
         location_start = self.app_js.index('if (route === "location"')
         no_qr_start = self.app_js.index('route === "mobile-capture"')
         direct_route = self.app_js[location_start:no_qr_start]
-        self.assertIn("captureChoiceHtml(etbId, location)", direct_route)
+        self.assertIn("renderRetiredMobileCapturePage", direct_route)
+        self.assertNotIn("captureChoiceHtml(etbId, location)", direct_route)
         self.assertNotIn("initializeCapture(etbId", direct_route)
 
-    def test_etb_and_no_qr_flows_preserve_capture_type_and_canonical_location(self):
-        for contract in (
-            "state.captureType = normalizeCaptureType",
-            "state.etbId = mobileCore.normalizeEtbId",
-            "state.location = mobileCore.normalizeLocationCode",
-            "mobileCore.canonicalLocationId",
-            "captureRoute(state.etbId, state.location, state.captureType, state.captureLayout)",
-            "Start Capture",
-        ):
-            self.assertIn(contract, self.app_js)
-
-    def test_no_qr_mobile_entry_uses_streamlined_dropdown_form(self):
-        for contract in (
-            'id="mobile-capture-type"',
-            'id="mobile-capture-etb"',
-            'id="mobile-capture-location"',
-            'id="mobile-capture-layout"',
-            'id="mobile-capture-entry-form"',
-            "renderMobileCaptureForm",
-            "Choose ETB first",
-        ):
-            self.assertIn(contract, self.app_js)
-
-    def test_mobile_capture_allows_operator_to_select_camera_device(self):
-        for contract in (
-            'id="camera-device-select"',
-            "navigator.mediaDevices.enumerateDevices",
-            'device.kind === "videoinput"',
-            "deviceId: { exact: deviceId }",
-            "saveSelectedCameraDeviceId",
-            "Switching camera...",
-        ):
-            self.assertIn(contract, self.app_js)
+    def test_retirement_message_directs_capture_to_carduploader(self):
+        self.assertIn("Use CardUploader for photo capture", self.app_js)
+        self.assertIn("Phone and camera-roll capture now belongs in CardUploader", self.app_js)
+        self.assertIn("https://carduploader.com/dashboard/history", self.app_js)
 
     def test_mobile_creation_uses_restricted_rpc(self):
         self.assertIn('client.rpc("cardvector_create_next_location"', self.app_js)

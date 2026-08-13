@@ -1,14 +1,25 @@
 # Mobile Capture Supabase Setup
 
-Status: Production setup notes
+Status: Retired historical setup notes
 
 Date: 2026-07-13
 
+Retired: 2026-08-13
+
 ## Scope
 
-Mobile Capture uses Supabase for authenticated mobile uploads, capture-session metadata, and original-image storage.
+CardVector Mobile Capture has been retired. Phone camera and camera-roll batch
+creation now belong in CardUploader. This document remains historical context
+for the old Supabase-backed implementation and should not be used to enable a
+new public capture workflow.
 
-GitHub Pages remains the static host for `cardvector.app`. The browser receives only public Supabase configuration. Service-role credentials are used only by trusted desktop queue processing tools.
+Previously, Mobile Capture used Supabase for authenticated mobile uploads,
+capture-session metadata, and original-image storage.
+
+GitHub Pages remains the static host for `cardvector.app`, but the browser no
+longer publishes `Docs/mobile-capture-config.js` or starts the mobile capture
+camera flow. Service-role credentials remain desktop/server-only when retained
+for migration, diagnostics, or historical cleanup.
 
 ## Required Supabase Resources
 
@@ -24,10 +35,7 @@ GitHub Pages remains the static host for `cardvector.app`. The browser receives 
 
 Static web configuration:
 
-- `Docs/mobile-capture-config.js`
-  - `supabaseUrl`
-  - `supabaseAnonKey`
-  - `originalImageBucket`
+- Retired. `Docs/mobile-capture-config.js` is no longer published.
 
 Desktop queue processor:
 

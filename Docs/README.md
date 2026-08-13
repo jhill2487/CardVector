@@ -196,67 +196,16 @@ inventory, or eBay fulfillment.
 
 #### Mobile Capture Queue
 
-CardVector OS automatically polls authenticated phone captures that reach
-`PENDING_CONVERSION` in Supabase. Queue summaries appear in Capture and
-Processing; the detailed `Capture Queue` remains available as a contextual tool.
+Retired as of 2026-08-13. Phone camera and camera-roll batch creation now belong
+in CardUploader, which owns recognition, batch creation, managed inventory, and
+eBay synchronization. CardVector.app `/capture`, `/mobile`, `/mobile-capture`,
+ETB, and location routes display a retired-workflow message and direct the
+operator to CardUploader batches.
 
-Required desktop environment variables:
-
-- `CARDVECTOR_SUPABASE_URL`
-- `CARDVECTOR_SUPABASE_SERVICE_ROLE_KEY`
-
-Operator flow:
-
-1. Open CardVector OS.
-2. Leave the automatic queue running.
-3. CardVector atomically claims pending sessions and downloads originals.
-4. `NEW_CAPTURE` is staged under `Capture/MM.DD.YY`.
-5. `PHYSICAL_INVENTORY` is staged under
-   `Capture/Physical_Inventory_Conversion/MM.DD.YY`.
-6. Continue the exact staged folder from Home, Capture, or Processing.
-7. Mark the Mobile Capture session complete only after downstream conversion
-   succeeds.
-
-Queue statuses:
-
-- Pending: ready to claim and stage.
-- Processing: claimed by a workstation.
-- Converted: operator-confirmed completion.
-- Failed: visible for audit and retry.
-- Cancelled: retained as a non-active record.
-
-Failed sessions can be retried through a controlled action. Retry returns the
-session to Pending after recording that retry was requested; it does not delete
-cloud originals or local partial folders.
-
-Mobile capture sessions now use an explicit capture type. `NEW_CAPTURE` stages
-under `Capture/MM.DD.YY`; `PHYSICAL_INVENTORY` stages under
-`Capture/Physical_Inventory_Conversion/MM.DD.YY`. Existing blank capture-type
-sessions default to `PHYSICAL_INVENTORY`.
-
-After choosing the capture type and destination, choose a photo mode:
-
-- `Front only` captures one image per card.
-- `Front + back` captures the front and then the back of each card.
-
-Front-and-back sessions cannot be finished with an incomplete pair. Mobile
-photo mode is retained in private session metadata, and desktop staging writes
-the standard numbered front/back filenames consumed by the Capture thumbnail
-rail. Existing mobile sessions without photo-mode metadata remain front-only.
-
-The in-browser camera saves the same centered `object-fit: cover` viewport shown
-in the live preview. A 63:88 guide helps position a card but is not included in
-the JPEG. Photo Library files are uploaded without applying the live-preview
-crop.
-
-CardVector Mobile has explicit entry paths: direct location QR, main ETB QR,
-`/capture` without a QR, and the bookmark-friendly backup aliases
-`/mobile-capture` and `/mobile`. Main ETB and no-QR entry use the same existing
-camera route after capture type, ETB, and location are reviewed. Supabase owns
-cloud-visible location identity; the desktop ETB JSON registry remains the
-offline operational projection and synchronizes through the Capture Queue
-service. The detailed contract lives at
-`Docs/Reference/MOBILE_LOCATION_SYNC.md`.
+CardVector OS no longer starts the automatic Mobile Capture queue watcher and no
+longer opens the CardVector.app mobile capture website. The historical queue
+code remains only for compatibility, migration review, and audit context until a
+later cleanup phase explicitly removes it.
 
 #### Production Workflow: v1.2.1
 

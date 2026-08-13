@@ -93,7 +93,7 @@ class PublicStorefrontContractTests(unittest.TestCase):
         self.assertIsNotNone(footer)
         self.assertIn('class="footer-admin"', footer.group(1))
         self.assertIn('href="/operator"', footer.group(1))
-        self.assertIn('href="/#mobile-capture"', footer.group(1))
+        self.assertNotIn('href="/#mobile-capture"', footer.group(1))
 
     def test_hero_avoids_duplicate_static_marketplace_summary(self):
         hero = re.search(r'<section class="hero wrap">(.*?)</section>', self.source_html, re.S)
@@ -303,9 +303,10 @@ class PublicStorefrontContractTests(unittest.TestCase):
         self.assertIn(".nav-menu[open] > .nav-links", self.source_css)
         self.assertNotIn("overflow-x: auto", self.source_css)
         self.assertIn("min-height: 44px", self.source_css)
-        self.assertIn('"mobile-capture"', EXPORTER_PATH.read_text(encoding="utf-8"))
-        self.assertIn('"mobile"', EXPORTER_PATH.read_text(encoding="utf-8"))
+        self.assertNotIn('"mobile-capture"', EXPORTER_PATH.read_text(encoding="utf-8"))
+        self.assertNotIn('"mobile"', EXPORTER_PATH.read_text(encoding="utf-8"))
         self.assertIn("mobileHashRoutes", APP_PATH.read_text(encoding="utf-8"))
+        self.assertIn("renderRetiredMobileCapturePage", APP_PATH.read_text(encoding="utf-8"))
 
     def test_public_export_contains_no_private_credentials(self):
         combined = "\n".join(

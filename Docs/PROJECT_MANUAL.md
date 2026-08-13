@@ -108,31 +108,22 @@ The ETB Registry records occupancy, capacity, active location and completion sta
 
 ## Mobile Capture Queue
 
-Mobile Capture Queue is the desktop CardVector OS workspace for processing
-phone-submitted capture sessions from Supabase into the existing Physical
-Inventory Conversion workflow.
+Mobile Capture Queue is retired. CardUploader is now the operator workflow for
+phone camera and camera-roll batch creation, recognition, managed inventory, and
+eBay synchronization.
 
-The workflow is:
+CardVector OS keeps a retired Capture Queue page for compatibility and audit
+context, but it does not poll Supabase for mobile sessions or stage new mobile
+captures. The old implementation notes below are historical only.
 
-1. Phone submits a Mobile Capture session.
-2. Supabase stores session metadata, image metadata, and private originals.
-3. CardVector OS shows the session in `Capture Queue`.
-4. The operator processes one pending session.
-5. The desktop queue atomically claims the session for the current workstation.
-6. Originals download to the portable MobileCapture runtime folder.
-7. Files are staged under `Capture/Physical_Inventory_Conversion/{location_id}/...`.
-8. `capture_session.json` and the current inventory conversion session are written.
-9. The operator runs Physical Inventory Conversion.
-10. The operator explicitly marks the mobile session complete.
-
-Before the camera opens, the operator chooses two independent values:
+Before retirement, the operator chose two independent values:
 
 - Capture type: `NEW_CAPTURE` or `PHYSICAL_INVENTORY`
 - Photo mode: `FRONT_ONLY` or `FRONT_BACK`
 
-Photo mode is stored in the existing private session device metadata.
-`FRONT_ONLY` creates one numbered front record per card. `FRONT_BACK` captures
-front then back and creates a matched numbered pair. Desktop staging writes the
+Photo mode was stored in the existing private session device metadata.
+`FRONT_ONLY` created one numbered front record per card. `FRONT_BACK` captured
+front then back and created a matched numbered pair. Desktop staging wrote the
 same canonical filenames used by Capture Studio, allowing the Capture rail to
 display mobile images without a separate thumbnail system.
 
@@ -144,7 +135,7 @@ Status meanings:
 - `FAILED`: processing failed or was marked failed; retry is available.
 - `CANCELLED`: no longer active.
 
-The queue uses `CARDVECTOR_SUPABASE_URL` and
+The queue used `CARDVECTOR_SUPABASE_URL` and
 `CARDVECTOR_SUPABASE_SERVICE_ROLE_KEY` from the desktop environment. Service-role
 credentials are never stored in tracked config and are never exposed to the
 public website.

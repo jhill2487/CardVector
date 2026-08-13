@@ -74,15 +74,13 @@ In Progress
 
 Current production capability:
 
-- Mobile Capture can submit authenticated phone captures to Supabase.
-- CardVector OS includes a Capture Queue workspace for reviewing,
-  claiming, staging, retrying, and completing Mobile Capture sessions through
-  the existing Physical Inventory Conversion workflow.
-- Mobile entry supports direct location QR, main ETB QR, and no-QR capture
-  setup through one shared capture implementation. Cloud location creation
-  remains pending production migration activation and live mobile validation.
-- Both mobile capture types support explicit Front only and Front + back photo
-  modes. Paired sessions stage into the existing desktop capture-pair format.
+- Mobile Capture is retired. Phone camera and camera-roll batch creation now
+  belong in CardUploader.
+- CardVector.app mobile capture routes display a retired-workflow message and
+  direct operators to CardUploader batches.
+- CardVector OS no longer starts the automatic mobile capture queue watcher.
+- Historical Supabase capture/location migration artifacts remain for audit and
+  cleanup planning only.
 
 Known limitations:
 

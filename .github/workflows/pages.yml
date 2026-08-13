@@ -38,7 +38,6 @@ jobs:
           python Tools/export_cardvector_site.py --output public-site --source-sha "$GITHUB_SHA"
           test -s public-site/index.html
           test -s public-site/app.js
-          test -s public-site/mobile-capture-config.js
           echo "Source CardVector commit: $GITHUB_SHA"
 
       - name: Checkout CardVector-site deployment repository

@@ -99,7 +99,6 @@ The exporter publishes only:
 - `404.html`
 - `app.js`
 - `style.css`
-- `mobile-capture-config.js`
 - `CNAME`
 - `_config.yml`
 - `.nojekyll`
@@ -128,7 +127,7 @@ Recommended token type:
 
 Do not grant access to other repositories unless operationally required.
 
-Do not use this token in browser code. Do not store it in `Docs/mobile-capture-config.js`.
+Do not use this token in browser code.
 
 ## Rotation
 
@@ -166,11 +165,9 @@ Long-term source fixes should still be made in `CardVector/Docs` and redeployed.
 After deployment:
 
 - `https://cardvector.app/app.js` returns HTTP 200.
-- `app.js` contains `Capture Inventory`.
-- `https://cardvector.app/mobile-capture-config.js` returns HTTP 200.
+- `app.js` contains `Operator Dashboard`.
 - `/etb/ETB-001` and `/location/ETB-001/A` resolve through the 404 fallback.
-- `/location/ETB-001/A` shows the Mobile Capture UI.
-- With placeholder Supabase config, the UI appears and reports that the backend is not configured.
+- `/capture`, `/mobile`, `/mobile-capture`, `/etb/ETB-001`, and `/location/ETB-001/A` show the retired mobile-capture message and direct operators to CardUploader batches.
 - `deployment-manifest.json` contains the source CardVector commit SHA.
 - No service-role key or private file paths are present in static files.
 
@@ -181,14 +178,14 @@ batch, listing, and allocation views use metadata-only Supabase reads, capped
 row limits, and a five-minute browser cache. Operator pages expose a manual
 `Refresh from Supabase` action for cases where current cloud state is required.
 
-Mobile capture writes still upload original images, but browser camera captures
-are downscaled before upload so later downloads cost less egress. Public pages
-must not auto-download Supabase storage originals for previews; use metadata,
-counts, thumbnails, or explicit operator-open actions instead.
+Mobile capture is retired and no longer uploads original images from
+CardVector.app. Public pages must not auto-download Supabase storage originals
+for previews; use metadata, counts, thumbnails, or explicit operator-open
+actions instead.
 
 ## Troubleshooting
 
 - Missing `CARDVECTOR_SITE_DEPLOY_TOKEN`: add the repository secret in `CardVector`.
 - No generated commit: the exported artifact matches `CardVector-site`.
-- Missing Mobile Capture UI: check `app.js`, `mobile-capture-config.js`, and `deployment-manifest.json` on `cardvector.app`.
+- Capture route still opens a camera workflow: check `app.js` and `deployment-manifest.json` on `cardvector.app`.
 - QR route shows the homepage only: verify `404.html` deployed and Pages still serves from `CardVector-site` root.

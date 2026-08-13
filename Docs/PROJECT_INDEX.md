@@ -66,7 +66,8 @@ Current deployment reference:
 Current desktop queue implementation:
 
 - `Platform/Putnam_OS/System/tools/mobile_capture_queue.py`
-- CardVector OS workspace: `Capture`, with detailed `Capture Queue` available contextually
+- Retired compatibility implementation. CardVector OS no longer starts the
+  automatic mobile capture watcher or opens the mobile capture website.
 
 Current desktop workflow implementation:
 

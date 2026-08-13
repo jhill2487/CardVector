@@ -319,10 +319,8 @@ BUTTON_ICONS = {
     "Open Folder": "\u2197",
     "Open Export Folder": "\u2197",
     "Open CardUploader": "\u2197",
-    "Open Mobile Capture Website": "\u2197",
     "Open eBay Seller Hub": "\u2197",
     "Open eBay Upload": "\u2197",
-    "Open Capture Queue": "\u2197",
     "Open Marketplace Intelligence": "\u2197",
     "Open Inventory Tools": "\u2197",
     "Open Completed Jobs": "\u2197",
@@ -604,7 +602,6 @@ def latest_decision_log():
 def load_app_config():
     defaults = {
         "carduploader_url": "https://carduploader.com/dashboard/history",
-        "mobile_capture_url": "https://cardvector.app/capture",
         "ebay_seller_hub_url": "https://www.ebay.com/sh/ovw",
         "ebay_upload_url": "https://www.ebay.com/sh/reports/uploads",
         "pricing_strategy": "market_match",
@@ -621,7 +618,7 @@ def load_app_config():
     if not isinstance(section, dict):
         return defaults
 
-    for key in ("carduploader_url", "mobile_capture_url", "ebay_seller_hub_url", "ebay_upload_url"):
+    for key in ("carduploader_url", "ebay_seller_hub_url", "ebay_upload_url"):
         defaults[key] = str(section.get(key, defaults[key]) or defaults[key]).strip()
     strategy = str(section.get("pricing_strategy", "market_match") or "market_match").strip().lower()
     defaults["pricing_strategy"] = strategy if strategy in {"market_match", "fast_sell", "profit"} else "market_match"
@@ -654,7 +651,6 @@ def save_app_config(values):
     data = {
         "putnam_os": {
             "carduploader_url": str(current.get("carduploader_url", "") or "").strip(),
-            "mobile_capture_url": str(current.get("mobile_capture_url", "https://cardvector.app/capture") or "https://cardvector.app/capture").strip(),
             "ebay_seller_hub_url": str(current.get("ebay_seller_hub_url", "https://www.ebay.com/sh/ovw") or "https://www.ebay.com/sh/ovw").strip(),
             "ebay_upload_url": str(current.get("ebay_upload_url", "https://www.ebay.com/sh/reports/uploads") or "https://www.ebay.com/sh/reports/uploads").strip(),
             "pricing_strategy": strategy,
@@ -3559,7 +3555,7 @@ class PutnamOS(BaseTk):
         self.workflow_last_network_refresh = 0.0
         self.capture_queue_refresh_running = False
         self.capture_queue_auto_after_id = None
-        self.capture_queue_auto_var = tk.BooleanVar(value=True)
+        self.capture_queue_auto_var = tk.BooleanVar(value=False)
         self.capture_queue_zero_touch_running = False
         self.capture_queue_zero_touch_after_id = None
         self.capture_queue_last_staged_folder = ""
@@ -3606,7 +3602,6 @@ class PutnamOS(BaseTk):
         self.build_styles()
         self.build_ui()
         self.obs_health_after_id = self.after(900, self.auto_check_obs_connection)
-        self.capture_queue_zero_touch_after_id = self.after(1400, self.capture_queue_start_zero_touch)
 
     def build_styles(self):
         s = ttk.Style(self)
@@ -4375,8 +4370,26 @@ class PutnamOS(BaseTk):
         self.refresh_workflow_jobs_background()
 
     def capture_queue_page(self):
-        self.header("Capture Queue", "Detailed status for authenticated mobile capture sessions.")
+        self.header("Capture Queue", "Retired CardVector mobile capture workflow.")
         wrap = self.scrollable_page()
+
+        retired = self.card(wrap, fill="x", pady=(0, 14), ipady=16)
+        self.label(retired, "MOBILE CAPTURE RETIRED", 12, BRAND["gold"], True, anchor="w", padx=18, pady=(16, 6))
+        self.label(
+            retired,
+            "CardVector OS no longer processes mobile capture sessions. Use CardUploader for phone camera or camera-roll batch creation, recognition, and managed eBay inventory synchronization.",
+            10,
+            BRAND["muted"],
+            False,
+            anchor="w",
+            padx=18,
+            pady=(0, 10),
+        )
+        actions = tk.Frame(retired, bg=BRAND["panel"])
+        actions.pack(anchor="w", padx=18, pady=(0, 14))
+        self.primary_button(actions, "Open CardUploader", self.open_carduploader).pack(side="left")
+        self.action_button(actions, "Open Processing", lambda: self.show_page("Processing")).pack(side="left", padx=8)
+        return
 
         if not hasattr(self, "capture_queue_filter_var"):
             self.capture_queue_filter_var = tk.StringVar(value="Active Queue")
@@ -4684,13 +4697,8 @@ class PutnamOS(BaseTk):
         self.capture_queue_auto_after_id = None
 
     def capture_queue_start_zero_touch(self):
-        """Start the global mobile-capture watcher.
-
-        This runs while CardVector is open, independent of the currently
-        visible page. Atomic database claiming prevents two workstations from
-        staging the same session.
-        """
-        self.capture_queue_schedule_zero_touch(250)
+        """Retired compatibility hook for the former mobile-capture watcher."""
+        self.status.set("Mobile capture auto-sync is retired; use CardUploader batches.")
 
     def capture_queue_schedule_zero_touch(self, delay_ms=15000):
         if self.app_closing:
@@ -5027,8 +5035,11 @@ class PutnamOS(BaseTk):
         self.refresh_workflow_jobs_background(force=True)
 
     def open_mobile_capture_website(self):
-        webbrowser.open(load_app_config().get("mobile_capture_url", "https://cardvector.app/capture"))
-        self.status.set("Opened CardVector Mobile Capture.")
+        self.status.set("Mobile capture is retired; use CardUploader for phone capture and batch creation.")
+        messagebox.showinfo(
+            "Mobile Capture Retired",
+            "CardVector mobile capture has been retired. Use CardUploader for phone camera or camera-roll batch creation.",
+        )
 
     def open_ebay_seller_hub(self):
         webbrowser.open(load_app_config().get("ebay_seller_hub_url", "https://www.ebay.com/sh/ovw"))
@@ -5056,7 +5067,6 @@ class PutnamOS(BaseTk):
         queue_head = tk.Frame(queue_card, bg=BRAND["panel"])
         queue_head.pack(fill="x", padx=18, pady=(14, 5))
         self.label(queue_head, "PROCESSING QUEUE", 12, BRAND["gold"], True, side="left")
-        self.action_button(queue_head, "Open Capture Queue", lambda: self.show_page("Capture Queue")).pack(side="right")
         visible = 0
         for stage in ("Ready for CardUploader", "Awaiting CSV Import", "Uploaded to CardUploader", "Pricing Review", "Ready for eBay Upload"):
             stage_jobs = grouped.get(stage) or []
@@ -5310,7 +5320,7 @@ class PutnamOS(BaseTk):
         self.status.set("Imported CSV loaded in CardVector Pricing Engine. Ready to analyze.")
 
     def capture_page(self):
-        self.header("Capture", "Start a capture or continue a staged mobile session.")
+        self.header("Capture", "Legacy desktop capture tools.")
         wrap = self.scrollable_page()
 
         workspace = tk.Frame(wrap, bg=BRAND["bg"])
@@ -5321,11 +5331,10 @@ class PutnamOS(BaseTk):
 
         start_card = self.card(workspace, fill="x", pady=(0, 14), ipady=12)
         self.label(start_card, "START CAPTURE", 12, BRAND["gold"], True, anchor="w", padx=18, pady=(14, 4))
-        self.label(start_card, "Use OBS on this workstation or open the authenticated mobile capture site.", 9, BRAND["muted"], False, anchor="w", padx=18, pady=(0, 10))
+        self.label(start_card, "Desktop capture remains available for legacy/manual workflows. Phone capture and camera-roll batch creation now belong in CardUploader.", 9, BRAND["muted"], False, anchor="w", padx=18, pady=(0, 10))
         start_actions = tk.Frame(start_card, bg=BRAND["panel"])
         start_actions.pack(anchor="w", padx=18, pady=(0, 14))
         self.primary_button(start_actions, "Start Desktop Capture", self.start_capture_session_ui).pack(side="left")
-        self.action_button(start_actions, "Open Mobile Capture Website", self.open_mobile_capture_website).pack(side="left", padx=10)
         self.action_button(start_actions, "Open Capture Folder", self.open_capture_folder_ui).pack(side="left")
 
         status_card = self.card(workspace, fill="x", pady=(0, 14), ipady=12)
@@ -5419,27 +5428,15 @@ class PutnamOS(BaseTk):
         self.stop_auto_button = self.action_button(row2, "Stop Auto Capture", self.stop_auto_capture_ui)
         self.stop_auto_button.pack(side="left", padx=10)
 
-        jobs = self.workflow_job_snapshot(include_completed=False)
-        pending_mobile = [job for job in jobs if job.get("source") == "Mobile Queue"]
-        staged = [job for job in jobs if job.get("source") == "Mobile Capture" and job.get("state") != "Failed"]
         queue_card = self.card(workspace, fill="x", pady=(0, 14), ipady=10)
         queue_head = tk.Frame(queue_card, bg=BRAND["panel"])
         queue_head.pack(fill="x", padx=18, pady=(12, 4))
-        self.label(queue_head, "PENDING MOBILE CAPTURES", 12, BRAND["gold"], True, side="left")
-        self.action_button(queue_head, "Open Capture Queue", lambda: self.show_page("Capture Queue")).pack(side="right")
-        if pending_mobile:
-            for job in pending_mobile[:3]:
-                self.workflow_job_row(queue_card, job, compact=True)
-        else:
-            self.label(queue_card, "No mobile captures are waiting.", 9, BRAND["muted"], False, anchor="w", padx=18, pady=(6, 12))
+        self.label(queue_head, "MOBILE CAPTURE RETIRED", 12, BRAND["gold"], True, side="left")
+        self.label(queue_card, "CardUploader now owns phone capture, camera-roll batch creation, recognition, and managed eBay sync.", 9, BRAND["muted"], False, anchor="w", padx=18, pady=(6, 12))
 
         staged_card = self.card(workspace, fill="x", pady=(0, 14), ipady=10)
-        self.label(staged_card, "RECENTLY STAGED CAPTURES", 12, BRAND["gold"], True, anchor="w", padx=18, pady=(12, 4))
-        if staged:
-            for job in staged[:3]:
-                self.workflow_job_row(staged_card, job, compact=True)
-        else:
-            self.label(staged_card, "No staged captures yet.", 9, BRAND["muted"], False, anchor="w", padx=18, pady=(6, 12))
+        self.label(staged_card, "CARDUPLOADER HANDOFF", 12, BRAND["gold"], True, anchor="w", padx=18, pady=(12, 4))
+        self.label(staged_card, "Use CardUploader batches as the active capture/import surface. CardVector OS remains available for legacy desktop capture only.", 9, BRAND["muted"], False, anchor="w", padx=18, pady=(6, 12))
 
         self.label(rail, "RECENT CAPTURES", 12, BRAND["gold"], True, anchor="w", padx=14, pady=(14, 8))
         rail_buttons = tk.Frame(rail, bg=BRAND["panel"])
@@ -8080,12 +8077,10 @@ class PutnamOS(BaseTk):
         self.label(app_panel, "CARDUPLOADER", 12, BRAND["gold"], True, anchor="w", padx=18, pady=(12, 8))
         app_config = load_app_config()
         self.carduploader_url_var = tk.StringVar(value=app_config.get("carduploader_url", ""))
-        self.mobile_capture_url_var = tk.StringVar(value=app_config.get("mobile_capture_url", "https://cardvector.app/capture"))
         self.ebay_seller_hub_url_var = tk.StringVar(value=app_config.get("ebay_seller_hub_url", "https://www.ebay.com/sh/ovw"))
         self.ebay_upload_url_var = tk.StringVar(value=app_config.get("ebay_upload_url", "https://www.ebay.com/sh/reports/uploads"))
         for label_text, var in [
             ("CardUploader", self.carduploader_url_var),
-            ("Mobile Capture", self.mobile_capture_url_var),
             ("eBay Seller Hub", self.ebay_seller_hub_url_var),
             ("eBay Upload", self.ebay_upload_url_var),
         ]:
@@ -8119,7 +8114,6 @@ class PutnamOS(BaseTk):
         system_actions.pack(anchor="w", padx=18, pady=(0, 12))
         self.action_button(system_actions, "Sync Locations", self.sync_locations_ui).pack(side="left")
         self.action_button(system_actions, "Open Inventory Tools", lambda: self.show_page("Inventory")).pack(side="left", padx=8)
-        self.action_button(system_actions, "Open Capture Queue", lambda: self.show_page("Capture Queue")).pack(side="left")
 
     def save_obs_settings_ui(self):
         try:
@@ -8186,7 +8180,6 @@ class PutnamOS(BaseTk):
             save_app_config(
                 {
                     "carduploader_url": self.carduploader_url_var.get(),
-                    "mobile_capture_url": self.mobile_capture_url_var.get(),
                     "ebay_seller_hub_url": self.ebay_seller_hub_url_var.get(),
                     "ebay_upload_url": self.ebay_upload_url_var.get(),
                 }

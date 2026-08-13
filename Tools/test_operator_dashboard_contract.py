@@ -18,7 +18,7 @@ class OperatorDashboardContractTests(unittest.TestCase):
     def test_operator_navigation_is_present(self):
         self.assertIn('href="/operator"', self.index_html)
         self.assertIn("Open CardVector Operator Dashboard", self.index_html)
-        self.assertIn('href="/#mobile-capture"', self.index_html)
+        self.assertNotIn('href="/#mobile-capture"', self.index_html)
         header = self.index_html[
             self.index_html.index('<header class="site-header"'):
             self.index_html.index("</header>")
@@ -31,11 +31,12 @@ class OperatorDashboardContractTests(unittest.TestCase):
         self.assertNotIn('href="/#mobile-capture"', header)
         self.assertIn('class="footer-admin"', footer)
         self.assertIn('href="/operator"', footer)
-        self.assertIn('href="/#mobile-capture"', footer)
+        self.assertNotIn('href="/#mobile-capture"', footer)
 
     def test_operator_routes_are_static_export_clients(self):
-        for route in ('"operator"', '"registry"', '"mobile-capture"', '"batches"', '"batch-workflow"', '"listings"', '"listing-reconciliation"', '"repricing"', '"price-review"'):
+        for route in ('"operator"', '"registry"', '"batches"', '"batch-workflow"', '"listings"', '"listing-reconciliation"', '"repricing"', '"price-review"'):
             self.assertIn(route, self.exporter)
+        self.assertNotIn('"mobile-capture"', self.exporter)
         self.assertIn('route === "operator"', self.app_js)
         self.assertIn('route === "registry"', self.app_js)
         self.assertIn('route === "batches"', self.app_js)
@@ -84,7 +85,8 @@ class OperatorDashboardContractTests(unittest.TestCase):
         self.assertNotIn("Existing Listing Review", dashboard_source)
         self.assertNotIn("Price Review", dashboard_source)
         self.assertNotIn("operator-card is-disabled", dashboard_source)
-        self.assertIn('href="/#mobile-capture"', dashboard_source)
+        self.assertNotIn('href="/#mobile-capture"', dashboard_source)
+        self.assertNotIn("Mobile Capture", dashboard_source)
         self.assertIn('href="/operator/batches"', dashboard_source)
         self.assertIn('href="/operator/repricing"', dashboard_source)
         self.assertIn("Repricing Review", dashboard_source)
