@@ -10,24 +10,29 @@ const exporter = fs.readFileSync(path.join(root, "Tools", "export_cardvector_sit
 
 [
   'href="/operator/repricing"',
-  "Batch Import Price Review",
+  "Automatic Inventory Price Review",
   "renderOperatorRepricingReview",
-  "Open CardUploader Batches",
-  "carduploader.com/dashboard/history",
-  "Review starting prices before a CardUploader batch is added to automatic inventory",
-  "Automatic inventory is treated as post-approval live state",
+  "Open CardUploader Automatic Inventory",
+  "carduploader.com/dashboard/inventory/automatic",
+  "Review CardUploader automatic inventory prices before changing values that sync live to eBay",
+  "CardUploader automatic inventory is already connected to live eBay sync",
   "CardUploader remains inventory truth",
-  "Pre-Live Workflow",
-  "CardUploader Batch Scanner",
+  "Safe Review Workflow",
+  "CardUploader Automatic Inventory Scanner",
   "id=\"repricing-copy-scanner\"",
   "id=\"repricing-load-snapshot\"",
   "id=\"carduploader-batch-snapshot\"",
-  "cardUploaderBatchScannerScript",
-  "parseCardUploaderBatchSnapshot",
-  "carduploader_batch_page_snapshot",
-  "Scanned Batch Rows",
-  "Prepare approved prices",
-  "Bulk preparation remains capped",
+  "cardUploaderAutomaticInventoryScannerScript",
+  "parseCardUploaderAutomaticInventorySnapshot",
+  "carduploader_automatic_inventory_page_snapshot",
+  "Scanned Automatic Inventory Rows",
+  "Price Review Candidates",
+  "Download approved prices",
+  "Bulk preparation remains local",
+  "data-repricing-recommend",
+  "updateRepricingRecommendation",
+  "reviewedRepricingExport",
+  "live_apply_permitted: false",
 ].forEach((needle) => assert(app.includes(needle), `app.js missing ${needle}`));
 
 [
@@ -66,9 +71,14 @@ const repricingSource = app.slice(
   "fetch(",
   "XMLHttpRequest",
   ".submit(",
-].forEach((needle) => assert(!app.slice(app.indexOf("function cardUploaderBatchScannerScript"), app.indexOf("function looksLikeCardUploaderBatchUrl")).includes(needle), `scanner script contains unsafe marker ${needle}`));
+].forEach((needle) => assert(!app.slice(app.indexOf("function cardUploaderAutomaticInventoryScannerScript"), app.indexOf("function looksLikeCardUploaderAutomaticInventoryUrl")).includes(needle), `scanner script contains unsafe marker ${needle}`));
 
 [
+  "Batch Import Price Review",
+  "CardUploader Batch Scanner",
+  "Scan CardUploader batch",
+  "Review batch prices",
+  "carduploader_batch_page_snapshot",
   "repricing-plan-file",
   "Import Repricing Plan",
   "Choose repricing plan JSON or CSV",
@@ -86,12 +96,12 @@ assert(
 
 assert(
   !/id="repricing-copy-scanner"[^>]*disabled/.test(repricingSource),
-  "batch scanner button must be active"
+  "automatic inventory scanner button must be active"
 );
 
 assert(
   !/id="repricing-load-snapshot"[^>]*disabled/.test(repricingSource),
-  "batch snapshot review button must be active"
+  "automatic inventory snapshot review button must be active"
 );
 
-console.log("Operator batch import price-review contract passed.");
+console.log("Operator automatic inventory price-review contract passed.");
