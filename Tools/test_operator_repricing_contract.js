@@ -19,6 +19,11 @@ const exporter = fs.readFileSync(path.join(root, "Tools", "export_cardvector_sit
   "CardUploader remains inventory truth",
   "Safe Review Workflow",
   "CardUploader Automatic Inventory Scanner",
+  "Copy scanner script",
+  "Load captured JSON",
+  "Do not paste the scanner script itself here",
+  "That is the scanner script, not the inventory JSON",
+  "Open CardUploader Automatic Inventory in Chrome on the signed-in workstation",
   "id=\"repricing-copy-scanner\"",
   "id=\"repricing-load-snapshot\"",
   "id=\"carduploader-batch-snapshot\"",
@@ -47,6 +52,7 @@ const exporter = fs.readFileSync(path.join(root, "Tools", "export_cardvector_sit
   ".repricing-scan-panel",
   ".repricing-live-steps",
   ".repricing-safeguard-list",
+  ".repricing-instructions",
 ].forEach((needle) => assert(css.includes(needle), `style.css missing ${needle}`));
 
 const repricingSource = app.slice(
