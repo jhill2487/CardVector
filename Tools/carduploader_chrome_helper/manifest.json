@@ -1,0 +1,28 @@
+{
+  "manifest_version": 3,
+  "name": "CardVector CardUploader Helper",
+  "version": "0.1.0",
+  "description": "Private read-only helper for CardUploader automatic inventory snapshots used by CardVector.",
+  "permissions": [
+    "storage"
+  ],
+  "host_permissions": [
+    "https://carduploader.com/dashboard/inventory/automatic*",
+    "https://cardvector.app/operator/repricing*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://carduploader.com/dashboard/inventory/automatic*",
+        "https://cardvector.app/operator/repricing*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "css": [
+        "panel.css"
+      ],
+      "run_at": "document_idle"
+    }
+  ]
+}

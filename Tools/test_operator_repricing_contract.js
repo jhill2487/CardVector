@@ -14,18 +14,20 @@ const exporter = fs.readFileSync(path.join(root, "Tools", "export_cardvector_sit
   "renderOperatorRepricingReview",
   "Open CardUploader Automatic Inventory",
   "carduploader.com/dashboard/inventory/automatic",
-  "Review CardUploader automatic inventory prices through the workstation helper before changing values that sync live to eBay",
-  "Live apply remains disabled until the persistent PC helper and approval guardrails are built",
+  "Review CardUploader automatic inventory prices through the Chrome helper before changing values that sync live to eBay",
+  "Live apply remains disabled until apply behavior and approval guardrails are built",
   "CardUploader remains inventory truth",
   "Safe Review Workflow",
   "PC Helper Connection",
   "Check helper status",
-  "Request inventory snapshot",
-  "Not connected yet",
-  "The manual scanner has been retired from the primary workflow",
+  "Load helper snapshot",
+  "No snapshot yet",
+  "Install the private Chrome helper",
   "No helper snapshot loaded yet",
   "id=\"repricing-helper-status\"",
   "id=\"repricing-request-snapshot\"",
+  "readStoredCardUploaderHelperSnapshot",
+  "cardvector.carduploaderAutomaticInventorySnapshot.v1",
   "Price Review Candidates",
   "Download approved prices",
   "data-repricing-recommend",
@@ -100,7 +102,7 @@ assert(
 
 assert(
   /id="repricing-request-snapshot"[^>]*disabled/.test(repricingSource),
-  "helper snapshot button must remain disabled until helper exists"
+  "helper snapshot button must remain conditionally disabled until a snapshot exists"
 );
 
 assert(
@@ -108,4 +110,4 @@ assert(
   "helper status button must be active"
 );
 
-console.log("Operator PC-helper price-review contract passed.");
+console.log("Operator Chrome-helper price-review contract passed.");
