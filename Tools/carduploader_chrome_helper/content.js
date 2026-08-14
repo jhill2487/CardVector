@@ -5,7 +5,7 @@
   const PAGE_STORAGE_KEY = "cardvector.carduploaderAutomaticInventorySnapshot.v1";
   const SNAPSHOT_SOURCE = "carduploader_automatic_inventory_page_snapshot";
   const PANEL_ID = "cardvector-carduploader-helper";
-  const HELPER_VERSION = "0.3.5";
+  const HELPER_VERSION = "0.3.6";
   const SCROLL_SCAN_STEPS = 28;
   const SCROLL_SETTLE_MS = 350;
   const PAGE_SCAN_MAX_PAGES = 25;
@@ -360,8 +360,12 @@
     return Boolean(element.closest("tbody tr"));
   }
 
+  function isMarketplaceTabControl(element) {
+    return /^(ebay|mana pool|manapool)$/.test(controlText(element));
+  }
+
   function isSafeNextPageControl(element) {
-    if (!element || !isVisible(element) || isDisabledControl(element) || isInsideInventoryRow(element)) {
+    if (!element || !isVisible(element) || isDisabledControl(element) || isInsideInventoryRow(element) || isMarketplaceTabControl(element)) {
       return false;
     }
     const label = controlText(element);
@@ -371,6 +375,19 @@
     return element.getAttribute("rel") === "next"
       || /\b(next|next page|go to next)\b/.test(label)
       || /^[›»>]$/.test(label);
+  }
+
+  function isNearPageTextNextControl(control, pageTextElement) {
+    if (!isSafeNextPageControl(control)) {
+      return false;
+    }
+    const pageRect = pageTextElement.getBoundingClientRect();
+    const controlRect = control.getBoundingClientRect();
+    const pageCenterY = (pageRect.top + pageRect.bottom) / 2;
+    const controlCenterY = (controlRect.top + controlRect.bottom) / 2;
+    const verticalDistance = Math.abs(controlCenterY - pageCenterY);
+    return controlRect.left >= pageRect.right - 8
+      && verticalDistance <= Math.max(36, pageRect.height * 2);
   }
 
   function pageInfoFromText(text, includeComplete = false) {
@@ -426,10 +443,7 @@
   function findPageTextNextControl() {
     for (const candidate of paginationTextContainers()) {
       const { controls } = paginationContainerFor(candidate.element);
-      const safeControls = controls.filter((control) => {
-        const label = controlText(control);
-        return !/\b(mark|sold|listed|platform|batch|delete|edit|save|apply|submit|remove)\b/.test(label);
-      });
+      const safeControls = controls.filter((control) => isNearPageTextNextControl(control, candidate.element));
       if (!safeControls.length) {
         continue;
       }
@@ -445,20 +459,7 @@
     if (pageTextControl) {
       return pageTextControl;
     }
-    const preferredContainers = Array.from(document.querySelectorAll([
-      "nav",
-      "[role='navigation']",
-      "[aria-label*='pagination' i]",
-      "[class*='pagination' i]",
-      "[class*='pager' i]"
-    ].join(","))).filter(isVisible);
-    const preferred = preferredContainers
-      .flatMap((container) => Array.from(container.querySelectorAll("button, a[href], [role='button']")))
-      .find(isSafeNextPageControl);
-    if (preferred) {
-      return preferred;
-    }
-    return Array.from(document.querySelectorAll("button, a[href], [role='button']")).find(isSafeNextPageControl) || null;
+    return null;
   }
 
   async function waitForInventoryPageChange(previousSignature, previousPageInfo = null) {

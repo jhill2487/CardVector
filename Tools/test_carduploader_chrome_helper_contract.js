@@ -12,7 +12,7 @@ const app = fs.readFileSync(path.join(root, "Docs", "app.js"), "utf8");
 
 assert.strictEqual(manifest.manifest_version, 3);
 assert.strictEqual(manifest.name, "CardVector CardUploader Helper");
-assert.strictEqual(manifest.version, "0.3.5");
+assert.strictEqual(manifest.version, "0.3.6");
 assert.deepStrictEqual(manifest.permissions, ["storage"]);
 assert.deepStrictEqual(manifest.host_permissions, [
   "https://carduploader.com/dashboard/inventory/automatic*",
@@ -49,6 +49,8 @@ assert.deepStrictEqual(manifest.content_scripts[0].css, ["panel.css"]);
   "findNextPageControl",
   "pageInfoFromText",
   "findPageTextNextControl",
+  "isMarketplaceTabControl",
+  "isNearPageTextNextControl",
   "pagination Next control",
   "dedupeAutomaticInventoryRows",
   "evidence_text",
@@ -63,6 +65,8 @@ assert.deepStrictEqual(manifest.content_scripts[0].css, ["panel.css"]);
 ].forEach((needle) => assert(content.includes(needle), `content.js missing ${needle}`));
 
 assert(content.includes("page\\s+([0-9]+)\\s+of\\s+([0-9]+)"), "content.js must detect Page X of Y pagination text");
+assert(content.includes("isMarketplaceTabControl(element)"), "pagination safety must exclude marketplace tabs");
+assert(content.includes("controlRect.left >= pageRect.right - 8"), "pagination safety must require the next control beside page text");
 
 [
   "fetch(",
