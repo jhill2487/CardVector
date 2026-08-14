@@ -5,7 +5,7 @@
   const PAGE_STORAGE_KEY = "cardvector.carduploaderAutomaticInventorySnapshot.v1";
   const SNAPSHOT_SOURCE = "carduploader_automatic_inventory_page_snapshot";
   const PANEL_ID = "cardvector-carduploader-helper";
-  const HELPER_VERSION = "0.3.6";
+  const HELPER_VERSION = "0.3.7";
   const SCROLL_SCAN_STEPS = 28;
   const SCROLL_SETTLE_MS = 350;
   const PAGE_SCAN_MAX_PAGES = 25;
@@ -364,30 +364,63 @@
     return /^(ebay|mana pool|manapool)$/.test(controlText(element));
   }
 
-  function isSafeNextPageControl(element) {
+  function isBlockedPaginationControl(element) {
     if (!element || !isVisible(element) || isDisabledControl(element) || isInsideInventoryRow(element) || isMarketplaceTabControl(element)) {
+      return true;
+    }
+    const label = controlText(element);
+    return /\b(mark|sold|listed|platform|batch|delete|edit|save|apply|submit|remove)\b/.test(label);
+  }
+
+  function isSafeNextPageControl(element) {
+    if (isBlockedPaginationControl(element)) {
       return false;
     }
     const label = controlText(element);
-    if (/\b(mark|sold|listed|platform|batch|delete|edit|save|apply|submit|remove)\b/.test(label)) {
-      return false;
-    }
     return element.getAttribute("rel") === "next"
       || /\b(next|next page|go to next)\b/.test(label)
       || /^[›»>]$/.test(label);
   }
 
+  function pageTextRect(pageTextElement) {
+    const walker = document.createTreeWalker(pageTextElement, NodeFilter.SHOW_TEXT);
+    let node = walker.nextNode();
+    while (node) {
+      const text = node.nodeValue || "";
+      const match = text.match(/\bpage\s+[0-9]+\s+of\s+[0-9]+\b/i);
+      if (match) {
+        const range = document.createRange();
+        const start = text.indexOf(match[0]);
+        range.setStart(node, start);
+        range.setEnd(node, start + match[0].length);
+        const rect = range.getBoundingClientRect();
+        range.detach();
+        if (rect.width > 0 && rect.height > 0) {
+          return rect;
+        }
+      }
+      node = walker.nextNode();
+    }
+    return pageTextElement.getBoundingClientRect();
+  }
+
   function isNearPageTextNextControl(control, pageTextElement) {
-    if (!isSafeNextPageControl(control)) {
+    if (isBlockedPaginationControl(control)) {
       return false;
     }
-    const pageRect = pageTextElement.getBoundingClientRect();
+    const label = controlText(control);
+    const looksLikeNext = control.getAttribute("rel") === "next"
+      || /\b(next|next page|go to next)\b/.test(label)
+      || /^[›»>]$/.test(label);
+    const isIconOnly = !label && Boolean(control.querySelector("svg, img"));
+    const pageRect = pageTextRect(pageTextElement);
     const controlRect = control.getBoundingClientRect();
     const pageCenterY = (pageRect.top + pageRect.bottom) / 2;
     const controlCenterY = (controlRect.top + controlRect.bottom) / 2;
     const verticalDistance = Math.abs(controlCenterY - pageCenterY);
     return controlRect.left >= pageRect.right - 8
-      && verticalDistance <= Math.max(36, pageRect.height * 2);
+      && verticalDistance <= Math.max(36, pageRect.height * 2)
+      && (looksLikeNext || isIconOnly);
   }
 
   function pageInfoFromText(text, includeComplete = false) {
