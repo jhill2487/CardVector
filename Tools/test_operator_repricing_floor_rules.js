@@ -71,6 +71,7 @@ function pricedRow(overrides = {}) {
 }
 
 const [defaultFloor] = api.applyRepricingFloorRules([pricedRow()]);
+assert.strictEqual(api.defaultRepricingFloorRuleConfig.defaultFloor, 1.58);
 assert.strictEqual(defaultFloor.recommended_price, 1.82);
 assert(defaultFloor.reason_codes.includes("BELOW_DEFAULT_FLOOR"));
 assert(defaultFloor.reason_codes.includes("MINIMUM_VIABLE_PRICE_APPLIED"));

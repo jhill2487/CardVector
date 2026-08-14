@@ -32,7 +32,8 @@ const exporter = fs.readFileSync(path.join(root, "Tools", "export_cardvector_sit
   "Business pricing profile",
   "Include free shipping, supplies, fees, and profit",
   "Minimum viable",
-  "Est. profit",
+  "Profit",
+  "Target",
   "defaultRepricingFloorRuleConfig",
   "defaultRepricingBusinessProfile",
   "ebayStandardEnvelopeOneOz: 0.78",
@@ -110,6 +111,16 @@ const repricingSource = app.slice(
   app.indexOf("async function renderOperatorRepricingReview"),
   app.indexOf("async function renderOperatorListingReconciliationView")
 );
+
+[
+  "No CardUploader ID",
+  "No SKU",
+  "NO_NOTES",
+  "Set recommended",
+  "<span>Recommended</span>",
+  "<span>Min viable</span>",
+  "<span>Est. profit</span>",
+].forEach((needle) => assert(!repricingSource.includes(needle), `repricing page should not show verbose row marker ${needle}`));
 
 [
   "revise_listing",
