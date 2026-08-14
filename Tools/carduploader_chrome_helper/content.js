@@ -5,7 +5,7 @@
   const PAGE_STORAGE_KEY = "cardvector.carduploaderAutomaticInventorySnapshot.v1";
   const SNAPSHOT_SOURCE = "carduploader_automatic_inventory_page_snapshot";
   const PANEL_ID = "cardvector-carduploader-helper";
-  const HELPER_VERSION = "0.3.7";
+  const HELPER_VERSION = "0.3.8";
   const SCROLL_SCAN_STEPS = 28;
   const SCROLL_SETTLE_MS = 350;
   const PAGE_SCAN_MAX_PAGES = 25;
@@ -364,6 +364,26 @@
     return /^(ebay|mana pool|manapool)$/.test(controlText(element));
   }
 
+  function closestClickableElement(element) {
+    return element.closest("button, a[href], [role='button'], [tabindex]") || element;
+  }
+
+  function isLikelyClickableElement(element) {
+    if (!element || !isVisible(element)) {
+      return false;
+    }
+    const tag = (element.tagName || "").toLowerCase();
+    const role = (element.getAttribute("role") || "").toLowerCase();
+    const className = String(element.className || "");
+    const style = window.getComputedStyle(element);
+    return tag === "button"
+      || tag === "a"
+      || role === "button"
+      || element.getAttribute("tabindex") !== null
+      || style.cursor === "pointer"
+      || /\b(button|btn|clickable|cursor-pointer)\b/i.test(className);
+  }
+
   function isBlockedPaginationControl(element) {
     if (!element || !isVisible(element) || isDisabledControl(element) || isInsideInventoryRow(element) || isMarketplaceTabControl(element)) {
       return true;
@@ -412,15 +432,41 @@
     const looksLikeNext = control.getAttribute("rel") === "next"
       || /\b(next|next page|go to next)\b/.test(label)
       || /^[›»>]$/.test(label);
-    const isIconOnly = !label && Boolean(control.querySelector("svg, img"));
+    const tag = (control.tagName || "").toLowerCase();
+    const hasIcon = tag === "svg" || tag === "img" || Boolean(control.querySelector("svg, img"));
+    const isIconOnly = !label && hasIcon;
     const pageRect = pageTextRect(pageTextElement);
     const controlRect = control.getBoundingClientRect();
     const pageCenterY = (pageRect.top + pageRect.bottom) / 2;
     const controlCenterY = (controlRect.top + controlRect.bottom) / 2;
     const verticalDistance = Math.abs(controlCenterY - pageCenterY);
+    const horizontalDistance = controlRect.left - pageRect.right;
+    const compactIconControl = controlRect.width <= 96 && controlRect.height <= 96;
     return controlRect.left >= pageRect.right - 8
+      && horizontalDistance <= 180
       && verticalDistance <= Math.max(36, pageRect.height * 2)
-      && (looksLikeNext || isIconOnly);
+      && (looksLikeNext || (isIconOnly && compactIconControl && isLikelyClickableElement(control)));
+  }
+
+  function paginationControlsNearPageText(pageTextElement) {
+    const seen = new Set();
+    return Array.from(document.querySelectorAll("button, a[href], [role='button'], [tabindex], svg, img, div, span"))
+      .map((element) => closestClickableElement(element))
+      .filter((element) => {
+        if (seen.has(element)) {
+          return false;
+        }
+        seen.add(element);
+        return true;
+      })
+      .filter((control) => isNearPageTextNextControl(control, pageTextElement))
+      .map((control) => {
+        const pageRect = pageTextRect(pageTextElement);
+        const controlRect = control.getBoundingClientRect();
+        return { control, distance: Math.abs(controlRect.left - pageRect.right) };
+      })
+      .sort((a, b) => a.distance - b.distance)
+      .map((candidate) => candidate.control);
   }
 
   function pageInfoFromText(text, includeComplete = false) {
@@ -475,14 +521,11 @@
 
   function findPageTextNextControl() {
     for (const candidate of paginationTextContainers()) {
-      const { controls } = paginationContainerFor(candidate.element);
-      const safeControls = controls.filter((control) => isNearPageTextNextControl(control, candidate.element));
+      const safeControls = paginationControlsNearPageText(candidate.element);
       if (!safeControls.length) {
         continue;
       }
-      return safeControls
-        .map((control) => ({ control, rect: control.getBoundingClientRect() }))
-        .sort((a, b) => b.rect.left - a.rect.left)[0].control;
+      return safeControls[0];
     }
     return null;
   }

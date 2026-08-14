@@ -12,7 +12,7 @@ const app = fs.readFileSync(path.join(root, "Docs", "app.js"), "utf8");
 
 assert.strictEqual(manifest.manifest_version, 3);
 assert.strictEqual(manifest.name, "CardVector CardUploader Helper");
-assert.strictEqual(manifest.version, "0.3.7");
+assert.strictEqual(manifest.version, "0.3.8");
 assert.deepStrictEqual(manifest.permissions, ["storage"]);
 assert.deepStrictEqual(manifest.host_permissions, [
   "https://carduploader.com/dashboard/inventory/automatic*",
@@ -50,9 +50,12 @@ assert.deepStrictEqual(manifest.content_scripts[0].css, ["panel.css"]);
   "pageInfoFromText",
   "findPageTextNextControl",
   "isMarketplaceTabControl",
+  "closestClickableElement",
+  "isLikelyClickableElement",
   "isBlockedPaginationControl",
   "pageTextRect",
   "isNearPageTextNextControl",
+  "paginationControlsNearPageText",
   "pagination Next control",
   "dedupeAutomaticInventoryRows",
   "evidence_text",
@@ -71,6 +74,8 @@ assert(content.includes("isMarketplaceTabControl(element)"), "pagination safety 
 assert(content.includes("controlRect.left >= pageRect.right - 8"), "pagination safety must require the next control beside page text");
 assert(content.includes("document.createRange()"), "pagination safety must locate the actual Page X of Y text range");
 assert(content.includes("control.querySelector(\"svg, img\")"), "pagination safety must allow icon-only pagination buttons near page text");
+assert(content.includes("horizontalDistance <= 180"), "pagination safety must keep next clicks near the page counter");
+assert(content.includes("closestClickableElement(element)"), "pagination safety must click the clickable wrapper around icon-only controls");
 
 [
   "fetch(",
