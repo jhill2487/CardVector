@@ -5,7 +5,7 @@
   const PAGE_STORAGE_KEY = "cardvector.carduploaderAutomaticInventorySnapshot.v1";
   const SNAPSHOT_SOURCE = "carduploader_automatic_inventory_page_snapshot";
   const PANEL_ID = "cardvector-carduploader-helper";
-  const HELPER_VERSION = "0.3.8";
+  const HELPER_VERSION = "0.3.9";
   const SCROLL_SCAN_STEPS = 28;
   const SCROLL_SETTLE_MS = 350;
   const PAGE_SCAN_MAX_PAGES = 25;
@@ -368,6 +368,16 @@
     return element.closest("button, a[href], [role='button'], [tabindex]") || element;
   }
 
+  function ancestorElements(element, maxDepth = 6) {
+    const ancestors = [];
+    let current = element;
+    for (let depth = 0; current && depth < maxDepth; depth += 1) {
+      ancestors.push(current);
+      current = current.parentElement;
+    }
+    return ancestors;
+  }
+
   function isLikelyClickableElement(element) {
     if (!element || !isVisible(element)) {
       return false;
@@ -448,9 +458,58 @@
       && (looksLikeNext || (isIconOnly && compactIconControl && isLikelyClickableElement(control)));
   }
 
+  function isCoordinatePaginationCandidate(control, pageTextElement) {
+    if (isBlockedPaginationControl(control)) {
+      return false;
+    }
+    const pageRect = pageTextRect(pageTextElement);
+    const controlRect = control.getBoundingClientRect();
+    const pageCenterY = (pageRect.top + pageRect.bottom) / 2;
+    const controlCenterY = (controlRect.top + controlRect.bottom) / 2;
+    const verticalDistance = Math.abs(controlCenterY - pageCenterY);
+    const horizontalDistance = controlRect.left - pageRect.right;
+    return controlRect.left >= pageRect.right - 8
+      && horizontalDistance <= 180
+      && verticalDistance <= Math.max(40, pageRect.height * 2.5)
+      && controlRect.width <= 120
+      && controlRect.height <= 120;
+  }
+
+  function paginationControlsFromPoint(pageTextElement) {
+    const pageRect = pageTextRect(pageTextElement);
+    const yOffsets = [0, -8, 8, -16, 16];
+    const xOffsets = [8, 16, 24, 32, 44, 56, 72, 96, 128, 160];
+    const seen = new Set();
+    const controls = [];
+    yOffsets.forEach((yOffset) => {
+      xOffsets.forEach((xOffset) => {
+        const x = Math.min(window.innerWidth - 1, pageRect.right + xOffset);
+        const y = Math.max(0, Math.min(window.innerHeight - 1, (pageRect.top + pageRect.bottom) / 2 + yOffset));
+        document.elementsFromPoint(x, y).forEach((element) => {
+          ancestorElements(closestClickableElement(element)).forEach((candidate) => {
+            if (seen.has(candidate)) {
+              return;
+            }
+            seen.add(candidate);
+            if (isCoordinatePaginationCandidate(candidate, pageTextElement)) {
+              controls.push(candidate);
+            }
+          });
+        });
+      });
+    });
+    return controls
+      .map((control) => {
+        const controlRect = control.getBoundingClientRect();
+        return { control, distance: Math.abs(controlRect.left - pageRect.right) };
+      })
+      .sort((a, b) => a.distance - b.distance)
+      .map((candidate) => candidate.control);
+  }
+
   function paginationControlsNearPageText(pageTextElement) {
     const seen = new Set();
-    return Array.from(document.querySelectorAll("button, a[href], [role='button'], [tabindex], svg, img, div, span"))
+    const queriedControls = Array.from(document.querySelectorAll("button, a[href], [role='button'], [tabindex], svg, img, div, span"))
       .map((element) => closestClickableElement(element))
       .filter((element) => {
         if (seen.has(element)) {
@@ -467,6 +526,7 @@
       })
       .sort((a, b) => a.distance - b.distance)
       .map((candidate) => candidate.control);
+    return queriedControls.length ? queriedControls : paginationControlsFromPoint(pageTextElement);
   }
 
   function pageInfoFromText(text, includeComplete = false) {
