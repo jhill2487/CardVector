@@ -5,7 +5,7 @@
   const PAGE_STORAGE_KEY = "cardvector.carduploaderAutomaticInventorySnapshot.v1";
   const SNAPSHOT_SOURCE = "carduploader_automatic_inventory_page_snapshot";
   const PANEL_ID = "cardvector-carduploader-helper";
-  const HELPER_VERSION = "0.3.4";
+  const HELPER_VERSION = "0.3.5";
   const SCROLL_SCAN_STEPS = 28;
   const SCROLL_SETTLE_MS = 350;
   const PAGE_SCAN_MAX_PAGES = 25;
@@ -246,10 +246,17 @@
     return "unknown";
   }
 
-  function rowsContainManapoolEvidence(rows) {
+  function platformHasEbay(value) {
+    return /\bebay\b/i.test(value || "");
+  }
+
+  function platformHasManapool(value) {
+    return /\bmana\s*pool\b/i.test(value || "") || /\bmanapool\b/i.test(value || "");
+  }
+
+  function rowsContainManapoolOnlyEvidence(rows) {
     return Array.isArray(rows) && rows.some((row) => (
-      /\bmana\s*pool\b/i.test(row.platform || "")
-      || /\bmanapool\b/i.test(row.platform || "")
+      platformHasManapool(row.platform) && !platformHasEbay(row.platform)
     ));
   }
 
@@ -596,7 +603,7 @@
       </div>
     `;
     const completeScan = async (rows, scanMode, scanMeta = {}) => {
-      if (!canScanForEbayPriceReview(rows) || rowsContainManapoolEvidence(rows)) {
+      if (!canScanForEbayPriceReview(rows) || rowsContainManapoolOnlyEvidence(rows)) {
         body.querySelector(".cardvector-helper-status").textContent = "Scan blocked. Switch to the eBay tab before preparing price-review recommendations.";
         return;
       }
