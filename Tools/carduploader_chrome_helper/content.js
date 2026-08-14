@@ -5,6 +5,8 @@
   const PAGE_STORAGE_KEY = "cardvector.carduploaderAutomaticInventorySnapshot.v1";
   const SNAPSHOT_SOURCE = "carduploader_automatic_inventory_page_snapshot";
   const PANEL_ID = "cardvector-carduploader-helper";
+  const SCROLL_SCAN_STEPS = 28;
+  const SCROLL_SETTLE_MS = 350;
   const EXPECTED_HEADERS = new Set([
     "card",
     "status",
@@ -33,6 +35,10 @@
     return Number.isFinite(parsed) ? Math.max(0, parsed) : null;
   }
 
+  function delay(ms) {
+    return new Promise((resolve) => window.setTimeout(resolve, ms));
+  }
+
   function headerKey(value) {
     return clean(value).toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
   }
@@ -50,6 +56,85 @@
       }
     });
     return mapped;
+  }
+
+  function cellEvidence(cell) {
+    const links = Array.from(cell.querySelectorAll("a[href]")).map((link) => ({
+      text: clean(link.innerText || link.getAttribute("aria-label"), 160),
+      href: link.href || ""
+    })).filter((link) => link.text || link.href);
+    const imageAlts = Array.from(cell.querySelectorAll("img")).map((image) => clean(image.getAttribute("alt"), 160)).filter(Boolean);
+    return {
+      text: clean(cell.innerText, 500),
+      title: clean(cell.getAttribute("title"), 240),
+      aria_label: clean(cell.getAttribute("aria-label"), 240),
+      image_alt_text: imageAlts,
+      links
+    };
+  }
+
+  function rowActionEvidence(row) {
+    return Array.from(row.querySelectorAll("button, a, [role='button']"))
+      .filter(isVisible)
+      .map((element) => clean(element.innerText || element.getAttribute("aria-label") || element.getAttribute("title"), 140))
+      .filter(Boolean);
+  }
+
+  function rowEvidenceText(rawText, cellDetails, actionLabels) {
+    return [
+      rawText,
+      ...cellDetails.flatMap((cell) => [
+        cell.text,
+        cell.title,
+        cell.aria_label,
+        ...(cell.image_alt_text || []),
+        ...(cell.links || []).map((link) => link.text)
+      ]),
+      ...(actionLabels || [])
+    ].filter(Boolean).join(" ");
+  }
+
+  function normalizedIdentityPart(value) {
+    return clean(value, 220).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  }
+
+  function automaticInventoryRowIdentity(row) {
+    return [
+      row.catalog_sku,
+      row.user_sku,
+      row.location,
+      row.title,
+      row.current_price,
+      row.quantity
+    ].map(normalizedIdentityPart).filter(Boolean).join("|") || normalizedIdentityPart(row.raw_text || row.evidence_text || "");
+  }
+
+  function mergeRowEvidence(existing, incoming) {
+    const merged = { ...existing, ...incoming };
+    merged.raw_text = clean([existing.raw_text, incoming.raw_text].filter(Boolean).sort((a, b) => b.length - a.length)[0], 1600);
+    merged.evidence_text = clean([existing.evidence_text, incoming.evidence_text].filter(Boolean).join(" "), 2400);
+    merged.action_labels = Array.from(new Set([...(existing.action_labels || []), ...(incoming.action_labels || [])]));
+    merged.links = Array.from(new Map([...(existing.links || []), ...(incoming.links || [])].map((link) => [link.href || link.text, link])).values());
+    merged.cell_details = incoming.cell_details && incoming.cell_details.length >= (existing.cell_details || []).length
+      ? incoming.cell_details
+      : existing.cell_details;
+    return merged;
+  }
+
+  function dedupeAutomaticInventoryRows(rows) {
+    const byIdentity = new Map();
+    rows.forEach((row) => {
+      const identity = automaticInventoryRowIdentity(row);
+      if (!identity) {
+        return;
+      }
+      byIdentity.set(identity, byIdentity.has(identity) ? mergeRowEvidence(byIdentity.get(identity), row) : row);
+    });
+    return Array.from(byIdentity.values()).map((row, index) => ({
+      ...row,
+      row_number: index + 1,
+      row_key: row.row_key || automaticInventoryRowIdentity(row) || `row-${index + 1}`
+    }));
   }
 
   function selectorFor(element) {
@@ -107,7 +192,9 @@
         return;
       }
       Array.from(table.querySelectorAll("tbody tr, tr")).forEach((row) => {
-        const cells = Array.from(row.querySelectorAll("td, th")).map((cell) => clean(cell.innerText, 400));
+        const cellElements = Array.from(row.querySelectorAll("td, th"));
+        const cells = cellElements.map((cell) => clean(cell.innerText, 400));
+        const cellDetails = cellElements.map(cellEvidence);
         const rawText = clean(row.innerText || cells.join(" "), 1400);
         if (!rawText || cells.length < 2) {
           return;
@@ -119,6 +206,8 @@
         const catalogSku = ((rawText.match(/\bCS-[A-Z0-9-]+\b/i) || [""])[0] || "").toUpperCase();
         const location = ((rawText.match(/\bETB-[0-9]{3}-[A-J](?:\.[0-9]+)?\b/i) || [""])[0] || "").toUpperCase();
         const priceCell = mapped.price || cells.find((cell) => /\$[0-9]/.test(cell)) || "";
+        const actionLabels = rowActionEvidence(row);
+        const links = cellDetails.flatMap((cell) => cell.links || []);
         rows.push({
           row_number: rows.length + 1,
           row_key: mapped["catalog sku"] || catalogSku || mapped["user sku"] || location || `row-${rows.length + 1}`,
@@ -134,22 +223,73 @@
           market_price: money(mapped.market || ""),
           quantity: integer(mapped.qty),
           added: mapped.added || "",
+          action_labels: actionLabels,
+          links,
+          cell_details: cellDetails,
+          evidence_text: clean(rowEvidenceText(rawText, cellDetails, actionLabels), 2400),
           raw_text: rawText
         });
       });
     });
-    return rows;
+    return dedupeAutomaticInventoryRows(rows);
   }
 
-  function buildSnapshot() {
+  function scrollableElements() {
+    return Array.from(document.querySelectorAll("main, [role='main'], section, article, div"))
+      .filter((element) => {
+        if (!isVisible(element)) {
+          return false;
+        }
+        const style = window.getComputedStyle(element);
+        return /(auto|scroll)/.test(`${style.overflowY} ${style.overflow}`) && element.scrollHeight > element.clientHeight + 80;
+      })
+      .slice(0, 8);
+  }
+
+  function scrollInventoryViewport() {
+    let moved = false;
+    const beforeWindow = window.scrollY;
+    window.scrollBy({ top: Math.max(360, Math.round(window.innerHeight * 0.8)), behavior: "auto" });
+    moved = moved || window.scrollY !== beforeWindow;
+    scrollableElements().forEach((element) => {
+      const before = element.scrollTop;
+      element.scrollTop = Math.min(element.scrollHeight, element.scrollTop + Math.max(320, Math.round(element.clientHeight * 0.85)));
+      moved = moved || element.scrollTop !== before;
+    });
+    return moved;
+  }
+
+  async function scanLoadedAutomaticInventoryRows() {
+    return scanAutomaticInventoryRows();
+  }
+
+  async function scanScrollableAutomaticInventoryRows(updateStatus = () => {}) {
+    const collected = [];
+    for (let step = 0; step < SCROLL_SCAN_STEPS; step += 1) {
+      collected.push(...scanAutomaticInventoryRows());
+      const deduped = dedupeAutomaticInventoryRows(collected);
+      updateStatus(`Scanning loaded inventory rows... ${deduped.length} unique rows found.`);
+      const moved = scrollInventoryViewport();
+      if (!moved) {
+        break;
+      }
+      await delay(SCROLL_SETTLE_MS);
+    }
+    collected.push(...scanAutomaticInventoryRows());
+    return dedupeAutomaticInventoryRows(collected);
+  }
+
+  function buildSnapshot(rows, scanMode = "loaded_rows") {
     return {
       source: SNAPSHOT_SOURCE,
       url: location.href,
       title: document.title || "CardUploader automatic inventory",
       captured_at: new Date().toISOString(),
+      scan_mode: scanMode,
+      row_count: Array.isArray(rows) ? rows.length : 0,
       controls: visibleControls(),
       editable_controls: visibleEditableControls(),
-      rows: scanAutomaticInventoryRows()
+      rows: Array.isArray(rows) ? rows : []
     };
   }
 
@@ -186,30 +326,42 @@
     return panel;
   }
 
-  function renderCardUploaderPanel(message = "Ready to scan visible automatic-inventory rows.") {
+  function renderCardUploaderPanel(message = "Ready to scan CardUploader automatic-inventory rows.") {
     const panel = panelShell("CardVector Helper");
     const body = panel.querySelector("[data-cv-helper-body]");
     body.innerHTML = `
       <p class="cardvector-helper-status">${message}</p>
       <div class="cardvector-helper-actions">
-        <button class="primary" type="button" data-cv-scan>Scan Visible Rows</button>
+        <button class="primary" type="button" data-cv-scan-loaded>Scan Loaded Rows</button>
+        <button type="button" data-cv-scan-scroll>Scroll & Scan Page</button>
         <button type="button" data-cv-open-review>Open Review</button>
       </div>
       <div class="cardvector-helper-meta" data-cv-meta>
         <span>Snapshot</span>
         <strong>Not scanned</strong>
-        <span>Read-only. No prices are edited.</span>
+        <span>Read-only. No prices are edited. Row action menus are not clicked.</span>
       </div>
     `;
-    body.querySelector("[data-cv-scan]").addEventListener("click", async () => {
-      const snapshot = buildSnapshot();
+    const completeScan = async (rows, scanMode) => {
+      const snapshot = buildSnapshot(rows, scanMode);
       await saveSnapshot(snapshot);
       body.querySelector("[data-cv-meta]").innerHTML = `
         <span>Snapshot</span>
         <strong>${snapshot.rows.length} rows</strong>
-        <span>Captured ${snapshot.captured_at}</span>
+        <span>${snapshot.scan_mode} captured ${snapshot.captured_at}</span>
       `;
       body.querySelector(".cardvector-helper-status").textContent = "Snapshot saved locally for CardVector.app review.";
+    };
+    body.querySelector("[data-cv-scan-loaded]").addEventListener("click", async () => {
+      const rows = await scanLoadedAutomaticInventoryRows();
+      await completeScan(rows, "loaded_rows");
+    });
+    body.querySelector("[data-cv-scan-scroll]").addEventListener("click", async () => {
+      body.querySelector(".cardvector-helper-status").textContent = "Scanning loaded rows while scrolling. This remains read-only.";
+      const rows = await scanScrollableAutomaticInventoryRows((status) => {
+        body.querySelector(".cardvector-helper-status").textContent = status;
+      });
+      await completeScan(rows, "scroll_scan_loaded_rows");
     });
     body.querySelector("[data-cv-open-review]").addEventListener("click", () => {
       window.open("https://cardvector.app/operator/repricing", "_blank", "noopener,noreferrer");

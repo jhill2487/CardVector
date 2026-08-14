@@ -12,6 +12,7 @@ const app = fs.readFileSync(path.join(root, "Docs", "app.js"), "utf8");
 
 assert.strictEqual(manifest.manifest_version, 3);
 assert.strictEqual(manifest.name, "CardVector CardUploader Helper");
+assert.strictEqual(manifest.version, "0.2.0");
 assert.deepStrictEqual(manifest.permissions, ["storage"]);
 assert.deepStrictEqual(manifest.host_permissions, [
   "https://carduploader.com/dashboard/inventory/automatic*",
@@ -28,7 +29,14 @@ assert.deepStrictEqual(manifest.content_scripts[0].css, ["panel.css"]);
   "cardvector.latestCardUploaderAutomaticInventorySnapshot.v1",
   "cardvector.carduploaderAutomaticInventorySnapshot.v1",
   "carduploader_automatic_inventory_page_snapshot",
-  "Scan Visible Rows",
+  "Scan Loaded Rows",
+  "Scroll & Scan Page",
+  "scanScrollableAutomaticInventoryRows",
+  "dedupeAutomaticInventoryRows",
+  "evidence_text",
+  "action_labels",
+  "cell_details",
+  "Row action menus are not clicked",
   "Send to Page",
   "Open Review",
   "Open CardUploader",
@@ -42,6 +50,7 @@ assert.deepStrictEqual(manifest.content_scripts[0].css, ["panel.css"]);
   ".submit(",
   "chrome.tabs",
   "chrome.scripting",
+  ".click(",
   "password",
   "service_role",
   "SUPABASE",
@@ -50,6 +59,7 @@ assert.deepStrictEqual(manifest.content_scripts[0].css, ["panel.css"]);
 
 [
   "querySelectorAll(\"table\")",
+  "scrollBy",
   "chrome.storage.local.set",
   "chrome.storage.local.get",
   "window.localStorage.setItem",
@@ -66,6 +76,8 @@ assert.deepStrictEqual(manifest.content_scripts[0].css, ["panel.css"]);
   "Read-only helper foundation",
   "Load unpacked",
   "does not edit CardUploader",
+  "Scroll & Scan Page",
+  "does not click row action menus",
 ].forEach((needle) => assert(readme.includes(needle), `README missing ${needle}`));
 
 [
