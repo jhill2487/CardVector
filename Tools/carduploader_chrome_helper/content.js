@@ -304,7 +304,68 @@
       || /^[›»>]$/.test(label);
   }
 
+  function pageInfoFromText(text) {
+    const match = clean(text, 160).match(/\bpage\s+([0-9]+)\s+of\s+([0-9]+)\b/i);
+    if (!match) {
+      return null;
+    }
+    const current = Number.parseInt(match[1], 10);
+    const total = Number.parseInt(match[2], 10);
+    if (!Number.isFinite(current) || !Number.isFinite(total) || current >= total) {
+      return null;
+    }
+    return { current, total };
+  }
+
+  function paginationTextContainers() {
+    return Array.from(document.querySelectorAll("nav, [role='navigation'], [aria-label*='pagination' i], [class*='pagination' i], [class*='pager' i], div, span, p"))
+      .filter(isVisible)
+      .map((element) => ({
+        element,
+        info: pageInfoFromText(element.innerText || element.textContent || "")
+      }))
+      .filter((candidate) => candidate.info);
+  }
+
+  function paginationContainerFor(element) {
+    let current = element;
+    for (let depth = 0; current && depth < 4; depth += 1) {
+      const controls = Array.from(current.querySelectorAll("button, a[href], [role='button']")).filter((control) => (
+        control !== element
+        && isVisible(control)
+        && !isDisabledControl(control)
+        && !isInsideInventoryRow(control)
+      ));
+      if (controls.length) {
+        return { container: current, controls };
+      }
+      current = current.parentElement;
+    }
+    return { container: element, controls: [] };
+  }
+
+  function findPageTextNextControl() {
+    for (const candidate of paginationTextContainers()) {
+      const { controls } = paginationContainerFor(candidate.element);
+      const safeControls = controls.filter((control) => {
+        const label = controlText(control);
+        return !/\b(mark|sold|listed|platform|batch|delete|edit|save|apply|submit|remove)\b/.test(label);
+      });
+      if (!safeControls.length) {
+        continue;
+      }
+      return safeControls
+        .map((control) => ({ control, rect: control.getBoundingClientRect() }))
+        .sort((a, b) => b.rect.left - a.rect.left)[0].control;
+    }
+    return null;
+  }
+
   function findNextPageControl() {
+    const pageTextControl = findPageTextNextControl();
+    if (pageTextControl) {
+      return pageTextControl;
+    }
     const preferredContainers = Array.from(document.querySelectorAll([
       "nav",
       "[role='navigation']",

@@ -12,7 +12,7 @@ const app = fs.readFileSync(path.join(root, "Docs", "app.js"), "utf8");
 
 assert.strictEqual(manifest.manifest_version, 3);
 assert.strictEqual(manifest.name, "CardVector CardUploader Helper");
-assert.strictEqual(manifest.version, "0.3.0");
+assert.strictEqual(manifest.version, "0.3.1");
 assert.deepStrictEqual(manifest.permissions, ["storage"]);
 assert.deepStrictEqual(manifest.host_permissions, [
   "https://carduploader.com/dashboard/inventory/automatic*",
@@ -36,6 +36,8 @@ assert.deepStrictEqual(manifest.content_scripts[0].css, ["panel.css"]);
   "scanPaginatedAutomaticInventoryRows",
   "safeClickNextPageControl",
   "findNextPageControl",
+  "pageInfoFromText",
+  "findPageTextNextControl",
   "pagination Next control",
   "dedupeAutomaticInventoryRows",
   "evidence_text",
@@ -48,6 +50,8 @@ assert.deepStrictEqual(manifest.content_scripts[0].css, ["panel.css"]);
   "Read-only. No prices are edited.",
   "Snapshot sent to CardVector.app",
 ].forEach((needle) => assert(content.includes(needle), `content.js missing ${needle}`));
+
+assert(content.includes("page\\s+([0-9]+)\\s+of\\s+([0-9]+)"), "content.js must detect Page X of Y pagination text");
 
 [
   "fetch(",
@@ -85,6 +89,7 @@ assert.deepStrictEqual(manifest.content_scripts[0].css, ["panel.css"]);
   "Scan All Pages",
   "does not click row action menus",
   "non-destructive pagination Next control",
+  "Page 1 of 6",
 ].forEach((needle) => assert(readme.includes(needle), `README missing ${needle}`));
 
 const clickMatches = content.match(/\.click\(/g) || [];

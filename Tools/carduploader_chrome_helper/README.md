@@ -15,7 +15,8 @@ eBay, publish listings, or make network requests.
 - Scans loaded automatic-inventory table rows.
 - Can scroll the current Automatic Inventory page and rescan loaded rows.
 - Can scan paginated Automatic Inventory pages by clicking only the safe
-  pagination Next control.
+  pagination Next control, including icon-only controls beside text such as
+  `Page 1 of 6`.
 - Captures richer read-only row evidence, including row links, image alt text,
   cell attributes, and visible row action labels.
 - Saves the latest snapshot in Chrome extension storage.
