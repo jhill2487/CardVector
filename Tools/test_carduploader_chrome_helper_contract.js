@@ -12,7 +12,7 @@ const app = fs.readFileSync(path.join(root, "Docs", "app.js"), "utf8");
 
 assert.strictEqual(manifest.manifest_version, 3);
 assert.strictEqual(manifest.name, "CardVector CardUploader Helper");
-assert.strictEqual(manifest.version, "0.2.0");
+assert.strictEqual(manifest.version, "0.3.0");
 assert.deepStrictEqual(manifest.permissions, ["storage"]);
 assert.deepStrictEqual(manifest.host_permissions, [
   "https://carduploader.com/dashboard/inventory/automatic*",
@@ -31,7 +31,12 @@ assert.deepStrictEqual(manifest.content_scripts[0].css, ["panel.css"]);
   "carduploader_automatic_inventory_page_snapshot",
   "Scan Loaded Rows",
   "Scroll & Scan Page",
+  "Scan All Pages",
   "scanScrollableAutomaticInventoryRows",
+  "scanPaginatedAutomaticInventoryRows",
+  "safeClickNextPageControl",
+  "findNextPageControl",
+  "pagination Next control",
   "dedupeAutomaticInventoryRows",
   "evidence_text",
   "action_labels",
@@ -50,7 +55,6 @@ assert.deepStrictEqual(manifest.content_scripts[0].css, ["panel.css"]);
   ".submit(",
   "chrome.tabs",
   "chrome.scripting",
-  ".click(",
   "password",
   "service_role",
   "SUPABASE",
@@ -60,6 +64,7 @@ assert.deepStrictEqual(manifest.content_scripts[0].css, ["panel.css"]);
 [
   "querySelectorAll(\"table\")",
   "scrollBy",
+  "next.click();",
   "chrome.storage.local.set",
   "chrome.storage.local.get",
   "window.localStorage.setItem",
@@ -77,8 +82,14 @@ assert.deepStrictEqual(manifest.content_scripts[0].css, ["panel.css"]);
   "Load unpacked",
   "does not edit CardUploader",
   "Scroll & Scan Page",
+  "Scan All Pages",
   "does not click row action menus",
+  "non-destructive pagination Next control",
 ].forEach((needle) => assert(readme.includes(needle), `README missing ${needle}`));
+
+const clickMatches = content.match(/\.click\(/g) || [];
+assert.strictEqual(clickMatches.length, 1, "helper should only click the safe pagination Next control");
+assert(content.includes("next.click();"), "helper click must remain isolated to safeClickNextPageControl");
 
 [
   "cardvector.carduploaderAutomaticInventorySnapshot.v1",

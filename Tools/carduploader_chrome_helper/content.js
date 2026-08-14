@@ -7,6 +7,8 @@
   const PANEL_ID = "cardvector-carduploader-helper";
   const SCROLL_SCAN_STEPS = 28;
   const SCROLL_SETTLE_MS = 350;
+  const PAGE_SCAN_MAX_PAGES = 25;
+  const PAGE_CHANGE_WAIT_MS = 300;
   const EXPECTED_HEADERS = new Set([
     "card",
     "status",
@@ -96,6 +98,15 @@
 
   function normalizedIdentityPart(value) {
     return clean(value, 220).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  }
+
+  function automaticInventoryPageSignature(rows = scanAutomaticInventoryRows()) {
+    const identities = rows.map(automaticInventoryRowIdentity).filter(Boolean);
+    return [
+      identities.length,
+      identities.slice(0, 5).join("~"),
+      identities.slice(-5).join("~")
+    ].join("|");
   }
 
   function automaticInventoryRowIdentity(row) {
@@ -259,6 +270,81 @@
     return moved;
   }
 
+  function controlText(element) {
+    return clean([
+      element.innerText,
+      element.value,
+      element.getAttribute("aria-label"),
+      element.getAttribute("title"),
+      element.getAttribute("rel")
+    ].filter(Boolean).join(" "), 240).toLowerCase();
+  }
+
+  function isDisabledControl(element) {
+    return element.disabled
+      || element.getAttribute("aria-disabled") === "true"
+      || element.getAttribute("disabled") !== null
+      || /\b(disabled|inactive)\b/i.test(element.className || "");
+  }
+
+  function isInsideInventoryRow(element) {
+    return Boolean(element.closest("tbody tr"));
+  }
+
+  function isSafeNextPageControl(element) {
+    if (!element || !isVisible(element) || isDisabledControl(element) || isInsideInventoryRow(element)) {
+      return false;
+    }
+    const label = controlText(element);
+    if (/\b(mark|sold|listed|platform|batch|delete|edit|save|apply|submit|remove)\b/.test(label)) {
+      return false;
+    }
+    return element.getAttribute("rel") === "next"
+      || /\b(next|next page|go to next)\b/.test(label)
+      || /^[›»>]$/.test(label);
+  }
+
+  function findNextPageControl() {
+    const preferredContainers = Array.from(document.querySelectorAll([
+      "nav",
+      "[role='navigation']",
+      "[aria-label*='pagination' i]",
+      "[class*='pagination' i]",
+      "[class*='pager' i]"
+    ].join(","))).filter(isVisible);
+    const preferred = preferredContainers
+      .flatMap((container) => Array.from(container.querySelectorAll("button, a[href], [role='button']")))
+      .find(isSafeNextPageControl);
+    if (preferred) {
+      return preferred;
+    }
+    return Array.from(document.querySelectorAll("button, a[href], [role='button']")).find(isSafeNextPageControl) || null;
+  }
+
+  async function waitForInventoryPageChange(previousSignature) {
+    for (let attempt = 0; attempt < 20; attempt += 1) {
+      await delay(PAGE_CHANGE_WAIT_MS);
+      const currentSignature = automaticInventoryPageSignature();
+      if (currentSignature && currentSignature !== previousSignature) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  async function safeClickNextPageControl(updateStatus = () => {}) {
+    const next = findNextPageControl();
+    if (!next) {
+      return false;
+    }
+    const before = automaticInventoryPageSignature();
+    updateStatus("Moving to the next Automatic Inventory page...");
+    next.scrollIntoView({ behavior: "auto", block: "center" });
+    await delay(100);
+    next.click();
+    return waitForInventoryPageChange(before);
+  }
+
   async function scanLoadedAutomaticInventoryRows() {
     return scanAutomaticInventoryRows();
   }
@@ -279,13 +365,32 @@
     return dedupeAutomaticInventoryRows(collected);
   }
 
-  function buildSnapshot(rows, scanMode = "loaded_rows") {
+  async function scanPaginatedAutomaticInventoryRows(updateStatus = () => {}) {
+    const collected = [];
+    let pagesScanned = 0;
+    for (let page = 1; page <= PAGE_SCAN_MAX_PAGES; page += 1) {
+      const pageRows = await scanScrollableAutomaticInventoryRows((status) => updateStatus(`Page ${page}: ${status}`));
+      collected.push(...pageRows);
+      pagesScanned = page;
+      const unique = dedupeAutomaticInventoryRows(collected);
+      updateStatus(`Scanned page ${page}. ${unique.length} unique rows collected.`);
+      const moved = await safeClickNextPageControl(updateStatus);
+      if (!moved) {
+        return { rows: unique, page_count: pagesScanned, reached_end: true };
+      }
+    }
+    return { rows: dedupeAutomaticInventoryRows(collected), page_count: pagesScanned, reached_end: false };
+  }
+
+  function buildSnapshot(rows, scanMode = "loaded_rows", scanMeta = {}) {
     return {
       source: SNAPSHOT_SOURCE,
       url: location.href,
       title: document.title || "CardUploader automatic inventory",
       captured_at: new Date().toISOString(),
       scan_mode: scanMode,
+      scan_meta: scanMeta,
+      page_count: scanMeta.page_count || 1,
       row_count: Array.isArray(rows) ? rows.length : 0,
       controls: visibleControls(),
       editable_controls: visibleEditableControls(),
@@ -334,6 +439,7 @@
       <div class="cardvector-helper-actions">
         <button class="primary" type="button" data-cv-scan-loaded>Scan Loaded Rows</button>
         <button type="button" data-cv-scan-scroll>Scroll & Scan Page</button>
+        <button type="button" data-cv-scan-pages>Scan All Pages</button>
         <button type="button" data-cv-open-review>Open Review</button>
       </div>
       <div class="cardvector-helper-meta" data-cv-meta>
@@ -342,13 +448,13 @@
         <span>Read-only. No prices are edited. Row action menus are not clicked.</span>
       </div>
     `;
-    const completeScan = async (rows, scanMode) => {
-      const snapshot = buildSnapshot(rows, scanMode);
+    const completeScan = async (rows, scanMode, scanMeta = {}) => {
+      const snapshot = buildSnapshot(rows, scanMode, scanMeta);
       await saveSnapshot(snapshot);
       body.querySelector("[data-cv-meta]").innerHTML = `
         <span>Snapshot</span>
         <strong>${snapshot.rows.length} rows</strong>
-        <span>${snapshot.scan_mode} captured ${snapshot.captured_at}</span>
+        <span>${snapshot.scan_mode} captured ${snapshot.captured_at}${snapshot.page_count ? ` across ${snapshot.page_count} page(s)` : ""}</span>
       `;
       body.querySelector(".cardvector-helper-status").textContent = "Snapshot saved locally for CardVector.app review.";
     };
@@ -362,6 +468,16 @@
         body.querySelector(".cardvector-helper-status").textContent = status;
       });
       await completeScan(rows, "scroll_scan_loaded_rows");
+    });
+    body.querySelector("[data-cv-scan-pages]").addEventListener("click", async () => {
+      body.querySelector(".cardvector-helper-status").textContent = "Scanning all Automatic Inventory pages. Only the pagination Next control is clicked.";
+      const result = await scanPaginatedAutomaticInventoryRows((status) => {
+        body.querySelector(".cardvector-helper-status").textContent = status;
+      });
+      await completeScan(result.rows, "paginated_scan", {
+        page_count: result.page_count,
+        reached_end: result.reached_end
+      });
     });
     body.querySelector("[data-cv-open-review]").addEventListener("click", () => {
       window.open("https://cardvector.app/operator/repricing", "_blank", "noopener,noreferrer");
