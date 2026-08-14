@@ -35,8 +35,7 @@ return {
   summarizeRepricingFloorRules,
   detectRepricingGame,
   detectRepricingPlatform,
-  filterRepricingRows,
-  repricingReviewCsv
+  filterRepricingRows
 };
 })()`);
 
@@ -142,9 +141,5 @@ assert.deepStrictEqual(api.filterRepricingRows([crossListed, ebayOnly, manaOnly]
 assert.deepStrictEqual(api.filterRepricingRows([crossListed, ebayOnly, manaOnly], { game: "pokemon" }), [ebayOnly]);
 assert.deepStrictEqual(api.filterRepricingRows([crossListed, ebayOnly, manaOnly], { priceBucket: "under_2" }).length, 3);
 assert.deepStrictEqual(api.filterRepricingRows([crossListed, ebayOnly, manaOnly], { search: "counterspell" }), [crossListed]);
-
-const csv = api.repricingReviewCsv([crossListed]);
-assert(csv.includes("inventory_id,catalog_sku,user_sku,title,game,platform"));
-assert(csv.includes("mtg,crosslisted"));
 
 console.log("Operator repricing floor-rule logic passed.");

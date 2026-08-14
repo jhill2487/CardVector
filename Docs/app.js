@@ -2593,59 +2593,6 @@
     };
   }
 
-  function csvCellValue(value) {
-    if (Array.isArray(value)) {
-      return value.join("|");
-    }
-    if (value === null || value === undefined) {
-      return "";
-    }
-    return String(value);
-  }
-
-  function csvEscape(value) {
-    const text = csvCellValue(value);
-    return /[",\r\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
-  }
-
-  function repricingReviewCsv(rows) {
-    const fields = [
-      "inventory_id",
-      "catalog_sku",
-      "user_sku",
-      "title",
-      "game",
-      "platform",
-      "condition",
-      "variant",
-      "quantity",
-      "current_price",
-      "recommended_price",
-      "price_delta",
-      "status",
-      "review_decision",
-      "reason_codes",
-      "notes",
-      "sold_search_url"
-    ];
-    const lines = [
-      fields.join(","),
-      ...rows.map((row) => fields.map((field) => {
-        if (field === "game") {
-          return csvEscape(detectRepricingGame(row));
-        }
-        if (field === "platform") {
-          return csvEscape(detectRepricingPlatform(row));
-        }
-        if (field === "sold_search_url") {
-          return csvEscape(ebaySoldSearchUrl(row));
-        }
-        return csvEscape(row[field]);
-      }).join(","))
-    ];
-    return lines.join("\r\n");
-  }
-
   function downloadTextFile(filename, text, contentType = "application/json") {
     const blob = new Blob([text], { type: contentType });
     const url = URL.createObjectURL(blob);
@@ -3798,8 +3745,7 @@
               <div class="repricing-command-actions">
                 <button class="button secondary" id="repricing-helper-status" type="button">Check helper status</button>
                 <button class="button secondary" id="repricing-request-snapshot" type="button"${state.snapshot && state.snapshot.rows.length ? "" : " disabled"}>Load helper snapshot</button>
-                <button class="button secondary" id="repricing-export-visible" type="button"${state.rows.length ? "" : " disabled"}>Download visible review CSV</button>
-                <button class="button primary" id="repricing-apply-live" type="button"${summarizeRepricingRows(state.rows).approved ? "" : " disabled"}>Download approved prices</button>
+                <button class="button primary" id="repricing-apply-live" type="button"${summarizeRepricingRows(state.rows).approved ? "" : " disabled"}>Prepare approved price updates</button>
               </div>
             </div>
             <ol class="repricing-instructions">
@@ -3968,14 +3914,6 @@
           const payload = reviewedRepricingExport(approved);
           const stamp = new Date().toISOString().slice(0, 10);
           downloadTextFile(`carduploader-approved-price-plan-${stamp}.json`, JSON.stringify(payload, null, 2));
-        });
-      }
-      const exportVisible = document.getElementById("repricing-export-visible");
-      if (exportVisible) {
-        exportVisible.addEventListener("click", () => {
-          const visible = filterRepricingRows(state.rows, state.filters);
-          const stamp = new Date().toISOString().slice(0, 10);
-          downloadTextFile(`carduploader-visible-price-review-${stamp}.csv`, repricingReviewCsv(visible), "text/csv");
         });
       }
       if (state.focusCandidates) {
