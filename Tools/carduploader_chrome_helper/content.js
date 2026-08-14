@@ -195,6 +195,31 @@
       }));
   }
 
+  function detectActiveMarketplaceTab() {
+    const controls = Array.from(document.querySelectorAll("button, a, [role='tab'], [role='button']"))
+      .filter(isVisible)
+      .filter((element) => /\b(ebay|manapool)\b/i.test(controlText(element)));
+    const active = controls.find((element) => (
+      element.getAttribute("aria-selected") === "true"
+      || element.getAttribute("data-state") === "active"
+      || element.getAttribute("aria-current") === "page"
+      || /\b(active|selected|current)\b/i.test(element.className || "")
+    ));
+    const chosen = active || controls[0] || null;
+    const label = chosen ? controlText(chosen) : "";
+    if (/\bmanapool\b/.test(label)) {
+      return "manapool";
+    }
+    if (/\bebay\b/.test(label)) {
+      return "ebay";
+    }
+    return "unknown";
+  }
+
+  function canScanForEbayPriceReview() {
+    return detectActiveMarketplaceTab() !== "manapool";
+  }
+
   function scanAutomaticInventoryRows() {
     const rows = [];
     Array.from(document.querySelectorAll("table")).forEach((table) => {
@@ -304,27 +329,37 @@
       || /^[›»>]$/.test(label);
   }
 
-  function pageInfoFromText(text) {
+  function pageInfoFromText(text, includeComplete = false) {
     const match = clean(text, 160).match(/\bpage\s+([0-9]+)\s+of\s+([0-9]+)\b/i);
     if (!match) {
       return null;
     }
     const current = Number.parseInt(match[1], 10);
     const total = Number.parseInt(match[2], 10);
-    if (!Number.isFinite(current) || !Number.isFinite(total) || current >= total) {
+    if (!Number.isFinite(current) || !Number.isFinite(total) || (!includeComplete && current >= total)) {
       return null;
     }
     return { current, total };
   }
 
-  function paginationTextContainers() {
+  function paginationTextContainers(includeComplete = false) {
     return Array.from(document.querySelectorAll("nav, [role='navigation'], [aria-label*='pagination' i], [class*='pagination' i], [class*='pager' i], div, span, p"))
       .filter(isVisible)
       .map((element) => ({
         element,
-        info: pageInfoFromText(element.innerText || element.textContent || "")
+        info: pageInfoFromText(element.innerText || element.textContent || "", includeComplete)
       }))
       .filter((candidate) => candidate.info);
+  }
+
+  function currentPaginationInfo() {
+    const candidates = paginationTextContainers(true)
+      .map((candidate) => ({
+        ...candidate,
+        textLength: clean(candidate.element.innerText || candidate.element.textContent || "", 240).length
+      }))
+      .sort((a, b) => a.textLength - b.textLength);
+    return candidates.length ? candidates[0].info : null;
   }
 
   function paginationContainerFor(element) {
@@ -382,9 +417,13 @@
     return Array.from(document.querySelectorAll("button, a[href], [role='button']")).find(isSafeNextPageControl) || null;
   }
 
-  async function waitForInventoryPageChange(previousSignature) {
-    for (let attempt = 0; attempt < 20; attempt += 1) {
+  async function waitForInventoryPageChange(previousSignature, previousPageInfo = null) {
+    for (let attempt = 0; attempt < 40; attempt += 1) {
       await delay(PAGE_CHANGE_WAIT_MS);
+      const currentPageInfo = currentPaginationInfo();
+      if (previousPageInfo && currentPageInfo && currentPageInfo.total === previousPageInfo.total && currentPageInfo.current !== previousPageInfo.current) {
+        return true;
+      }
       const currentSignature = automaticInventoryPageSignature();
       if (currentSignature && currentSignature !== previousSignature) {
         return true;
@@ -399,11 +438,12 @@
       return false;
     }
     const before = automaticInventoryPageSignature();
+    const beforePageInfo = currentPaginationInfo();
     updateStatus("Moving to the next Automatic Inventory page...");
     next.scrollIntoView({ behavior: "auto", block: "center" });
     await delay(100);
     next.click();
-    return waitForInventoryPageChange(before);
+    return waitForInventoryPageChange(before, beforePageInfo);
   }
 
   async function scanLoadedAutomaticInventoryRows() {
@@ -444,11 +484,13 @@
   }
 
   function buildSnapshot(rows, scanMode = "loaded_rows", scanMeta = {}) {
+    const activeMarketplaceTab = detectActiveMarketplaceTab();
     return {
       source: SNAPSHOT_SOURCE,
       url: location.href,
       title: document.title || "CardUploader automatic inventory",
       captured_at: new Date().toISOString(),
+      active_marketplace_tab: activeMarketplaceTab,
       scan_mode: scanMode,
       scan_meta: scanMeta,
       page_count: scanMeta.page_count || 1,
@@ -495,21 +537,30 @@
   function renderCardUploaderPanel(message = "Ready to scan CardUploader automatic-inventory rows.") {
     const panel = panelShell("CardVector Helper");
     const body = panel.querySelector("[data-cv-helper-body]");
+    const activeMarketplaceTab = detectActiveMarketplaceTab();
+    const scanBlocked = activeMarketplaceTab === "manapool";
+    const scanDisabled = scanBlocked ? " disabled" : "";
     body.innerHTML = `
-      <p class="cardvector-helper-status">${message}</p>
+      <p class="cardvector-helper-status">${scanBlocked ? "Switch to the eBay tab before scanning for CardVector price review. Manapool pricing changes are intentionally out of scope." : message}</p>
       <div class="cardvector-helper-actions">
-        <button class="primary" type="button" data-cv-scan-loaded>Scan Loaded Rows</button>
-        <button type="button" data-cv-scan-scroll>Scroll & Scan Page</button>
-        <button type="button" data-cv-scan-pages>Scan All Pages</button>
+        <button class="primary" type="button" data-cv-scan-loaded${scanDisabled}>Scan Loaded Rows</button>
+        <button type="button" data-cv-scan-scroll${scanDisabled}>Scroll & Scan Page</button>
+        <button type="button" data-cv-scan-pages${scanDisabled}>Scan All Pages</button>
         <button type="button" data-cv-open-review>Open Review</button>
       </div>
       <div class="cardvector-helper-meta" data-cv-meta>
+        <span>Active Tab</span>
+        <strong>${activeMarketplaceTab}</strong>
         <span>Snapshot</span>
         <strong>Not scanned</strong>
         <span>Read-only. No prices are edited. Row action menus are not clicked.</span>
       </div>
     `;
     const completeScan = async (rows, scanMode, scanMeta = {}) => {
+      if (!canScanForEbayPriceReview()) {
+        body.querySelector(".cardvector-helper-status").textContent = "Scan blocked. Switch to the eBay tab before preparing price-review recommendations.";
+        return;
+      }
       const snapshot = buildSnapshot(rows, scanMode, scanMeta);
       await saveSnapshot(snapshot);
       body.querySelector("[data-cv-meta]").innerHTML = `
