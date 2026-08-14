@@ -29,7 +29,15 @@ const exporter = fs.readFileSync(path.join(root, "Tools", "export_cardvector_sit
   "cardvector.carduploaderAutomaticInventorySnapshot.v1",
   "Price Review Candidates",
   "Floor Rule Recommendations",
-  "repricingFloorRuleConfig",
+  "defaultRepricingFloorRuleConfig",
+  "repricingFloorRuleConfigStorageKey",
+  "cardvector.repricingFloorRules.v1",
+  "readStoredRepricingFloorRuleConfig",
+  "writeStoredRepricingFloorRuleConfig",
+  "data-repricing-floor",
+  "Save floor rules",
+  "Reset defaults",
+  "Reapply to snapshot",
   "applyRepricingFloorRules",
   "summarizeRepricingFloorRules",
   "renderRepricingFloorRuleSummary",
@@ -64,6 +72,7 @@ const exporter = fs.readFileSync(path.join(root, "Tools", "export_cardvector_sit
   ".repricing-helper-card",
   ".repricing-floor-card",
   ".repricing-floor-grid",
+  ".repricing-floor-actions",
 ].forEach((needle) => assert(css.includes(needle), `style.css missing ${needle}`));
 
 const repricingSource = app.slice(
