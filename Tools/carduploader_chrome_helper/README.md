@@ -17,6 +17,8 @@ eBay, publish listings, or make network requests.
 - Can scan paginated Automatic Inventory pages by clicking only the safe
   pagination Next control, including icon-only controls beside text such as
   `Page 1 of 6`.
+- Can copy a read-only pagination diagnostic report for troubleshooting
+  CardUploader UI changes.
 - Captures richer read-only row evidence, including row links, image alt text,
   cell attributes, and visible row action labels.
 - Saves the latest snapshot in Chrome extension storage.
@@ -37,6 +39,8 @@ eBay, publish listings, or make network requests.
 
 1. Open CardUploader Automatic Inventory in the same Chrome profile.
 2. Click **Scan Loaded Rows**, **Scroll & Scan Page**, or **Scan All Pages** in the CardVector helper panel.
+   If **Scan All Pages** cannot advance, click **Diagnose Pagination** and paste
+   the copied JSON into Codex.
 3. Open `https://cardvector.app/operator/repricing`.
 4. Click **Send to Page** in the helper panel if needed.
 5. Click **Check helper status**, then **Load helper snapshot** in CardVector.app.
@@ -50,7 +54,7 @@ characterized and tested.
 The helper does not click row action menus. Options such as Mark Listed, Mark
 Not Listed, Mark Sold, View Batch, and Manage Platforms are treated only as
 evidence when they are already visible on the page. The only click automation in
-version 0.3.10 is the non-destructive pagination Next control used by **Scan All
+version 0.3.11 is the non-destructive pagination Next control used by **Scan All
 Pages**. The helper waits for the visible page number to advance before scanning
 the next page. Pagination clicks are limited to controls positioned beside the
 visible `Page X of Y` text, including icon-only chevron buttons and their
@@ -58,7 +62,7 @@ clickable wrappers. If CardUploader renders the chevron through a non-semantic
 icon, the helper probes the small visual area immediately to the right of
 `Page X of Y`. Marketplace tabs are never valid pagination targets.
 
-For now, CardVector price review is eBay-only. Version 0.3.10 no longer blocks
+For now, CardVector price review is eBay-only. Version 0.3.11 no longer blocks
 read-only scanning when tab detection is uncertain or reports Mana Pool. Instead,
 the helper saves the snapshot with active-tab and row platform evidence so
 CardVector.app can filter and review it safely. Cross-listed `eBay + Mana Pool`

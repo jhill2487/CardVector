@@ -5,7 +5,7 @@
   const PAGE_STORAGE_KEY = "cardvector.carduploaderAutomaticInventorySnapshot.v1";
   const SNAPSHOT_SOURCE = "carduploader_automatic_inventory_page_snapshot";
   const PANEL_ID = "cardvector-carduploader-helper";
-  const HELPER_VERSION = "0.3.10";
+  const HELPER_VERSION = "0.3.11";
   const SCROLL_SCAN_STEPS = 28;
   const SCROLL_SETTLE_MS = 350;
   const PAGE_SCAN_MAX_PAGES = 25;
@@ -539,6 +539,104 @@
     return queriedControls.length ? queriedControls : paginationControlsFromPoint(pageTextElement);
   }
 
+  function rectSummary(element) {
+    if (!element || !element.getBoundingClientRect) {
+      return null;
+    }
+    const rect = element.getBoundingClientRect();
+    return {
+      left: Math.round(rect.left),
+      top: Math.round(rect.top),
+      right: Math.round(rect.right),
+      bottom: Math.round(rect.bottom),
+      width: Math.round(rect.width),
+      height: Math.round(rect.height)
+    };
+  }
+
+  function elementSummary(element, pageTextElement = null) {
+    if (!element) {
+      return null;
+    }
+    const className = String(element.className || "");
+    return {
+      tag: (element.tagName || "").toLowerCase(),
+      text: controlText(element),
+      aria_label: clean(element.getAttribute("aria-label"), 160),
+      title: clean(element.getAttribute("title"), 160),
+      role: clean(element.getAttribute("role"), 80),
+      rel: clean(element.getAttribute("rel"), 80),
+      disabled: isDisabledControl(element),
+      marketplace_tab: isMarketplaceTabControl(element),
+      likely_clickable: isLikelyClickableElement(element),
+      safe_next: isSafeNextPageControl(element),
+      near_page_text_next: pageTextElement ? isNearPageTextNextControl(element, pageTextElement) : false,
+      coordinate_candidate: pageTextElement ? isCoordinatePaginationCandidate(element, pageTextElement) : false,
+      class_name: clean(className, 220),
+      rect: rectSummary(element)
+    };
+  }
+
+  function paginationProbeElements(pageTextElement) {
+    const pageRect = pageTextRect(pageTextElement);
+    const seen = new Set();
+    const probes = [];
+    [8, 16, 24, 32, 44, 56, 72, 96, 128, 160].forEach((xOffset) => {
+      const x = Math.min(window.innerWidth - 1, pageRect.right + xOffset);
+      const y = Math.max(0, Math.min(window.innerHeight - 1, (pageRect.top + pageRect.bottom) / 2));
+      document.elementsFromPoint(x, y).forEach((element) => {
+        ancestorElements(closestClickableElement(element)).forEach((candidate) => {
+          if (seen.has(candidate)) {
+            return;
+          }
+          seen.add(candidate);
+          probes.push({
+            x_offset: xOffset,
+            element: elementSummary(candidate, pageTextElement)
+          });
+        });
+      });
+    });
+    return probes.slice(0, 40);
+  }
+
+  function paginationDiagnosticReport() {
+    const pageContainers = paginationTextContainers(true);
+    return {
+      helper_version: HELPER_VERSION,
+      url: location.href,
+      active_marketplace_tab: detectActiveMarketplaceTab(),
+      page_info: currentPaginationInfo(),
+      page_container_count: pageContainers.length,
+      selected_next_control: elementSummary(findNextPageControl()),
+      page_containers: pageContainers.slice(0, 6).map((candidate) => ({
+        text: clean(candidate.element.innerText || candidate.element.textContent, 240),
+        info: candidate.info,
+        rect: rectSummary(candidate.element),
+        page_text_rect: rectSummary({ getBoundingClientRect: () => pageTextRect(candidate.element) }),
+        near_controls: paginationControlsNearPageText(candidate.element).slice(0, 8).map((control) => elementSummary(control, candidate.element)),
+        probe_elements: paginationProbeElements(candidate.element)
+      }))
+    };
+  }
+
+  async function copyTextToClipboard(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      await navigator.clipboard.writeText(text);
+      return true;
+    }
+    const textarea = document.createElement("textarea");
+    textarea.value = text;
+    textarea.setAttribute("readonly", "readonly");
+    textarea.style.position = "fixed";
+    textarea.style.left = "-9999px";
+    document.documentElement.appendChild(textarea);
+    textarea.select();
+    const copied = document.execCommand("copy");
+    textarea.remove();
+    return copied;
+  }
+
   function pageInfoFromText(text, includeComplete = false) {
     const match = clean(text, 160).match(/\bpage\s+([0-9]+)\s+of\s+([0-9]+)\b/i);
     if (!match) {
@@ -738,6 +836,7 @@
         <button class="primary" type="button" data-cv-scan-loaded>Scan Loaded Rows</button>
         <button type="button" data-cv-scan-scroll>Scroll & Scan Page</button>
         <button type="button" data-cv-scan-pages>Scan All Pages</button>
+        <button type="button" data-cv-diagnose-pagination>Diagnose Pagination</button>
         <button type="button" data-cv-open-review>Open Review</button>
       </div>
       <div class="cardvector-helper-meta" data-cv-meta>
@@ -780,6 +879,12 @@
         page_count: result.page_count,
         reached_end: result.reached_end
       });
+    });
+    body.querySelector("[data-cv-diagnose-pagination]").addEventListener("click", async () => {
+      const report = paginationDiagnosticReport();
+      const text = JSON.stringify(report, null, 2);
+      await copyTextToClipboard(text);
+      body.querySelector(".cardvector-helper-status").textContent = `Pagination diagnostic copied. Found ${report.page_container_count} page counter candidate(s); next control ${report.selected_next_control ? "was detected" : "was not detected"}.`;
     });
     body.querySelector("[data-cv-open-review]").addEventListener("click", () => {
       window.open("https://cardvector.app/operator/repricing", "_blank", "noopener,noreferrer");
