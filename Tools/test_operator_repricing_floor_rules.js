@@ -27,9 +27,15 @@ const document = { querySelectorAll() { return []; } };
 ${source}
 return {
   defaultRepricingFloorRuleConfig,
+  defaultRepricingBusinessProfile,
   normalizeRepricingFloorRuleConfig,
   readStoredRepricingFloorRuleConfig,
   writeStoredRepricingFloorRuleConfig,
+  normalizeRepricingBusinessProfile,
+  readStoredRepricingBusinessProfile,
+  writeStoredRepricingBusinessProfile,
+  calculateMinimumViablePrice,
+  buildRepricingBusinessAnalysis,
   matchedRepricingFloorRule,
   applyRepricingFloorRules,
   summarizeRepricingFloorRules,
@@ -65,8 +71,11 @@ function pricedRow(overrides = {}) {
 }
 
 const [defaultFloor] = api.applyRepricingFloorRules([pricedRow()]);
-assert.strictEqual(defaultFloor.recommended_price, 1.48);
+assert.strictEqual(defaultFloor.recommended_price, 1.82);
 assert(defaultFloor.reason_codes.includes("BELOW_DEFAULT_FLOOR"));
+assert(defaultFloor.reason_codes.includes("MINIMUM_VIABLE_PRICE_APPLIED"));
+assert(defaultFloor.reason_codes.includes("FREE_SHIPPING_ASSUMED"));
+assert.strictEqual(defaultFloor.business_analysis.shipping_cost, 0.78);
 
 const customConfig = api.writeStoredRepricingFloorRuleConfig({
   defaultFloor: "1.67",
@@ -77,37 +86,48 @@ const customConfig = api.writeStoredRepricingFloorRuleConfig({
 assert.deepStrictEqual(api.readStoredRepricingFloorRuleConfig(), customConfig);
 
 const [customDefaultFloor] = api.applyRepricingFloorRules([pricedRow()], customConfig);
-assert.strictEqual(customDefaultFloor.recommended_price, 1.67);
+assert.strictEqual(customDefaultFloor.recommended_price, 1.82);
+
+const customBusiness = api.writeStoredRepricingBusinessProfile({
+  ...api.defaultRepricingBusinessProfile,
+  acquisitionCost: "0.10",
+  ebayStandardEnvelopeOneOz: "0.78",
+  minimumProfit: "0.50",
+  roundingMode: "ending_0_99"
+});
+assert.deepStrictEqual(api.readStoredRepricingBusinessProfile(), customBusiness);
+assert.strictEqual(api.calculateMinimumViablePrice(customBusiness), 2.99);
 
 const [pokemonHolo] = api.applyRepricingFloorRules([pricedRow({
   title: "Pikachu Reverse Holo Pokemon",
   variant: "Reverse Holo",
   current_price: 1.5
-})], customConfig);
-assert.strictEqual(pokemonHolo.recommended_price, 2.11);
+})], customConfig, customBusiness);
+assert.strictEqual(pokemonHolo.recommended_price, 2.99);
 assert(pokemonHolo.reason_codes.includes("POKEMON_HOLO_FLOOR_APPLIED"));
 
 const [pokemonUltraRare] = api.applyRepricingFloorRules([pricedRow({
   title: "Charizard VMAX Secret Rare Pokemon",
   current_price: 1.99
-})], customConfig);
-assert.strictEqual(pokemonUltraRare.recommended_price, 3.49);
+})], customConfig, customBusiness);
+assert.strictEqual(pokemonUltraRare.recommended_price, 3.99);
 assert(pokemonUltraRare.reason_codes.includes("POKEMON_ULTRA_RARE_FLOOR_APPLIED"));
 
 const [mtgFoil] = api.applyRepricingFloorRules([pricedRow({
   title: "Counterspell Magic The Gathering",
   variant: "Foil",
   current_price: 1.25
-})], customConfig);
-assert.strictEqual(mtgFoil.recommended_price, 2.24);
+})], customConfig, customBusiness);
+assert.strictEqual(mtgFoil.recommended_price, 2.99);
 assert(mtgFoil.reason_codes.includes("MTG_FOIL_FLOOR_APPLIED"));
 
 const [aboveFloor] = api.applyRepricingFloorRules([pricedRow({
   title: "Pokemon bulk card",
   current_price: 3
 })]);
-assert.strictEqual(aboveFloor.recommended_price, null);
+assert.strictEqual(aboveFloor.recommended_price, 3);
 assert(aboveFloor.reason_codes.includes("ABOVE_FLOOR_NO_CHANGE"));
+assert.strictEqual(aboveFloor.business_analysis.estimated_net_profit, 1.27);
 
 const summary = api.summarizeRepricingFloorRules([defaultFloor, pokemonHolo, pokemonUltraRare, mtgFoil, aboveFloor]);
 assert.strictEqual(summary.evaluated, 5);
