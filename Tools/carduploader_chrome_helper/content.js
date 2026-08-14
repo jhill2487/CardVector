@@ -5,7 +5,7 @@
   const PAGE_STORAGE_KEY = "cardvector.carduploaderAutomaticInventorySnapshot.v1";
   const SNAPSHOT_SOURCE = "carduploader_automatic_inventory_page_snapshot";
   const PANEL_ID = "cardvector-carduploader-helper";
-  const HELPER_VERSION = "0.3.13";
+  const HELPER_VERSION = "0.3.14";
   const SCROLL_SCAN_STEPS = 28;
   const SCROLL_SETTLE_MS = 350;
   const PAGE_SCAN_MAX_PAGES = 25;
@@ -256,6 +256,40 @@
     return /\bmana\s*pool\b/i.test(value || "") || /\bmanapool\b/i.test(value || "");
   }
 
+  function automaticInventoryGameLabel(value) {
+    const text = clean(value, 220).toLowerCase().replace(/pok\u00e9/g, "poke").replace(/[^a-z0-9]+/g, " ").trim();
+    if (!text || /^(ebay|mana pool|manapool|ebay mana pool)$/.test(text)) {
+      return "";
+    }
+    if (/\b(pokemon|poke mon)\b/.test(text)) {
+      return "Pokemon";
+    }
+    if (/\b(mtg|magic|magic the gathering)\b/.test(text)) {
+      return "Magic";
+    }
+    if (/\b(yugioh|yu gi oh)\b/.test(text)) {
+      return "Yu-Gi-Oh";
+    }
+    if (/\blorcana\b/.test(text)) {
+      return "Lorcana";
+    }
+    if (/\bone piece\b/.test(text)) {
+      return "One Piece";
+    }
+    return "";
+  }
+
+  function automaticInventoryGameFromRow(mapped, cells) {
+    const explicit = automaticInventoryGameLabel(mapped.tcg || mapped.game || mapped["tcg game"] || mapped["game tcg"]);
+    if (explicit) {
+      return explicit;
+    }
+    return (cells || [])
+      .filter((cell) => !platformHasEbay(cell) && !platformHasManapool(cell))
+      .map(automaticInventoryGameLabel)
+      .find(Boolean) || "";
+  }
+
   function rowsContainManapoolOnlyEvidence(rows) {
     return Array.isArray(rows) && rows.some((row) => (
       platformHasManapool(row.platform) && !platformHasEbay(row.platform)
@@ -300,6 +334,7 @@
         const priceCell = mapped.price || cells.find((cell) => /\$[0-9]/.test(cell)) || "";
         const actionLabels = rowActionEvidence(row);
         const links = cellDetails.flatMap((cell) => cell.links || []);
+        const tcg = automaticInventoryGameFromRow(mapped, cells);
         rows.push({
           row_number: rows.length + 1,
           row_key: mapped["catalog sku"] || catalogSku || mapped["user sku"] || location || `row-${rows.length + 1}`,
@@ -311,7 +346,7 @@
           location,
           condition: mapped.condition || "",
           variant: mapped.variant || "",
-          tcg: mapped.tcg || mapped.game || "",
+          tcg,
           current_price: money(priceCell),
           market_price: money(mapped.market || ""),
           quantity: integer(mapped.qty),
