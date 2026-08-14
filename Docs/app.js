@@ -2038,11 +2038,19 @@
   const repricingReviewStorageKey = "cardvector.repricingPlan.v1";
   const cardUploaderHelperSnapshotStorageKey = "cardvector.carduploaderAutomaticInventorySnapshot.v1";
   const repricingFloorRuleConfigStorageKey = "cardvector.repricingFloorRules.v1";
+  const repricingFilterConfigStorageKey = "cardvector.repricingFilters.v1";
   const defaultRepricingFloorRuleConfig = Object.freeze({
     defaultFloor: 1.48,
     pokemonHoloFloor: 1.98,
     pokemonUltraRareFloor: 2.98,
     mtgFoilFloor: 1.98
+  });
+  const defaultRepricingFilterConfig = Object.freeze({
+    status: "all",
+    game: "all",
+    platform: "all",
+    priceBucket: "all",
+    search: ""
   });
   const repricingFloorRuleLabels = Object.freeze({
     defaultFloor: "Default floor",
@@ -2237,6 +2245,46 @@
     return normalized;
   }
 
+  function normalizeRepricingFilterConfig(config = {}) {
+    if (typeof config === "string") {
+      return { ...defaultRepricingFilterConfig, status: config || "all" };
+    }
+    const status = ["all", "safe", "approved", "needs_review", "blocked", "increase", "decrease"].includes(config.status)
+      ? config.status
+      : defaultRepricingFilterConfig.status;
+    const game = ["all", "pokemon", "mtg", "unknown"].includes(config.game)
+      ? config.game
+      : defaultRepricingFilterConfig.game;
+    const platform = ["all", "ebay", "crosslisted", "manapool", "unknown"].includes(config.platform)
+      ? config.platform
+      : defaultRepricingFilterConfig.platform;
+    const priceBucket = ["all", "under_2", "two_to_five", "five_to_ten", "ten_plus"].includes(config.priceBucket)
+      ? config.priceBucket
+      : defaultRepricingFilterConfig.priceBucket;
+    return {
+      status,
+      game,
+      platform,
+      priceBucket,
+      search: String(config.search || "").trim().slice(0, 120)
+    };
+  }
+
+  function readStoredRepricingFilterConfig() {
+    try {
+      const payload = JSON.parse(localStorage.getItem(repricingFilterConfigStorageKey) || "null");
+      return normalizeRepricingFilterConfig(payload || {});
+    } catch (_error) {
+      return normalizeRepricingFilterConfig();
+    }
+  }
+
+  function writeStoredRepricingFilterConfig(config) {
+    const normalized = normalizeRepricingFilterConfig(config);
+    localStorage.setItem(repricingFilterConfigStorageKey, JSON.stringify(normalized));
+    return normalized;
+  }
+
   function readRepricingFloorRuleInputs() {
     const values = {};
     document.querySelectorAll("[data-repricing-floor]").forEach((input) => {
@@ -2281,6 +2329,30 @@
     }
     if (/\b(pokemon|poke|holo|reverse holo|ex|gx|v|vmax|vstar|trainer gallery|illustration rare|secret rare)\b/.test(text)) {
       return "pokemon";
+    }
+    return "unknown";
+  }
+
+  function detectRepricingPlatform(row) {
+    const raw = row && row.raw_row ? row.raw_row : {};
+    const text = [
+      row && row.marketplace,
+      raw.platform,
+      raw.status,
+      raw.raw_text,
+      ...(raw.action_labels || []),
+      ...((raw.cell_details || []).map((cell) => cell.text || ""))
+    ].filter(Boolean).join(" ").toLowerCase();
+    const hasEbay = /\bebay\b/.test(text);
+    const hasManapool = /\b(mana ?pool|manapool)\b/.test(text);
+    if (hasEbay && hasManapool) {
+      return "crosslisted";
+    }
+    if (hasEbay) {
+      return "ebay";
+    }
+    if (hasManapool) {
+      return "manapool";
     }
     return "unknown";
   }
@@ -2422,27 +2494,86 @@
     };
   }
 
-  function filterRepricingRows(rows, filter) {
-    const values = Array.isArray(rows) ? rows : [];
+  function repricingPriceBucket(row) {
+    const price = Number(row && row.current_price);
+    if (!Number.isFinite(price)) {
+      return "unknown";
+    }
+    if (price < 2) {
+      return "under_2";
+    }
+    if (price < 5) {
+      return "two_to_five";
+    }
+    if (price < 10) {
+      return "five_to_ten";
+    }
+    return "ten_plus";
+  }
+
+  function repricingSearchText(row) {
+    const raw = row && row.raw_row ? row.raw_row : {};
+    return [
+      row && row.title,
+      row && row.inventory_id,
+      row && row.user_sku,
+      row && row.catalog_sku,
+      row && row.condition,
+      row && row.variant,
+      row && row.finish,
+      row && row.set_name,
+      row && row.card_number,
+      row && row.marketplace_listing_id,
+      row && row.search_query,
+      raw.platform,
+      raw.raw_text
+    ].filter(Boolean).join(" ").toLowerCase();
+  }
+
+  function rowMatchesRepricingStatus(row, filter) {
     if (filter === "approved") {
-      return values.filter((row) => row.status === "approved");
+      return row.status === "approved";
     }
     if (filter === "safe") {
-      return values.filter(canApproveRepricingRow);
+      return canApproveRepricingRow(row);
     }
     if (filter === "needs_review") {
-      return values.filter((row) => row.status === "dry_run" && !canApproveRepricingRow(row));
+      return row.status === "dry_run" && !canApproveRepricingRow(row);
     }
     if (filter === "blocked") {
-      return values.filter((row) => row.status === "blocked");
+      return row.status === "blocked";
     }
     if (filter === "increase") {
-      return values.filter((row) => Number(row.price_delta || 0) > 0);
+      return Number(row.price_delta || 0) > 0;
     }
     if (filter === "decrease") {
-      return values.filter((row) => Number(row.price_delta || 0) < 0);
+      return Number(row.price_delta || 0) < 0;
     }
-    return values;
+    return true;
+  }
+
+  function filterRepricingRows(rows, filter) {
+    const values = Array.isArray(rows) ? rows : [];
+    const filters = normalizeRepricingFilterConfig(filter);
+    const search = filters.search.toLowerCase();
+    return values.filter((row) => {
+      if (!rowMatchesRepricingStatus(row, filters.status)) {
+        return false;
+      }
+      if (filters.game !== "all" && detectRepricingGame(row) !== filters.game) {
+        return false;
+      }
+      if (filters.platform !== "all" && detectRepricingPlatform(row) !== filters.platform) {
+        return false;
+      }
+      if (filters.priceBucket !== "all" && repricingPriceBucket(row) !== filters.priceBucket) {
+        return false;
+      }
+      if (search && !repricingSearchText(row).includes(search)) {
+        return false;
+      }
+      return true;
+    });
   }
 
   function ebaySoldSearchUrl(row) {
@@ -2460,6 +2591,59 @@
         approved_for_future_apply: row.status === "approved"
       }))
     };
+  }
+
+  function csvCellValue(value) {
+    if (Array.isArray(value)) {
+      return value.join("|");
+    }
+    if (value === null || value === undefined) {
+      return "";
+    }
+    return String(value);
+  }
+
+  function csvEscape(value) {
+    const text = csvCellValue(value);
+    return /[",\r\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
+  }
+
+  function repricingReviewCsv(rows) {
+    const fields = [
+      "inventory_id",
+      "catalog_sku",
+      "user_sku",
+      "title",
+      "game",
+      "platform",
+      "condition",
+      "variant",
+      "quantity",
+      "current_price",
+      "recommended_price",
+      "price_delta",
+      "status",
+      "review_decision",
+      "reason_codes",
+      "notes",
+      "sold_search_url"
+    ];
+    const lines = [
+      fields.join(","),
+      ...rows.map((row) => fields.map((field) => {
+        if (field === "game") {
+          return csvEscape(detectRepricingGame(row));
+        }
+        if (field === "platform") {
+          return csvEscape(detectRepricingPlatform(row));
+        }
+        if (field === "sold_search_url") {
+          return csvEscape(ebaySoldSearchUrl(row));
+        }
+        return csvEscape(row[field]);
+      }).join(","))
+    ];
+    return lines.join("\r\n");
   }
 
   function downloadTextFile(filename, text, contentType = "application/json") {
@@ -2538,7 +2722,10 @@
       </div>`;
   }
 
-  function renderRepricingFilters(activeFilter) {
+  function renderRepricingFilters(rows, activeFilter) {
+    const filtersConfig = normalizeRepricingFilterConfig(activeFilter);
+    const visibleCount = filterRepricingRows(rows, filtersConfig).length;
+    const totalCount = Array.isArray(rows) ? rows.length : 0;
     const filters = [
       ["all", "All"],
       ["safe", "Auto-safe"],
@@ -2548,9 +2735,35 @@
       ["increase", "Increases"],
       ["decrease", "Decreases"]
     ];
-    return `<div class="repricing-filters" aria-label="Repricing filters">${filters.map(([value, label]) => `
-      <button class="repricing-filter${activeFilter === value ? " active" : ""}" type="button" data-repricing-filter="${escapeHtml(value)}">${escapeHtml(label)}</button>
-    `).join("")}</div>`;
+    const selectControl = (id, label, value, options) => `
+      <label>
+        <span>${escapeHtml(label)}</span>
+        <select id="${escapeHtml(id)}" data-repricing-filter-field="${escapeHtml(id)}">
+          ${options.map(([optionValue, optionLabel]) => `<option value="${escapeHtml(optionValue)}"${value === optionValue ? " selected" : ""}>${escapeHtml(optionLabel)}</option>`).join("")}
+        </select>
+      </label>`;
+    return `
+      <div class="repricing-filter-panel" aria-label="Repricing filters">
+        <div class="repricing-filter-header">
+          <div>
+            <p class="eyebrow">Review filters</p>
+            <strong>${escapeHtml(String(visibleCount))} of ${escapeHtml(String(totalCount))} rows visible</strong>
+          </div>
+          <button class="button secondary" id="repricing-clear-filters" type="button">Clear filters</button>
+        </div>
+        <div class="repricing-filters">${filters.map(([value, label]) => `
+          <button class="repricing-filter${filtersConfig.status === value ? " active" : ""}" type="button" data-repricing-filter="${escapeHtml(value)}">${escapeHtml(label)}</button>
+        `).join("")}</div>
+        <div class="repricing-filter-grid">
+          ${selectControl("game", "Game", filtersConfig.game, [["all", "All games"], ["pokemon", "Pokemon"], ["mtg", "Magic"], ["unknown", "Unknown"]])}
+          ${selectControl("platform", "Platform", filtersConfig.platform, [["all", "All platforms"], ["ebay", "eBay only"], ["crosslisted", "eBay + Mana Pool"], ["manapool", "Mana Pool only"], ["unknown", "Unknown"]])}
+          ${selectControl("priceBucket", "Current price", filtersConfig.priceBucket, [["all", "All prices"], ["under_2", "Under $2"], ["two_to_five", "$2-$5"], ["five_to_ten", "$5-$10"], ["ten_plus", "$10+"]])}
+          <label>
+            <span>Search</span>
+            <input id="repricing-filter-search" data-repricing-filter-field="search" type="search" value="${escapeHtml(filtersConfig.search)}" placeholder="Card, SKU, condition">
+          </label>
+        </div>
+      </div>`;
   }
 
   function renderReasonChips(row) {
@@ -3524,7 +3737,7 @@
       rows: readStoredRepricingPlan(),
       snapshot: readStoredCardUploaderHelperSnapshot(),
       floorConfig: readStoredRepricingFloorRuleConfig(),
-      filter: "all",
+      filters: readStoredRepricingFilterConfig(),
       error: "",
       message: "",
       focusCandidates: false
@@ -3585,6 +3798,7 @@
               <div class="repricing-command-actions">
                 <button class="button secondary" id="repricing-helper-status" type="button">Check helper status</button>
                 <button class="button secondary" id="repricing-request-snapshot" type="button"${state.snapshot && state.snapshot.rows.length ? "" : " disabled"}>Load helper snapshot</button>
+                <button class="button secondary" id="repricing-export-visible" type="button"${state.rows.length ? "" : " disabled"}>Download visible review CSV</button>
                 <button class="button primary" id="repricing-apply-live" type="button"${summarizeRepricingRows(state.rows).approved ? "" : " disabled"}>Download approved prices</button>
               </div>
             </div>
@@ -3611,8 +3825,8 @@
             <h2 id="repricing-plan-title">Price Review Candidates</h2>
             ${renderRepricingFloorRuleSummary(state.rows, state.floorConfig)}
             ${renderRepricingSummary(state.rows)}
-            ${renderRepricingFilters(state.filter)}
-            ${renderRepricingRows(state.rows, state.filter)}
+            ${renderRepricingFilters(state.rows, state.filters)}
+            ${renderRepricingRows(state.rows, state.filters)}
           </section>
         </section>`;
 
@@ -3639,7 +3853,7 @@
             state.rows = applyRepricingFloorRules(repricingRowsFromAutomaticInventorySnapshot(state.snapshot), state.floorConfig);
             writeStoredRepricingPlan(state.rows);
             const floorSummary = summarizeRepricingFloorRules(state.rows);
-            state.filter = floorSummary.raised ? "increase" : "all";
+            state.filters = writeStoredRepricingFilterConfig({ ...state.filters, status: floorSummary.raised ? "increase" : "all" });
             state.focusCandidates = true;
             state.message = `Loaded ${state.snapshot.rows.length} helper rows into price review. Floor rules raised ${floorSummary.raised} rows for review.`;
           }
@@ -3676,7 +3890,7 @@
             state.rows = applyRepricingFloorRules(repricingRowsFromAutomaticInventorySnapshot(state.snapshot), state.floorConfig);
             writeStoredRepricingPlan(state.rows);
             const floorSummary = summarizeRepricingFloorRules(state.rows);
-            state.filter = floorSummary.raised ? "increase" : "all";
+            state.filters = writeStoredRepricingFilterConfig({ ...state.filters, status: floorSummary.raised ? "increase" : "all" });
             state.focusCandidates = true;
             state.message = `Reapplied floor rules to ${state.snapshot.rows.length} helper rows. Floor rules raised ${floorSummary.raised} rows for review.`;
           }
@@ -3685,10 +3899,42 @@
       }
       document.querySelectorAll("[data-repricing-filter]").forEach((button) => {
         button.addEventListener("click", async () => {
-          state.filter = button.getAttribute("data-repricing-filter") || "all";
+          state.filters = writeStoredRepricingFilterConfig({
+            ...state.filters,
+            status: button.getAttribute("data-repricing-filter") || "all"
+          });
           await draw();
         });
       });
+      document.querySelectorAll("[data-repricing-filter-field]").forEach((control) => {
+        control.addEventListener("change", async () => {
+          const field = control.getAttribute("data-repricing-filter-field");
+          state.filters = writeStoredRepricingFilterConfig({ ...state.filters, [field]: control.value });
+          await draw();
+        });
+      });
+      const filterSearch = document.getElementById("repricing-filter-search");
+      if (filterSearch) {
+        filterSearch.addEventListener("input", () => {
+          state.filters = writeStoredRepricingFilterConfig({ ...state.filters, search: filterSearch.value });
+        });
+        filterSearch.addEventListener("keydown", async (event) => {
+          if (event.key === "Enter") {
+            event.preventDefault();
+            await draw();
+          }
+        });
+        filterSearch.addEventListener("blur", async () => {
+          await draw();
+        });
+      }
+      const clearFilters = document.getElementById("repricing-clear-filters");
+      if (clearFilters) {
+        clearFilters.addEventListener("click", async () => {
+          state.filters = writeStoredRepricingFilterConfig(defaultRepricingFilterConfig);
+          await draw();
+        });
+      }
       document.querySelectorAll("[data-repricing-recommend]").forEach((input) => {
         input.addEventListener("change", async () => {
           const id = input.getAttribute("data-repricing-recommend");
@@ -3722,6 +3968,14 @@
           const payload = reviewedRepricingExport(approved);
           const stamp = new Date().toISOString().slice(0, 10);
           downloadTextFile(`carduploader-approved-price-plan-${stamp}.json`, JSON.stringify(payload, null, 2));
+        });
+      }
+      const exportVisible = document.getElementById("repricing-export-visible");
+      if (exportVisible) {
+        exportVisible.addEventListener("click", () => {
+          const visible = filterRepricingRows(state.rows, state.filters);
+          const stamp = new Date().toISOString().slice(0, 10);
+          downloadTextFile(`carduploader-visible-price-review-${stamp}.csv`, repricingReviewCsv(visible), "text/csv");
         });
       }
       if (state.focusCandidates) {

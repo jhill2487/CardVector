@@ -32,7 +32,11 @@ return {
   writeStoredRepricingFloorRuleConfig,
   matchedRepricingFloorRule,
   applyRepricingFloorRules,
-  summarizeRepricingFloorRules
+  summarizeRepricingFloorRules,
+  detectRepricingGame,
+  detectRepricingPlatform,
+  filterRepricingRows,
+  repricingReviewCsv
 };
 })()`);
 
@@ -113,5 +117,34 @@ assert.strictEqual(summary.defaultFloor, 1);
 assert.strictEqual(summary.pokemonHolo, 1);
 assert.strictEqual(summary.pokemonUltraRare, 1);
 assert.strictEqual(summary.mtgFoil, 1);
+
+const crossListed = pricedRow({
+  title: "Counterspell Magic The Gathering Foil",
+  current_price: 1.5,
+  raw_row: { platform: "eBay + Mana Pool", raw_text: "Counterspell eBay Mana Pool" }
+});
+const ebayOnly = pricedRow({
+  title: "Pikachu Pokemon",
+  current_price: 1.25,
+  raw_row: { platform: "eBay", raw_text: "Pikachu eBay" }
+});
+const manaOnly = pricedRow({
+  title: "Forest Magic",
+  current_price: 1.25,
+  raw_row: { platform: "Mana Pool", raw_text: "Forest Mana Pool" }
+});
+
+assert.strictEqual(api.detectRepricingGame(crossListed), "mtg");
+assert.strictEqual(api.detectRepricingPlatform(crossListed), "crosslisted");
+assert.strictEqual(api.detectRepricingPlatform(ebayOnly), "ebay");
+assert.strictEqual(api.detectRepricingPlatform(manaOnly), "manapool");
+assert.deepStrictEqual(api.filterRepricingRows([crossListed, ebayOnly, manaOnly], { platform: "crosslisted" }), [crossListed]);
+assert.deepStrictEqual(api.filterRepricingRows([crossListed, ebayOnly, manaOnly], { game: "pokemon" }), [ebayOnly]);
+assert.deepStrictEqual(api.filterRepricingRows([crossListed, ebayOnly, manaOnly], { priceBucket: "under_2" }).length, 3);
+assert.deepStrictEqual(api.filterRepricingRows([crossListed, ebayOnly, manaOnly], { search: "counterspell" }), [crossListed]);
+
+const csv = api.repricingReviewCsv([crossListed]);
+assert(csv.includes("inventory_id,catalog_sku,user_sku,title,game,platform"));
+assert(csv.includes("mtg,crosslisted"));
 
 console.log("Operator repricing floor-rule logic passed.");

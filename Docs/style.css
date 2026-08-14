@@ -1987,6 +1987,69 @@ h3 {
   gap: 10px;
 }
 
+.repricing-filter-panel {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+  padding: 14px;
+  background: #f8fbff;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+
+.repricing-filter-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.repricing-filter-header strong {
+  display: block;
+  color: var(--blue-950);
+  font-size: 1rem;
+}
+
+.repricing-filter-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.repricing-filter-grid label {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+}
+
+.repricing-filter-grid span {
+  color: var(--muted);
+  font-size: .72rem;
+  font-weight: 900;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+
+.repricing-filter-grid select,
+.repricing-filter-grid input {
+  width: 100%;
+  min-height: 42px;
+  padding: 9px 10px;
+  color: var(--blue-950);
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  font: inherit;
+  font-size: .9rem;
+  font-weight: 850;
+}
+
+.repricing-filter-grid select:focus,
+.repricing-filter-grid input:focus {
+  outline: 2px solid rgba(37, 99, 235, 0.2);
+  border-color: var(--blue-500);
+}
+
 .repricing-scan-panel {
   display: grid;
   gap: 10px;
@@ -2741,6 +2804,15 @@ h3 {
 
   .repricing-command-bar {
     display: grid;
+  }
+
+  .repricing-filter-header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .repricing-filter-grid {
+    grid-template-columns: 1fr;
   }
 
   .repricing-command-actions .button,
