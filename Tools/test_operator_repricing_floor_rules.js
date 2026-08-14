@@ -40,6 +40,8 @@ return {
   applyRepricingFloorRules,
   summarizeRepricingFloorRules,
   detectRepricingGame,
+  repricingGameDisplayLabel,
+  repricingGameConfidence,
   detectRepricingPlatform,
   filterRepricingRows
 };
@@ -149,17 +151,35 @@ const ebayOnly = pricedRow({
   raw_row: { platform: "eBay", raw_text: "Pikachu eBay" }
 });
 const manaOnly = pricedRow({
-  title: "Forest Magic",
+  title: "Forest Basic Land",
   current_price: 1.25,
   raw_row: { platform: "Mana Pool", raw_text: "Forest Mana Pool" }
 });
+const shortenedPokemon = pricedRow({
+  title: "Eevee Gem Pack Volume 2 0110/15 NM Normal",
+  current_price: 1.58,
+  card_game: "Pokemon English",
+  raw_row: { platform: "eBay", tcg: "Pokemon English", raw_text: "Eevee Gem Pack Volume 2 NM eBay" }
+});
+const shortenedMagic = pricedRow({
+  title: "Counter Gain 25c",
+  current_price: 1.58,
+  card_game: "Magic",
+  raw_row: { platform: "eBay", tcg: "Magic", raw_text: "Counter Gain 25c eBay" }
+});
 
 assert.strictEqual(api.detectRepricingGame(crossListed), "mtg");
+assert.strictEqual(api.detectRepricingGame(manaOnly), "unknown");
+assert.strictEqual(api.detectRepricingGame(shortenedPokemon), "pokemon");
+assert.strictEqual(api.detectRepricingGame(shortenedMagic), "mtg");
+assert.strictEqual(api.repricingGameDisplayLabel(shortenedPokemon), "Pokemon");
+assert.strictEqual(api.repricingGameConfidence(shortenedPokemon), "explicit");
+assert.strictEqual(api.repricingGameConfidence(manaOnly), "unknown");
 assert.strictEqual(api.detectRepricingPlatform(crossListed), "crosslisted");
 assert.strictEqual(api.detectRepricingPlatform(ebayOnly), "ebay");
 assert.strictEqual(api.detectRepricingPlatform(manaOnly), "manapool");
 assert.deepStrictEqual(api.filterRepricingRows([crossListed, ebayOnly, manaOnly], { platform: "crosslisted" }), [crossListed]);
-assert.deepStrictEqual(api.filterRepricingRows([crossListed, ebayOnly, manaOnly], { game: "pokemon" }), [ebayOnly]);
+assert.deepStrictEqual(api.filterRepricingRows([crossListed, ebayOnly, manaOnly, shortenedPokemon], { game: "pokemon" }), [ebayOnly, shortenedPokemon]);
 assert.deepStrictEqual(api.filterRepricingRows([crossListed, ebayOnly, manaOnly], { priceBucket: "under_2" }).length, 3);
 assert.deepStrictEqual(api.filterRepricingRows([crossListed, ebayOnly, manaOnly], { search: "counterspell" }), [crossListed]);
 

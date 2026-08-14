@@ -5,7 +5,7 @@
   const PAGE_STORAGE_KEY = "cardvector.carduploaderAutomaticInventorySnapshot.v1";
   const SNAPSHOT_SOURCE = "carduploader_automatic_inventory_page_snapshot";
   const PANEL_ID = "cardvector-carduploader-helper";
-  const HELPER_VERSION = "0.3.12";
+  const HELPER_VERSION = "0.3.13";
   const SCROLL_SCAN_STEPS = 28;
   const SCROLL_SETTLE_MS = 350;
   const PAGE_SCAN_MAX_PAGES = 25;
@@ -18,6 +18,8 @@
     "catalog sku",
     "condition",
     "variant",
+    "tcg",
+    "game",
     "price",
     "market",
     "qty",
@@ -309,6 +311,7 @@
           location,
           condition: mapped.condition || "",
           variant: mapped.variant || "",
+          tcg: mapped.tcg || mapped.game || "",
           current_price: money(priceCell),
           market_price: money(mapped.market || ""),
           quantity: integer(mapped.qty),

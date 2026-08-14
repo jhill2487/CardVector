@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "CardVector CardUploader Helper",
-  "version": "0.3.12",
+  "version": "0.3.13",
   "description": "Private read-only helper for CardUploader automatic inventory snapshots used by CardVector.",
   "permissions": [
     "storage"
