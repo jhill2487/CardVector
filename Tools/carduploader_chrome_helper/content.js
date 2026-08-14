@@ -5,7 +5,7 @@
   const PAGE_STORAGE_KEY = "cardvector.carduploaderAutomaticInventorySnapshot.v1";
   const SNAPSHOT_SOURCE = "carduploader_automatic_inventory_page_snapshot";
   const PANEL_ID = "cardvector-carduploader-helper";
-  const HELPER_VERSION = "0.3.9";
+  const HELPER_VERSION = "0.3.10";
   const SCROLL_SCAN_STEPS = 28;
   const SCROLL_SETTLE_MS = 350;
   const PAGE_SCAN_MAX_PAGES = 25;
@@ -262,6 +262,16 @@
 
   function canScanForEbayPriceReview(rows = []) {
     return detectActiveMarketplaceTab() !== "manapool";
+  }
+
+  function scanContextNote(activeMarketplaceTab, rows = []) {
+    if (activeMarketplaceTab === "manapool") {
+      return " Active tab appears to be Mana Pool; snapshot is still read-only and will include platform evidence for review.";
+    }
+    if (rowsContainManapoolOnlyEvidence(rows)) {
+      return " Some rows appear Mana Pool-only; snapshot is still saved read-only and can be filtered during review.";
+    }
+    return "";
   }
 
   function scanAutomaticInventoryRows() {
@@ -719,14 +729,15 @@
     const panel = panelShell("CardVector Helper");
     const body = panel.querySelector("[data-cv-helper-body]");
     const activeMarketplaceTab = detectActiveMarketplaceTab();
-    const scanBlocked = activeMarketplaceTab === "manapool";
-    const scanDisabled = scanBlocked ? " disabled" : "";
+    const contextMessage = activeMarketplaceTab === "manapool"
+      ? "Active tab appears to be Mana Pool. Scans remain read-only; use the eBay tab for eBay price review snapshots."
+      : message;
     body.innerHTML = `
-      <p class="cardvector-helper-status">${scanBlocked ? "Switch to the eBay tab before scanning for CardVector price review. Manapool pricing changes are intentionally out of scope." : message}</p>
+      <p class="cardvector-helper-status">${contextMessage}</p>
       <div class="cardvector-helper-actions">
-        <button class="primary" type="button" data-cv-scan-loaded${scanDisabled}>Scan Loaded Rows</button>
-        <button type="button" data-cv-scan-scroll${scanDisabled}>Scroll & Scan Page</button>
-        <button type="button" data-cv-scan-pages${scanDisabled}>Scan All Pages</button>
+        <button class="primary" type="button" data-cv-scan-loaded>Scan Loaded Rows</button>
+        <button type="button" data-cv-scan-scroll>Scroll & Scan Page</button>
+        <button type="button" data-cv-scan-pages>Scan All Pages</button>
         <button type="button" data-cv-open-review>Open Review</button>
       </div>
       <div class="cardvector-helper-meta" data-cv-meta>
@@ -740,10 +751,6 @@
       </div>
     `;
     const completeScan = async (rows, scanMode, scanMeta = {}) => {
-      if (!canScanForEbayPriceReview(rows) || rowsContainManapoolOnlyEvidence(rows)) {
-        body.querySelector(".cardvector-helper-status").textContent = "Scan blocked. Switch to the eBay tab before preparing price-review recommendations.";
-        return;
-      }
       const snapshot = buildSnapshot(rows, scanMode, scanMeta);
       await saveSnapshot(snapshot);
       body.querySelector("[data-cv-meta]").innerHTML = `
@@ -751,7 +758,7 @@
         <strong>${snapshot.rows.length} rows</strong>
         <span>${snapshot.scan_mode} captured ${snapshot.captured_at}${snapshot.page_count ? ` across ${snapshot.page_count} page(s)` : ""}</span>
       `;
-      body.querySelector(".cardvector-helper-status").textContent = "Snapshot saved locally for CardVector.app review.";
+      body.querySelector(".cardvector-helper-status").textContent = `Snapshot saved locally for CardVector.app review.${scanContextNote(snapshot.active_marketplace_tab, snapshot.rows)}`;
     };
     body.querySelector("[data-cv-scan-loaded]").addEventListener("click", async () => {
       const rows = await scanLoadedAutomaticInventoryRows();

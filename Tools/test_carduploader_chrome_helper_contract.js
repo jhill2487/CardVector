@@ -12,7 +12,7 @@ const app = fs.readFileSync(path.join(root, "Docs", "app.js"), "utf8");
 
 assert.strictEqual(manifest.manifest_version, 3);
 assert.strictEqual(manifest.name, "CardVector CardUploader Helper");
-assert.strictEqual(manifest.version, "0.3.9");
+assert.strictEqual(manifest.version, "0.3.10");
 assert.deepStrictEqual(manifest.permissions, ["storage"]);
 assert.deepStrictEqual(manifest.host_permissions, [
   "https://carduploader.com/dashboard/inventory/automatic*",
@@ -40,9 +40,9 @@ assert.deepStrictEqual(manifest.content_scripts[0].css, ["panel.css"]);
   "platformHasManapool",
   "rowsContainManapoolOnlyEvidence",
   "canScanForEbayPriceReview",
+  "scanContextNote",
   "active_marketplace_tab",
-  "Manapool pricing changes are intentionally out of scope",
-  "Switch to the eBay tab before scanning",
+  "Scans remain read-only",
   "scanScrollableAutomaticInventoryRows",
   "scanPaginatedAutomaticInventoryRows",
   "safeClickNextPageControl",
@@ -120,7 +120,7 @@ assert(content.includes("document.elementsFromPoint(x, y)"), "pagination safety 
   "Page 1 of 6",
   "visible page number to advance",
   "CardVector price review is eBay-only",
-  "Manapool tab is active",
+  "no longer blocks",
 ].forEach((needle) => assert(readme.includes(needle), `README missing ${needle}`));
 
 const clickMatches = content.match(/\.click\(/g) || [];
