@@ -5,7 +5,7 @@
   const PAGE_STORAGE_KEY = "cardvector.carduploaderAutomaticInventorySnapshot.v1";
   const SNAPSHOT_SOURCE = "carduploader_automatic_inventory_page_snapshot";
   const PANEL_ID = "cardvector-carduploader-helper";
-  const HELPER_VERSION = "0.3.11";
+  const HELPER_VERSION = "0.3.12";
   const SCROLL_SCAN_STEPS = 28;
   const SCROLL_SETTLE_MS = 350;
   const PAGE_SCAN_MAX_PAGES = 25;
@@ -360,10 +360,14 @@
   }
 
   function isDisabledControl(element) {
+    const disabledClassTokens = String(element.className || "")
+      .split(/\s+/)
+      .filter(Boolean)
+      .filter((token) => !token.includes(":"));
     return element.disabled
       || element.getAttribute("aria-disabled") === "true"
       || element.getAttribute("disabled") !== null
-      || /\b(disabled|inactive)\b/i.test(element.className || "");
+      || disabledClassTokens.some((token) => /^(disabled|inactive|is-disabled|is-inactive)$/i.test(token));
   }
 
   function isInsideInventoryRow(element) {

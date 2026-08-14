@@ -12,7 +12,7 @@ const app = fs.readFileSync(path.join(root, "Docs", "app.js"), "utf8");
 
 assert.strictEqual(manifest.manifest_version, 3);
 assert.strictEqual(manifest.name, "CardVector CardUploader Helper");
-assert.strictEqual(manifest.version, "0.3.11");
+assert.strictEqual(manifest.version, "0.3.12");
 assert.deepStrictEqual(manifest.permissions, ["storage"]);
 assert.deepStrictEqual(manifest.host_permissions, [
   "https://carduploader.com/dashboard/inventory/automatic*",
@@ -85,6 +85,7 @@ assert(content.includes("horizontalDistance <= 180"), "pagination safety must ke
 assert(content.includes("closestClickableElement(element)"), "pagination safety must click the clickable wrapper around icon-only controls");
 assert(content.includes("document.elementsFromPoint(x, y)"), "pagination safety must probe the visual area beside the page counter");
 assert(content.includes("JSON.stringify(report, null, 2)"), "diagnostic report must be copyable as formatted JSON");
+assert(content.includes("!token.includes(\":\")"), "disabled detection must ignore Tailwind disabled: variant classes");
 
 [
   "fetch(",
