@@ -23,12 +23,21 @@ const exporter = fs.readFileSync(path.join(root, "Tools", "export_cardvector_sit
   "Load helper snapshot",
   "No snapshot yet",
   "Install the private Chrome helper",
-  "No helper snapshot loaded yet",
   "id=\"repricing-helper-status\"",
   "id=\"repricing-request-snapshot\"",
   "readStoredCardUploaderHelperSnapshot",
   "cardvector.carduploaderAutomaticInventorySnapshot.v1",
   "Price Review Candidates",
+  "Floor Rule Recommendations",
+  "repricingFloorRuleConfig",
+  "applyRepricingFloorRules",
+  "summarizeRepricingFloorRules",
+  "renderRepricingFloorRuleSummary",
+  "BELOW_DEFAULT_FLOOR",
+  "POKEMON_HOLO_FLOOR_APPLIED",
+  "POKEMON_ULTRA_RARE_FLOOR_APPLIED",
+  "MTG_FOIL_FLOOR_APPLIED",
+  "MANUAL_RECOMMENDATION_OVERRIDE",
   "Download approved prices",
   "data-repricing-recommend",
   "updateRepricingRecommendation",
@@ -50,6 +59,8 @@ const exporter = fs.readFileSync(path.join(root, "Tools", "export_cardvector_sit
   ".repricing-safeguard-list",
   ".repricing-instructions",
   ".repricing-helper-card",
+  ".repricing-floor-card",
+  ".repricing-floor-grid",
 ].forEach((needle) => assert(css.includes(needle), `style.css missing ${needle}`));
 
 const repricingSource = app.slice(
@@ -93,6 +104,9 @@ const repricingSource = app.slice(
   "Live CardUploader Repricing",
   "Open CardUploader Inventory",
   "Scan visible rows read-only",
+  "Automatic Inventory Snapshot",
+  "repricing-scan-results-title",
+  "renderCardUploaderAutomaticInventoryRows(state.snapshot)",
 ].forEach((needle) => assert(!repricingSource.includes(needle), `repricing page still contains import workflow marker ${needle}`));
 
 assert(

@@ -1,0 +1,91 @@
+const fs = require("fs");
+const path = require("path");
+const vm = require("vm");
+const assert = require("assert");
+
+const root = path.resolve(__dirname, "..");
+const app = fs.readFileSync(path.join(root, "Docs", "app.js"), "utf8");
+const start = app.indexOf("const repricingFloorRuleConfig");
+const end = app.indexOf("function renderRepricingFilters");
+
+assert(start > -1, "floor rule config not found");
+assert(end > start, "floor rule function boundary not found");
+
+const source = app.slice(start, end);
+const api = vm.runInNewContext(`(() => {
+${source}
+return {
+  matchedRepricingFloorRule,
+  applyRepricingFloorRules,
+  summarizeRepricingFloorRules
+};
+})()`);
+
+function pricedRow(overrides = {}) {
+  return {
+    title: "Bulk common card",
+    condition: "Near Mint",
+    variant: "Normal",
+    finish: "",
+    set_name: "",
+    card_number: "",
+    marketplace: "carduploader",
+    current_price: 1,
+    recommended_price: null,
+    price_delta: null,
+    percent_delta: "",
+    quantity: 1,
+    confidence: "",
+    status: "dry_run",
+    review_decision: "manual_review",
+    review_priority: "normal",
+    reason_codes: ["CARDUPLOADER_AUTOMATIC_INVENTORY_VISIBLE"],
+    notes: [],
+    raw_row: {},
+    ...overrides
+  };
+}
+
+const [defaultFloor] = api.applyRepricingFloorRules([pricedRow()]);
+assert.strictEqual(defaultFloor.recommended_price, 1.48);
+assert(defaultFloor.reason_codes.includes("BELOW_DEFAULT_FLOOR"));
+
+const [pokemonHolo] = api.applyRepricingFloorRules([pricedRow({
+  title: "Pikachu Reverse Holo Pokemon",
+  variant: "Reverse Holo",
+  current_price: 1.5
+})]);
+assert.strictEqual(pokemonHolo.recommended_price, 1.98);
+assert(pokemonHolo.reason_codes.includes("POKEMON_HOLO_FLOOR_APPLIED"));
+
+const [pokemonUltraRare] = api.applyRepricingFloorRules([pricedRow({
+  title: "Charizard VMAX Secret Rare Pokemon",
+  current_price: 1.99
+})]);
+assert.strictEqual(pokemonUltraRare.recommended_price, 2.98);
+assert(pokemonUltraRare.reason_codes.includes("POKEMON_ULTRA_RARE_FLOOR_APPLIED"));
+
+const [mtgFoil] = api.applyRepricingFloorRules([pricedRow({
+  title: "Counterspell Magic The Gathering",
+  variant: "Foil",
+  current_price: 1.25
+})]);
+assert.strictEqual(mtgFoil.recommended_price, 1.98);
+assert(mtgFoil.reason_codes.includes("MTG_FOIL_FLOOR_APPLIED"));
+
+const [aboveFloor] = api.applyRepricingFloorRules([pricedRow({
+  title: "Pokemon bulk card",
+  current_price: 3
+})]);
+assert.strictEqual(aboveFloor.recommended_price, null);
+assert(aboveFloor.reason_codes.includes("ABOVE_FLOOR_NO_CHANGE"));
+
+const summary = api.summarizeRepricingFloorRules([defaultFloor, pokemonHolo, pokemonUltraRare, mtgFoil, aboveFloor]);
+assert.strictEqual(summary.evaluated, 5);
+assert.strictEqual(summary.raised, 4);
+assert.strictEqual(summary.defaultFloor, 1);
+assert.strictEqual(summary.pokemonHolo, 1);
+assert.strictEqual(summary.pokemonUltraRare, 1);
+assert.strictEqual(summary.mtgFoil, 1);
+
+console.log("Operator repricing floor-rule logic passed.");
