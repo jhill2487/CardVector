@@ -195,22 +195,48 @@
       }));
   }
 
-  function detectActiveMarketplaceTab() {
-    const controls = Array.from(document.querySelectorAll("button, a, [role='tab'], [role='button']"))
+  function marketplaceTabCandidates() {
+    return Array.from(document.querySelectorAll("button, a, [role='tab'], [role='button'], div, span"))
       .filter(isVisible)
-      .filter((element) => /\b(ebay|manapool)\b/i.test(controlText(element)));
-    const active = controls.find((element) => (
-      element.getAttribute("aria-selected") === "true"
+      .map((element) => ({ element, label: controlText(element) || clean(element.innerText || element.textContent, 120).toLowerCase() }))
+      .filter((candidate) => /^(ebay|mana pool|manapool)$/.test(candidate.label));
+  }
+
+  function hasUnderlineSignal(element) {
+    const elements = [element, element.parentElement].filter(Boolean);
+    return elements.some((candidate) => {
+      const style = window.getComputedStyle(candidate);
+      const after = window.getComputedStyle(candidate, "::after");
+      return Number.parseFloat(style.borderBottomWidth || "0") > 1
+        || Number.parseFloat(after.borderBottomWidth || "0") > 1
+        || Number.parseFloat(after.height || "0") > 1;
+    });
+  }
+
+  function isActiveMarketplaceCandidate(element) {
+    return element.getAttribute("aria-selected") === "true"
       || element.getAttribute("data-state") === "active"
       || element.getAttribute("aria-current") === "page"
       || /\b(active|selected|current)\b/i.test(element.className || "")
-    ));
-    const chosen = active || controls[0] || null;
-    const label = chosen ? controlText(chosen) : "";
-    if (/\bmanapool\b/.test(label)) {
+      || hasUnderlineSignal(element);
+  }
+
+  function detectActiveMarketplaceTab() {
+    const controls = marketplaceTabCandidates();
+    const activeCandidate = controls.find(({ element }) => isActiveMarketplaceCandidate(element));
+    if (activeCandidate && /\bmana ?pool\b/.test(activeCandidate.label)) {
       return "manapool";
     }
-    if (/\bebay\b/.test(label)) {
+    if (activeCandidate && /\bebay\b/.test(activeCandidate.label)) {
+      return "ebay";
+    }
+    const hasEbay = controls.some((candidate) => /\bebay\b/.test(candidate.label));
+    const hasManapool = controls.some((candidate) => /\bmana ?pool\b/.test(candidate.label));
+    const manapoolCandidate = controls.find((candidate) => /\bmana ?pool\b/.test(candidate.label));
+    if (manapoolCandidate && isActiveMarketplaceCandidate(manapoolCandidate.element)) {
+      return "manapool";
+    }
+    if (hasEbay) {
       return "ebay";
     }
     return "unknown";

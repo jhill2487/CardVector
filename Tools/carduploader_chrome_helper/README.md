@@ -50,10 +50,11 @@ characterized and tested.
 The helper does not click row action menus. Options such as Mark Listed, Mark
 Not Listed, Mark Sold, View Batch, and Manage Platforms are treated only as
 evidence when they are already visible on the page. The only click automation in
-version 0.3.2 is the non-destructive pagination Next control used by **Scan All
+version 0.3.3 is the non-destructive pagination Next control used by **Scan All
 Pages**. The helper waits for the visible page number to advance before scanning
 the next page.
 
 For now, CardVector price review is eBay-only. If the helper can tell the
 Manapool tab is active, scan buttons are disabled and no price-review snapshot is
-created.
+created. Version 0.3.3 also recognizes CardUploader's visual eBay tab selection
+when the page does not expose a formal selected-tab attribute.

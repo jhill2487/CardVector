@@ -12,7 +12,7 @@ const app = fs.readFileSync(path.join(root, "Docs", "app.js"), "utf8");
 
 assert.strictEqual(manifest.manifest_version, 3);
 assert.strictEqual(manifest.name, "CardVector CardUploader Helper");
-assert.strictEqual(manifest.version, "0.3.2");
+assert.strictEqual(manifest.version, "0.3.3");
 assert.deepStrictEqual(manifest.permissions, ["storage"]);
 assert.deepStrictEqual(manifest.host_permissions, [
   "https://carduploader.com/dashboard/inventory/automatic*",
@@ -33,6 +33,8 @@ assert.deepStrictEqual(manifest.content_scripts[0].css, ["panel.css"]);
   "Scroll & Scan Page",
   "Scan All Pages",
   "detectActiveMarketplaceTab",
+  "marketplaceTabCandidates",
+  "isActiveMarketplaceCandidate",
   "canScanForEbayPriceReview",
   "active_marketplace_tab",
   "Manapool pricing changes are intentionally out of scope",
