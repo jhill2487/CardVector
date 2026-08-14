@@ -5,6 +5,7 @@
   const PAGE_STORAGE_KEY = "cardvector.carduploaderAutomaticInventorySnapshot.v1";
   const SNAPSHOT_SOURCE = "carduploader_automatic_inventory_page_snapshot";
   const PANEL_ID = "cardvector-carduploader-helper";
+  const HELPER_VERSION = "0.3.4";
   const SCROLL_SCAN_STEPS = 28;
   const SCROLL_SETTLE_MS = 350;
   const PAGE_SCAN_MAX_PAGES = 25;
@@ -239,10 +240,20 @@
     if (hasEbay) {
       return "ebay";
     }
+    if (CARDUPLOADER_URL_RE.test(location.href)) {
+      return "ebay";
+    }
     return "unknown";
   }
 
-  function canScanForEbayPriceReview() {
+  function rowsContainManapoolEvidence(rows) {
+    return Array.isArray(rows) && rows.some((row) => (
+      /\bmana\s*pool\b/i.test(row.platform || "")
+      || /\bmanapool\b/i.test(row.platform || "")
+    ));
+  }
+
+  function canScanForEbayPriceReview(rows = []) {
     return detectActiveMarketplaceTab() !== "manapool";
   }
 
@@ -577,13 +588,15 @@
       <div class="cardvector-helper-meta" data-cv-meta>
         <span>Active Tab</span>
         <strong>${activeMarketplaceTab}</strong>
+        <span>Helper Version</span>
+        <strong>${HELPER_VERSION}</strong>
         <span>Snapshot</span>
         <strong>Not scanned</strong>
         <span>Read-only. No prices are edited. Row action menus are not clicked.</span>
       </div>
     `;
     const completeScan = async (rows, scanMode, scanMeta = {}) => {
-      if (!canScanForEbayPriceReview()) {
+      if (!canScanForEbayPriceReview(rows) || rowsContainManapoolEvidence(rows)) {
         body.querySelector(".cardvector-helper-status").textContent = "Scan blocked. Switch to the eBay tab before preparing price-review recommendations.";
         return;
       }
