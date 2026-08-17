@@ -1,0 +1,90 @@
+name: Generate Market Brief Issue
+
+on:
+  schedule:
+    - cron: "30 12 * * 1"
+  workflow_dispatch:
+    inputs:
+      brief_date:
+        description: Optional brief date in YYYY-MM-DD format. Defaults to the run date.
+        required: false
+        type: string
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: generate-market-brief-issue-${{ github.event.inputs.brief_date || github.run_id }}
+  cancel-in-progress: false
+
+jobs:
+  generate-market-brief-issue:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      OPEN_AI_KEY: ${{ secrets.OPEN_AI_KEY }}
+      OPENAI_MARKET_BRIEF_MODEL: ${{ vars.OPENAI_MARKET_BRIEF_MODEL || 'gpt-5' }}
+    steps:
+      - name: Checkout CardVector source
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Check OpenAI API key
+        shell: bash
+        run: |
+          if [ -z "$OPENAI_API_KEY" ] && [ -z "$OPEN_AI_KEY" ]; then
+            echo "Missing OPENAI_API_KEY or OPEN_AI_KEY repository secret."
+            exit 1
+          fi
+
+      - name: Resolve brief date
+        id: brief_date
+        shell: bash
+        run: |
+          if [ -n "${{ inputs.brief_date }}" ]; then
+            echo "value=${{ inputs.brief_date }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "value=$(date -u +%F)" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Read existing market brief issues
+        shell: bash
+        run: |
+          gh issue list \
+            --repo "$GITHUB_REPOSITORY" \
+            --label market-brief \
+            --state all \
+            --limit 100 \
+            --json number,title,body,url \
+            > existing-market-brief-issues.json
+
+      - name: Generate and validate market brief package
+        shell: bash
+        run: |
+          python Tools/generate_market_brief_issue.py \
+            --date "${{ steps.brief_date.outputs.value }}" \
+            --existing-issues-json existing-market-brief-issues.json \
+            --output-dir generated-market-brief
+
+      - name: Create content draft issue
+        id: issue
+        shell: bash
+        run: |
+          title="$(python -c "import json; print(json.load(open('generated-market-brief/market_brief_generation_report.json', encoding='utf-8'))['title'])")"
+          url="$(gh issue create \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "$title" \
+            --label content-draft \
+            --label market-brief \
+            --body-file generated-market-brief/market_brief_issue_body.md)"
+          echo "url=${url}" >> "$GITHUB_OUTPUT"
+          echo "Created market brief issue: ${url}"
+
+      - name: Upload generated package artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: market-brief-generation-package
+          path: generated-market-brief/

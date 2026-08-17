@@ -1,0 +1,144 @@
+{
+  "schema_version": "1.0",
+  "brief_type": "market-brief",
+  "audience": "small trading card sellers using eBay, TCGplayer, CardUploader, and CardVector.app",
+  "default_category": "Seller Strategy",
+  "required_labels": [
+    "content-draft",
+    "market-brief"
+  ],
+  "topic_rotation": [
+    {
+      "key": "pricing-system",
+      "angle": "Build a repeatable pricing system instead of reacting to every market comp.",
+      "primary_keyword": "Pokemon card pricing strategy",
+      "secondary_keywords": [
+        "Pokemon card market comps",
+        "how to price Pokemon cards",
+        "eBay trading card pricing",
+        "TCGplayer seller pricing"
+      ]
+    },
+    {
+      "key": "seasonal-summer-slump",
+      "angle": "Explain recurring summer slowdown patterns and how sellers should monitor softer seasonal demand without making fragile predictions.",
+      "primary_keyword": "Pokemon card summer slump",
+      "secondary_keywords": [
+        "seasonal Pokemon card market",
+        "summer trading card sales",
+        "cyclical card market trends",
+        "Pokemon seller strategy"
+      ]
+    },
+    {
+      "key": "holiday-demand-cycle",
+      "angle": "Explain holiday buying season patterns, gift-driven demand, and why sealed products and singles can behave differently.",
+      "primary_keyword": "Pokemon card holiday sales",
+      "secondary_keywords": [
+        "holiday trading card demand",
+        "Pokemon gift buying season",
+        "card seller holiday strategy",
+        "seasonal inventory planning"
+      ]
+    },
+    {
+      "key": "back-to-school-shift",
+      "angle": "Explain late-summer and back-to-school spending shifts and how small sellers can adjust review cadence without panic pricing.",
+      "primary_keyword": "Pokemon card back to school market",
+      "secondary_keywords": [
+        "back to school collectibles",
+        "seasonal card selling",
+        "Pokemon card demand cycle",
+        "trading card seller planning"
+      ]
+    },
+    {
+      "key": "new-set-release-cycle",
+      "angle": "Teach the new set release cycle: early hype, supply flood, price compression, stabilization, and long-tail demand.",
+      "primary_keyword": "Pokemon new set price cycle",
+      "secondary_keywords": [
+        "Pokemon set release pricing",
+        "new Pokemon card supply",
+        "Pokemon card hype cycle",
+        "market stabilization"
+      ]
+    },
+    {
+      "key": "inventory-aging",
+      "angle": "Use inventory age to decide which listings deserve price review, photo review, promotion, or no action.",
+      "primary_keyword": "Pokemon card inventory management",
+      "secondary_keywords": [
+        "stale Pokemon card listings",
+        "trading card inventory aging",
+        "eBay inventory review",
+        "card seller workflow"
+      ]
+    },
+    {
+      "key": "variant-accuracy",
+      "angle": "Avoid pricing mistakes caused by wrong variants, finishes, languages, promos, and set numbers.",
+      "primary_keyword": "Pokemon card variant matching",
+      "secondary_keywords": [
+        "reverse holo pricing",
+        "Pokemon promo card pricing",
+        "card set number matching",
+        "trading card listing accuracy"
+      ]
+    },
+    {
+      "key": "low-end-profitability",
+      "angle": "Price low-end singles with fees, shipping, supplies, and minimum viable price in mind.",
+      "primary_keyword": "low value Pokemon card pricing",
+      "secondary_keywords": [
+        "minimum viable price",
+        "eBay standard envelope cards",
+        "trading card seller fees",
+        "Pokemon bulk selling strategy"
+      ]
+    },
+    {
+      "key": "listing-quality",
+      "angle": "Separate price problems from listing quality problems before discounting stale cards.",
+      "primary_keyword": "Pokemon card listing quality",
+      "secondary_keywords": [
+        "eBay card photos",
+        "Pokemon card listing title",
+        "trading card condition",
+        "marketplace conversion"
+      ]
+    },
+    {
+      "key": "confidence-review",
+      "angle": "Use confidence, comparable count, and market variance to decide when manual review is required.",
+      "primary_keyword": "Pokemon card price confidence",
+      "secondary_keywords": [
+        "market variance",
+        "comparable sales count",
+        "manual price review",
+        "trading card pricing evidence"
+      ]
+    },
+    {
+      "key": "cross-channel-discipline",
+      "angle": "Think about cross-listing, inventory truth, and oversell prevention before scaling marketplace sales.",
+      "primary_keyword": "trading card oversell prevention",
+      "secondary_keywords": [
+        "eBay TCGplayer inventory sync",
+        "cross listed trading cards",
+        "marketplace inventory truth",
+        "card seller operations"
+      ]
+    },
+    {
+      "key": "shipping-fees",
+      "angle": "Treat shipping, marketplace fees, and packaging costs as pricing inputs rather than afterthoughts.",
+      "primary_keyword": "trading card shipping fees",
+      "secondary_keywords": [
+        "Pokemon card shipping cost",
+        "eBay seller fees",
+        "TCGplayer shipping",
+        "card packaging cost"
+      ]
+    }
+  ]
+}

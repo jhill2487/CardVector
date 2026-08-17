@@ -1,11 +1,85 @@
+import datetime as dt
+import importlib.util
+import tempfile
 import unittest
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
 WORKFLOW = ROOT / ".github" / "workflows" / "market-brief-draft.yml"
+GENERATE_WORKFLOW = ROOT / ".github" / "workflows" / "generate-market-brief-issue.yml"
 TEMPLATE = ROOT / ".github" / "ISSUE_TEMPLATE" / "market_brief_draft.yml"
 SCRIPT = ROOT / "Tools" / "create_market_brief_from_issue.py"
+GENERATOR = ROOT / "Tools" / "generate_market_brief_issue.py"
+CONTENT_PLAN = ROOT / "Docs" / "content" / "market-briefs" / "content_plan.json"
+
+
+def load_generator_module():
+    spec = importlib.util.spec_from_file_location("generate_market_brief_issue", GENERATOR)
+    module = importlib.util.module_from_spec(spec)
+    assert spec and spec.loader
+    spec.loader.exec_module(module)
+    return module
+
+
+SAMPLE_PACKAGE = """
+PUBLISH_METADATA
+{
+  "title": "Seasonal Pokemon Card Market Trends Sellers Should Track",
+  "seoTitle": "Pokemon Card Seasonal Market Trends for Sellers",
+  "slug": "seasonal-pokemon-card-market-trends",
+  "date": "2026-08-17",
+  "excerpt": "Learn how recurring seasonal trends can shape Pokemon card seller workflows.",
+  "metaDescription": "Pokemon card sellers can use seasonal market trends to plan pricing, inventory review, and listing quality work.",
+  "primaryKeyword": "Pokemon card seasonal market trends",
+  "secondaryKeywords": ["summer slump", "holiday demand"],
+  "category": "Seller Strategy",
+  "tags": ["Pokemon", "eBay", "TCGplayer"],
+  "featuredImagePath": "/images/blog/seasonal-pokemon-card-market-trends.webp",
+  "featuredImageAlt": "Pokemon cards organized for seasonal market review",
+  "socialTitle": "Pokemon Card Seasonal Trends Sellers Should Track",
+  "socialDescription": "A seller guide to seasonal Pokemon card market patterns.",
+  "status": "draft"
+}
+ARTICLE_FILE
+Filename: `2026-08-17-seasonal-pokemon-card-market-trends.md`
+
+```markdown
+---
+title: "Seasonal Pokemon Card Market Trends Sellers Should Track"
+seoTitle: "Pokemon Card Seasonal Market Trends for Sellers"
+slug: "seasonal-pokemon-card-market-trends"
+date: "2026-08-17"
+description: "Pokemon card sellers can use seasonal market trends to plan pricing, inventory review, and listing quality work."
+summary: "Learn how recurring seasonal trends can shape Pokemon card seller workflows."
+label: "Market Brief"
+author: "CardVector"
+category: "Seller Strategy"
+status: "draft"
+tags:
+  - Pokemon
+  - eBay
+  - TCGplayer
+---
+
+# Seasonal Pokemon Card Market Trends Sellers Should Track
+
+""" + "Market cycles help sellers plan inventory review and pricing discipline. " * 180 + """
+```
+FACT_CHECK_NOTES
+- Time-sensitive claim: Seasonal patterns are discussed as general seller education.
+  - Source name: Example source
+  - Source URL: https://example.com
+  - Source publication date: 2026-08-17
+TIKTOK_PACKAGE
+Hook: Watch seasonal card market cycles.
+Voiceover: Sellers should understand seasonal cycles before they panic reprice inventory.
+B-roll: Cards, listings, calendar, seller dashboard.
+On-screen text: Seasonal trends are signals, not guarantees.
+Caption: A quick seller note on seasonal Pokemon card market trends.
+Hashtags: #PokemonCards #CardSeller
+CTA: Read more at CardVector.app.
+"""
 
 
 class MarketBriefWorkflowContractTests(unittest.TestCase):
@@ -35,6 +109,68 @@ class MarketBriefWorkflowContractTests(unittest.TestCase):
         self.assertIn("--output-dir", text)
         self.assertNotIn("GH_TOKEN", text)
         self.assertNotIn("subprocess", text)
+
+    def test_scheduled_generator_workflow_creates_issue_not_pr(self):
+        text = GENERATE_WORKFLOW.read_text(encoding="utf-8")
+        self.assertIn("schedule:", text)
+        self.assertIn("workflow_dispatch:", text)
+        self.assertIn("issues: write", text)
+        self.assertIn("OPENAI_API_KEY", text)
+        self.assertIn("OPEN_AI_KEY", text)
+        self.assertIn("Tools/generate_market_brief_issue.py", text)
+        self.assertIn("gh issue create", text)
+        self.assertIn("--label content-draft", text)
+        self.assertIn("--label market-brief", text)
+        self.assertNotIn("gh pr create", text)
+
+    def test_content_plan_exists_with_topic_rotation(self):
+        text = CONTENT_PLAN.read_text(encoding="utf-8")
+        self.assertIn("topic_rotation", text)
+        self.assertIn("seasonal-summer-slump", text)
+        self.assertIn("holiday-demand-cycle", text)
+        self.assertIn("back-to-school-shift", text)
+        self.assertIn("new-set-release-cycle", text)
+
+    def test_generator_validates_package_and_builds_issue_body(self):
+        generator = load_generator_module()
+        validated = generator.validate_package(SAMPLE_PACKAGE, dt.date(2026, 8, 17), set())
+        body = generator.build_issue_body(validated, SAMPLE_PACKAGE)
+        self.assertEqual("2026-08-17-seasonal-pokemon-card-market-trends.md", validated["filename"])
+        self.assertIn("### Article file", body)
+        self.assertIn("```markdown", body)
+        self.assertIn("### Fact-check notes", body)
+        self.assertIn("### TikTok package", body)
+
+    def test_generator_rejects_duplicate_slug(self):
+        generator = load_generator_module()
+        with self.assertRaisesRegex(Exception, "already exists"):
+            generator.validate_package(
+                SAMPLE_PACKAGE,
+                dt.date(2026, 8, 17),
+                {"seasonal-pokemon-card-market-trends"},
+            )
+
+    def test_generator_cli_can_validate_without_openai_api_call(self):
+        with tempfile.TemporaryDirectory() as temp:
+            temp_path = Path(temp)
+            package = temp_path / "package.txt"
+            output = temp_path / "out"
+            package.write_text(SAMPLE_PACKAGE, encoding="utf-8")
+            generator = load_generator_module()
+            code = generator.main_for_test([
+                "--date",
+                "2026-08-17",
+                "--content-plan",
+                str(CONTENT_PLAN),
+                "--briefs-dir",
+                str(temp_path / "briefs"),
+                "--input-package",
+                str(package),
+                "--output-dir",
+                str(output),
+            ])
+            self.assertEqual(0, code)
+            self.assertTrue((output / "market_brief_issue_body.md").exists())
 
 
 if __name__ == "__main__":
