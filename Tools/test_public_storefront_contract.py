@@ -58,6 +58,7 @@ class PublicStorefrontContractTests(unittest.TestCase):
         cls.output_robots = (cls.output / "robots.txt").read_text(encoding="utf-8")
         cls.output_sitemap = (cls.output / "sitemap.xml").read_text(encoding="utf-8")
         cls.output_carduploader = (cls.output / "tools" / "carduploader" / "index.html").read_text(encoding="utf-8")
+        cls.output_sell = (cls.output / "sell" / "index.html").read_text(encoding="utf-8")
         cls.output_market_briefs = (cls.output / "market-briefs" / "index.html").read_text(encoding="utf-8")
         cls.market_brief_index = json.loads(
             (cls.output / "content" / "market-briefs" / "index.json").read_text(encoding="utf-8")
@@ -173,7 +174,7 @@ class PublicStorefrontContractTests(unittest.TestCase):
 
     def test_market_briefs_section_and_routes_are_present(self):
         self.assertIn("Pokemon Market Briefs", self.source_html)
-        self.assertIn('href="/market-briefs"', self.source_html)
+        self.assertIn('href="/market-briefs/"', self.source_html)
         self.assertIn("renderMarketBriefsPage", self.source_js)
         self.assertIn("renderMarketBriefPost", self.source_js)
         self.assertIn("/content/market-briefs/index.json", self.source_js)
@@ -192,11 +193,15 @@ class PublicStorefrontContractTests(unittest.TestCase):
 
         self.assertIn("Sitemap: https://cardvector.app/sitemap.xml", self.output_robots)
         self.assertIn("<loc>https://cardvector.app/</loc>", self.output_sitemap)
-        self.assertIn("<loc>https://cardvector.app/market-briefs</loc>", self.output_sitemap)
-        self.assertIn("<loc>https://cardvector.app/tools/carduploader</loc>", self.output_sitemap)
-        self.assertIn("<loc>https://cardvector.app/market-briefs/why-pokemon-card-prices-change</loc>", self.output_sitemap)
+        self.assertIn("<loc>https://cardvector.app/market-briefs/</loc>", self.output_sitemap)
+        self.assertIn("<loc>https://cardvector.app/sell/</loc>", self.output_sitemap)
+        self.assertIn("<loc>https://cardvector.app/tools/carduploader/</loc>", self.output_sitemap)
+        self.assertIn("<loc>https://cardvector.app/market-briefs/why-pokemon-card-prices-change/</loc>", self.output_sitemap)
+        self.assertNotIn("<loc>https://cardvector.app/market-briefs</loc>", self.output_sitemap)
+        self.assertNotIn("<loc>https://cardvector.app/tools/carduploader</loc>", self.output_sitemap)
 
         self.assertIn("Pokemon Market Briefs for Sellers | Putnam Collectibles", self.output_market_briefs)
+        self.assertIn('<link rel="canonical" href="https://cardvector.app/market-briefs/">', self.output_market_briefs)
         self.assertIn("Pokemon Market Briefs for Card Sellers", self.output_market_briefs)
         self.assertIn("What these briefs cover", self.output_market_briefs)
         self.assertIn("CardUploader workflow", self.output_market_briefs)
@@ -216,11 +221,18 @@ class PublicStorefrontContractTests(unittest.TestCase):
         self.assertIn("Marketplace links may be affiliate links.", post_html)
         self.assertIn('"@type":"BlogPosting"', post_html)
         self.assertIn('"@type":"BreadcrumbList"', post_html)
-        self.assertIn('<link rel="canonical" href="https://cardvector.app/market-briefs/why-pokemon-card-prices-change">', post_html)
+        self.assertIn('<link rel="canonical" href="https://cardvector.app/market-briefs/why-pokemon-card-prices-change/">', post_html)
+
+    def test_sell_page_is_static_crawlable_and_canonical(self):
+        self.assertIn("Sell Pokemon Cards and Trading Card Collections", self.output_sell)
+        self.assertIn('<link rel="canonical" href="https://cardvector.app/sell/">', self.output_sell)
+        self.assertIn("Submit Collection Inquiry", self.output_sell)
+        self.assertIn(EXPECTED_URLS["COLLECTION_INQUIRY_URL"], self.output_sell)
+        self.assertIn('"@type":"BreadcrumbList"', self.output_sell)
 
     def test_carduploader_landing_page_is_crawlable_and_disclosed(self):
         self.assertIn("Why Putnam Collectibles Uses CardUploader", self.output_carduploader)
-        self.assertIn('<link rel="canonical" href="https://cardvector.app/tools/carduploader">', self.output_carduploader)
+        self.assertIn('<link rel="canonical" href="https://cardvector.app/tools/carduploader/">', self.output_carduploader)
         self.assertIn('"@type": "Article"', self.output_carduploader)
         self.assertIn("unlimited card processing", self.output_carduploader)
         self.assertIn(EXPECTED_URLS["CARDUPLOADER_REFERRAL_URL"], self.output_carduploader)

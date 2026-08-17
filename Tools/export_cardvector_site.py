@@ -245,7 +245,7 @@ def escape_html(value: object) -> str:
 
 
 def market_brief_url(post: dict[str, object]) -> str:
-    return f"{SITE_URL}/market-briefs/{post['slug']}"
+    return f"{SITE_URL}/market-briefs/{post['slug']}/"
 
 
 def date_label_for_brief(value: object) -> str:
@@ -338,12 +338,12 @@ def render_public_header(
       <details class="nav-menu" open>
         <summary aria-label="Open site navigation">Menu</summary>
         <ul class="nav-links" aria-label="Site navigation">
-          <li><a class="nav-shop nav-cta" href="{{EBAY_STORE_URL}}" target="_blank" rel="noopener noreferrer">Shop eBay</a></li>
-          <li><a class="nav-shop nav-cta-secondary" href="{{TCGPLAYER_STORE_URL}}" target="_blank" rel="noopener noreferrer">Shop TCGplayer</a></li>
-          <li><a class="nav-shop nav-cta-secondary" href="{{MANAPOOL_STORE_URL}}" target="_blank" rel="noopener noreferrer">Shop Manapool</a></li>
-          <li><a href="/market-briefs">Market Briefs</a></li>
-          <li><a href="/sell">Sell Your Collection</a></li>
-          <li><a href="/tools/carduploader">CardUploader</a></li>
+          <li><a class="nav-shop nav-cta" href="{{{{EBAY_STORE_URL}}}}" target="_blank" rel="noopener noreferrer">Shop eBay</a></li>
+          <li><a class="nav-shop nav-cta-secondary" href="{{{{TCGPLAYER_STORE_URL}}}}" target="_blank" rel="noopener noreferrer">Shop TCGplayer</a></li>
+          <li><a class="nav-shop nav-cta-secondary" href="{{{{MANAPOOL_STORE_URL}}}}" target="_blank" rel="noopener noreferrer">Shop Manapool</a></li>
+          <li><a href="/market-briefs/">Market Briefs</a></li>
+          <li><a href="/sell/">Sell Your Collection</a></li>
+          <li><a href="/tools/carduploader/">CardUploader</a></li>
           <li><a href="/#contact">Contact</a></li>
         </ul>
       </details>
@@ -358,8 +358,8 @@ def render_public_footer() -> str:
     <div class="wrap footer-inner">
       <p>&copy; 2026 Putnam Collectibles</p>
       <ul>
-        <li><a href="/market-briefs">Market Briefs</a></li>
-        <li><a href="/tools/carduploader">CardUploader</a></li>
+        <li><a href="/market-briefs/">Market Briefs</a></li>
+        <li><a href="/tools/carduploader/">CardUploader</a></li>
         <li><a href="{{EBAY_STORE_URL}}" target="_blank" rel="noopener noreferrer">Shop eBay</a></li>
         <li><a href="{{TCGPLAYER_STORE_URL}}" target="_blank" rel="noopener noreferrer">Shop TCGplayer</a></li>
         <li><a href="{{MANAPOOL_STORE_URL}}" target="_blank" rel="noopener noreferrer">Shop Manapool</a></li>
@@ -417,7 +417,7 @@ def render_market_brief_static_pages(output: Path, posts: list[dict[str, object]
     brief_dir.mkdir(parents=True, exist_ok=True)
     cards = []
     for post in posts:
-        url = f"/market-briefs/{escape_html(post['slug'])}"
+        url = f"/market-briefs/{escape_html(post['slug'])}/"
         cards.append(f"""
         <article class="brief-card">
           <span class="brief-kicker">{escape_html(post.get("label", "Market Brief"))}</span>
@@ -450,7 +450,7 @@ def render_market_brief_static_pages(output: Path, posts: list[dict[str, object]
     index_html = render_public_header(
         "Pokemon Market Briefs for Sellers | Putnam Collectibles",
         "Weekly Pokemon card market briefs for sellers tracking pricing strategy, eBay and TCGplayer signals, inventory age, and collector demand.",
-        f"{SITE_URL}/market-briefs",
+        f"{SITE_URL}/market-briefs/",
         keywords=["Pokemon market briefs", "Pokemon card prices", "Pokemon seller strategy", "eBay Pokemon cards", "TCGplayer pricing"],
     ) + f"""
     <script type="application/ld+json">{item_list_json_ld}</script>
@@ -475,10 +475,10 @@ def render_market_brief_static_pages(output: Path, posts: list[dict[str, object]
         {''.join(cards)}
       </div>
       <nav class="brief-internal-links" aria-label="Related Putnam Collectibles pages">
-        <a href="/tools/carduploader">CardUploader workflow</a>
-        <a href="/sell">Sell Pokemon cards</a>
-        <a href="{{EBAY_STORE_URL}}" target="_blank" rel="noopener noreferrer">Shop Pokemon cards on eBay</a>
-        <a href="{{TCGPLAYER_STORE_URL}}" target="_blank" rel="noopener noreferrer">Shop Pokemon cards on TCGplayer</a>
+        <a href="/tools/carduploader/">CardUploader workflow</a>
+        <a href="/sell/">Sell Pokemon cards</a>
+        <a href="{{{{EBAY_STORE_URL}}}}" target="_blank" rel="noopener noreferrer">Shop Pokemon cards on eBay</a>
+        <a href="{{{{TCGPLAYER_STORE_URL}}}}" target="_blank" rel="noopener noreferrer">Shop Pokemon cards on TCGplayer</a>
       </nav>
     </section>
 """ + render_public_footer()
@@ -525,7 +525,7 @@ def render_market_brief_static_pages(output: Path, posts: list[dict[str, object]
     <script type="application/ld+json">{json_ld}</script>
     <script type="application/ld+json">{breadcrumb_post_json_ld}</script>
     <article class="blog-shell blog-post wrap" aria-labelledby="market-brief-post-title">
-      <a class="operator-inline-link" href="/market-briefs">Back to Market Briefs</a>
+      <a class="operator-inline-link" href="/market-briefs/">Back to Market Briefs</a>
       <p class="eyebrow">{escape_html(post.get("label", "Market Brief"))}</p>
       <h1 id="market-brief-post-title">{escape_html(post["title"])}</h1>
       <p class="blog-meta">{escape_html(date_label_for_brief(post.get("date", "")))} &middot; {escape_html(post.get("status", "published"))}</p>
@@ -537,9 +537,9 @@ def render_market_brief_static_pages(output: Path, posts: list[dict[str, object]
       <div class="brief-post-layout">{sections}</div>
       {render_brief_affiliate_panel(post)}
       <nav class="brief-internal-links" aria-label="Related Putnam Collectibles pages">
-        <a href="/market-briefs">More Pokemon market briefs</a>
-        <a href="/tools/carduploader">CardUploader seller workflow</a>
-        <a href="/sell">Sell a Pokemon card collection</a>
+        <a href="/market-briefs/">More Pokemon market briefs</a>
+        <a href="/tools/carduploader/">CardUploader seller workflow</a>
+        <a href="/sell/">Sell a Pokemon card collection</a>
       </nav>
       <aside class="brief-disclosure">
         <strong>Editorial note</strong>
@@ -550,11 +550,57 @@ def render_market_brief_static_pages(output: Path, posts: list[dict[str, object]
         (slug_dir / "index.html").write_text(post_html, encoding="utf-8")
 
 
+def render_sell_static_page(output: Path) -> None:
+    sell_dir = output / "sell"
+    sell_dir.mkdir(parents=True, exist_ok=True)
+    sell_html = render_public_header(
+        "Sell Pokemon Cards and Trading Card Collections | Putnam Collectibles",
+        "Sell your Pokemon card collection, Magic: The Gathering cards, or Near Mint English bulk to Putnam Collectibles for review.",
+        f"{SITE_URL}/sell/",
+        keywords=[
+            "sell Pokemon cards",
+            "sell trading card collection",
+            "sell Pokemon card collection",
+            "Near Mint English bulk",
+            "Putnam Collectibles",
+        ],
+    ) + f"""
+    <script type="application/ld+json">{render_json_ld(breadcrumb_json_ld([
+        ("Home", SITE_URL + "/"),
+        ("Sell Your Collection", SITE_URL + "/sell/"),
+    ]))}</script>
+    <section class="qr-view wrap" aria-labelledby="sell-page-title">
+      <article class="qr-card sell-route-card">
+        <p class="eyebrow">We buy cards</p>
+        <h1 id="sell-page-title">Sell Your Collection</h1>
+        <p class="hero-lede">Selling a collection or Near Mint English bulk? Tell us what you have and Putnam Collectibles will review it.</p>
+        <div class="sell-options" aria-label="Items Putnam Collectibles currently reviews">
+          <div>
+            <strong>Full or Partial Collections</strong>
+            <span>Share the size, games, highlights, and condition.</span>
+          </div>
+          <div>
+            <strong>Near Mint English Bulk</strong>
+            <span>Holo and reverse-holo bulk inquiries are welcome.</span>
+          </div>
+        </div>
+        <div class="entry-actions sell-route-actions">
+          <a class="button primary button-large" href="{{{{COLLECTION_INQUIRY_URL}}}}" target="_blank" rel="noopener noreferrer" aria-label="Submit a collection or bulk card inquiry to Putnam Collectibles">Submit Collection Inquiry</a>
+          <a class="button secondary" href="/">Return Home</a>
+        </div>
+        <p class="qr-note">Near Mint English cards only at this time.</p>
+      </article>
+    </section>
+""" + render_public_footer()
+    (sell_dir / "index.html").write_text(sell_html, encoding="utf-8")
+
+
 def render_sitemap(output: Path, posts: list[dict[str, object]]) -> None:
     urls = [
         (SITE_URL + "/", "2026-08-12", "weekly", "1.0"),
-        (SITE_URL + "/market-briefs", "2026-08-12", "weekly", "0.8"),
-        (SITE_URL + "/tools/carduploader", "2026-08-12", "monthly", "0.8"),
+        (SITE_URL + "/market-briefs/", "2026-08-12", "weekly", "0.8"),
+        (SITE_URL + "/sell/", "2026-08-17", "monthly", "0.8"),
+        (SITE_URL + "/tools/carduploader/", "2026-08-12", "monthly", "0.8"),
     ]
     for post in posts:
         urls.append((market_brief_url(post), str(post.get("date", "2026-08-12") or "2026-08-12"), "monthly", "0.7"))
@@ -654,6 +700,7 @@ def write_generated_files(output: Path, commit: str, market_briefs: list[dict[st
             MARKET_BRIEF_INDEX_FILE.as_posix(),
             "market-briefs/index.html",
             "market-briefs/<slug>/index.html",
+            "sell/index.html",
             "sitemap.xml",
         ],
         "market_brief_count": len(market_briefs),
@@ -731,6 +778,7 @@ def export_site(source: Path, output: Path, commit: str) -> None:
     render_site_config(output, site_config)
     market_briefs = render_market_brief_index(source, output)
     render_market_brief_static_pages(output, market_briefs)
+    render_sell_static_page(output)
     render_sitemap(output, market_briefs)
     render_site_config(output, site_config)
     write_generated_files(output, commit, market_briefs)
