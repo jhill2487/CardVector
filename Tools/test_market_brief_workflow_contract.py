@@ -173,6 +173,23 @@ class MarketBriefWorkflowContractTests(unittest.TestCase):
         self.assertEqual(section_validated["filename"], validated["filename"])
         self.assertTrue(validated["markdown"].startswith("---\n"))
 
+    def test_generator_synthesizes_frontmatter_for_json_article_body(self):
+        generator = load_generator_module()
+        section_validated = generator.validate_package(SAMPLE_PACKAGE, dt.date(2026, 8, 17), set())
+        body_only = "# Seasonal Pokemon Card Market Trends Sellers Should Track\n\n" + (
+            "Market cycles help sellers plan inventory review and pricing discipline. " * 180
+        )
+        package = json.dumps({
+            "publishMetadata": section_validated["metadata"],
+            "filename": section_validated["filename"],
+            "articleFile": body_only,
+            "factCheckNotes": section_validated["fact_check_notes"],
+            "tiktokPackage": section_validated["tiktok_package"],
+        })
+        validated = generator.validate_package(package, dt.date(2026, 8, 17), set())
+        self.assertTrue(validated["markdown"].startswith("---\n"))
+        self.assertEqual("seasonal-pokemon-card-market-trends", validated["frontmatter"]["slug"])
+
     def test_generator_rejects_duplicate_slug(self):
         generator = load_generator_module()
         with self.assertRaisesRegex(Exception, "already exists"):

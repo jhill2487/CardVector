@@ -157,6 +157,44 @@ def section_pattern(name: str) -> re.Pattern[str]:
     return re.compile(rf"^\s*(?:#+\s*)?{re.escape(name)}\s*$", re.IGNORECASE | re.MULTILINE)
 
 
+def yaml_quote(value: Any) -> str:
+    return json.dumps(str(value or ""), ensure_ascii=False)
+
+
+def normalize_article_markdown(article: str, metadata: dict[str, Any]) -> str:
+    markdown = article.strip()
+    if markdown.startswith("---\n"):
+        return markdown + "\n"
+    frontmatter_start = markdown.find("\n---\n")
+    if frontmatter_start != -1:
+        return markdown[frontmatter_start + 1 :].strip() + "\n"
+    title = str(metadata.get("title") or "CardVector Market Brief").strip()
+    slug = slugify(str(metadata.get("slug") or title))
+    date = str(metadata.get("date") or today_utc().isoformat()).strip()
+    description = str(metadata.get("metaDescription") or metadata.get("excerpt") or title).strip()
+    category = str(metadata.get("category") or "Seller Strategy").strip()
+    tags = metadata.get("tags")
+    if not isinstance(tags, list):
+        tags = ["Pokemon", "eBay", "TCGplayer"]
+    frontmatter = [
+        "---",
+        f"title: {yaml_quote(title)}",
+        f"seoTitle: {yaml_quote(metadata.get('seoTitle') or title)}",
+        f"slug: {yaml_quote(slug)}",
+        f"date: {yaml_quote(date)}",
+        f"description: {yaml_quote(description)}",
+        f"summary: {yaml_quote(metadata.get('excerpt') or description)}",
+        'label: "Market Brief"',
+        'author: "CardVector"',
+        f"category: {yaml_quote(category)}",
+        f"status: {yaml_quote(metadata.get('status') or 'draft')}",
+        "tags:",
+    ]
+    frontmatter.extend(f"  - {yaml_quote(tag)}" for tag in tags)
+    frontmatter.append("---")
+    return "\n".join(frontmatter) + "\n\n" + markdown + "\n"
+
+
 def parse_json_package(package_text: str) -> dict[str, str] | None:
     source = package_text.strip()
     fenced = re.fullmatch(r"```(?:json)?\s*(.*?)\s*```", source, flags=re.DOTALL | re.IGNORECASE)
@@ -175,7 +213,7 @@ def parse_json_package(package_text: str) -> dict[str, str] | None:
     tiktok = data.get("tiktokPackage") or data.get("tiktok_package") or data.get("TIKTOK_PACKAGE")
     if not isinstance(metadata, dict) or not isinstance(article, str):
         return None
-    article_text = article.strip() + "\n"
+    article_text = normalize_article_markdown(article, metadata)
     if filename:
         article_text = f"Filename: `{filename}`\n\n```markdown\n{article_text}```"
     return {
