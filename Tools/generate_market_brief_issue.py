@@ -67,7 +67,7 @@ def existing_issue_slugs(issue_json: Path | None) -> set[str]:
     if not issue_json:
         return set()
     data = json.loads(issue_json.read_text(encoding="utf-8"))
-    issues = data.get("issues", data if isinstance(data, list) else [])
+    issues = data if isinstance(data, list) else data.get("issues", [])
     slugs: set[str] = set()
     for issue in issues:
         body = str(issue.get("body", "") if isinstance(issue, dict) else "")

@@ -157,6 +157,18 @@ class MarketBriefWorkflowContractTests(unittest.TestCase):
             slugs = generator.existing_market_brief_slugs(briefs)
             self.assertIn("historical-brief", slugs)
 
+    def test_existing_issue_slugs_accepts_github_cli_array(self):
+        generator = load_generator_module()
+        with tempfile.TemporaryDirectory() as temp:
+            issues = Path(temp) / "issues.json"
+            issues.write_text(json.dumps([{
+                "number": 7,
+                "title": "[Content Draft] Example - 2026-08-18",
+                "body": "Filename: `2026-08-18-example-market-brief.md`\nslug: \"example-market-brief\"",
+            }]), encoding="utf-8")
+            slugs = generator.existing_issue_slugs(issues)
+            self.assertIn("example-market-brief", slugs)
+
     def test_generator_validates_package_and_builds_issue_body(self):
         generator = load_generator_module()
         validated = generator.validate_package(SAMPLE_PACKAGE, dt.date(2026, 8, 17), set())
