@@ -64,6 +64,7 @@ jobs:
       - name: Generate and validate market brief package
         shell: bash
         run: |
+          mkdir -p generated-market-brief
           python Tools/generate_market_brief_issue.py \
             --date "${{ steps.brief_date.outputs.value }}" \
             --existing-issues-json existing-market-brief-issues.json \

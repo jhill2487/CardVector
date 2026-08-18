@@ -1,5 +1,6 @@
 import datetime as dt
 import importlib.util
+import json
 import tempfile
 import unittest
 from pathlib import Path
@@ -157,6 +158,20 @@ class MarketBriefWorkflowContractTests(unittest.TestCase):
         package = package[:article_end] + package[article_end + len("\n```") :]
         validated = generator.validate_package(package, dt.date(2026, 8, 17), set())
         self.assertEqual("seasonal-pokemon-card-market-trends", validated["metadata"]["slug"])
+
+    def test_generator_accepts_json_package_contract(self):
+        generator = load_generator_module()
+        section_validated = generator.validate_package(SAMPLE_PACKAGE, dt.date(2026, 8, 17), set())
+        package = json.dumps({
+            "publishMetadata": section_validated["metadata"],
+            "filename": section_validated["filename"],
+            "articleFile": section_validated["markdown"],
+            "factCheckNotes": section_validated["fact_check_notes"],
+            "tiktokPackage": section_validated["tiktok_package"],
+        })
+        validated = generator.validate_package(package, dt.date(2026, 8, 17), set())
+        self.assertEqual(section_validated["filename"], validated["filename"])
+        self.assertTrue(validated["markdown"].startswith("---\n"))
 
     def test_generator_rejects_duplicate_slug(self):
         generator = load_generator_module()

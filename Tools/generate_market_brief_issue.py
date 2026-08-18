@@ -92,11 +92,14 @@ def build_prompt(plan: dict[str, Any], topic: dict[str, Any], brief_date: dt.dat
     secondary = topic.get("secondary_keywords", [])
     return f"""Create CardVector's weekly market brief publishing package in a deterministic format suitable for automated GitHub ingestion.
 
-Output the following sections in this exact order:
-1) PUBLISH_METADATA as valid JSON with fields: title, seoTitle, slug, date, excerpt, metaDescription, primaryKeyword, secondaryKeywords, category, tags, featuredImagePath, featuredImageAlt, socialTitle, socialDescription, status.
-2) ARTICLE_FILE containing one complete copy-paste-ready Markdown file, including YAML front matter and the final article body only. Include a deterministic filename line before the fenced Markdown in the format YYYY-MM-DD-<slug>.md.
-3) FACT_CHECK_NOTES listing time-sensitive claims, source names, source URLs, and source publication dates.
-4) TIKTOK_PACKAGE with hook, 60-90 second voiceover, scene-by-scene B-roll, on-screen text, caption, hashtags, and CTA to CardVector.app.
+Return only one valid JSON object. Do not wrap the JSON in Markdown fences. Do not include any prose before or after the JSON.
+
+The JSON object must contain these exact top-level keys:
+- publishMetadata: an object with fields title, seoTitle, slug, date, excerpt, metaDescription, primaryKeyword, secondaryKeywords, category, tags, featuredImagePath, featuredImageAlt, socialTitle, socialDescription, status.
+- filename: a deterministic filename in the format YYYY-MM-DD-<slug>.md.
+- articleFile: one complete copy-paste-ready Markdown file as a JSON string, including YAML front matter and the final article body only. The string must start with "---\\n".
+- factCheckNotes: a Markdown string listing time-sensitive claims, source names, source URLs, and source publication dates.
+- tiktokPackage: a Markdown string with hook, 60-90 second voiceover, scene-by-scene B-roll, on-screen text, caption, hashtags, and CTA to CardVector.app.
 
 Brief date: {brief_date.isoformat()}
 Audience: {plan.get("audience")}
@@ -154,7 +157,39 @@ def section_pattern(name: str) -> re.Pattern[str]:
     return re.compile(rf"^\s*(?:#+\s*)?{re.escape(name)}\s*$", re.IGNORECASE | re.MULTILINE)
 
 
+def parse_json_package(package_text: str) -> dict[str, str] | None:
+    source = package_text.strip()
+    fenced = re.fullmatch(r"```(?:json)?\s*(.*?)\s*```", source, flags=re.DOTALL | re.IGNORECASE)
+    if fenced:
+        source = fenced.group(1).strip()
+    if not source.startswith("{"):
+        return None
+    try:
+        data = json.loads(source)
+    except json.JSONDecodeError:
+        return None
+    metadata = data.get("publishMetadata") or data.get("publish_metadata") or data.get("PUBLISH_METADATA")
+    filename = str(data.get("filename", "")).strip()
+    article = data.get("articleFile") or data.get("article_file") or data.get("ARTICLE_FILE")
+    fact_check = data.get("factCheckNotes") or data.get("fact_check_notes") or data.get("FACT_CHECK_NOTES")
+    tiktok = data.get("tiktokPackage") or data.get("tiktok_package") or data.get("TIKTOK_PACKAGE")
+    if not isinstance(metadata, dict) or not isinstance(article, str):
+        return None
+    article_text = article.strip() + "\n"
+    if filename:
+        article_text = f"Filename: `{filename}`\n\n```markdown\n{article_text}```"
+    return {
+        "PUBLISH_METADATA": json.dumps(metadata, indent=2),
+        "ARTICLE_FILE": article_text,
+        "FACT_CHECK_NOTES": str(fact_check or "").strip(),
+        "TIKTOK_PACKAGE": str(tiktok or "").strip(),
+    }
+
+
 def parse_sections(package_text: str) -> dict[str, str]:
+    json_sections = parse_json_package(package_text)
+    if json_sections:
+        return json_sections
     matches: list[tuple[str, re.Match[str]]] = []
     for name in SECTION_NAMES:
         match = section_pattern(name).search(package_text)
