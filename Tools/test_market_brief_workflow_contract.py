@@ -132,6 +132,14 @@ class MarketBriefWorkflowContractTests(unittest.TestCase):
         self.assertIn("back-to-school-shift", text)
         self.assertIn("new-set-release-cycle", text)
 
+    def test_generator_uses_strict_openai_schema(self):
+        generator = load_generator_module()
+        schema = generator.market_brief_json_schema()
+        self.assertFalse(schema["additionalProperties"])
+        self.assertIn("publishMetadata", schema["required"])
+        self.assertIn("articleFile", schema["required"])
+        self.assertFalse(schema["properties"]["publishMetadata"]["additionalProperties"])
+
     def test_generator_validates_package_and_builds_issue_body(self):
         generator = load_generator_module()
         validated = generator.validate_package(SAMPLE_PACKAGE, dt.date(2026, 8, 17), set())

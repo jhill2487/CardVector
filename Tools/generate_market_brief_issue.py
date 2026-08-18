@@ -114,6 +114,43 @@ Write a polished 1,000-1,500 word SEO-focused article using evergreen seller edu
 """
 
 
+def market_brief_json_schema() -> dict[str, Any]:
+    metadata_properties = {
+        "title": {"type": "string"},
+        "seoTitle": {"type": "string"},
+        "slug": {"type": "string"},
+        "date": {"type": "string"},
+        "excerpt": {"type": "string"},
+        "metaDescription": {"type": "string"},
+        "primaryKeyword": {"type": "string"},
+        "secondaryKeywords": {"type": "array", "items": {"type": "string"}},
+        "category": {"type": "string"},
+        "tags": {"type": "array", "items": {"type": "string"}},
+        "featuredImagePath": {"type": "string"},
+        "featuredImageAlt": {"type": "string"},
+        "socialTitle": {"type": "string"},
+        "socialDescription": {"type": "string"},
+        "status": {"type": "string"},
+    }
+    return {
+        "type": "object",
+        "additionalProperties": False,
+        "properties": {
+            "publishMetadata": {
+                "type": "object",
+                "additionalProperties": False,
+                "properties": metadata_properties,
+                "required": list(metadata_properties),
+            },
+            "filename": {"type": "string"},
+            "articleFile": {"type": "string"},
+            "factCheckNotes": {"type": "string"},
+            "tiktokPackage": {"type": "string"},
+        },
+        "required": ["publishMetadata", "filename", "articleFile", "factCheckNotes", "tiktokPackage"],
+    }
+
+
 def call_openai_responses(prompt: str, model: str, use_web_search: bool) -> str:
     api_key = os.environ.get("OPENAI_API_KEY", "").strip() or os.environ.get("OPEN_AI_KEY", "").strip()
     if not api_key:
@@ -121,6 +158,14 @@ def call_openai_responses(prompt: str, model: str, use_web_search: bool) -> str:
     payload: dict[str, Any] = {
         "model": model,
         "input": prompt,
+        "text": {
+            "format": {
+                "type": "json_schema",
+                "name": "cardvector_market_brief_package",
+                "strict": True,
+                "schema": market_brief_json_schema(),
+            }
+        },
     }
     if use_web_search:
         payload["tools"] = [{"type": "web_search"}]
