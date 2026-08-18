@@ -140,6 +140,23 @@ class MarketBriefWorkflowContractTests(unittest.TestCase):
         self.assertIn("articleFile", schema["required"])
         self.assertFalse(schema["properties"]["publishMetadata"]["additionalProperties"])
 
+    def test_generator_reads_crlf_frontmatter(self):
+        generator = load_generator_module()
+        markdown = "---\r\ntitle: \"Existing Brief\"\r\nslug: \"existing-brief\"\r\ndate: \"2026-08-17\"\r\ndescription: \"Existing brief.\"\r\nstatus: \"published\"\r\n---\r\n\r\n# Existing Brief\r\n"
+        frontmatter = generator.parse_markdown_frontmatter(markdown)
+        self.assertEqual("existing-brief", frontmatter["slug"])
+
+    def test_existing_slug_discovery_tolerates_historical_files(self):
+        generator = load_generator_module()
+        with tempfile.TemporaryDirectory() as temp:
+            briefs = Path(temp)
+            (briefs / "2026-08-17-historical-brief.md").write_text(
+                "\ufeff\nslug: \"historical-brief\"\n# Historical Brief\n",
+                encoding="utf-8",
+            )
+            slugs = generator.existing_market_brief_slugs(briefs)
+            self.assertIn("historical-brief", slugs)
+
     def test_generator_validates_package_and_builds_issue_body(self):
         generator = load_generator_module()
         validated = generator.validate_package(SAMPLE_PACKAGE, dt.date(2026, 8, 17), set())

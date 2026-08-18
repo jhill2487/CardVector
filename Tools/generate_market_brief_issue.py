@@ -49,10 +49,14 @@ def existing_market_brief_slugs(briefs_dir: Path) -> set[str]:
         return slugs
     for path in sorted(briefs_dir.glob("*.md")):
         text = path.read_text(encoding="utf-8")
-        frontmatter = parse_markdown_frontmatter(text)
-        slug = str(frontmatter.get("slug", "")).strip()
-        if slug:
-            slugs.add(slug)
+        try:
+            frontmatter = parse_markdown_frontmatter(text)
+            slug = str(frontmatter.get("slug", "")).strip()
+            if slug:
+                slugs.add(slug)
+        except MarketBriefError:
+            for match in re.finditer(r"slug:\s*[\"']?([a-z0-9][a-z0-9-]+)", text):
+                slugs.add(match.group(1))
         match = re.match(r"^\d{4}-\d{2}-\d{2}-(.+)\.md$", path.name)
         if match:
             slugs.add(match.group(1))
@@ -326,6 +330,7 @@ def extract_article_markdown(text: str) -> tuple[str, str]:
 
 
 def parse_markdown_frontmatter(text: str) -> dict[str, Any]:
+    text = text.replace("\r\n", "\n").replace("\r", "\n").lstrip("\ufeff")
     if not text.startswith("---\n"):
         raise MarketBriefError("Article Markdown must start with YAML front matter.")
     end = text.find("\n---", 4)
