@@ -185,10 +185,23 @@ def extract_json_object(text: str) -> dict[str, Any]:
 
 def extract_article_markdown(text: str) -> tuple[str, str]:
     filename_match = re.search(r"\b(\d{4}-\d{2}-\d{2}-[a-z0-9][a-z0-9-]*\.md)\b", text)
-    markdown_match = re.search(r"```(?:markdown|md)?\s*\n(.*?)\n```", text, flags=re.DOTALL | re.IGNORECASE)
-    if not markdown_match:
-        raise MarketBriefError("ARTICLE_FILE must contain the article in a fenced Markdown block.")
-    markdown = markdown_match.group(1).strip() + "\n"
+    fenced_blocks = re.findall(r"```[a-zA-Z0-9_-]*\s*\n(.*?)\n```", text, flags=re.DOTALL)
+    markdown = ""
+    for block in fenced_blocks:
+        candidate = block.strip() + "\n"
+        if candidate.startswith("---\n"):
+            markdown = candidate
+            break
+    if not markdown:
+        bare = text.strip()
+        if bare.startswith("---\n"):
+            markdown = bare + "\n"
+        else:
+            frontmatter_start = bare.find("\n---\n")
+            if frontmatter_start != -1:
+                markdown = bare[frontmatter_start + 1 :].strip() + "\n"
+    if not markdown:
+        raise MarketBriefError("ARTICLE_FILE must contain the complete article Markdown starting with YAML front matter.")
     frontmatter = parse_markdown_frontmatter(markdown)
     filename = filename_match.group(1) if filename_match else f"{frontmatter['date']}-{frontmatter['slug']}.md"
     return filename, markdown
@@ -357,7 +370,22 @@ def run(args: argparse.Namespace) -> int:
     else:
         prompt = build_prompt(plan, topic, brief_date, used_slugs)
         package_text = call_openai_responses(prompt, args.model, use_web_search=not args.no_web_search)
-    validated = validate_package(package_text, brief_date, used_slugs)
+    args.output_dir.mkdir(parents=True, exist_ok=True)
+    (args.output_dir / "market_brief_package.raw.txt").write_text(package_text, encoding="utf-8")
+    try:
+        validated = validate_package(package_text, brief_date, used_slugs)
+    except MarketBriefError as exc:
+        error_report = {
+            "error": str(exc),
+            "brief_date": brief_date.isoformat(),
+            "topic": topic.get("key"),
+            "raw_package": "market_brief_package.raw.txt",
+        }
+        (args.output_dir / "market_brief_generation_error.json").write_text(
+            json.dumps(error_report, indent=2) + "\n",
+            encoding="utf-8",
+        )
+        raise
     paths = write_outputs(args.output_dir, package_text, validated)
     print(json.dumps({"title": issue_title(validated), **paths}, indent=2))
     return 0

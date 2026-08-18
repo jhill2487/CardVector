@@ -141,6 +141,23 @@ class MarketBriefWorkflowContractTests(unittest.TestCase):
         self.assertIn("### Fact-check notes", body)
         self.assertIn("### TikTok package", body)
 
+    def test_generator_selects_frontmatter_markdown_block(self):
+        generator = load_generator_module()
+        package = SAMPLE_PACKAGE.replace(
+            "2026-08-17-seasonal-pokemon-card-market-trends.md\n\n```markdown",
+            "2026-08-17-seasonal-pokemon-card-market-trends.md\n\n```text\nDo not parse this helper block.\n```\n\n```markdown",
+        )
+        validated = generator.validate_package(package, dt.date(2026, 8, 17), set())
+        self.assertTrue(validated["markdown"].startswith("---\n"))
+
+    def test_generator_accepts_bare_article_frontmatter(self):
+        generator = load_generator_module()
+        package = SAMPLE_PACKAGE.replace("```markdown\n", "", 1)
+        article_end = package.index("\n```\nFACT_CHECK_NOTES")
+        package = package[:article_end] + package[article_end + len("\n```") :]
+        validated = generator.validate_package(package, dt.date(2026, 8, 17), set())
+        self.assertEqual("seasonal-pokemon-card-market-trends", validated["metadata"]["slug"])
+
     def test_generator_rejects_duplicate_slug(self):
         generator = load_generator_module()
         with self.assertRaisesRegex(Exception, "already exists"):

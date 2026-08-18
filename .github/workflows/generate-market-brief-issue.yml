@@ -84,6 +84,7 @@ jobs:
           echo "Created market brief issue: ${url}"
 
       - name: Upload generated package artifact
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: market-brief-generation-package
