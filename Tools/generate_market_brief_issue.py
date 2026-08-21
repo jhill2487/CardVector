@@ -94,7 +94,7 @@ def choose_topic(plan: dict[str, Any], brief_date: dt.date, used_slugs: set[str]
 def build_prompt(plan: dict[str, Any], topic: dict[str, Any], brief_date: dt.date, used_slugs: set[str]) -> str:
     used = ", ".join(sorted(used_slugs)) or "none"
     secondary = topic.get("secondary_keywords", [])
-    return f"""Create CardVector's weekly market brief publishing package in a deterministic format suitable for automated GitHub ingestion.
+    return f"""Create CardVector's market brief publishing package in a deterministic format suitable for automated GitHub ingestion.
 
 Return only one valid JSON object. Do not wrap the JSON in Markdown fences. Do not include any prose before or after the JSON.
 
@@ -471,7 +471,7 @@ def write_outputs(output_dir: Path, package_text: str, validated: dict[str, Any]
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Generate and validate a weekly CardVector market brief issue package.")
+    parser = argparse.ArgumentParser(description="Generate and validate a CardVector market brief issue package.")
     parser.add_argument("--date", default=today_utc().isoformat(), help="Brief date in YYYY-MM-DD format.")
     parser.add_argument("--content-plan", type=Path, default=DEFAULT_PLAN)
     parser.add_argument("--briefs-dir", type=Path, default=DEFAULT_BRIEFS_DIR)

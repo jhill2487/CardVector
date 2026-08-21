@@ -432,7 +432,7 @@ def render_market_brief_static_pages(output: Path, posts: list[dict[str, object]
         "@context": "https://schema.org",
         "@type": "ItemList",
         "name": "Pokemon Market Briefs",
-        "description": "Weekly Pokemon card market updates and seller strategy notes from Putnam Collectibles.",
+        "description": "Pokemon card market updates and seller strategy notes from Putnam Collectibles.",
         "itemListElement": [
             {
                 "@type": "ListItem",
@@ -449,7 +449,7 @@ def render_market_brief_static_pages(output: Path, posts: list[dict[str, object]
     ]))
     index_html = render_public_header(
         "Pokemon Market Briefs for Sellers | Putnam Collectibles",
-        "Weekly Pokemon card market briefs for sellers tracking pricing strategy, eBay and TCGplayer signals, inventory age, and collector demand.",
+        "Pokemon card market briefs for sellers tracking pricing strategy, eBay and TCGplayer signals, inventory age, and collector demand.",
         f"{SITE_URL}/market-briefs/",
         keywords=["Pokemon market briefs", "Pokemon card prices", "Pokemon seller strategy", "eBay Pokemon cards", "TCGplayer pricing"],
     ) + f"""
@@ -468,7 +468,7 @@ def render_market_brief_static_pages(output: Path, posts: list[dict[str, object]
         </article>
         <article>
           <h2>How to use them</h2>
-          <p>Use the weekly notes as a starting point for checking recent sold listings, stale inventory, card condition, and listing quality before making price changes.</p>
+          <p>Use these notes as a starting point for checking recent sold listings, stale inventory, card condition, and listing quality before making price changes.</p>
         </article>
       </div>
       <div class="brief-grid">

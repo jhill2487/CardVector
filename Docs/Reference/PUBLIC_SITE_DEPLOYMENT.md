@@ -36,7 +36,7 @@ It runs on:
 
 ## Market Brief Draft Automation
 
-Weekly Pokemon market briefs are source-controlled Markdown files under:
+Pokemon market briefs are source-controlled Markdown files under:
 
 ```text
 Docs/content/market-briefs/
