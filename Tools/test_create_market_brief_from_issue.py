@@ -108,6 +108,48 @@ Keep these in the issue only.
         self.assertNotIn("Fact-check notes", content)
         self.assertEqual("fenced_markdown", report["input_mode"])
 
+    def test_build_markdown_uses_article_file_when_publishing_package_has_json_first(self):
+        issue = {
+            "number": 85,
+            "title": "[Content Draft] Pokemon Card Pricing Strategy - 2026-08-24",
+            "url": "https://github.com/jhill2487/CardVector/issues/85",
+            "body": """## Filename
+
+`2026-08-24-pokemon-card-pricing-strategy.md`
+
+## Publishing package
+
+```json
+{"title": "Pokemon Card Pricing Strategy"}
+```
+
+## Article file
+
+```markdown
+---
+title: "Pokemon Card Pricing Strategy"
+slug: "pokemon-card-pricing-strategy"
+date: "2026-08-24"
+description: "Short SEO description and site teaser."
+status: "published"
+---
+
+# Pokemon Card Pricing Strategy
+
+Article content.
+```
+
+## Fact-check notes
+
+Keep these in the issue only.
+""",
+        }
+        filename, content, report = build_market_brief_markdown(issue, "published")
+        self.assertEqual("2026-08-24-pokemon-card-pricing-strategy.md", filename)
+        self.assertTrue(content.startswith("---\n"))
+        self.assertNotIn("Publishing package", content)
+        self.assertEqual("fenced_markdown", report["input_mode"])
+
     def test_validate_fenced_article_requires_frontmatter(self):
         with self.assertRaises(ValueError):
             validate_article_markdown("# Missing frontmatter")

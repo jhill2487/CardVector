@@ -47,9 +47,12 @@ def parse_issue_sections(body: str) -> dict[str, str]:
     sections: dict[str, list[str]] = {}
     current_heading = "body"
     sections[current_heading] = []
+    in_fence = False
     for line in body.splitlines():
-        match = re.match(r"^###\s+(.+?)\s*$", line)
-        if match:
+        if line.strip().startswith("```"):
+            in_fence = not in_fence
+        match = re.match(r"^#{2,3}\s+(.+?)\s*$", line) if not in_fence else None
+        if match and normalize_heading(match.group(1)) in KNOWN_SECTION_KEYS:
             normalized = normalize_heading(match.group(1))
             current_heading = KNOWN_SECTION_KEYS.get(normalized, normalized)
             sections.setdefault(current_heading, [])
