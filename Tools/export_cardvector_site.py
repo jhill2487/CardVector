@@ -17,6 +17,7 @@ PUBLIC_FILES = (
     "app.js",
     "style.css",
     "robots.txt",
+    "content/shop/direct-inventory.json",
     "tools/carduploader/index.html",
     "CNAME",
     "_config.yml",
@@ -76,6 +77,7 @@ CLIENT_ROUTES = {
     "buylist",
     "bulk",
     "contact",
+    "cart",
     "events",
     "etb",
     "location",
@@ -90,6 +92,7 @@ CLIENT_ROUTES = {
     "sell",
     "tools",
     "registry",
+    "shop",
 }
 
 
@@ -325,7 +328,7 @@ def render_public_header(
   <meta property="og:image" content="{SITE_URL}/assets/putnam-ebay-banner.png">
   <meta name="twitter:card" content="summary_large_image">
   <title>{escape_html(title)}</title>
-  <link rel="stylesheet" href="/style.css?v=20260812-seo">
+  <link rel="stylesheet" href="/style.css?v=20260827-direct-store">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -338,10 +341,12 @@ def render_public_header(
       <details class="nav-menu" open>
         <summary aria-label="Open site navigation">Menu</summary>
         <ul class="nav-links" aria-label="Site navigation">
+          <li><a class="nav-shop nav-cta" href="/shop/">Shop Direct</a></li>
           <li><a class="nav-shop nav-cta" href="{{{{EBAY_STORE_URL}}}}" target="_blank" rel="noopener noreferrer">Shop eBay</a></li>
           <li><a class="nav-shop nav-cta-secondary" href="{{{{TCGPLAYER_STORE_URL}}}}" target="_blank" rel="noopener noreferrer">Shop TCGplayer</a></li>
           <li><a class="nav-shop nav-cta-secondary" href="{{{{MANAPOOL_STORE_URL}}}}" target="_blank" rel="noopener noreferrer">Shop Manapool</a></li>
           <li><a href="/market-briefs/">Market Briefs</a></li>
+          <li><a href="/cart/" data-cart-count-label>Cart</a></li>
           <li><a href="/sell/">Sell Your Collection</a></li>
           <li><a href="/tools/carduploader/">CardUploader</a></li>
           <li><a href="/#contact">Contact</a></li>
@@ -359,6 +364,8 @@ def render_public_footer() -> str:
       <p>&copy; 2026 Putnam Collectibles</p>
       <ul>
         <li><a href="/market-briefs/">Market Briefs</a></li>
+        <li><a href="/shop/">Shop Direct</a></li>
+        <li><a href="/cart/">Cart</a></li>
         <li><a href="/tools/carduploader/">CardUploader</a></li>
         <li><a href="{{EBAY_STORE_URL}}" target="_blank" rel="noopener noreferrer">Shop eBay</a></li>
         <li><a href="{{TCGPLAYER_STORE_URL}}" target="_blank" rel="noopener noreferrer">Shop TCGplayer</a></li>
@@ -366,7 +373,7 @@ def render_public_footer() -> str:
       </ul>
     </div>
   </footer>
-  <script src="/app.js?v=20260812-seo" defer></script>
+  <script src="/app.js?v=20260827-direct-store" defer></script>
 </body>
 </html>
 """
@@ -595,10 +602,76 @@ def render_sell_static_page(output: Path) -> None:
     (sell_dir / "index.html").write_text(sell_html, encoding="utf-8")
 
 
+def render_shop_static_page(output: Path) -> None:
+    shop_dir = output / "shop"
+    shop_dir.mkdir(parents=True, exist_ok=True)
+    shop_html = render_public_header(
+        "Shop Putnam Collectibles Direct | Pokemon and MTG Singles",
+        "Shop trading card singles directly from Putnam Collectibles through the CardVector direct storefront and cart pilot.",
+        f"{SITE_URL}/shop/",
+        keywords=[
+            "shop Pokemon cards direct",
+            "Putnam Collectibles cards",
+            "Pokemon card singles",
+            "MTG singles",
+            "CardVector shop",
+        ],
+    ) + f"""
+    <script type="application/ld+json">{render_json_ld(breadcrumb_json_ld([
+        ("Home", SITE_URL + "/"),
+        ("Shop Direct", SITE_URL + "/shop/"),
+    ]))}</script>
+    <section class="direct-store-shell wrap" aria-labelledby="shop-page-title">
+      <div class="direct-store-hero">
+        <div>
+          <p class="eyebrow">Direct storefront pilot</p>
+          <h1 id="shop-page-title">Shop Putnam Collectibles Direct</h1>
+          <p>CardVector is preparing a direct shopping cart for available trading card singles. Live checkout will be enabled after inventory reservation and payment capture controls are validated.</p>
+        </div>
+        <a class="button secondary" href="/cart/">View Cart</a>
+      </div>
+      <aside class="direct-store-safety">
+        <strong>Oversell safety first</strong>
+        <p>The direct store is designed around availability re-checks, short checkout holds, and future payment authorization before marketplace availability is removed.</p>
+      </aside>
+    </section>
+""" + render_public_footer()
+    (shop_dir / "index.html").write_text(shop_html, encoding="utf-8")
+
+
+def render_cart_static_page(output: Path) -> None:
+    cart_dir = output / "cart"
+    cart_dir.mkdir(parents=True, exist_ok=True)
+    cart_html = render_public_header(
+        "Cart | Putnam Collectibles Direct Store",
+        "Review your Putnam Collectibles direct-store cart and prepare a checkout hold through CardVector.",
+        f"{SITE_URL}/cart/",
+        keywords=["Putnam Collectibles cart", "CardVector cart", "Pokemon cards checkout"],
+    ) + f"""
+    <script type="application/ld+json">{render_json_ld(breadcrumb_json_ld([
+        ("Home", SITE_URL + "/"),
+        ("Shop Direct", SITE_URL + "/shop/"),
+        ("Cart", SITE_URL + "/cart/"),
+    ]))}</script>
+    <section class="direct-store-shell wrap" aria-labelledby="cart-page-title">
+      <div class="direct-store-hero">
+        <div>
+          <p class="eyebrow">Direct checkout foundation</p>
+          <h1 id="cart-page-title">CardVector Cart</h1>
+          <p>The cart page loads your current browser cart and validates quantities against the direct-store inventory feed.</p>
+        </div>
+        <a class="button secondary" href="/shop/">Continue Shopping</a>
+      </div>
+    </section>
+""" + render_public_footer()
+    (cart_dir / "index.html").write_text(cart_html, encoding="utf-8")
+
+
 def render_sitemap(output: Path, posts: list[dict[str, object]]) -> None:
     urls = [
         (SITE_URL + "/", "2026-08-12", "weekly", "1.0"),
         (SITE_URL + "/market-briefs/", "2026-08-12", "weekly", "0.8"),
+        (SITE_URL + "/shop/", "2026-08-27", "daily", "0.8"),
         (SITE_URL + "/sell/", "2026-08-17", "monthly", "0.8"),
         (SITE_URL + "/tools/carduploader/", "2026-08-12", "monthly", "0.8"),
     ]
@@ -700,7 +773,10 @@ def write_generated_files(output: Path, commit: str, market_briefs: list[dict[st
             MARKET_BRIEF_INDEX_FILE.as_posix(),
             "market-briefs/index.html",
             "market-briefs/<slug>/index.html",
+            "shop/index.html",
+            "cart/index.html",
             "sell/index.html",
+            "content/shop/direct-inventory.json",
             "sitemap.xml",
         ],
         "market_brief_count": len(market_briefs),
@@ -778,6 +854,8 @@ def export_site(source: Path, output: Path, commit: str) -> None:
     render_site_config(output, site_config)
     market_briefs = render_market_brief_index(source, output)
     render_market_brief_static_pages(output, market_briefs)
+    render_shop_static_page(output)
+    render_cart_static_page(output)
     render_sell_static_page(output)
     render_sitemap(output, market_briefs)
     render_site_config(output, site_config)

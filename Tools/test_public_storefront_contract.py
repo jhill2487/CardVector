@@ -76,10 +76,12 @@ class PublicStorefrontContractTests(unittest.TestCase):
         nav = re.search(r'<ul class="nav-links"[^>]*>(.*?)</ul>', self.source_html, re.S)
         self.assertIsNotNone(nav)
         labels = [
+            "Shop Direct",
             "Shop eBay",
             "Shop TCGplayer",
             "Shop Manapool",
             "Market Briefs",
+            "Cart",
             "Sell Your Collection",
             "Whatnot",
             "About",
@@ -194,6 +196,7 @@ class PublicStorefrontContractTests(unittest.TestCase):
         self.assertIn("Sitemap: https://cardvector.app/sitemap.xml", self.output_robots)
         self.assertIn("<loc>https://cardvector.app/</loc>", self.output_sitemap)
         self.assertIn("<loc>https://cardvector.app/market-briefs/</loc>", self.output_sitemap)
+        self.assertIn("<loc>https://cardvector.app/shop/</loc>", self.output_sitemap)
         self.assertIn("<loc>https://cardvector.app/sell/</loc>", self.output_sitemap)
         self.assertIn("<loc>https://cardvector.app/tools/carduploader/</loc>", self.output_sitemap)
         self.assertIn("<loc>https://cardvector.app/market-briefs/why-pokemon-card-prices-change/</loc>", self.output_sitemap)
@@ -222,6 +225,30 @@ class PublicStorefrontContractTests(unittest.TestCase):
         self.assertIn('"@type":"BlogPosting"', post_html)
         self.assertIn('"@type":"BreadcrumbList"', post_html)
         self.assertIn('<link rel="canonical" href="https://cardvector.app/market-briefs/why-pokemon-card-prices-change/">', post_html)
+
+    def test_direct_storefront_cart_foundation_is_present(self):
+        self.assertIn('href="/shop/"', self.source_html)
+        self.assertIn('href="/cart/"', self.source_html)
+        self.assertIn("Shop Direct", self.source_html)
+        self.assertIn("CardVector Cart", self.source_html)
+        self.assertIn("directStoreInventoryUrl", self.source_js)
+        self.assertIn("/content/shop/direct-inventory.json", self.source_js)
+        self.assertIn("cardvector.directStoreCart.v1", self.source_js)
+        self.assertIn("cardvector.directStoreReservations.v1", self.source_js)
+        self.assertIn("createDirectStoreReservation", self.source_js)
+        self.assertIn("payment_status: \"not_configured\"", self.source_js)
+        self.assertIn("marketplace_release_status: \"not_configured\"", self.source_js)
+        self.assertIn("Adding to cart does not reserve inventory", self.source_js)
+        self.assertIn(".direct-store-shell", self.source_css)
+        self.assertIn(".direct-cart-panel", self.source_css)
+        self.assertTrue((self.output / "shop" / "index.html").exists())
+        self.assertTrue((self.output / "cart" / "index.html").exists())
+        self.assertTrue((self.output / "content" / "shop" / "direct-inventory.json").exists())
+        direct_inventory = json.loads((self.output / "content" / "shop" / "direct-inventory.json").read_text(encoding="utf-8"))
+        self.assertEqual("reservation_pilot", direct_inventory["checkout_mode"])
+        self.assertEqual([], direct_inventory["items"])
+        self.assertIn("Shop Putnam Collectibles Direct", (self.output / "shop" / "index.html").read_text(encoding="utf-8"))
+        self.assertIn("CardVector Cart", (self.output / "cart" / "index.html").read_text(encoding="utf-8"))
 
     def test_sell_page_is_static_crawlable_and_canonical(self):
         self.assertIn("Sell Pokemon Cards and Trading Card Collections", self.output_sell)
