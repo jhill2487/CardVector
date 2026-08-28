@@ -7,6 +7,9 @@ CardVector.app uses a hybrid storefront model:
 3. The Edge Function re-fetches the feed, validates prices and availability, creates a pending order, and redirects the customer to Stripe Checkout.
 4. Stripe Checkout collects email, shipping address, payment details, and optional promotional-email consent.
 5. The Stripe webhook marks the order paid and ready to ship in Supabase.
+6. The webhook creates one private CardUploader/eBay release job per paid order
+   item so the downstream helper can remove purchased inventory from the live
+   marketplace workflow.
 
 Transactional order, receipt, shipping, and tracking updates are not marketing
 messages and do not require promotional opt-in. Promotional email consent is
@@ -46,9 +49,13 @@ Listen for at least:
   Checkout Session and webhook-related permissions needed by these functions.
   `STRIPE_SECRET_KEY` remains a fallback name for local testing only.
 - The browser does not collect card numbers.
-- Checkout does not automatically remove marketplace availability.
+- Checkout queues marketplace release jobs after payment. The trusted
+  CardUploader executor must still be enabled separately before any live
+  CardUploader or eBay inventory state is changed.
 - CardUploader remains managed-inventory truth.
 - Supabase direct-store order tables are service-role only.
+- Supabase direct-store release jobs are service-role only until the private
+  helper/executor is wired and validated.
 - Shipping confirmation email delivery still needs a transactional email sender
   or a fulfillment workflow that records `tracking_number`, `shipping_carrier`,
   and `shipping_confirmation_sent_at`.
