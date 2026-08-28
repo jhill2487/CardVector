@@ -6,6 +6,16 @@
 
 create extension if not exists pgcrypto;
 
+create or replace function public.cardvector_direct_store_touch_updated_at()
+returns trigger
+language plpgsql
+as $$
+begin
+  new.updated_at = now();
+  return new;
+end;
+$$;
+
 create table if not exists public.cardvector_direct_store_customers (
   id uuid primary key default gen_random_uuid(),
   email text not null,
@@ -144,19 +154,19 @@ drop trigger if exists cardvector_direct_store_customers_touch_updated_at
   on public.cardvector_direct_store_customers;
 create trigger cardvector_direct_store_customers_touch_updated_at
 before update on public.cardvector_direct_store_customers
-for each row execute function public.cardvector_registry_touch_updated_at();
+for each row execute function public.cardvector_direct_store_touch_updated_at();
 
 drop trigger if exists cardvector_direct_store_orders_touch_updated_at
   on public.cardvector_direct_store_orders;
 create trigger cardvector_direct_store_orders_touch_updated_at
 before update on public.cardvector_direct_store_orders
-for each row execute function public.cardvector_registry_touch_updated_at();
+for each row execute function public.cardvector_direct_store_touch_updated_at();
 
 drop trigger if exists cardvector_direct_store_checkout_events_touch_updated_at
   on public.cardvector_direct_store_checkout_events;
 create trigger cardvector_direct_store_checkout_events_touch_updated_at
 before update on public.cardvector_direct_store_checkout_events
-for each row execute function public.cardvector_registry_touch_updated_at();
+for each row execute function public.cardvector_direct_store_touch_updated_at();
 
 alter table public.cardvector_direct_store_customers enable row level security;
 alter table public.cardvector_direct_store_orders enable row level security;
