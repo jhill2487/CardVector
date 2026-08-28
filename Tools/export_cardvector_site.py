@@ -43,6 +43,7 @@ SITE_CONFIG_KEYS = (
     "COLLECTION_INQUIRY_URL",
     "CONTACT_EMAIL",
     "CONTACT_EMAIL_URL",
+    "CHECKOUT_FUNCTION_URL",
 )
 
 PROHIBITED_PARTS = {
@@ -328,7 +329,7 @@ def render_public_header(
   <meta property="og:image" content="{SITE_URL}/assets/putnam-ebay-banner.png">
   <meta name="twitter:card" content="summary_large_image">
   <title>{escape_html(title)}</title>
-  <link rel="stylesheet" href="/style.css?v=20260827-direct-store">
+  <link rel="stylesheet" href="/style.css?v=20260828-direct-checkout">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -373,7 +374,7 @@ def render_public_footer() -> str:
       </ul>
     </div>
   </footer>
-  <script src="/app.js?v=20260827-direct-store" defer></script>
+  <script src="/app.js?v=20260828-direct-checkout" defer></script>
 </body>
 </html>
 """
@@ -626,13 +627,13 @@ def render_shop_static_page(output: Path) -> None:
         <div>
           <p class="eyebrow">Direct storefront pilot</p>
           <h1 id="shop-page-title">Shop Putnam Collectibles Direct</h1>
-          <p>CardVector is preparing a direct shopping cart for available trading card singles. Live checkout will be enabled after inventory reservation and payment capture controls are validated.</p>
+          <p>CardVector is preparing a direct shopping cart for available trading card singles. Secure checkout uses Stripe after server-side inventory validation.</p>
         </div>
         <a class="button secondary" href="/cart/">View Cart</a>
       </div>
       <aside class="direct-store-safety">
         <strong>Oversell safety first</strong>
-        <p>The direct store is designed around availability re-checks, short checkout holds, and future payment authorization before marketplace availability is removed.</p>
+        <p>The direct store is designed around availability re-checks, Stripe payment capture, and a separate fulfillment step before marketplace availability is removed.</p>
       </aside>
     </section>
 """ + render_public_footer()
@@ -644,7 +645,7 @@ def render_cart_static_page(output: Path) -> None:
     cart_dir.mkdir(parents=True, exist_ok=True)
     cart_html = render_public_header(
         "Cart | Putnam Collectibles Direct Store",
-        "Review your Putnam Collectibles direct-store cart and prepare a checkout hold through CardVector.",
+        "Review your Putnam Collectibles direct-store cart and continue to secure Stripe checkout through CardVector.",
         f"{SITE_URL}/cart/",
         keywords=["Putnam Collectibles cart", "CardVector cart", "Pokemon cards checkout"],
     ) + f"""
@@ -658,7 +659,7 @@ def render_cart_static_page(output: Path) -> None:
         <div>
           <p class="eyebrow">Direct checkout foundation</p>
           <h1 id="cart-page-title">CardVector Cart</h1>
-          <p>The cart page loads your current browser cart and validates quantities against the direct-store inventory feed.</p>
+          <p>The cart page loads your current browser cart and starts secure checkout after CardVector validates quantities against the direct-store inventory feed.</p>
         </div>
         <a class="button secondary" href="/shop/">Continue Shopping</a>
       </div>

@@ -21,6 +21,7 @@ EXPECTED_URLS = {
     "COLLECTION_INQUIRY_URL": "https://tally.so/r/ob1ABN",
     "CONTACT_EMAIL": "Putnam.collects@gmail.com",
     "CONTACT_EMAIL_URL": "https://mail.google.com/mail/?view=cm&fs=1&to=Putnam.collects%40gmail.com&su=Putnam%20Collectibles%20Inquiry",
+    "CHECKOUT_FUNCTION_URL": "https://iqdpfgpkagjxzedfxrvn.supabase.co/functions/v1/create-checkout-session",
 }
 
 
@@ -238,10 +239,13 @@ class PublicStorefrontContractTests(unittest.TestCase):
         self.assertIn("cardvector.directStoreFilters.v1", self.source_js)
         self.assertIn("filterDirectStoreItems", self.source_js)
         self.assertIn("createDirectStoreReservation", self.source_js)
+        self.assertIn("createDirectStoreCheckoutSession", self.source_js)
+        self.assertIn("Continue to Secure Checkout", self.source_js)
+        self.assertIn("Stripe will collect the buyer email, shipping address, and payment information", self.source_js)
         self.assertIn("payment_status: \"not_configured\"", self.source_js)
         self.assertIn("marketplace_release_status: \"not_configured\"", self.source_js)
         self.assertIn("Adding to cart does not reserve inventory", self.source_js)
-        self.assertIn("static browse feed", self.source_js)
+        self.assertIn("static_browse_feed", self.source_js)
         self.assertIn("without pulling original capture images from Supabase", self.source_js)
         self.assertIn(".direct-store-shell", self.source_css)
         self.assertIn(".direct-store-feed-bar", self.source_css)
@@ -338,8 +342,11 @@ class PublicStorefrontContractTests(unittest.TestCase):
     def test_export_resolves_configuration_and_keeps_links_safe(self):
         for text in (self.output_html, self.output_404, self.output_js):
             self.assertNotRegex(text, r"\{\{[A-Z0-9_]+\}\}")
-        for url in EXPECTED_URLS.values():
+        for key, url in EXPECTED_URLS.items():
+            if key == "CHECKOUT_FUNCTION_URL":
+                continue
             self.assertIn(url, self.output_html)
+        self.assertIn(EXPECTED_URLS["CHECKOUT_FUNCTION_URL"], self.output_js)
 
         parser = AnchorParser()
         parser.feed(self.output_html)
