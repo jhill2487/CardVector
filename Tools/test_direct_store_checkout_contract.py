@@ -30,7 +30,7 @@ class DirectStoreCheckoutContractTests(unittest.TestCase):
         self.assertIn("Continue to Secure Checkout", self.app_js)
         self.assertIn("window.location.assign(result.checkout_url)", self.app_js)
         self.assertIn("Shipping and tracking messages are transactional order updates", self.app_js)
-        self.assertIn("Promotional emails are optional in Stripe Checkout", self.app_js)
+        self.assertNotIn("Promotional emails are optional in Stripe Checkout", self.app_js)
         self.assertNotIn("stripe.confirmPayment", self.app_js)
         self.assertNotIn("paypal.Buttons", self.app_js)
 
@@ -61,7 +61,7 @@ class DirectStoreCheckoutContractTests(unittest.TestCase):
         self.assertIn("stripe.checkout.sessions.create", self.create_checkout)
         self.assertIn("integration_identifier", self.create_checkout)
         self.assertIn('shipping_address_collection: { allowed_countries: ["US"] }', self.create_checkout)
-        self.assertIn('consent_collection: { promotions: "auto" }', self.create_checkout)
+        self.assertNotIn("consent_collection", self.create_checkout)
         self.assertIn("DIRECT_STORE_FEED_URL", self.create_checkout)
         self.assertIn("cardvector_direct_store_orders", self.create_checkout)
         self.assertIn("cardvector_direct_store_order_items", self.create_checkout)
