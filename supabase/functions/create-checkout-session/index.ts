@@ -190,7 +190,6 @@ Deno.serve(async (req) => {
           display_name: "Standard shipping",
         },
       }],
-      consent_collection: { promotions: "auto" },
       metadata: {
         cardvector_order_id: order.id,
         cardvector_public_order_id: order.public_order_id,
