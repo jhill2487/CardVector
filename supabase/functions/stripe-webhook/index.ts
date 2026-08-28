@@ -1,10 +1,10 @@
-import Stripe from "npm:stripe@22.0.0";
+import Stripe from "npm:stripe@22.4.0";
 import { createClient } from "npm:@supabase/supabase-js@2.45.4";
 
-function env(name: string): string {
-  const value = Deno.env.get(name);
+function env(name: string, fallbackName = ""): string {
+  const value = Deno.env.get(name) || (fallbackName ? Deno.env.get(fallbackName) : "");
   if (!value) {
-    throw new Error(`${name} is not configured`);
+    throw new Error(`${fallbackName ? `${name} or ${fallbackName}` : name} is not configured`);
   }
   return value;
 }
@@ -29,7 +29,9 @@ Deno.serve(async (req) => {
     return new Response("Method not allowed", { status: 405 });
   }
 
-  const stripe = new Stripe(env("STRIPE_SECRET_KEY"));
+  const stripe = new Stripe(env("STRIPE_RESTRICTED_KEY", "STRIPE_SECRET_KEY"), {
+    apiVersion: "2026-07-29.dahlia",
+  });
   const signature = req.headers.get("stripe-signature") || "";
   const rawBody = await req.text();
   let event: Stripe.Event;

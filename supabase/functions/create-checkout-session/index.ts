@@ -1,4 +1,4 @@
-import Stripe from "npm:stripe@22.0.0";
+import Stripe from "npm:stripe@22.4.0";
 import { createClient } from "npm:@supabase/supabase-js@2.45.4";
 
 type DirectStoreItem = {
@@ -49,12 +49,19 @@ async function sha256Hex(value: string): Promise<string> {
   return Array.from(new Uint8Array(digest)).map((byte) => byte.toString(16).padStart(2, "0")).join("");
 }
 
-function env(name: string): string {
-  const value = Deno.env.get(name);
+function env(name: string, fallbackName = ""): string {
+  const value = Deno.env.get(name) || (fallbackName ? Deno.env.get(fallbackName) : "");
   if (!value) {
-    throw new Error(`${name} is not configured`);
+    throw new Error(`${fallbackName ? `${name} or ${fallbackName}` : name} is not configured`);
   }
   return value;
+}
+
+function randomLetters(length: number): string {
+  const alphabet = "abcdefghijklmnopqrstuvwxyz";
+  const bytes = new Uint8Array(length);
+  crypto.getRandomValues(bytes);
+  return Array.from(bytes).map((byte) => alphabet[byte % alphabet.length]).join("");
 }
 
 function orderPublicId(): string {
@@ -71,7 +78,9 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const stripe = new Stripe(env("STRIPE_SECRET_KEY"));
+    const stripe = new Stripe(env("STRIPE_RESTRICTED_KEY", "STRIPE_SECRET_KEY"), {
+      apiVersion: "2026-07-29.dahlia",
+    });
     const supabase = createClient(env("SUPABASE_URL"), env("SUPABASE_SERVICE_ROLE_KEY"), {
       auth: { persistSession: false },
     });
@@ -160,6 +169,7 @@ Deno.serve(async (req) => {
 
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
+      integration_identifier: `cardvector_direct_store_${randomLetters(8)}`,
       line_items: orderItems.map(({ item, line, unitAmount }) => ({
         quantity: line.quantity,
         price_data: {

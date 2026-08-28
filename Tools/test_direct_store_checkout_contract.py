@@ -53,9 +53,13 @@ class DirectStoreCheckoutContractTests(unittest.TestCase):
         self.assertIn("stripe_checkout_session_id text unique", self.sql)
 
     def test_edge_functions_use_stripe_checkout_and_webhook(self):
+        self.assertIn('npm:stripe@22.4.0', self.create_checkout)
+        self.assertIn("STRIPE_RESTRICTED_KEY", self.create_checkout)
         self.assertIn("STRIPE_SECRET_KEY", self.create_checkout)
+        self.assertIn("apiVersion: \"2026-07-29.dahlia\"", self.create_checkout)
         self.assertIn("SUPABASE_SERVICE_ROLE_KEY", self.create_checkout)
         self.assertIn("stripe.checkout.sessions.create", self.create_checkout)
+        self.assertIn("integration_identifier", self.create_checkout)
         self.assertIn('shipping_address_collection: { allowed_countries: ["US"] }', self.create_checkout)
         self.assertIn('consent_collection: { promotions: "auto" }', self.create_checkout)
         self.assertIn("DIRECT_STORE_FEED_URL", self.create_checkout)
@@ -63,6 +67,9 @@ class DirectStoreCheckoutContractTests(unittest.TestCase):
         self.assertIn("cardvector_direct_store_order_items", self.create_checkout)
 
         self.assertIn("STRIPE_WEBHOOK_SECRET", self.webhook)
+        self.assertIn('npm:stripe@22.4.0', self.webhook)
+        self.assertIn("STRIPE_RESTRICTED_KEY", self.webhook)
+        self.assertIn("apiVersion: \"2026-07-29.dahlia\"", self.webhook)
         self.assertIn("constructEventAsync", self.webhook)
         self.assertIn('event.type === "checkout.session.completed"', self.webhook)
         self.assertIn('fulfillment_status: "ready_to_ship"', self.webhook)

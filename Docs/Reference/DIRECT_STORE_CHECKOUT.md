@@ -20,7 +20,7 @@ Production checkout is not active until these steps are completed:
 supabase db push
 supabase functions deploy create-checkout-session
 supabase functions deploy stripe-webhook
-supabase secrets set STRIPE_SECRET_KEY=...
+supabase secrets set STRIPE_RESTRICTED_KEY=...
 supabase secrets set STRIPE_WEBHOOK_SECRET=...
 supabase secrets set SUPABASE_SERVICE_ROLE_KEY=...
 supabase secrets set CARDVECTOR_SITE_URL=https://cardvector.app
@@ -42,6 +42,9 @@ Listen for at least:
 ## Safety Notes
 
 - The browser never receives Stripe secret keys or Supabase service-role keys.
+- Prefer a Stripe restricted API key (`STRIPE_RESTRICTED_KEY`) with the minimum
+  Checkout Session and webhook-related permissions needed by these functions.
+  `STRIPE_SECRET_KEY` remains a fallback name for local testing only.
 - The browser does not collect card numbers.
 - Checkout does not automatically remove marketplace availability.
 - CardUploader remains managed-inventory truth.
