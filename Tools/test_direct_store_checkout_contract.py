@@ -6,6 +6,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "Docs"
 MIGRATION = ROOT / "supabase" / "migrations" / "20260828120000_direct_store_checkout.sql"
+RELEASE_JOB_MIGRATION = ROOT / "supabase" / "migrations" / "20260828163000_direct_store_release_jobs.sql"
 CREATE_CHECKOUT = ROOT / "supabase" / "functions" / "create-checkout-session" / "index.ts"
 STRIPE_WEBHOOK = ROOT / "supabase" / "functions" / "stripe-webhook" / "index.ts"
 SUPABASE_CONFIG = ROOT / "supabase" / "config.toml"
@@ -17,6 +18,7 @@ class DirectStoreCheckoutContractTests(unittest.TestCase):
         cls.app_js = (DOCS / "app.js").read_text(encoding="utf-8")
         cls.site_config = json.loads((DOCS / "site-config.json").read_text(encoding="utf-8"))
         cls.sql = MIGRATION.read_text(encoding="utf-8")
+        cls.release_job_sql = RELEASE_JOB_MIGRATION.read_text(encoding="utf-8")
         cls.create_checkout = CREATE_CHECKOUT.read_text(encoding="utf-8")
         cls.webhook = STRIPE_WEBHOOK.read_text(encoding="utf-8")
         cls.supabase_config = SUPABASE_CONFIG.read_text(encoding="utf-8")
@@ -52,6 +54,22 @@ class DirectStoreCheckoutContractTests(unittest.TestCase):
         self.assertIn("marketing_opt_in boolean not null default false", self.sql)
         self.assertIn("stripe_checkout_session_id text unique", self.sql)
 
+    def test_release_job_migration_is_private_and_idempotent(self):
+        table = "cardvector_direct_store_release_jobs"
+        self.assertIn(f"create table if not exists public.{table}", self.release_job_sql)
+        self.assertIn("order_id uuid not null references public.cardvector_direct_store_orders(id) on delete cascade", self.release_job_sql)
+        self.assertIn("order_item_id uuid not null references public.cardvector_direct_store_order_items(id) on delete cascade", self.release_job_sql)
+        self.assertIn("release_action text not null default 'release_purchased_quantity'", self.release_job_sql)
+        self.assertIn("release_status text not null default 'pending'", self.release_job_sql)
+        self.assertIn("target_system in ('carduploader')", self.release_job_sql)
+        self.assertIn("target_marketplace in ('ebay')", self.release_job_sql)
+        self.assertIn("cardvector_direct_store_release_jobs_order_item_idx", self.release_job_sql)
+        self.assertIn("on public.cardvector_direct_store_release_jobs(order_item_id)", self.release_job_sql)
+        self.assertIn(f"alter table public.{table} enable row level security", self.release_job_sql)
+        self.assertIn(f"revoke all on table public.{table} from anon", self.release_job_sql)
+        self.assertIn(f"revoke all on table public.{table} from authenticated", self.release_job_sql)
+        self.assertIn(f"grant select, insert, update on table public.{table} to service_role", self.release_job_sql)
+
     def test_edge_functions_use_stripe_checkout_and_webhook(self):
         self.assertIn('npm:stripe@22.4.0', self.create_checkout)
         self.assertIn("STRIPE_RESTRICTED_KEY", self.create_checkout)
@@ -71,8 +89,18 @@ class DirectStoreCheckoutContractTests(unittest.TestCase):
         self.assertIn("STRIPE_RESTRICTED_KEY", self.webhook)
         self.assertIn("apiVersion: \"2026-07-29.dahlia\"", self.webhook)
         self.assertIn("constructEventAsync", self.webhook)
+        self.assertIn('onConflict: "stripe_event_id"', self.webhook)
+        self.assertIn('processing_status: "received"', self.webhook)
         self.assertIn('event.type === "checkout.session.completed"', self.webhook)
         self.assertIn('fulfillment_status: "ready_to_ship"', self.webhook)
+        self.assertIn('marketplace_release_status: "automation_pending"', self.webhook)
+        self.assertIn("enqueueMarketplaceReleaseJobs", self.webhook)
+        self.assertIn("cardvector_direct_store_release_jobs", self.webhook)
+        self.assertIn('release_action: "release_purchased_quantity"', self.webhook)
+        self.assertIn('release_status: "pending"', self.webhook)
+        self.assertIn('onConflict: "order_item_id"', self.webhook)
+        self.assertIn("ignoreDuplicates: true", self.webhook)
+        self.assertIn("order_id: orderId", self.webhook)
         self.assertIn('marketing_consent_source: "stripe_checkout"', self.webhook)
         self.assertIn("shipping_details", self.webhook)
 

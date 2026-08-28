@@ -14,14 +14,60 @@ function consentStatus(session: Stripe.Checkout.Session): string {
   return value || "not_collected";
 }
 
-async function markEvent(status: string, eventId: string, errorMessage = ""): Promise<void> {
+async function markEvent(status: string, eventId: string, errorMessage = "", orderId: string | null = null): Promise<void> {
   const supabase = createClient(env("SUPABASE_URL"), env("SUPABASE_SERVICE_ROLE_KEY"), {
     auth: { persistSession: false },
   });
   await supabase
     .from("cardvector_direct_store_checkout_events")
-    .update({ processing_status: status, processed_at: new Date().toISOString(), error_message: errorMessage })
+    .update({
+      processing_status: status,
+      processed_at: new Date().toISOString(),
+      error_message: errorMessage,
+      ...(orderId ? { order_id: orderId } : {}),
+    })
     .eq("stripe_event_id", eventId);
+}
+
+async function enqueueMarketplaceReleaseJobs(
+  supabase: ReturnType<typeof createClient>,
+  order: { id: string; public_order_id: string },
+): Promise<void> {
+  const { data: items, error: itemsError } = await supabase
+    .from("cardvector_direct_store_order_items")
+    .select("id, item_id, title, quantity, source, source_listing_id, inventory_reference")
+    .eq("order_id", order.id);
+  if (itemsError) {
+    throw itemsError;
+  }
+  const rows = (items || []).map((item) => ({
+    order_id: order.id,
+    order_item_id: item.id,
+    public_order_id: order.public_order_id,
+    target_system: "carduploader",
+    target_marketplace: "ebay",
+    release_action: "release_purchased_quantity",
+    release_status: "pending",
+    item_id: item.item_id,
+    title: item.title,
+    quantity: item.quantity,
+    source: item.source || "",
+    source_listing_id: item.source_listing_id || "",
+    inventory_reference: item.inventory_reference || "",
+    metadata: {
+      queued_by: "stripe-webhook",
+      checkout_session_confirmed_at: new Date().toISOString(),
+    },
+  }));
+  if (!rows.length) {
+    throw new Error(`No order items found for order ${order.public_order_id}`);
+  }
+  const { error: releaseError } = await supabase
+    .from("cardvector_direct_store_release_jobs")
+    .upsert(rows, { onConflict: "order_item_id", ignoreDuplicates: true });
+  if (releaseError) {
+    throw releaseError;
+  }
 }
 
 Deno.serve(async (req) => {
@@ -46,23 +92,20 @@ Deno.serve(async (req) => {
   });
 
   const session = event.data.object as Stripe.Checkout.Session;
-  const { error: insertEventError } = await supabase
+  const { error: recordEventError } = await supabase
     .from("cardvector_direct_store_checkout_events")
-    .insert({
+    .upsert({
       stripe_event_id: event.id,
       event_type: event.type,
       stripe_checkout_session_id: typeof session.id === "string" ? session.id : "",
+      processing_status: "received",
+      processed_at: null,
+      error_message: "",
       payload: event as unknown as Record<string, unknown>,
-    });
-  if (insertEventError) {
-    const message = String(insertEventError.message || "");
-    if (message.includes("duplicate key")) {
-      return new Response(JSON.stringify({ received: true, duplicate: true }), {
-        headers: { "content-type": "application/json" },
-      });
-    }
-    console.error("webhook event insert failed", insertEventError);
-    return new Response("Webhook event insert failed", { status: 500 });
+    }, { onConflict: "stripe_event_id" });
+  if (recordEventError) {
+    console.error("webhook event recording failed", recordEventError);
+    return new Response("Webhook event recording failed", { status: 500 });
   }
 
   try {
@@ -94,12 +137,13 @@ Deno.serve(async (req) => {
         customerId = customer?.id || null;
       }
 
-      const { error: orderError } = await supabase
+      const { data: order, error: orderError } = await supabase
         .from("cardvector_direct_store_orders")
         .update({
           order_status: "paid",
           payment_status: "paid",
           fulfillment_status: "ready_to_ship",
+          marketplace_release_status: "automation_pending",
           ready_to_ship_at: new Date().toISOString(),
           paid_at: new Date().toISOString(),
           customer_id: customerId,
@@ -115,20 +159,25 @@ Deno.serve(async (req) => {
           shipping_cents: session.total_details?.amount_shipping ?? 0,
           tax_cents: session.total_details?.amount_tax ?? 0,
         })
-        .eq("stripe_checkout_session_id", session.id);
-      if (orderError) {
-        throw orderError;
+        .eq("stripe_checkout_session_id", session.id)
+        .select("id, public_order_id")
+        .single();
+      if (orderError || !order) {
+        throw orderError || new Error(`No order found for checkout session ${session.id}`);
       }
-      await markEvent("processed", event.id);
+      await enqueueMarketplaceReleaseJobs(supabase, order);
+      await markEvent("processed", event.id, "", order.id);
     } else if (event.type === "checkout.session.expired") {
-      const { error: expireError } = await supabase
+      const { data: order, error: expireError } = await supabase
         .from("cardvector_direct_store_orders")
         .update({ order_status: "expired", payment_status: "expired" })
-        .eq("stripe_checkout_session_id", session.id);
+        .eq("stripe_checkout_session_id", session.id)
+        .select("id")
+        .single();
       if (expireError) {
         throw expireError;
       }
-      await markEvent("processed", event.id);
+      await markEvent("processed", event.id, "", order?.id || null);
     } else {
       await markEvent("ignored", event.id);
     }
