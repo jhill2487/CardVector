@@ -140,3 +140,10 @@ objects after exporting any newly written rows.
 Implementation authorized by the project owner in the Supabase registry
 migration task. Production migration apply, production data import, and final
 cutover remain pending review and explicit approval.
+
+## Superseded By
+
+CV-ADR-026 supersedes this ADR for active roadmap priority. The schema and
+migration artifacts remain historical/restartable evidence, but production
+capture/location registry apply, import, and cutover are paused unless a future
+ADR reauthorizes the workflow.

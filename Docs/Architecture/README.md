@@ -24,17 +24,18 @@ evidence; a recommendation in an audit is not a binding decision.
 
 ## Current State
 
-- **Current phase:** Supabase capture/location registry migration gate after Phase 8
+- **Current phase:** CardUploader helper and web storefront work after Supabase registry migration pause
 - **Current production launcher:** `Platform/Putnam_OS/Run CardVector OS Production.vbs`
 - **Current Python target:** `Platform/Putnam_OS/System/app/putnam_os.py`
 - **Primary future operator UI:** CardVector.app
-- **CardVector OS future role:** compatibility/admin desktop tool during migration
+- **CardVector OS future role:** legacy/admin desktop tool; not the active operating workflow
 - **Proposed future entry point:** `py -m cardvector`
 - **Proposed future package root:** `Platform/cardvector/`
-- **Migration status:** `Platform/cardvector/application` is the canonical
-  orchestration layer, `Platform/cardvector/marketplace_intelligence` is the
-  canonical pricing API, and `Platform/cardvector/capture` is the canonical
-  Capture API; CardUploader is the external recognition and inventory owner
+- **Migration status:** `Platform/cardvector/application`,
+  `Platform/cardvector/marketplace_intelligence`, and
+  `Platform/cardvector/capture` remain documented architecture foundations, but
+  CardVector-owned capture, listing, and pricing operating workflows are no
+  longer active operator workflows unless reauthorized by a future ADR
 - **Phase 0:** Preserved with commits, a recovery branch, and patch/ZIP artifacts
 - **Phase 5:** CardVector uses a read-only CardUploader snapshot service and
   registered legacy ETB projection adapters. No live CardUploader inventory
@@ -49,15 +50,17 @@ evidence; a recommendation in an audit is not a binding decision.
   owns acquisition, packaging, shipping-estimate, marketplace-fee, minimum
   viable price, and profitability policy. Existing and new inventory use the
   same mandatory business-rules stage after FMV and Price Vector.
-- **Supabase registry migration:** Supabase is the accepted canonical source for
-  shared capture batches, ETBs/storage locations, capture images, and their
-  relationships. CardUploader remains the managed-inventory owner. Production
-  schema apply and legacy import remain gated by dry-run review.
+- **Supabase registry migration:** Paused and archived by CV-ADR-026. Do not run
+  production capture/location registry migrations, imports, or cutover commands
+  without a new explicit approval.
 - **Web-first UI decision:** CV-ADR-025 makes CardVector.app the primary future
   operator UI. CardVector OS remains the current production launcher and a
   compatibility/admin surface until its workflows are migrated or explicitly
   retired. Scanner/OBS workflows are no longer active roadmap requirements for
   the current operator workflow.
+- **Active helper direction:** CardUploader browser/helper automation remains an
+  active workstream because it supports the actual CardUploader managed
+  inventory and automatic eBay synchronization workflow.
 
 ## Canonical Owners
 
@@ -71,7 +74,7 @@ evidence; a recommendation in an audit is not a binding decision.
 | Shared business types | Future `cardvector.shared.domain` |
 | Capture | `Platform/cardvector/capture` |
 | Inventory records, quantities, locations, allocation, and picking state | CardUploader |
-| Shared capture batches, ETBs/storage locations, and capture images | Supabase through `Platform/cardvector/integrations/supabase` |
+| Shared capture batches, ETBs/storage locations, and capture images | Historical Supabase registry workstream; paused by CV-ADR-026 |
 | Inventory UI and workflow orchestration | `Platform/cardvector/application` through `Platform/cardvector/integrations/carduploader` |
 | FMV, Price Vector, Business Profile, business rules, pricing intelligence | `Platform/cardvector/marketplace_intelligence` |
 | Listings and eBay export records | Future `cardvector.listings` |
@@ -82,6 +85,7 @@ evidence; a recommendation in an audit is not a binding decision.
 | Temporary migration forwarding | Future `cardvector.compatibility` |
 | Card recognition | CardUploader; CardVector only orchestrates the handoff |
 | Scanner/OBS workflows | Legacy/retirement candidates; not active roadmap owners |
+| CardUploader browser/helper automation | Active helper workstream; must not create a competing inventory, listing, capture, or pricing authority |
 
 The complete current-to-future mapping is in
 `CardVector_Subsystem_Ownership_Matrix.md`.
@@ -150,6 +154,7 @@ ADR Accepted.
 - [Supabase Registry Migration](Supabase_Registry_Migration/)
 - [eBay Listing Reconciliation](Ebay_Listing_Reconciliation.md)
 - [CV-ADR-025 CardVector.app Primary UI](CV-ADR-025-cardvector-app-primary-ui.md)
+- [CV-ADR-026 Supabase Registry Pause And Operating Workflow Retirement](CV-ADR-026-pause-supabase-location-registry-and-retire-cardvector-operating-workflows.md)
 
 ## Change Approval
 
@@ -175,10 +180,10 @@ Default mode reports findings and exits successfully unless the checker itself
 cannot run. Strict mode fails for findings that are not in the approved baseline.
 The checker never changes files.
 
-## Active Production Data Gate
+## Paused Production Data Gate
 
-The Supabase capture/location registry migration has source changes and a
-dry-run report, but production execution is not approved yet. Before running
-`supabase db push` or `Tools.migrate_legacy_registry_to_supabase --apply`, review
-the schema, mapping, dry-run conflicts, backup path, rollback procedure, and
-exact commands in `Supabase_Registry_Migration/`.
+The Supabase capture/location registry migration is paused and archived. Do not
+run `supabase db push` for the capture/location registry or run
+`Tools.migrate_legacy_registry_to_supabase --apply` unless a future ADR
+reactivates the workflow and the project owner explicitly approves the
+production commands.

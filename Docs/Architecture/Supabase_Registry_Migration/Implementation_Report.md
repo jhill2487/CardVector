@@ -1,5 +1,11 @@
 # Supabase Registry Migration Implementation Report
 
+## Current Status
+
+Paused by CV-ADR-026 on 2026-09-01. This report remains historical evidence and
+restart material. Do not use it as approval to run production schema migration,
+legacy import, or cutover commands.
+
 ## Implementation Summary
 
 This implementation creates the canonical Supabase-backed registry foundation
@@ -45,7 +51,8 @@ after staging or failure without blocking the existing local staging behavior.
 
 Not applied to production.
 
-The Supabase migration and legacy import are ready for review, but the dry-run
+Historically, the Supabase migration and legacy import were ready for review,
+but the dry-run
 report found 82 conflicts in legacy capture/session/image evidence. The
 conflicts now have Markdown, CSV, JSON, excluded-record, balanced-count, and
 proposed-resolution artifacts in

@@ -1,12 +1,12 @@
 {
   "schema_version": "1.0",
-  "architecture_version": "1.6",
-  "approval_status": "web_first_cardvector_app_primary_ui_accepted_supabase_cutover_gated",
-  "current_migration_phase": "supabase_capture_location_registry_migration_gate",
+  "architecture_version": "1.7",
+  "approval_status": "web_first_cardvector_app_primary_ui_accepted_supabase_registry_paused",
+  "current_migration_phase": "carduploader_helper_and_storefront_after_supabase_registry_pause",
   "current_production_launcher": "Platform/Putnam_OS/Run CardVector OS Production.vbs",
   "current_production_python_target": "Platform/Putnam_OS/System/app/putnam_os.py",
   "primary_future_operator_ui": "CardVector.app",
-  "desktop_os_future_role": "compatibility_admin_tool_during_migration",
+  "desktop_os_future_role": "legacy_admin_tool_not_active_operating_workflow",
   "scanner_obs_workflow_status": "legacy_retirement_candidate_not_active_roadmap",
   "proposed_future_python_entry_point": "py -m cardvector",
   "proposed_package_root": "Platform/cardvector",
@@ -21,7 +21,7 @@
     "batch_workflow_orchestration": "Platform/cardvector/application",
     "shared_domain_models": "cardvector.shared.domain",
     "capture": "cardvector.capture",
-    "shared_capture_location_registry": "Platform/cardvector/integrations/supabase",
+    "shared_capture_location_registry": "paused_historical_workstream_reactivation_requires_approval",
     "scanner_recognition": "external:CardUploader",
     "scanner_obs_workflows": "legacy_retirement_candidate",
     "inventory": "external:CardUploader",
@@ -38,6 +38,7 @@
     "reporting": "cardvector.reporting",
     "analytics": "cardvector.analytics",
     "content": "cardvector.content",
+    "carduploader_browser_helper": "active_helper_workstream_over_real_carduploader_workflow",
     "configuration": "cardvector.infrastructure.config",
     "paths": "cardvector.infrastructure.paths",
     "logging": "cardvector.infrastructure.logging",
@@ -194,8 +195,8 @@
     {
       "id": "CV-COMP-020",
       "legacy_interface": "legacy ETB JSON registry and old mobile Supabase tables",
-      "canonical_target": "Platform/cardvector/integrations/supabase shared capture/location registry",
-      "status": "active"
+      "canonical_target": "paused Supabase shared capture/location registry workstream",
+      "status": "paused_by_CV-ADR-026"
     },
     {
       "id": "CV-COMP-005",
@@ -252,6 +253,12 @@
       "status": "compatibility_admin_surface",
       "decision": "CV-ADR-025",
       "reason": "CardVector.app is the primary future operator UI; CardVector OS remains the current production compatibility/admin surface."
+    },
+    {
+      "path": "Supabase capture/location registry migration",
+      "status": "paused_historical_workstream",
+      "decision": "CV-ADR-026",
+      "reason": "CardVector-owned capture/location operating workflows are no longer active; production registry cutover requires future reapproval."
     }
   ],
   "open_architecture_questions": [
@@ -324,7 +331,8 @@
       "CV-ADR-022",
       "CV-ADR-023",
       "CV-ADR-024",
-      "CV-ADR-025"
+      "CV-ADR-025",
+      "CV-ADR-026"
     ],
     "proposed": [
       "CV-ADR-001",
@@ -345,5 +353,5 @@
       "CV-ADR-016"
     ]
   },
-  "last_updated": "2026-07-30T12:30:00-04:00"
+  "last_updated": "2026-09-01T00:00:00-04:00"
 }
