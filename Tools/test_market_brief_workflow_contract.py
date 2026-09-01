@@ -88,19 +88,23 @@ class MarketBriefWorkflowContractTests(unittest.TestCase):
         text = TEMPLATE.read_text(encoding="utf-8")
         self.assertIn("content-draft", text)
         self.assertIn("market-brief", text)
+        self.assertIn("approved-to-publish", text)
+        self.assertNotIn("monday-brief", text)
         self.assertIn("Filename", text)
         self.assertIn("Article file", text)
         self.assertIn("Fact-check notes", text)
         self.assertIn("TikTok package", text)
 
-    def test_workflow_creates_draft_pull_request_from_issue(self):
+    def test_workflow_publishes_approved_issue_through_pull_request(self):
         text = WORKFLOW.read_text(encoding="utf-8")
         self.assertIn("issues:", text)
         self.assertIn("workflow_dispatch:", text)
-        self.assertIn("ready-for-pr", text)
+        self.assertIn("approved-to-publish", text)
+        self.assertNotIn("ready-for-pr", text)
         self.assertNotIn("github.event.label.name == 'market-brief-draft'", text)
         self.assertIn("Tools/create_market_brief_from_issue.py", text)
-        self.assertIn("--draft", text)
+        self.assertNotIn("--draft", text)
+        self.assertIn("gh pr merge", text)
         self.assertIn("Docs/content/market-briefs", text)
         self.assertIn("Tools/export_cardvector_site.py", text)
 

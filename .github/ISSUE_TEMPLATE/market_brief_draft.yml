@@ -1,6 +1,6 @@
 name: Market Brief Draft
-description: Create a draft that GitHub Actions can convert into a CardVector.app market brief PR.
-title: "[Content Draft] Pokemon Card Pricing Strategy - YYYY-MM-DD"
+description: Create a reviewed CardVector.app market brief draft for approval and publication.
+title: "[Content Draft] CardVector Market Brief - YYYY-MM-DD"
 labels:
   - content-draft
   - market-brief
@@ -8,7 +8,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Paste the reviewed ChatGPT draft here. Add the `ready-for-pr` label only after the article Markdown is ready to become a draft pull request.
+        Paste the reviewed ChatGPT draft here. Add the `approved-to-publish` label only after the article Markdown is ready to publish. The workflow will create and merge the publishing PR after validation succeeds.
   - type: input
     id: filename
     attributes:
@@ -21,7 +21,7 @@ body:
     id: status
     attributes:
       label: Status
-      description: Use Draft while staging. The PR is still reviewed before publishing.
+      description: Use Draft while staging. Add approved-to-publish only after review.
       placeholder: "Draft"
     validations:
       required: false

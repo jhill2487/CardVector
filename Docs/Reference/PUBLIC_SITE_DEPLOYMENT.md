@@ -34,7 +34,7 @@ It runs on:
 - changes to `Tools/export_cardvector_site.py`
 - manual `workflow_dispatch`
 
-## Market Brief Draft Automation
+## Market Brief Publishing Automation
 
 Pokemon market briefs are source-controlled Markdown files under:
 
@@ -48,7 +48,7 @@ should start with the labels `content-draft` and `market-brief`.
 
 The workflow `.github/workflows/market-brief-draft.yml` runs when either:
 
-- an issue receives the `ready-for-pr` label
+- an issue receives the `approved-to-publish` label
 - the workflow is run manually with an issue number
 
 The workflow:
@@ -56,16 +56,18 @@ The workflow:
 1. Reads the issue title and complete fenced Markdown article file.
 2. Creates one Markdown file in `Docs/content/market-briefs/`.
 3. Validates the public site export.
-4. Opens a draft pull request against `main`.
-5. Comments on the issue with the draft PR link.
+4. Opens a normal pull request against `main`.
+5. Merges the PR after the issue approval and site-export validation.
+6. Comments on the issue with the publish PR link.
 
 The importer intentionally rejects raw article text that is not inside a fenced
 `markdown` code block. This prevents placeholder issue text, fact-check notes,
 or TikTok package content from being accidentally published as the website
 article.
 
-The brief does not publish from the issue alone. It publishes only after the
-draft PR is reviewed and merged, which then triggers the normal
+The issue approval is the human publishing gate. After the
+`approved-to-publish` label is applied, the generated PR is mechanical: it
+preserves the GitHub audit trail, then merges to trigger the normal
 `.github/workflows/pages.yml` deployment to `CardVector-site`.
 
 Fact-check notes and TikTok package content remain in the issue as staging
@@ -88,7 +90,8 @@ Recommended recurring-task output:
 Create a GitHub issue in jhill2487/CardVector using the Market Brief Draft
 template. Use labels content-draft and market-brief. Include Filename, Fact-check
 notes, TikTok package, and the complete article as a fenced markdown code block
-under Article file. Do not add ready-for-pr until the draft has been reviewed.
+under Article file. Do not add approved-to-publish until the draft has been
+reviewed and is ready to publish.
 ```
 
 ## Public Artifact Allowlist
