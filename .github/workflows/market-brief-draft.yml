@@ -1,4 +1,4 @@
-name: Create Market Brief Draft PR
+name: Publish Approved Market Brief
 
 on:
   issues:
@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       issue_number:
-        description: GitHub issue number containing the market brief draft.
+        description: GitHub issue number containing the approved market brief draft.
         required: true
         type: string
 
@@ -17,12 +17,12 @@ permissions:
   pull-requests: write
 
 concurrency:
-  group: market-brief-draft-${{ github.event.issue.number || inputs.issue_number }}
+  group: market-brief-publish-${{ github.event.issue.number || inputs.issue_number }}
   cancel-in-progress: false
 
 jobs:
-  create-market-brief-pr:
-    if: github.event_name == 'workflow_dispatch' || github.event.label.name == 'ready-for-pr'
+  publish-market-brief:
+    if: github.event_name == 'workflow_dispatch' || github.event.label.name == 'approved-to-publish'
     runs-on: ubuntu-latest
     env:
       GH_TOKEN: ${{ github.token }}
@@ -66,7 +66,7 @@ jobs:
           test -s public-site/content/market-briefs/index.json
           git diff --check
 
-      - name: Create draft pull request
+      - name: Create and merge approved pull request
         id: pr
         shell: bash
         run: |
@@ -86,15 +86,20 @@ jobs:
             --repo "$GITHUB_REPOSITORY" \
             --base main \
             --head "$branch" \
-            --draft \
             --title "Market brief: ${title}" \
-            --body "Creates a CardVector.app market brief from issue #${{ steps.issue.outputs.number }}. Review the Markdown file, mark the PR ready, and merge to trigger the normal public-site deployment.")"
+            --body "Creates and publishes a CardVector.app market brief from issue #${{ steps.issue.outputs.number }} after the issue received the approved-to-publish label. The workflow generated the Markdown file and validated the public site export before merging.")"
           echo "url=${pr_url}" >> "$GITHUB_OUTPUT"
+          gh pr merge "$pr_url" \
+            --squash \
+            --delete-branch \
+            --subject "docs(site): add market brief from issue #${{ steps.issue.outputs.number }}" \
+            --body "Approved for publication from issue #${{ steps.issue.outputs.number }}."
+          echo "merged=true" >> "$GITHUB_OUTPUT"
 
-      - name: Comment with draft PR link
+      - name: Comment with publish result
         if: steps.pr.outputs.url != ''
         shell: bash
         run: |
           gh issue comment "${{ steps.issue.outputs.number }}" \
             --repo "$GITHUB_REPOSITORY" \
-            --body "Created draft market brief PR: ${{ steps.pr.outputs.url }}"
+            --body "Published approved market brief through PR: ${{ steps.pr.outputs.url }}. The normal CardVector.app deployment workflow will run from the merge to main."
