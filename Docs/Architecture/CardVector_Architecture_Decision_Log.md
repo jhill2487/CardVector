@@ -352,7 +352,8 @@ Only the project owner changes approval status to Accepted.
   ETBs/storage locations, capture images, and their relationships. ETBs are
   canonical storage-location rows; ETB slots are child location rows. CardUploader
   remains the managed-inventory owner.
-- **Status:** Accepted; production schema apply and legacy import remain gated.
+- **Status:** Accepted historically; active roadmap superseded by CV-ADR-026.
+  Production schema apply and legacy import are paused unless reauthorized.
 - **Evidence:** Desktop OS reads legacy JSON while mobile capture writes
   Supabase upload/session artifacts; mobile staged sessions do not reach the
   local registry projection.
@@ -366,8 +367,9 @@ Only the project owner changes approval status to Accepted.
 - **Migration impact:** Adds canonical Supabase migration, trusted desktop
   integration, mobile canonical writes, desktop canonical read fallback, and
   dry-run migration tooling.
-- **Approval status:** Implementation authorized by the project owner through the
-  Supabase registry migration task; production cutover pending explicit approval.
+- **Approval status:** Implementation was authorized by the project owner
+  through the Supabase registry migration task. CV-ADR-026 later paused the
+  active migration path; production cutover requires future reapproval.
 - **Full ADR:** `CV-ADR-024-supabase-capture-location-registry.md`
 
 ## CV-ADR-025 - CardVector.app Is The Primary Future Operator UI
@@ -395,3 +397,32 @@ Only the project owner changes approval status to Accepted.
 - **Approval status:** Approved by the project owner in conversation on
   2026-07-30.
 - **Full ADR:** `CV-ADR-025-cardvector-app-primary-ui.md`
+
+## CV-ADR-026 - Pause Supabase Location Registry Migration And Retire CardVector Operating Workflows
+
+- **Decision:** Pause and archive the Supabase capture/location registry
+  migration as a historical/restartable workstream. Retire CardVector-owned
+  capture, listing, and pricing operating workflows from the active roadmap
+  unless a future ADR reauthorizes them. Keep CardUploader browser/helper
+  automation active because it supports the actual CardUploader managed
+  inventory and automatic eBay synchronization workflow.
+- **Status:** Accepted.
+- **Evidence:** The project owner confirmed on 2026-09-01 that CardVector is no
+  longer used for capture, listing, or pricing exercises. CardUploader now owns
+  the active capture, recognition, managed inventory, standardized listing, and
+  automatic eBay synchronization workflow.
+- **Rationale:** Continuing the registry cutover would preserve risk and churn
+  around workflows that are no longer active. The migration artifacts remain
+  useful evidence but should not drive near-term work.
+- **Alternatives considered:** Continue the Supabase registry cutover; delete
+  migration artifacts immediately; keep CardVector OS as the active operating
+  system; move inventory/listing ownership into CardVector.
+- **Consequences:** No production Supabase registry migration, import, or cutover
+  should be run without new explicit approval. CardVector helper work should
+  support the CardUploader workflow without creating a competing source of truth.
+- **Migration impact:** Near-term work shifts toward CardUploader helper
+  hardening, public CardVector.app content/storefront work, and read-only
+  analysis where useful.
+- **Approval status:** Approved by the project owner in conversation on
+  2026-09-01.
+- **Full ADR:** `CV-ADR-026-pause-supabase-location-registry-and-retire-cardvector-operating-workflows.md`

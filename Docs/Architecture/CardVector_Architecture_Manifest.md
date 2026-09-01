@@ -1,6 +1,6 @@
 # CardVector Architecture Manifest
 
-**Status:** Approved through web-first CardVector.app UI direction; remaining target migration requires separate approval
+**Status:** Approved through web-first CardVector.app UI direction and CV-ADR-026 workflow retirement; remaining target migration requires separate approval
 **Prepared:** 2026-07-17
 **Scope:** Permanent architecture and migration policy
 **Evidence baseline:** The eight completed reports in `Docs/Reports`
@@ -63,18 +63,27 @@ launcher target and a compatibility/admin desktop surface during migration.
 Scanner and OBS workflows are obsolete for the current operator workflow and are
 legacy/retirement candidates, not active roadmap requirements.
 
+The project owner accepted CV-ADR-026 on 2026-09-01. CardVector-owned capture,
+listing, and pricing operating workflows are no longer active operator
+workflows. The Supabase capture/location registry migration is paused and
+archived unless a future ADR reauthorizes it. CardUploader browser/helper
+automation remains active because it supports the actual CardUploader managed
+inventory and automatic eBay synchronization workflow.
+
 ## Architectural Mission
 
 CardVector is a workflow platform for trading card operations. It coordinates:
 
 `Capture -> CardUploader -> Processing and Price Vector -> eBay handoff`
 
-CardVector owns workflow orchestration, batch milestone visibility, capture
-preparation, pricing intelligence, supported exports, and operator guidance.
-CardVector.app is the primary future operator interface for those workflows.
-CardUploader owns card recognition and managed inventory. CardVector consumes
-that inventory through application and integration contracts; it does not
-maintain a competing source of truth.
+CardVector owns workflow orchestration, public site/storefront surfaces,
+content, helper automation, read-only analysis, and operator guidance where
+those surfaces support the active CardUploader/eBay workflow. CardVector.app is
+the primary future interface for supported web workflows. CardUploader owns card
+capture intake, recognition, managed inventory, listing creation, and automatic
+eBay synchronization. CardVector consumes CardUploader/eBay evidence through
+approved integration contracts; it does not maintain a competing source of
+truth.
 
 ## Permanent Architecture Decisions
 
@@ -183,16 +192,18 @@ Until a supported live CardUploader API is available, exported snapshots are
 read-only evidence. Existing CardVector ETB JSON and Supabase location data are
 temporary capture/location projections, not authoritative card inventory.
 
-### A14. Supabase owns the shared capture/location registry
+### A14. Supabase capture/location registry migration is paused
 
-Supabase is authoritative for shared CardVector capture batches, ETBs/storage
-locations, capture images, and capture-to-location relationships. ETBs are
-canonical storage-location rows with `location_type = 'etb'`; ETB slots are child
-location rows with `location_type = 'slot'`.
+CV-ADR-024 accepted Supabase as the planned shared capture/location registry,
+but CV-ADR-026 pauses and archives that migration because CardVector-owned
+capture/location operating workflows are no longer active. Do not apply
+production capture/location registry migrations, import legacy registry data, or
+cut over active workflows without a new explicit approval.
 
-The legacy ETB JSON registry remains a migration input, comparison source,
-fallback cache, export, and historical audit artifact only after cutover
-validation. It must not silently overwrite newer Supabase records.
+The legacy ETB JSON registry and Supabase migration artifacts remain historical
+evidence, possible restart material, migration input, comparison source,
+fallback cache, export, and audit context. They must not silently overwrite
+newer operational records.
 
 ### A15. CardVector.app is the primary future operator UI
 
@@ -212,7 +223,7 @@ requirements for the current operator workflow.
 | Cross-subsystem workflow | `cardvector.application` |
 | Common value objects and errors | `cardvector.shared.domain` |
 | Capture | `cardvector.capture` |
-| Shared capture/location registry | `cardvector.integrations.supabase` |
+| Shared capture/location registry | Paused historical workstream; future reactivation requires approval |
 | Managed inventory | External CardUploader |
 | Inventory orchestration and views | `cardvector.application` through `cardvector.integrations.carduploader` |
 | Marketplace evidence, FMV, Price Vector | `cardvector.marketplace_intelligence` |
@@ -223,6 +234,7 @@ requirements for the current operator workflow.
 | Analytics and metric definitions | `cardvector.analytics` |
 | Content workflow, if retained | `cardvector.content` |
 | Native scanner/OBS workflows | Legacy/retirement candidates; future native scanner only by new approval |
+| CardUploader browser/helper automation | Active helper workstream over the real CardUploader workflow |
 | Configuration, paths, logging, persistence, jobs | `cardvector.infrastructure` |
 | External protocols | `cardvector.integrations` |
 | Temporary legacy surfaces | `cardvector.compatibility` |

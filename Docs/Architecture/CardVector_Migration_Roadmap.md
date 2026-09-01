@@ -24,6 +24,28 @@ This addendum does not authorize deleting Scanner/OBS source, changing the
 production launcher, retiring `putnam_os.py`, or moving private source/runtime
 data into the public deployment.
 
+## Authorized Execution Addendum - Workflow Retirement And Helper Direction
+
+The project owner's 2026-09-01 approval accepts CV-ADR-026. CardVector-owned
+capture, listing, and pricing operating workflows are no longer active operator
+workflows. CardUploader owns the current capture, recognition, managed
+inventory, standardized listing, and automatic eBay synchronization workflow.
+
+The Supabase capture/location registry migration is paused and archived as
+historical/restartable work. Production schema apply, legacy import, and
+capture/location registry cutover must not run without a new explicit approval.
+
+Near-term work should prioritize:
+
+- CardUploader browser/helper hardening over the actual CardUploader workflow,
+- CardVector.app public content and storefront improvements,
+- read-only business analysis where useful,
+- cleanup of retired CardVector OS/mobile capture surfaces after caller
+  inventory and owner approval.
+
+This addendum does not delete historical migration artifacts, change production
+launchers, modify production data, or authorize live marketplace actions.
+
 ## Authorized Execution Addendum - Phase 6 Batch Workflow
 
 The project owner's 2026-07-19 authorization supersedes the older sequence

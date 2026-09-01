@@ -14,9 +14,9 @@
 | Cross-workflow orchestration | `cardvector.application.workflows` delegates to existing `putnam_os.py`/`workflow_context.py` behavior | `cardvector.application.workflows` | Phase 2 foundation implemented; further callback migration required | `CV-COMP-012`: existing UI methods delegate |
 | Batch workflow status | `workflow_context.py`, conversion-session JSON, pricing callbacks in `putnam_os.py` | `cardvector.batch_workflow` through `cardvector.application.batch_workflow` | Phase 6 canonical milestone model implemented | `CV-COMP-017`: legacy dashboard context remains |
 | Background jobs | UI threads/callbacks, mobile queue loops | `cardvector.application.background_jobs` plus subsystem workers | Required | Existing scheduling methods delegate |
-| Capture domain | UI functions, `capture_studio.py` | `cardvector.capture` | Required | Old module forwards |
+| Capture domain | UI functions, `capture_studio.py` | Historical `cardvector.capture`; no active CardVector capture workflow after CV-ADR-026 | Paused/retirement inventory required | Old module remains until cleanup approval |
 | OBS connection | `obs_connection_manager.py` | Legacy/retirement candidate under CV-ADR-025 | Retirement inventory required | Old import path remains until retired |
-| Mobile capture queue | `System/tools/mobile_capture_queue.py` | `cardvector.capture.application` with Supabase adapter | Required | CLI wrapper remains |
+| Mobile capture queue | `System/tools/mobile_capture_queue.py` | No active operator workflow; historical Supabase migration workstream paused | Paused/retirement inventory required | CLI wrapper remains until cleanup approval |
 | Thumbnails/pairs | `capture_pair_rows`, UI preview methods | `cardvector.capture` metadata service; UI renders | Required | Current functions delegate |
 | Scanner recognition | CardUploader external; archived scanner research | External CardUploader; future `cardvector.scanner` only by new approval | No current migration; Scanner/OBS active roadmap retired | CardUploader adapter |
 | Card identification model | CSV/provider fields, CardUploader data | `cardvector.shared.domain.cards` if shared contract is proven | Discovery required | External identity adapter |
@@ -24,20 +24,20 @@
 | Market evidence | MI providers plus UI comp helpers | `cardvector.marketplace_intelligence` | Required | UI helper wrappers temporarily |
 | Fair Market Value | MI/active Price Vector work | `cardvector.marketplace_intelligence` | Required | Legacy market-price mapping |
 | Price Vector | MI pricing engine | `cardvector.marketplace_intelligence` | Required | Putnam OS/optimizer adapters |
-| Bulk repricing | MI plus `bulk_price_engine.py`, `main.py` | MI pricing; Listings owns export preparation | Required | Preserve CLI/UI result shapes |
+| Bulk repricing | MI plus `bulk_price_engine.py`, `main.py`, CardUploader browser/helper experiments | Active helper workflow over CardUploader automatic inventory; no independent listing authority | Required only for approved helper scope | Preserve CLI/UI result shapes where still used |
 | Pricing persistence | Active untracked MI repository/migration | `cardvector.marketplace_intelligence` ports + infrastructure repository | Required | Existing API adapter |
 | Pricing Business Profile | Marketplace Intelligence business/pricing profiles plus partial Putnam OS profile | `cardvector.marketplace_intelligence` | Phase 8 canonical profile implemented | `CV-COMP-018` and `CV-COMP-019` |
 | Business pricing rules and profitability | Packaging foundation, historical BI constants, and no prior canonical calculation | `cardvector.marketplace_intelligence` | Phase 8 implemented after FMV/Price Vector | Flat-profile compatibility mode |
 | Managed inventory domain | CardUploader export and managed-inventory workflow; CardVector snapshot/audit helpers | External CardUploader | Phase 5 ownership accepted; live API unavailable | `CardUploaderInventoryService` snapshot adapter |
 | Batch-to-card association and card-level marketplace state | CardUploader managed inventory | External CardUploader | No CardVector migration | No synthetic adapter permitted |
 | Inventory UI/orchestration | `putnam_os.py`, `cardvector.application.inventory` | `cardvector.application` | Phase 5 facade implemented | Current UI callbacks remain |
-| Shared capture/location registry | `Docs/app.js`, `mobile_capture_queue.py`, `inventory_locations.py`, local ETB JSON projection, Supabase migrations | `Platform/cardvector/integrations/supabase` for persistence access; `cardvector.capture` and `cardvector.application` orchestrate workflows | Supabase registry migration in progress; production apply gated | Legacy JSON projection and mobile compatibility tables |
-| Location cloud sync | `mobile_capture_queue.py`, Supabase migration | Supabase shared capture/location registry through `Platform/cardvector/integrations/supabase` | Required; local JSON becomes cache/export after validation | Queue command compatibility |
-| Conversion sessions | `putnam_os.py`, runtime JSON | Capture/application workflow; CardUploader receives completed recognition handoff | Required | Current UI/session functions delegate |
+| Shared capture/location registry | `Docs/app.js`, `mobile_capture_queue.py`, `inventory_locations.py`, local ETB JSON projection, Supabase migrations | Paused historical Supabase registry workstream | Paused by CV-ADR-026; no production apply/cutover without reapproval | Legacy JSON projection and mobile compatibility tables |
+| Location cloud sync | `mobile_capture_queue.py`, Supabase migration | Paused historical Supabase registry workstream | Paused by CV-ADR-026 | Queue command compatibility |
+| Conversion sessions | `putnam_os.py`, runtime JSON | Historical CardVector capture/listing workflow | Paused/retirement inventory required | Current UI/session functions remain until cleanup approval |
 | Reconciliation | `inventory_reconciliation.py` | CardVector reporting over `cardvector.integrations.carduploader` snapshots | Phase 5 CardUploader parser delegated | CLI wrapper |
 | QR payloads/labels | `inventory_locations.py` and label tool | Capture/location compatibility projection; Reporting renders labels | Required after CardUploader location contract exists | Existing tool wrapper |
 | Quantity, reservation, allocation, picking state | CardUploader managed inventory; no CardVector implementation found | External CardUploader | No CardVector migration | No synthetic adapter permitted |
-| Listings | UI/export helpers, bulk engine, Listing Optimizer | `cardvector.listings` | Required | Existing export functions delegate |
+| Listings | UI/export helpers, bulk engine, Listing Optimizer | CardUploader/eBay are active listing authorities; future `cardvector.listings` only by reapproval | Paused for CardVector-owned listing workflow | Existing export functions remain until cleanup approval |
 | eBay CSV preservation | `prepare_listing_export_rows`, MI bulk export | Listings + eBay integration | Required | Legacy function wrapper |
 | Orders | `orders_fulfillment.py`, UI callbacks | `cardvector.orders` | Required | Existing module wrapper |
 | Shipping | eBay policies in `putnam_os.py`/config | `cardvector.shipping` | Required | Current policy functions delegate |
@@ -58,7 +58,7 @@
 | Error handling | exceptions, message boxes, text logs | domain/app errors + presentation mapping | Required | Legacy exception translation |
 | Validation | scattered functions | Owning domain/application plus shared primitives | Required | Existing function wrappers |
 | Shared models | duplicated dicts/dataclasses | `cardvector.shared.domain` only for proven cross-owner concepts | Discovery required | Shape adapters |
-| CardVector.app primary UI | `Docs` and export tool, mobile capture app | CardVector.app authenticated workflows over Supabase/application contracts | Required | Existing deployment workflow |
+| CardVector.app primary UI | `Docs` and export tool, storefront/content/operator helper surfaces | CardVector.app supported web workflows; retired capture/location pages stay inactive | Active | Existing deployment workflow |
 | Public storefront | `Docs` and export tool | Static source/export boundary remains | No desktop package migration | Existing deployment workflow |
 
 ## Ownership Clarifications
@@ -99,13 +99,12 @@ Listings must never recalculate FMV or Price Vector.
 
 ### Inventory Versus Capture
 
-Capture records where and how images were acquired. Supabase owns the shared
-capture/location registry that CardVector.app and CardVector OS both need to
-coordinate ETBs, storage locations, capture sessions, and capture images.
-CardUploader owns managed card inventory and card-level fulfillment locations.
-Existing ETB/location JSON remains a compatibility cache/export after cutover.
-Cross-system handoff is orchestrated through application and integration
-contracts.
+Capture historically recorded where and how images were acquired. CV-ADR-026
+pauses the Supabase capture/location registry migration because active capture,
+recognition, managed inventory, listing creation, and automatic eBay
+synchronization now happen in CardUploader. CardVector helper work may support
+that real workflow, but it must not create a competing capture, inventory, or
+listing authority.
 
 ### Reports Versus Analytics
 
