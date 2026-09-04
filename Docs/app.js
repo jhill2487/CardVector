@@ -804,10 +804,14 @@
   }
 
   function renderDirectStoreCartShell(catalog, cart, status = "") {
-    const summary = directStoreCartSummary(cart, catalog);
     const query = new URLSearchParams(window.location.search);
+    const checkoutSucceeded = query.get("checkout") === "success";
+    if (checkoutSucceeded && directStoreCartSummary(cart, catalog).quantity) {
+      cart = writeDirectStoreCart({ items: {} });
+    }
+    const summary = directStoreCartSummary(cart, catalog);
     let routeNotice = "";
-    if (query.get("checkout") === "success") {
+    if (checkoutSucceeded) {
       routeNotice = "Payment completed. Order and shipping/tracking messages are sent as transactional updates for this purchase.";
     } else if (query.get("checkout") === "cancelled") {
       routeNotice = "Checkout was cancelled. Your browser cart is still available if you want to try again.";
@@ -835,7 +839,7 @@
           <form class="direct-checkout-form" id="direct-checkout-form">
             <h2>Secure Checkout</h2>
             <p>Stripe will collect the buyer email, shipping address, and payment information. Shipping and tracking messages are transactional order updates and do not require marketing opt-in.</p>
-            <p class="operator-note">Promotional email opt-in will be enabled after Stripe Checkout marketing consent is approved. Paid orders queue private CardUploader/eBay release jobs after Stripe confirms payment.</p>
+            <p class="operator-note">Paid orders queue private CardUploader/eBay release jobs after Stripe confirms payment. Promotional email opt-in remains disabled until Stripe Checkout marketing consent is approved.</p>
             <button class="button primary" type="submit"${summary.quantity ? "" : " disabled"}>Continue to Secure Checkout</button>
           </form>
         </div>

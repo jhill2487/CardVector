@@ -31,6 +31,8 @@ class DirectStoreCheckoutContractTests(unittest.TestCase):
         self.assertIn("createDirectStoreCheckoutSession", self.app_js)
         self.assertIn("Continue to Secure Checkout", self.app_js)
         self.assertIn("window.location.assign(result.checkout_url)", self.app_js)
+        self.assertIn("checkoutSucceeded", self.app_js)
+        self.assertIn("writeDirectStoreCart({ items: {} })", self.app_js)
         self.assertIn("Shipping and tracking messages are transactional order updates", self.app_js)
         self.assertNotIn("Promotional emails are optional in Stripe Checkout", self.app_js)
         self.assertNotIn("stripe.confirmPayment", self.app_js)
@@ -83,6 +85,7 @@ class DirectStoreCheckoutContractTests(unittest.TestCase):
         self.assertIn("DIRECT_STORE_FEED_URL", self.create_checkout)
         self.assertIn("cardvector_direct_store_orders", self.create_checkout)
         self.assertIn("cardvector_direct_store_order_items", self.create_checkout)
+        self.assertNotIn("consent_collection", self.webhook)
 
         self.assertIn("STRIPE_WEBHOOK_SECRET", self.webhook)
         self.assertIn('npm:stripe@22.4.0', self.webhook)
