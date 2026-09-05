@@ -77,12 +77,10 @@ class PublicStorefrontContractTests(unittest.TestCase):
         nav = re.search(r'<ul class="nav-links"[^>]*>(.*?)</ul>', self.source_html, re.S)
         self.assertIsNotNone(nav)
         labels = [
-            "Shop Direct",
             "Shop eBay",
             "Shop TCGplayer",
             "Shop Manapool",
             "Market Briefs",
-            "Cart",
             "Sell Your Collection",
             "Whatnot",
             "About",
@@ -90,6 +88,9 @@ class PublicStorefrontContractTests(unittest.TestCase):
         ]
         positions = [nav.group(1).index(label) for label in labels]
         self.assertEqual(positions, sorted(positions))
+        self.assertNotIn("Shop Direct", nav.group(1))
+        self.assertNotIn('href="/shop/"', nav.group(1))
+        self.assertNotIn('href="/cart/"', nav.group(1))
         self.assertNotIn('href="/operator"', nav.group(1))
         self.assertNotIn('href="/#mobile-capture"', nav.group(1))
 
@@ -197,7 +198,8 @@ class PublicStorefrontContractTests(unittest.TestCase):
         self.assertIn("Sitemap: https://cardvector.app/sitemap.xml", self.output_robots)
         self.assertIn("<loc>https://cardvector.app/</loc>", self.output_sitemap)
         self.assertIn("<loc>https://cardvector.app/market-briefs/</loc>", self.output_sitemap)
-        self.assertIn("<loc>https://cardvector.app/shop/</loc>", self.output_sitemap)
+        self.assertNotIn("<loc>https://cardvector.app/shop/</loc>", self.output_sitemap)
+        self.assertNotIn("<loc>https://cardvector.app/cart/</loc>", self.output_sitemap)
         self.assertIn("<loc>https://cardvector.app/sell/</loc>", self.output_sitemap)
         self.assertIn("<loc>https://cardvector.app/tools/carduploader/</loc>", self.output_sitemap)
         self.assertIn("<loc>https://cardvector.app/market-briefs/why-pokemon-card-prices-change/</loc>", self.output_sitemap)
@@ -228,10 +230,17 @@ class PublicStorefrontContractTests(unittest.TestCase):
         self.assertIn('<link rel="canonical" href="https://cardvector.app/market-briefs/why-pokemon-card-prices-change/">', post_html)
 
     def test_direct_storefront_cart_foundation_is_present(self):
-        self.assertIn('href="/shop/"', self.source_html)
-        self.assertIn('href="/cart/"', self.source_html)
-        self.assertIn("Shop Direct", self.source_html)
-        self.assertIn("CardVector Cart", self.source_html)
+        nav = re.search(r'<ul class="nav-links"[^>]*>(.*?)</ul>', self.source_html, re.S)
+        self.assertIsNotNone(nav)
+        self.assertNotIn('href="/shop/"', nav.group(1))
+        self.assertNotIn('href="/cart/"', nav.group(1))
+        self.assertNotIn("Shop Direct", nav.group(1))
+        self.assertIn("Direct purchase option", self.source_html)
+        self.assertIn("if you find a card on eBay, TCGplayer, or Manapool", self.source_html)
+        self.assertIn("{{CONTACT_EMAIL}}", self.source_html)
+        self.assertIn("directStorePublicEnabled = false", self.source_js)
+        self.assertIn("renderDirectStorePausedPage", self.source_js)
+        self.assertIn("CardVector direct checkout is not public yet.", self.source_js)
         self.assertIn("directStoreInventoryUrl", self.source_js)
         self.assertIn("/content/shop/direct-inventory.json", self.source_js)
         self.assertIn("cardvector.directStoreCart.v1", self.source_js)
@@ -264,8 +273,12 @@ class PublicStorefrontContractTests(unittest.TestCase):
             self.assertGreater(item["price"], 0)
             self.assertGreater(item["quantity_available"], 0)
             self.assertNotIn("image_url", item)
-        self.assertIn("Shop Putnam Collectibles Direct", (self.output / "shop" / "index.html").read_text(encoding="utf-8"))
-        self.assertIn("CardVector Cart", (self.output / "cart" / "index.html").read_text(encoding="utf-8"))
+        self.assertNotIn('<loc>https://cardvector.app/shop/</loc>', self.output_sitemap)
+        shop_page = (self.output / "shop" / "index.html").read_text(encoding="utf-8")
+        cart_page = (self.output / "cart" / "index.html").read_text(encoding="utf-8")
+        self.assertIn("CardVector direct checkout is not public yet.", shop_page)
+        self.assertIn("CardVector direct checkout is not public yet.", cart_page)
+        self.assertIn(EXPECTED_URLS["CONTACT_EMAIL"], shop_page)
 
     def test_sell_page_is_static_crawlable_and_canonical(self):
         self.assertIn("Sell Pokemon Cards and Trading Card Collections", self.output_sell)

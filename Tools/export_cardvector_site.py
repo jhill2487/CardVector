@@ -329,7 +329,7 @@ def render_public_header(
   <meta property="og:image" content="{SITE_URL}/assets/putnam-ebay-banner.png">
   <meta name="twitter:card" content="summary_large_image">
   <title>{escape_html(title)}</title>
-  <link rel="stylesheet" href="/style.css?v=20260828-direct-checkout">
+  <link rel="stylesheet" href="/style.css?v=20260905-direct-paused">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -342,12 +342,10 @@ def render_public_header(
       <details class="nav-menu" open>
         <summary aria-label="Open site navigation">Menu</summary>
         <ul class="nav-links" aria-label="Site navigation">
-          <li><a class="nav-shop nav-cta" href="/shop/">Shop Direct</a></li>
           <li><a class="nav-shop nav-cta" href="{{{{EBAY_STORE_URL}}}}" target="_blank" rel="noopener noreferrer">Shop eBay</a></li>
           <li><a class="nav-shop nav-cta-secondary" href="{{{{TCGPLAYER_STORE_URL}}}}" target="_blank" rel="noopener noreferrer">Shop TCGplayer</a></li>
           <li><a class="nav-shop nav-cta-secondary" href="{{{{MANAPOOL_STORE_URL}}}}" target="_blank" rel="noopener noreferrer">Shop Manapool</a></li>
           <li><a href="/market-briefs/">Market Briefs</a></li>
-          <li><a href="/cart/" data-cart-count-label>Cart</a></li>
           <li><a href="/sell/">Sell Your Collection</a></li>
           <li><a href="/tools/carduploader/">CardUploader</a></li>
           <li><a href="/#contact">Contact</a></li>
@@ -365,8 +363,6 @@ def render_public_footer() -> str:
       <p>&copy; 2026 Putnam Collectibles</p>
       <ul>
         <li><a href="/market-briefs/">Market Briefs</a></li>
-        <li><a href="/shop/">Shop Direct</a></li>
-        <li><a href="/cart/">Cart</a></li>
         <li><a href="/tools/carduploader/">CardUploader</a></li>
         <li><a href="{{EBAY_STORE_URL}}" target="_blank" rel="noopener noreferrer">Shop eBay</a></li>
         <li><a href="{{TCGPLAYER_STORE_URL}}" target="_blank" rel="noopener noreferrer">Shop TCGplayer</a></li>
@@ -374,7 +370,7 @@ def render_public_footer() -> str:
       </ul>
     </div>
   </footer>
-  <script src="/app.js?v=20260828-direct-checkout" defer></script>
+  <script src="/app.js?v=20260905-direct-paused" defer></script>
 </body>
 </html>
 """
@@ -607,33 +603,37 @@ def render_shop_static_page(output: Path) -> None:
     shop_dir = output / "shop"
     shop_dir.mkdir(parents=True, exist_ok=True)
     shop_html = render_public_header(
-        "Shop Putnam Collectibles Direct | Pokemon and MTG Singles",
-        "Shop trading card singles directly from Putnam Collectibles through the CardVector direct storefront and cart pilot.",
+        "Direct Store Coming Soon | Putnam Collectibles",
+        "CardVector direct checkout is being prepared. Shop current Putnam Collectibles inventory on eBay, TCGplayer, or Manapool and email about buying direct.",
         f"{SITE_URL}/shop/",
         keywords=[
-            "shop Pokemon cards direct",
+            "Putnam Collectibles direct",
             "Putnam Collectibles cards",
             "Pokemon card singles",
             "MTG singles",
-            "CardVector shop",
+            "CardVector direct checkout",
         ],
     ) + f"""
     <script type="application/ld+json">{render_json_ld(breadcrumb_json_ld([
         ("Home", SITE_URL + "/"),
-        ("Shop Direct", SITE_URL + "/shop/"),
+        ("Direct Store Coming Soon", SITE_URL + "/shop/"),
     ]))}</script>
     <section class="direct-store-shell wrap" aria-labelledby="shop-page-title">
       <div class="direct-store-hero">
         <div>
-          <p class="eyebrow">Direct storefront pilot</p>
-          <h1 id="shop-page-title">Shop Putnam Collectibles Direct</h1>
-          <p>CardVector is preparing a direct shopping cart for available trading card singles. Secure checkout uses Stripe after server-side inventory validation.</p>
+          <p class="eyebrow">Direct store coming soon</p>
+          <h1 id="shop-page-title">CardVector direct checkout is not public yet.</h1>
+          <p>The secure cart and Stripe checkout foundation is being kept ready behind the scenes while public purchases continue through the current marketplaces.</p>
         </div>
-        <a class="button secondary" href="/cart/">View Cart</a>
+        <a class="button secondary" href="/">Return Home</a>
       </div>
-      <aside class="direct-store-safety">
-        <strong>Oversell safety first</strong>
-        <p>The direct store is designed around availability re-checks, Stripe payment capture, and a separate fulfillment step before marketplace availability is removed.</p>
+      <aside class="direct-contact-banner direct-contact-banner-route">
+        <div>
+          <p class="eyebrow">Direct purchase option</p>
+          <h2>See something in one of our stores?</h2>
+          <p>Email <strong>{{{{CONTACT_EMAIL}}}}</strong> if you find a card on eBay, TCGplayer, or Manapool and want to ask about buying direct.</p>
+        </div>
+        <a class="button primary" href="{{{{CONTACT_EMAIL_URL}}}}" target="_blank" rel="noopener noreferrer">Email Putnam Collectibles</a>
       </aside>
     </section>
 """ + render_public_footer()
@@ -644,25 +644,32 @@ def render_cart_static_page(output: Path) -> None:
     cart_dir = output / "cart"
     cart_dir.mkdir(parents=True, exist_ok=True)
     cart_html = render_public_header(
-        "Cart | Putnam Collectibles Direct Store",
-        "Review your Putnam Collectibles direct-store cart and continue to secure Stripe checkout through CardVector.",
+        "Direct Store Coming Soon | Putnam Collectibles",
+        "CardVector direct checkout is being prepared. Email Putnam Collectibles about buying direct from cards listed on eBay, TCGplayer, or Manapool.",
         f"{SITE_URL}/cart/",
         keywords=["Putnam Collectibles cart", "CardVector cart", "Pokemon cards checkout"],
     ) + f"""
     <script type="application/ld+json">{render_json_ld(breadcrumb_json_ld([
         ("Home", SITE_URL + "/"),
-        ("Shop Direct", SITE_URL + "/shop/"),
-        ("Cart", SITE_URL + "/cart/"),
+        ("Direct Store Coming Soon", SITE_URL + "/cart/"),
     ]))}</script>
     <section class="direct-store-shell wrap" aria-labelledby="cart-page-title">
       <div class="direct-store-hero">
         <div>
-          <p class="eyebrow">Direct checkout foundation</p>
-          <h1 id="cart-page-title">CardVector Cart</h1>
-          <p>The cart page loads your current browser cart and starts secure checkout after CardVector validates quantities against the direct-store inventory feed.</p>
+          <p class="eyebrow">Direct store coming soon</p>
+          <h1 id="cart-page-title">CardVector direct checkout is not public yet.</h1>
+          <p>The cart and Stripe checkout foundation are being kept ready behind the scenes while public purchases continue through the current marketplaces.</p>
         </div>
-        <a class="button secondary" href="/shop/">Continue Shopping</a>
+        <a class="button secondary" href="/">Return Home</a>
       </div>
+      <aside class="direct-contact-banner direct-contact-banner-route">
+        <div>
+          <p class="eyebrow">Direct purchase option</p>
+          <h2>See something in one of our stores?</h2>
+          <p>Email <strong>{{{{CONTACT_EMAIL}}}}</strong> if you find a card on eBay, TCGplayer, or Manapool and want to ask about buying direct.</p>
+        </div>
+        <a class="button primary" href="{{{{CONTACT_EMAIL_URL}}}}" target="_blank" rel="noopener noreferrer">Email Putnam Collectibles</a>
+      </aside>
     </section>
 """ + render_public_footer()
     (cart_dir / "index.html").write_text(cart_html, encoding="utf-8")
@@ -672,7 +679,6 @@ def render_sitemap(output: Path, posts: list[dict[str, object]]) -> None:
     urls = [
         (SITE_URL + "/", "2026-08-12", "weekly", "1.0"),
         (SITE_URL + "/market-briefs/", "2026-08-12", "weekly", "0.8"),
-        (SITE_URL + "/shop/", "2026-08-27", "daily", "0.8"),
         (SITE_URL + "/sell/", "2026-08-17", "monthly", "0.8"),
         (SITE_URL + "/tools/carduploader/", "2026-08-12", "monthly", "0.8"),
     ]

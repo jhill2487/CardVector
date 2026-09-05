@@ -149,6 +149,7 @@
   const directStoreCartStorageKey = "cardvector.directStoreCart.v1";
   const directStoreReservationsStorageKey = "cardvector.directStoreReservations.v1";
   const directStoreFiltersStorageKey = "cardvector.directStoreFilters.v1";
+  const directStorePublicEnabled = false;
   function readDirectStoreCartCount() {
     try {
       const parsed = JSON.parse(window.localStorage.getItem(directStoreCartStorageKey) || "{}");
@@ -367,6 +368,29 @@
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
     }).format(amount);
+  }
+
+  function renderDirectStorePausedPage() {
+    main.innerHTML = `
+      <section class="direct-store-shell wrap" aria-labelledby="direct-store-paused-title">
+        <div class="direct-store-hero">
+          <div>
+            <p class="eyebrow">Direct store coming soon</p>
+            <h1 id="direct-store-paused-title">CardVector direct checkout is not public yet.</h1>
+            <p>The secure cart and Stripe checkout foundation is being kept ready behind the scenes while public purchases continue through the current marketplaces.</p>
+          </div>
+          <a class="button secondary" href="/">Return Home</a>
+        </div>
+        <aside class="direct-contact-banner direct-contact-banner-route" aria-labelledby="direct-store-contact-title">
+          <div>
+            <p class="eyebrow">Direct purchase option</p>
+            <h2 id="direct-store-contact-title">See something in one of our stores?</h2>
+            <p>Email <strong>${escapeHtml(siteLinks.CONTACT_EMAIL)}</strong> if you find a card on eBay, TCGplayer, or Manapool and want to ask about buying direct.</p>
+          </div>
+          <a class="button primary" href="${escapeHtml(siteLinks.CONTACT_EMAIL_URL)}" target="_blank" rel="noopener noreferrer">Email Putnam Collectibles</a>
+        </aside>
+      </section>`;
+    document.title = "Direct Store Coming Soon | Putnam Collectibles";
   }
 
   function normalizeDirectStoreItem(item) {
@@ -6574,11 +6598,19 @@
   }
 
   if (route === "shop") {
+    if (!directStorePublicEnabled) {
+      renderDirectStorePausedPage();
+      return;
+    }
     renderDirectStorePage();
     return;
   }
 
   if (route === "cart") {
+    if (!directStorePublicEnabled) {
+      renderDirectStorePausedPage();
+      return;
+    }
     renderDirectStoreCartPage();
     return;
   }

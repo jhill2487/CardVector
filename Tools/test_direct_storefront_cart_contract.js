@@ -11,11 +11,14 @@ const exporter = fs.readFileSync(path.join(root, "Tools", "export_cardvector_sit
 const inventory = JSON.parse(fs.readFileSync(path.join(docs, "content", "shop", "direct-inventory.json"), "utf8"));
 
 [
-  'href="/shop/"',
-  'href="/cart/"',
-  "Shop Direct",
-  "CardVector Cart",
+  "Direct purchase option",
+  "if you find a card on eBay, TCGplayer, or Manapool",
+  "{{CONTACT_EMAIL}}",
 ].forEach((needle) => assert(html.includes(needle), `index.html missing ${needle}`));
+
+assert(!html.includes('href="/shop/"'), "index.html should not expose direct shop links while checkout is paused");
+assert(!html.includes('href="/cart/"'), "index.html should not expose direct cart links while checkout is paused");
+assert(!html.includes("Shop Direct"), "index.html should not expose Shop Direct while checkout is paused");
 
 [
   "directStoreInventoryUrl",
@@ -28,6 +31,9 @@ const inventory = JSON.parse(fs.readFileSync(path.join(docs, "content", "shop", 
   "setDirectStoreCartQuantity",
   "createDirectStoreReservation",
   "createDirectStoreCheckoutSession",
+  "directStorePublicEnabled = false",
+  "renderDirectStorePausedPage",
+  "CardVector direct checkout is not public yet.",
   "directStoreCheckoutFunctionUrl",
   "hybrid_static_browse_live_availability_pending",
   "checkout_ready_for_payment_integration",
@@ -76,7 +82,7 @@ const inventory = JSON.parse(fs.readFileSync(path.join(docs, "content", "shop", 
   "render_shop_static_page",
   "render_cart_static_page",
   "content/shop/direct-inventory.json",
-  'SITE_URL}/shop/',
+  "Direct Store Coming Soon",
 ].forEach((needle) => assert(exporter.includes(needle), `exporter missing ${needle}`));
 
 assert.strictEqual(inventory.schema_version, "1.1");
