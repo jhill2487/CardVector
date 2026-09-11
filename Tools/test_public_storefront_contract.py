@@ -22,7 +22,6 @@ EXPECTED_URLS = {
     "COLLECTION_INQUIRY_URL": "https://tally.so/r/ob1ABN",
     "CONTACT_EMAIL": "Putnam.collects@gmail.com",
     "CONTACT_EMAIL_URL": "https://mail.google.com/mail/?view=cm&fs=1&to=Putnam.collects%40gmail.com&su=Putnam%20Collectibles%20Inquiry",
-    "CHECKOUT_FUNCTION_URL": "https://iqdpfgpkagjxzedfxrvn.supabase.co/functions/v1/create-checkout-session",
 }
 
 
@@ -245,7 +244,7 @@ class PublicStorefrontContractTests(unittest.TestCase):
         self.assertIn('"@type":"BreadcrumbList"', post_html)
         self.assertIn('<link rel="canonical" href="https://cardvector.app/market-briefs/why-pokemon-card-prices-change/">', post_html)
 
-    def test_direct_storefront_cart_foundation_is_present(self):
+    def test_direct_checkout_capabilities_are_retired(self):
         nav = re.search(r'<ul class="nav-links"[^>]*>(.*?)</ul>', self.source_html, re.S)
         self.assertIsNotNone(nav)
         self.assertNotIn('href="/shop/"', nav.group(1))
@@ -254,46 +253,33 @@ class PublicStorefrontContractTests(unittest.TestCase):
         self.assertIn("Direct purchase option", self.source_html)
         self.assertIn("if you see something in our CardUploader storefront", self.source_html)
         self.assertIn("{{CONTACT_EMAIL}}", self.source_html)
-        self.assertIn("directStorePublicEnabled = false", self.source_js)
-        self.assertIn("renderDirectStorePausedPage", self.source_js)
-        self.assertIn("CardVector direct checkout is not public yet.", self.source_js)
-        self.assertIn("directStoreInventoryUrl", self.source_js)
-        self.assertIn("/content/shop/direct-inventory.json", self.source_js)
-        self.assertIn("cardvector.directStoreCart.v1", self.source_js)
-        self.assertIn("cardvector.directStoreReservations.v1", self.source_js)
-        self.assertIn("cardvector.directStoreFilters.v1", self.source_js)
-        self.assertIn("filterDirectStoreItems", self.source_js)
-        self.assertIn("createDirectStoreReservation", self.source_js)
-        self.assertIn("createDirectStoreCheckoutSession", self.source_js)
-        self.assertIn("Continue to Secure Checkout", self.source_js)
-        self.assertIn("Stripe will collect the buyer email, shipping address, and payment information", self.source_js)
-        self.assertIn("payment_status: \"not_configured\"", self.source_js)
-        self.assertIn("marketplace_release_status: \"not_configured\"", self.source_js)
-        self.assertIn("Adding to cart does not reserve inventory", self.source_js)
-        self.assertIn("static_browse_feed", self.source_js)
-        self.assertIn("without pulling original capture images from Supabase", self.source_js)
-        self.assertIn(".direct-store-shell", self.source_css)
-        self.assertIn(".direct-store-feed-bar", self.source_css)
-        self.assertIn(".direct-store-filters", self.source_css)
-        self.assertIn(".direct-cart-panel", self.source_css)
+        self.assertIn("renderRetiredCheckoutPage", self.source_js)
+        self.assertIn("CardVector.app no longer runs a direct cart or payment checkout.", self.source_js)
+        self.assertNotIn("directStorePublicEnabled", self.source_js)
+        self.assertNotIn("renderDirectStorePausedPage", self.source_js)
+        self.assertNotIn("directStoreInventoryUrl", self.source_js)
+        self.assertNotIn("/content/shop/direct-inventory.json", self.source_js)
+        self.assertNotIn("cardvector.directStoreCart.v1", self.source_js)
+        self.assertNotIn("cardvector.directStoreReservations.v1", self.source_js)
+        self.assertNotIn("cardvector.directStoreFilters.v1", self.source_js)
+        self.assertNotIn("filterDirectStoreItems", self.source_js)
+        self.assertNotIn("createDirectStoreReservation", self.source_js)
+        self.assertNotIn("createDirectStoreCheckoutSession", self.source_js)
+        self.assertNotIn("Continue to Secure Checkout", self.source_js)
+        self.assertNotIn("Stripe will collect", self.source_js)
+        self.assertNotIn("payment_status", self.source_js)
+        self.assertNotIn("marketplace_release_status", self.source_js)
+        self.assertNotIn("CHECKOUT_FUNCTION_URL", self.source_js)
         self.assertTrue((self.output / "shop" / "index.html").exists())
         self.assertTrue((self.output / "cart" / "index.html").exists())
-        self.assertTrue((self.output / "content" / "shop" / "direct-inventory.json").exists())
-        direct_inventory = json.loads((self.output / "content" / "shop" / "direct-inventory.json").read_text(encoding="utf-8"))
-        self.assertEqual("hybrid_static_browse_live_availability_pending", direct_inventory["checkout_mode"])
-        self.assertFalse(direct_inventory["availability"]["supabase_enabled"])
-        self.assertTrue(direct_inventory["availability"]["live_checkout_required"])
-        self.assertIsInstance(direct_inventory["items"], list)
-        self.assertEqual(direct_inventory["summary"]["published_items"], len(direct_inventory["items"]))
-        for item in direct_inventory["items"]:
-            self.assertGreater(item["price"], 0)
-            self.assertGreater(item["quantity_available"], 0)
-            self.assertNotIn("image_url", item)
+        self.assertFalse((self.output / "content" / "shop" / "direct-inventory.json").exists())
         self.assertNotIn('<loc>https://cardvector.app/shop/</loc>', self.output_sitemap)
         shop_page = (self.output / "shop" / "index.html").read_text(encoding="utf-8")
         cart_page = (self.output / "cart" / "index.html").read_text(encoding="utf-8")
-        self.assertIn("CardVector direct checkout is not public yet.", shop_page)
-        self.assertIn("CardVector direct checkout is not public yet.", cart_page)
+        self.assertIn("Shop through CardUploader", shop_page)
+        self.assertIn("CardVector checkout is retired.", cart_page)
+        self.assertNotIn("Stripe", shop_page)
+        self.assertNotIn("Stripe", cart_page)
         self.assertIn(EXPECTED_URLS["CARDUPLOADER_STORE_URL"], shop_page)
         self.assertIn(EXPECTED_URLS["CARDUPLOADER_STORE_URL"], cart_page)
         self.assertIn(EXPECTED_URLS["CONTACT_EMAIL"], shop_page)
@@ -375,10 +361,7 @@ class PublicStorefrontContractTests(unittest.TestCase):
         for text in (self.output_html, self.output_404, self.output_js):
             self.assertNotRegex(text, r"\{\{[A-Z0-9_]+\}\}")
         for key, url in EXPECTED_URLS.items():
-            if key == "CHECKOUT_FUNCTION_URL":
-                continue
             self.assertIn(url, self.output_html)
-        self.assertIn(EXPECTED_URLS["CHECKOUT_FUNCTION_URL"], self.output_js)
 
         parser = AnchorParser()
         parser.feed(self.output_html)
@@ -410,6 +393,11 @@ class PublicStorefrontContractTests(unittest.TestCase):
             "SUPABASE_SERVICE_ROLE_KEY",
             "CARDVECTOR_SITE_DEPLOY_TOKEN",
             "C:\\Users\\user\\OneDrive\\PutnamCollectibles",
+            "STRIPE_SECRET_KEY",
+            "STRIPE_RESTRICTED_KEY",
+            "STRIPE_WEBHOOK_SECRET",
+            "create-checkout-session",
+            "stripe-webhook",
         )
         for value in prohibited:
             self.assertNotIn(value, combined)

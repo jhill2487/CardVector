@@ -1,5 +1,1 @@
-[functions.create-checkout-session]
-verify_jwt = false
-
-[functions.stripe-webhook]
-verify_jwt = false
+# No Supabase Edge Functions are currently configured for CardVector.app.
