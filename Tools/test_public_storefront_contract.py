@@ -19,7 +19,6 @@ EXPECTED_URLS = {
     "CARDUPLOADER_REFERRAL_URL": "https://carduploader.com/signup?ref=LIEA0817",
     "WHATNOT_REFERRAL_URL": "https://whatnot.com/invite/putnam_collectibles",
     "WHATNOT_SELLER_REFERRAL_URL": "https://whatnot.com/invite/seller/putnam_collectibles",
-    "COLLECTION_INQUIRY_URL": "https://tally.so/r/ob1ABN",
     "CONTACT_EMAIL": "Putnam.collects@gmail.com",
     "CONTACT_EMAIL_URL": "https://mail.google.com/mail/?view=cm&fs=1&to=Putnam.collects%40gmail.com&su=Putnam%20Collectibles%20Inquiry",
 }
@@ -79,7 +78,6 @@ class PublicStorefrontContractTests(unittest.TestCase):
         snippets = [
             'href="{{CARDUPLOADER_STORE_URL}}"',
             'href="/market-briefs/"',
-            'href="/sell/"',
             'href="/tools/carduploader/"',
             'href="/#about"',
             'href="/#contact"',
@@ -91,6 +89,8 @@ class PublicStorefrontContractTests(unittest.TestCase):
         self.assertNotIn("Shop Manapool", nav.group(1))
         self.assertNotIn("Whatnot", nav.group(1))
         self.assertNotIn("Shop Direct", nav.group(1))
+        self.assertNotIn("Sell Your Collection", nav.group(1))
+        self.assertNotIn('href="/sell/"', nav.group(1))
         self.assertNotIn('href="/shop/"', nav.group(1))
         self.assertNotIn('href="/cart/"', nav.group(1))
         self.assertNotIn('href="/operator"', nav.group(1))
@@ -105,7 +105,9 @@ class PublicStorefrontContractTests(unittest.TestCase):
     def test_hero_avoids_duplicate_static_marketplace_summary(self):
         hero = re.search(r'<section class="hero wrap">(.*?)</section>', self.source_html, re.S)
         self.assertIsNotNone(hero)
-        self.assertIn("Sell Your Collection", hero.group(1))
+        self.assertIn("Shop CardUploader Store", hero.group(1))
+        self.assertNotIn("Sell Your Collection", hero.group(1))
+        self.assertNotIn('href="/sell/"', hero.group(1))
         self.assertNotIn("hero-panel", hero.group(1))
         self.assertNotIn("Online Stores", hero.group(1))
         self.assertNotIn("Live Shopping", hero.group(1))
@@ -150,18 +152,27 @@ class PublicStorefrontContractTests(unittest.TestCase):
     def test_sell_and_bulk_routes_share_one_destination(self):
         self.assertIn('new Set(["sell", "bulk", "buylist"])', self.source_js)
         self.assertIn("renderSellCollectionPage", self.source_js)
+        self.assertIn("Sell Through CardUploader", self.source_js)
+        self.assertIn("Open CardUploader Storefront", self.source_js)
         self.assertNotIn('new Set(["buylist", "bulk", "events", "about"])', self.source_js)
         for route_id in ('id="sell"', 'id="bulk"', 'id="buylist"'):
             self.assertIn(route_id, self.source_html)
+        sell_section = re.search(r'<section class="sell-section wrap" id="sell"[^>]*>(.*?)</section>', self.source_html, re.S)
+        self.assertIsNotNone(sell_section)
+        self.assertIn("Sell Through CardUploader", sell_section.group(1))
+        self.assertIn("Open CardUploader Storefront", sell_section.group(1))
+        self.assertNotIn("Submit Collection Inquiry", sell_section.group(1))
+        self.assertNotIn("{{COLLECTION_INQUIRY_URL}}", sell_section.group(1))
 
     def test_direct_contact_section_is_public_and_compliant(self):
         self.assertIn('<section class="contact-section wrap" id="contact"', self.source_html)
         self.assertIn("Contact Putnam Collectibles", self.source_html)
-        self.assertIn("Send Direct Message", self.source_html)
         self.assertIn("Email Putnam Collectibles", self.source_html)
         self.assertIn("{{CONTACT_EMAIL}}", self.source_html)
         self.assertIn("CONTACT_EMAIL", self.source_js)
         self.assertIn("CONTACT_EMAIL_URL", self.source_js)
+        self.assertNotIn("COLLECTION_INQUIRY_URL", self.source_js)
+        self.assertNotIn("Send Direct Message", self.source_html)
         self.assertIn("For an existing marketplace order or listing-specific transaction", self.source_html)
         self.assertIn("keep order messages and payment inside the marketplace", self.source_html)
         self.assertIn('href="/#contact"', self.source_html)
@@ -170,7 +181,8 @@ class PublicStorefrontContractTests(unittest.TestCase):
         self.assertIn(".contact-section", self.source_css)
         self.assertIn(".contact-route-notes", self.source_css)
         self.assertNotIn("window.location.replace(siteLinks.COLLECTION_INQUIRY_URL)", self.source_js)
-        self.assertIn("Send Direct Message", self.output_html)
+        self.assertNotIn("Send Direct Message", self.output_html)
+        self.assertNotIn("tally.so", self.output_html)
         self.assertIn("Putnam.collects@gmail.com", self.output_html)
         self.assertIn("https://mail.google.com/mail/?view=cm", self.output_html)
         self.assertIn("to=Putnam.collects%40gmail.com", self.output_html)
@@ -285,10 +297,12 @@ class PublicStorefrontContractTests(unittest.TestCase):
         self.assertIn(EXPECTED_URLS["CONTACT_EMAIL"], shop_page)
 
     def test_sell_page_is_static_crawlable_and_canonical(self):
-        self.assertIn("Sell Pokemon Cards and Trading Card Collections", self.output_sell)
+        self.assertIn("Sell Through CardUploader", self.output_sell)
         self.assertIn('<link rel="canonical" href="https://cardvector.app/sell/">', self.output_sell)
-        self.assertIn("Submit Collection Inquiry", self.output_sell)
-        self.assertIn(EXPECTED_URLS["COLLECTION_INQUIRY_URL"], self.output_sell)
+        self.assertIn("Open CardUploader Storefront", self.output_sell)
+        self.assertIn(EXPECTED_URLS["CARDUPLOADER_STORE_URL"], self.output_sell)
+        self.assertNotIn("Submit Collection Inquiry", self.output_sell)
+        self.assertNotIn("tally.so", self.output_sell)
         self.assertIn('"@type":"BreadcrumbList"', self.output_sell)
 
     def test_carduploader_landing_page_is_crawlable_and_disclosed(self):

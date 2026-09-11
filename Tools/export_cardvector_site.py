@@ -40,7 +40,6 @@ SITE_CONFIG_KEYS = (
     "CARDUPLOADER_REFERRAL_URL",
     "WHATNOT_REFERRAL_URL",
     "WHATNOT_SELLER_REFERRAL_URL",
-    "COLLECTION_INQUIRY_URL",
     "CONTACT_EMAIL",
     "CONTACT_EMAIL_URL",
 )
@@ -343,7 +342,6 @@ def render_public_header(
         <ul class="nav-links" aria-label="Site navigation">
           <li><a class="nav-shop nav-cta" href="{{{{CARDUPLOADER_STORE_URL}}}}" target="_blank" rel="noopener noreferrer">Shop CardUploader</a></li>
           <li><a href="/market-briefs/">Market Briefs</a></li>
-          <li><a href="/sell/">Sell Your Collection</a></li>
           <li><a href="/tools/carduploader/">CardUploader</a></li>
           <li><a href="/#contact">Contact</a></li>
         </ul>
@@ -361,7 +359,6 @@ def render_public_footer() -> str:
       <ul>
         <li><a href="{{CARDUPLOADER_STORE_URL}}" target="_blank" rel="noopener noreferrer">Shop CardUploader</a></li>
         <li><a href="/market-briefs/">Market Briefs</a></li>
-        <li><a href="/sell/">Sell Your Collection</a></li>
         <li><a href="/tools/carduploader/">CardUploader</a></li>
       </ul>
     </div>
@@ -476,7 +473,7 @@ def render_market_brief_static_pages(output: Path, posts: list[dict[str, object]
       </div>
       <nav class="brief-internal-links" aria-label="Related Putnam Collectibles pages">
         <a href="/tools/carduploader/">CardUploader workflow</a>
-        <a href="/sell/">Sell Pokemon cards</a>
+        <a href="{{{{CARDUPLOADER_STORE_URL}}}}" target="_blank" rel="noopener noreferrer">CardUploader buylist</a>
         <a href="{{{{CARDUPLOADER_STORE_URL}}}}" target="_blank" rel="noopener noreferrer">Shop Putnam Collectibles on CardUploader</a>
       </nav>
     </section>
@@ -538,7 +535,7 @@ def render_market_brief_static_pages(output: Path, posts: list[dict[str, object]
       <nav class="brief-internal-links" aria-label="Related Putnam Collectibles pages">
         <a href="/market-briefs/">More Pokemon market briefs</a>
         <a href="/tools/carduploader/">CardUploader seller workflow</a>
-        <a href="/sell/">Sell a Pokemon card collection</a>
+        <a href="{{{{CARDUPLOADER_STORE_URL}}}}" target="_blank" rel="noopener noreferrer">CardUploader buylist</a>
       </nav>
       <aside class="brief-disclosure">
         <strong>Editorial note</strong>
@@ -553,41 +550,40 @@ def render_sell_static_page(output: Path) -> None:
     sell_dir = output / "sell"
     sell_dir.mkdir(parents=True, exist_ok=True)
     sell_html = render_public_header(
-        "Sell Pokemon Cards and Trading Card Collections | Putnam Collectibles",
-        "Sell your Pokemon card collection, Magic: The Gathering cards, or Near Mint English bulk to Putnam Collectibles for review.",
+        "Sell Through CardUploader | Putnam Collectibles",
+        "Use the Putnam Collectibles CardUploader storefront and buylist tools for buying and selling workflows.",
         f"{SITE_URL}/sell/",
         keywords=[
-            "sell Pokemon cards",
-            "sell trading card collection",
-            "sell Pokemon card collection",
-            "Near Mint English bulk",
+            "CardUploader buylist",
+            "sell Pokemon cards to Putnam Collectibles",
+            "sell trading cards",
             "Putnam Collectibles",
         ],
     ) + f"""
     <script type="application/ld+json">{render_json_ld(breadcrumb_json_ld([
         ("Home", SITE_URL + "/"),
-        ("Sell Your Collection", SITE_URL + "/sell/"),
+        ("Sell Through CardUploader", SITE_URL + "/sell/"),
     ]))}</script>
     <section class="qr-view wrap" aria-labelledby="sell-page-title">
       <article class="qr-card sell-route-card">
-        <p class="eyebrow">We buy cards</p>
-        <h1 id="sell-page-title">Sell Your Collection</h1>
-        <p class="hero-lede">Selling a collection or Near Mint English bulk? Tell us what you have and Putnam Collectibles will review it.</p>
-        <div class="sell-options" aria-label="Items Putnam Collectibles currently reviews">
+        <p class="eyebrow">CardUploader buylist</p>
+        <h1 id="sell-page-title">Sell Through CardUploader</h1>
+        <p class="hero-lede">CardUploader storefront tools now handle buying and buylist workflows for Putnam Collectibles.</p>
+        <div class="sell-options" aria-label="CardUploader buylist guidance">
           <div>
-            <strong>Full or Partial Collections</strong>
-            <span>Share the size, games, highlights, and condition.</span>
+            <strong>Buylist Workflow</strong>
+            <span>Use the CardUploader storefront when buylist intake is available.</span>
           </div>
           <div>
-            <strong>Near Mint English Bulk</strong>
-            <span>Holo and reverse-holo bulk inquiries are welcome.</span>
+            <strong>Direct Questions</strong>
+            <span>Email Putnam Collectibles if you have a question before using the storefront.</span>
           </div>
         </div>
         <div class="entry-actions sell-route-actions">
-          <a class="button primary button-large" href="{{{{COLLECTION_INQUIRY_URL}}}}" target="_blank" rel="noopener noreferrer" aria-label="Submit a collection or bulk card inquiry to Putnam Collectibles">Submit Collection Inquiry</a>
+          <a class="button primary button-large" href="{{{{CARDUPLOADER_STORE_URL}}}}" target="_blank" rel="noopener noreferrer" aria-label="Open the Putnam Collectibles CardUploader storefront">Open CardUploader Storefront</a>
+          <a class="button secondary button-large" href="{{{{CONTACT_EMAIL_URL}}}}" target="_blank" rel="noopener noreferrer" aria-label="Email Putnam Collectibles directly">Email Putnam Collectibles</a>
           <a class="button secondary" href="/">Return Home</a>
         </div>
-        <p class="qr-note">Near Mint English cards only at this time.</p>
       </article>
     </section>
 """ + render_public_footer()
