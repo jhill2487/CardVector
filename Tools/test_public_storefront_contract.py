@@ -15,6 +15,7 @@ EXPECTED_URLS = {
     "EBAY_STORE_URL": "https://www.ebay.com/str/jhilltcg?mkcid=1&mkrid=711-53200-19255-0&siteid=0&campid=5339178316&customid=&toolid=10001&mkevt=1",
     "TCGPLAYER_STORE_URL": "https://www.tcgplayer.com/sellers/Putnam-Collectibles/747c057d",
     "MANAPOOL_STORE_URL": "https://manapool.com/shop/putnamcollectibles",
+    "CARDUPLOADER_STORE_URL": "https://carduploader.com/store/putnamcollectibles",
     "CARDUPLOADER_REFERRAL_URL": "https://carduploader.com/signup?ref=LIEA0817",
     "WHATNOT_REFERRAL_URL": "https://whatnot.com/invite/putnam_collectibles",
     "WHATNOT_SELLER_REFERRAL_URL": "https://whatnot.com/invite/seller/putnam_collectibles",
@@ -76,18 +77,20 @@ class PublicStorefrontContractTests(unittest.TestCase):
     def test_navigation_labels_are_in_required_order(self):
         nav = re.search(r'<ul class="nav-links"[^>]*>(.*?)</ul>', self.source_html, re.S)
         self.assertIsNotNone(nav)
-        labels = [
-            "Shop eBay",
-            "Shop TCGplayer",
-            "Shop Manapool",
-            "Market Briefs",
-            "Sell Your Collection",
-            "Whatnot",
-            "About",
-            "Contact",
+        snippets = [
+            'href="{{CARDUPLOADER_STORE_URL}}"',
+            'href="/market-briefs/"',
+            'href="/sell/"',
+            'href="/tools/carduploader/"',
+            'href="/#about"',
+            'href="/#contact"',
         ]
-        positions = [nav.group(1).index(label) for label in labels]
+        positions = [nav.group(1).index(snippet) for snippet in snippets]
         self.assertEqual(positions, sorted(positions))
+        self.assertNotIn("Shop eBay", nav.group(1))
+        self.assertNotIn("Shop TCGplayer", nav.group(1))
+        self.assertNotIn("Shop Manapool", nav.group(1))
+        self.assertNotIn("Whatnot", nav.group(1))
         self.assertNotIn("Shop Direct", nav.group(1))
         self.assertNotIn('href="/shop/"', nav.group(1))
         self.assertNotIn('href="/cart/"', nav.group(1))
@@ -111,17 +114,28 @@ class PublicStorefrontContractTests(unittest.TestCase):
         self.assertNotIn(".hero-panel", self.source_css)
         self.assertNotIn(".panel-line", self.source_css)
 
-    def test_manapool_store_link_is_public(self):
+    def test_carduploader_storefront_is_primary_public_store(self):
+        self.assertIn("{{CARDUPLOADER_STORE_URL}}", self.source_html)
+        self.assertIn("CardUploader Storefront", self.source_html)
+        self.assertIn("Preferred storefront", self.source_html)
+        self.assertIn("CardUploader is becoming our preferred storefront and inventory hub.", self.source_html)
+        self.assertIn("Shop CardUploader Store", self.source_html)
+        self.assertIn(EXPECTED_URLS["CARDUPLOADER_STORE_URL"], self.output_html)
+        self.assertNotIn("Shop on</span><strong>eBay", self.source_html)
+        self.assertNotIn("Shop on</span><strong>TCGplayer", self.source_html)
+        self.assertNotIn("Shop</span><strong>Manapool", self.source_html)
+
+    def test_legacy_marketplace_urls_remain_in_config_for_hidden_integrations(self):
         self.assertIn("{{MANAPOOL_STORE_URL}}", self.source_html)
-        self.assertIn("Manapool", self.source_html)
-        self.assertIn("Magic: The Gathering singles", self.source_html)
-        self.assertIn("Manapool is our dedicated marketplace for Magic: The Gathering singles.", self.source_html)
-        self.assertIn("Shop Manapool", self.source_html)
+        self.assertIn("{{EBAY_STORE_URL}}", self.source_html)
+        self.assertIn("{{TCGPLAYER_STORE_URL}}", self.source_html)
         self.assertIn(EXPECTED_URLS["MANAPOOL_STORE_URL"], self.output_html)
 
     def test_carduploader_referral_section_is_public_and_disclosed(self):
         self.assertIn('<section class="carduploader-section wrap" id="carduploader"', self.source_html)
         self.assertIn("{{CARDUPLOADER_REFERRAL_URL}}", self.source_html)
+        self.assertIn("{{CARDUPLOADER_STORE_URL}}", self.source_html)
+        self.assertIn("Shop CardUploader Store", self.source_html)
         self.assertIn("Try CardUploader", self.source_html)
         self.assertIn("Read why we use CardUploader", self.source_html)
         self.assertIn("Unlimited plan at $9.99/month", self.source_html)
@@ -129,6 +143,8 @@ class PublicStorefrontContractTests(unittest.TestCase):
         self.assertIn("Referral link. Putnam Collectibles may earn a commission or account credit", self.source_html)
         self.assertIn(".carduploader-section", self.source_css)
         self.assertIn(EXPECTED_URLS["CARDUPLOADER_REFERRAL_URL"], self.output_html)
+        self.assertIn(EXPECTED_URLS["CARDUPLOADER_STORE_URL"], self.output_html)
+        self.assertIn("Shop CardUploader Store", self.output_html)
         self.assertIn("Try CardUploader", self.output_html)
         self.assertIn("Referral link. Putnam Collectibles may earn a commission or account credit", self.output_html)
 
@@ -193,7 +209,7 @@ class PublicStorefrontContractTests(unittest.TestCase):
         self.assertIn('<link rel="canonical" href="https://cardvector.app/">', self.source_html)
         self.assertIn('"@type": "Organization"', self.source_html)
         self.assertIn('"@type": "WebSite"', self.source_html)
-        self.assertIn("Pokemon Cards, MTG Singles & Market Briefs", self.source_html)
+        self.assertIn("CardUploader Storefront & Market Briefs", self.source_html)
 
         self.assertIn("Sitemap: https://cardvector.app/sitemap.xml", self.output_robots)
         self.assertIn("<loc>https://cardvector.app/</loc>", self.output_sitemap)
@@ -223,7 +239,7 @@ class PublicStorefrontContractTests(unittest.TestCase):
         self.assertIn("Quick answer", post_html)
         self.assertIn("Help Pokemon card sellers understand why card prices move", post_html)
         self.assertIn("Shop Putnam Collectibles on eBay", post_html)
-        self.assertIn(EXPECTED_URLS["EBAY_STORE_URL"], post_html)
+        self.assertIn(EXPECTED_URLS["EBAY_STORE_URL"].replace("&", "&amp;"), post_html)
         self.assertIn("Marketplace links may be affiliate links.", post_html)
         self.assertIn('"@type":"BlogPosting"', post_html)
         self.assertIn('"@type":"BreadcrumbList"', post_html)
@@ -236,7 +252,7 @@ class PublicStorefrontContractTests(unittest.TestCase):
         self.assertNotIn('href="/cart/"', nav.group(1))
         self.assertNotIn("Shop Direct", nav.group(1))
         self.assertIn("Direct purchase option", self.source_html)
-        self.assertIn("if you find a card on eBay, TCGplayer, or Manapool", self.source_html)
+        self.assertIn("if you see something in our CardUploader storefront", self.source_html)
         self.assertIn("{{CONTACT_EMAIL}}", self.source_html)
         self.assertIn("directStorePublicEnabled = false", self.source_js)
         self.assertIn("renderDirectStorePausedPage", self.source_js)
@@ -278,6 +294,8 @@ class PublicStorefrontContractTests(unittest.TestCase):
         cart_page = (self.output / "cart" / "index.html").read_text(encoding="utf-8")
         self.assertIn("CardVector direct checkout is not public yet.", shop_page)
         self.assertIn("CardVector direct checkout is not public yet.", cart_page)
+        self.assertIn(EXPECTED_URLS["CARDUPLOADER_STORE_URL"], shop_page)
+        self.assertIn(EXPECTED_URLS["CARDUPLOADER_STORE_URL"], cart_page)
         self.assertIn(EXPECTED_URLS["CONTACT_EMAIL"], shop_page)
 
     def test_sell_page_is_static_crawlable_and_canonical(self):
@@ -292,6 +310,7 @@ class PublicStorefrontContractTests(unittest.TestCase):
         self.assertIn('<link rel="canonical" href="https://cardvector.app/tools/carduploader/">', self.output_carduploader)
         self.assertIn('"@type": "Article"', self.output_carduploader)
         self.assertIn("unlimited card processing", self.output_carduploader)
+        self.assertIn(EXPECTED_URLS["CARDUPLOADER_STORE_URL"], self.output_carduploader)
         self.assertIn(EXPECTED_URLS["CARDUPLOADER_REFERRAL_URL"], self.output_carduploader)
         self.assertIn("Referral link. Putnam Collectibles may earn a commission or account credit", self.output_carduploader)
 

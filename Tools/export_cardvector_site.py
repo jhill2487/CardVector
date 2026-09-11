@@ -37,6 +37,7 @@ SITE_CONFIG_KEYS = (
     "EBAY_STORE_URL",
     "TCGPLAYER_STORE_URL",
     "MANAPOOL_STORE_URL",
+    "CARDUPLOADER_STORE_URL",
     "CARDUPLOADER_REFERRAL_URL",
     "WHATNOT_REFERRAL_URL",
     "WHATNOT_SELLER_REFERRAL_URL",
@@ -329,7 +330,7 @@ def render_public_header(
   <meta property="og:image" content="{SITE_URL}/assets/putnam-ebay-banner.png">
   <meta name="twitter:card" content="summary_large_image">
   <title>{escape_html(title)}</title>
-  <link rel="stylesheet" href="/style.css?v=20260905-direct-paused">
+  <link rel="stylesheet" href="/style.css?v=20260911-carduploader-storefront">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -342,9 +343,7 @@ def render_public_header(
       <details class="nav-menu" open>
         <summary aria-label="Open site navigation">Menu</summary>
         <ul class="nav-links" aria-label="Site navigation">
-          <li><a class="nav-shop nav-cta" href="{{{{EBAY_STORE_URL}}}}" target="_blank" rel="noopener noreferrer">Shop eBay</a></li>
-          <li><a class="nav-shop nav-cta-secondary" href="{{{{TCGPLAYER_STORE_URL}}}}" target="_blank" rel="noopener noreferrer">Shop TCGplayer</a></li>
-          <li><a class="nav-shop nav-cta-secondary" href="{{{{MANAPOOL_STORE_URL}}}}" target="_blank" rel="noopener noreferrer">Shop Manapool</a></li>
+          <li><a class="nav-shop nav-cta" href="{{{{CARDUPLOADER_STORE_URL}}}}" target="_blank" rel="noopener noreferrer">Shop CardUploader</a></li>
           <li><a href="/market-briefs/">Market Briefs</a></li>
           <li><a href="/sell/">Sell Your Collection</a></li>
           <li><a href="/tools/carduploader/">CardUploader</a></li>
@@ -362,15 +361,14 @@ def render_public_footer() -> str:
     <div class="wrap footer-inner">
       <p>&copy; 2026 Putnam Collectibles</p>
       <ul>
+        <li><a href="{{CARDUPLOADER_STORE_URL}}" target="_blank" rel="noopener noreferrer">Shop CardUploader</a></li>
         <li><a href="/market-briefs/">Market Briefs</a></li>
+        <li><a href="/sell/">Sell Your Collection</a></li>
         <li><a href="/tools/carduploader/">CardUploader</a></li>
-        <li><a href="{{EBAY_STORE_URL}}" target="_blank" rel="noopener noreferrer">Shop eBay</a></li>
-        <li><a href="{{TCGPLAYER_STORE_URL}}" target="_blank" rel="noopener noreferrer">Shop TCGplayer</a></li>
-        <li><a href="{{MANAPOOL_STORE_URL}}" target="_blank" rel="noopener noreferrer">Shop Manapool</a></li>
       </ul>
     </div>
   </footer>
-  <script src="/app.js?v=20260905-direct-paused" defer></script>
+  <script src="/app.js?v=20260911-carduploader-storefront" defer></script>
 </body>
 </html>
 """
@@ -453,9 +451,9 @@ def render_market_brief_static_pages(output: Path, posts: list[dict[str, object]
     ]))
     index_html = render_public_header(
         "Pokemon Market Briefs for Sellers | Putnam Collectibles",
-        "Pokemon card market briefs for sellers tracking pricing strategy, eBay and TCGplayer signals, inventory age, and collector demand.",
+        "Pokemon card market briefs for sellers tracking product supply, collector demand, inventory workflows, marketplace behavior, and pricing discipline.",
         f"{SITE_URL}/market-briefs/",
-        keywords=["Pokemon market briefs", "Pokemon card prices", "Pokemon seller strategy", "eBay Pokemon cards", "TCGplayer pricing"],
+        keywords=["Pokemon market briefs", "Pokemon seller strategy", "Pokemon card supply", "trading card inventory workflow", "CardUploader storefront"],
     ) + f"""
     <script type="application/ld+json">{item_list_json_ld}</script>
     <script type="application/ld+json">{breadcrumb_index_json_ld}</script>
@@ -463,16 +461,16 @@ def render_market_brief_static_pages(output: Path, posts: list[dict[str, object]
       <div class="blog-hero">
         <p class="eyebrow">Pokemon market updates for sellers</p>
         <h1 id="market-briefs-page-title">Pokemon Market Briefs for Card Sellers</h1>
-        <p>Seller-focused notes on Pokemon card prices, collector demand, eBay and TCGplayer marketplace signals, inventory age, and practical pricing strategy.</p>
+        <p>Seller-focused notes on Pokemon product supply, collector demand, CardUploader workflows, marketplace signals, inventory age, and practical pricing discipline.</p>
       </div>
       <div class="brief-seo-summary" aria-label="What Pokemon market briefs cover">
         <article>
           <h2>What these briefs cover</h2>
-          <p>Each brief is written for small trading card sellers who need clear market context before pricing, repricing, or organizing inventory.</p>
+          <p>Each brief is written for small trading card sellers who need clear market context before organizing inventory, improving listings, or making pricing decisions.</p>
         </article>
         <article>
           <h2>How to use them</h2>
-          <p>Use these notes as a starting point for checking recent sold listings, stale inventory, card condition, and listing quality before making price changes.</p>
+          <p>Use these notes as a starting point for checking supply, demand signals, stale inventory, card condition, listing quality, and recent sold evidence.</p>
         </article>
       </div>
       <div class="brief-grid">
@@ -481,8 +479,7 @@ def render_market_brief_static_pages(output: Path, posts: list[dict[str, object]
       <nav class="brief-internal-links" aria-label="Related Putnam Collectibles pages">
         <a href="/tools/carduploader/">CardUploader workflow</a>
         <a href="/sell/">Sell Pokemon cards</a>
-        <a href="{{{{EBAY_STORE_URL}}}}" target="_blank" rel="noopener noreferrer">Shop Pokemon cards on eBay</a>
-        <a href="{{{{TCGPLAYER_STORE_URL}}}}" target="_blank" rel="noopener noreferrer">Shop Pokemon cards on TCGplayer</a>
+        <a href="{{{{CARDUPLOADER_STORE_URL}}}}" target="_blank" rel="noopener noreferrer">Shop Putnam Collectibles on CardUploader</a>
       </nav>
     </section>
 """ + render_public_footer()
@@ -604,7 +601,7 @@ def render_shop_static_page(output: Path) -> None:
     shop_dir.mkdir(parents=True, exist_ok=True)
     shop_html = render_public_header(
         "Direct Store Coming Soon | Putnam Collectibles",
-        "CardVector direct checkout is being prepared. Shop current Putnam Collectibles inventory on eBay, TCGplayer, or Manapool and email about buying direct.",
+        "CardVector direct checkout is being prepared. Shop current Putnam Collectibles inventory through the CardUploader storefront and email with questions.",
         f"{SITE_URL}/shop/",
         keywords=[
             "Putnam Collectibles direct",
@@ -623,15 +620,15 @@ def render_shop_static_page(output: Path) -> None:
         <div>
           <p class="eyebrow">Direct store coming soon</p>
           <h1 id="shop-page-title">CardVector direct checkout is not public yet.</h1>
-          <p>The secure cart and Stripe checkout foundation is being kept ready behind the scenes while public purchases continue through the current marketplaces.</p>
+          <p>The secure cart and Stripe checkout foundation is being kept ready behind the scenes while public purchases move through the CardUploader storefront.</p>
         </div>
-        <a class="button secondary" href="/">Return Home</a>
+        <a class="button primary" href="{{{{CARDUPLOADER_STORE_URL}}}}" target="_blank" rel="noopener noreferrer">Shop CardUploader Store</a>
       </div>
       <aside class="direct-contact-banner direct-contact-banner-route">
         <div>
           <p class="eyebrow">Direct purchase option</p>
           <h2>See something in one of our stores?</h2>
-          <p>Email <strong>{{{{CONTACT_EMAIL}}}}</strong> if you find a card on eBay, TCGplayer, or Manapool and want to ask about buying direct.</p>
+          <p>Email <strong>{{{{CONTACT_EMAIL}}}}</strong> if you see something in the CardUploader storefront and want to ask a question before buying.</p>
         </div>
         <a class="button primary" href="{{{{CONTACT_EMAIL_URL}}}}" target="_blank" rel="noopener noreferrer">Email Putnam Collectibles</a>
       </aside>
@@ -645,7 +642,7 @@ def render_cart_static_page(output: Path) -> None:
     cart_dir.mkdir(parents=True, exist_ok=True)
     cart_html = render_public_header(
         "Direct Store Coming Soon | Putnam Collectibles",
-        "CardVector direct checkout is being prepared. Email Putnam Collectibles about buying direct from cards listed on eBay, TCGplayer, or Manapool.",
+        "CardVector direct checkout is being prepared. Shop current Putnam Collectibles inventory through CardUploader or email with questions.",
         f"{SITE_URL}/cart/",
         keywords=["Putnam Collectibles cart", "CardVector cart", "Pokemon cards checkout"],
     ) + f"""
@@ -658,15 +655,15 @@ def render_cart_static_page(output: Path) -> None:
         <div>
           <p class="eyebrow">Direct store coming soon</p>
           <h1 id="cart-page-title">CardVector direct checkout is not public yet.</h1>
-          <p>The cart and Stripe checkout foundation are being kept ready behind the scenes while public purchases continue through the current marketplaces.</p>
+          <p>The cart and Stripe checkout foundation are being kept ready behind the scenes while public purchases move through the CardUploader storefront.</p>
         </div>
-        <a class="button secondary" href="/">Return Home</a>
+        <a class="button primary" href="{{{{CARDUPLOADER_STORE_URL}}}}" target="_blank" rel="noopener noreferrer">Shop CardUploader Store</a>
       </div>
       <aside class="direct-contact-banner direct-contact-banner-route">
         <div>
           <p class="eyebrow">Direct purchase option</p>
           <h2>See something in one of our stores?</h2>
-          <p>Email <strong>{{{{CONTACT_EMAIL}}}}</strong> if you find a card on eBay, TCGplayer, or Manapool and want to ask about buying direct.</p>
+          <p>Email <strong>{{{{CONTACT_EMAIL}}}}</strong> if you see something in the CardUploader storefront and want to ask a question before buying.</p>
         </div>
         <a class="button primary" href="{{{{CONTACT_EMAIL_URL}}}}" target="_blank" rel="noopener noreferrer">Email Putnam Collectibles</a>
       </aside>

@@ -12,8 +12,9 @@ const inventory = JSON.parse(fs.readFileSync(path.join(docs, "content", "shop", 
 
 [
   "Direct purchase option",
-  "if you find a card on eBay, TCGplayer, or Manapool",
+  "if you see something in our CardUploader storefront",
   "{{CONTACT_EMAIL}}",
+  "{{CARDUPLOADER_STORE_URL}}",
 ].forEach((needle) => assert(html.includes(needle), `index.html missing ${needle}`));
 
 assert(!html.includes('href="/shop/"'), "index.html should not expose direct shop links while checkout is paused");
