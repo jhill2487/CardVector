@@ -17,7 +17,6 @@ PUBLIC_FILES = (
     "app.js",
     "style.css",
     "robots.txt",
-    "content/shop/direct-inventory.json",
     "tools/carduploader/index.html",
     "CNAME",
     "_config.yml",
@@ -44,7 +43,6 @@ SITE_CONFIG_KEYS = (
     "COLLECTION_INQUIRY_URL",
     "CONTACT_EMAIL",
     "CONTACT_EMAIL_URL",
-    "CHECKOUT_FUNCTION_URL",
 )
 
 PROHIBITED_PARTS = {
@@ -600,38 +598,39 @@ def render_shop_static_page(output: Path) -> None:
     shop_dir = output / "shop"
     shop_dir.mkdir(parents=True, exist_ok=True)
     shop_html = render_public_header(
-        "Direct Store Coming Soon | Putnam Collectibles",
-        "CardVector direct checkout is being prepared. Shop current Putnam Collectibles inventory through the CardUploader storefront and email with questions.",
+        "Shop CardUploader Store | Putnam Collectibles",
+        "Shop current Putnam Collectibles inventory through the CardUploader storefront or email with questions.",
         f"{SITE_URL}/shop/",
         keywords=[
-            "Putnam Collectibles direct",
+            "Putnam Collectibles CardUploader store",
             "Putnam Collectibles cards",
             "Pokemon card singles",
             "MTG singles",
-            "CardVector direct checkout",
+            "CardUploader storefront",
         ],
     ) + f"""
     <script type="application/ld+json">{render_json_ld(breadcrumb_json_ld([
         ("Home", SITE_URL + "/"),
-        ("Direct Store Coming Soon", SITE_URL + "/shop/"),
+        ("Shop CardUploader Store", SITE_URL + "/shop/"),
     ]))}</script>
-    <section class="direct-store-shell wrap" aria-labelledby="shop-page-title">
-      <div class="direct-store-hero">
-        <div>
-          <p class="eyebrow">Direct store coming soon</p>
-          <h1 id="shop-page-title">CardVector direct checkout is not public yet.</h1>
-          <p>The secure cart and Stripe checkout foundation is being kept ready behind the scenes while public purchases move through the CardUploader storefront.</p>
-        </div>
-        <a class="button primary" href="{{{{CARDUPLOADER_STORE_URL}}}}" target="_blank" rel="noopener noreferrer">Shop CardUploader Store</a>
-      </div>
+    <section class="qr-view wrap" aria-labelledby="shop-page-title">
+      <article class="qr-card contact-route-card">
+        <p class="eyebrow">Putnam Collectibles storefront</p>
+        <h1 id="shop-page-title">Shop through CardUploader</h1>
+        <p class="hero-lede">CardVector.app no longer runs a direct cart or payment checkout. Current buying and selling activity is handled through the Putnam Collectibles CardUploader storefront.</p>
       <aside class="direct-contact-banner direct-contact-banner-route">
         <div>
-          <p class="eyebrow">Direct purchase option</p>
+          <p class="eyebrow">Questions</p>
           <h2>See something in one of our stores?</h2>
           <p>Email <strong>{{{{CONTACT_EMAIL}}}}</strong> if you see something in the CardUploader storefront and want to ask a question before buying.</p>
         </div>
         <a class="button primary" href="{{{{CONTACT_EMAIL_URL}}}}" target="_blank" rel="noopener noreferrer">Email Putnam Collectibles</a>
       </aside>
+        <div class="entry-actions sell-route-actions">
+          <a class="button primary button-large" href="{{{{CARDUPLOADER_STORE_URL}}}}" target="_blank" rel="noopener noreferrer">Shop CardUploader Store</a>
+          <a class="button secondary" href="/">Return Home</a>
+        </div>
+      </article>
     </section>
 """ + render_public_footer()
     (shop_dir / "index.html").write_text(shop_html, encoding="utf-8")
@@ -641,32 +640,33 @@ def render_cart_static_page(output: Path) -> None:
     cart_dir = output / "cart"
     cart_dir.mkdir(parents=True, exist_ok=True)
     cart_html = render_public_header(
-        "Direct Store Coming Soon | Putnam Collectibles",
-        "CardVector direct checkout is being prepared. Shop current Putnam Collectibles inventory through CardUploader or email with questions.",
+        "CardVector Checkout Retired | Putnam Collectibles",
+        "CardVector.app no longer runs a direct cart. Shop current Putnam Collectibles inventory through CardUploader.",
         f"{SITE_URL}/cart/",
-        keywords=["Putnam Collectibles cart", "CardVector cart", "Pokemon cards checkout"],
+        keywords=["Putnam Collectibles CardUploader store", "Pokemon card singles", "MTG singles"],
     ) + f"""
     <script type="application/ld+json">{render_json_ld(breadcrumb_json_ld([
         ("Home", SITE_URL + "/"),
-        ("Direct Store Coming Soon", SITE_URL + "/cart/"),
+        ("Checkout Retired", SITE_URL + "/cart/"),
     ]))}</script>
-    <section class="direct-store-shell wrap" aria-labelledby="cart-page-title">
-      <div class="direct-store-hero">
-        <div>
-          <p class="eyebrow">Direct store coming soon</p>
-          <h1 id="cart-page-title">CardVector direct checkout is not public yet.</h1>
-          <p>The cart and Stripe checkout foundation are being kept ready behind the scenes while public purchases move through the CardUploader storefront.</p>
-        </div>
-        <a class="button primary" href="{{{{CARDUPLOADER_STORE_URL}}}}" target="_blank" rel="noopener noreferrer">Shop CardUploader Store</a>
-      </div>
+    <section class="qr-view wrap" aria-labelledby="cart-page-title">
+      <article class="qr-card contact-route-card">
+        <p class="eyebrow">Putnam Collectibles storefront</p>
+        <h1 id="cart-page-title">CardVector checkout is retired.</h1>
+        <p class="hero-lede">CardVector.app no longer accepts direct cart purchases. Please shop current Putnam Collectibles inventory through the CardUploader storefront.</p>
       <aside class="direct-contact-banner direct-contact-banner-route">
         <div>
-          <p class="eyebrow">Direct purchase option</p>
+          <p class="eyebrow">Questions</p>
           <h2>See something in one of our stores?</h2>
           <p>Email <strong>{{{{CONTACT_EMAIL}}}}</strong> if you see something in the CardUploader storefront and want to ask a question before buying.</p>
         </div>
         <a class="button primary" href="{{{{CONTACT_EMAIL_URL}}}}" target="_blank" rel="noopener noreferrer">Email Putnam Collectibles</a>
       </aside>
+        <div class="entry-actions sell-route-actions">
+          <a class="button primary button-large" href="{{{{CARDUPLOADER_STORE_URL}}}}" target="_blank" rel="noopener noreferrer">Shop CardUploader Store</a>
+          <a class="button secondary" href="/">Return Home</a>
+        </div>
+      </article>
     </section>
 """ + render_public_footer()
     (cart_dir / "index.html").write_text(cart_html, encoding="utf-8")
@@ -780,7 +780,6 @@ def write_generated_files(output: Path, commit: str, market_briefs: list[dict[st
             "shop/index.html",
             "cart/index.html",
             "sell/index.html",
-            "content/shop/direct-inventory.json",
             "sitemap.xml",
         ],
         "market_brief_count": len(market_briefs),
