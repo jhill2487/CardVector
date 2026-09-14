@@ -160,17 +160,18 @@ class PublicStorefrontContractTests(unittest.TestCase):
 
     def test_misprint_is_presented_as_selling_platform_referral(self):
         self.assertIn('<section class="selling-platform-section wrap" id="misprint"', self.source_html)
-        self.assertIn("Selling platform referral", self.source_html)
-        self.assertIn("Selling on Misprint", self.source_html)
+        self.assertIn("Misprint referral", self.source_html)
+        self.assertIn("Join Misprint", self.source_html)
         self.assertIn("{{MISPRINT_REFERRAL_URL}}", self.source_html)
-        self.assertIn("Try Misprint", self.source_html)
+        self.assertIn("card-focused platforms", self.source_html)
         self.assertIn(".selling-platform-section", self.source_css)
         self.assertIn(EXPECTED_URLS["MISPRINT_REFERRAL_URL"], self.output_html)
-        self.assertIn("Selling on Misprint", self.output_html)
-        self.assertIn("Try Misprint", self.output_html)
+        self.assertIn("Join Misprint", self.output_html)
+        self.assertIn("card-focused platforms", self.output_html)
         self.assertIn("welcome pack worth $10-$200 in store credit", self.source_html)
         self.assertIn("welcome pack worth $10-$200 in store credit", self.output_html)
         self.assertIn("after eligible signup and verification", self.output_html)
+        self.assertNotIn("Selling on Misprint", self.source_html)
         self.assertNotIn("Misprint is becoming our main storefront", self.source_html)
 
     def test_sell_and_bulk_routes_share_one_destination(self):
