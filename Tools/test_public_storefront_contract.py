@@ -148,7 +148,7 @@ class PublicStorefrontContractTests(unittest.TestCase):
         self.assertIn("Read why we use CardUploader", self.source_html)
         self.assertIn("Unlimited plan at $9.99/month", self.source_html)
         self.assertIn("subject to its fair use policy", self.source_html)
-        self.assertIn("Referral link. Putnam Collectibles may earn a commission or account credit", self.source_html)
+        self.assertIn("no specific visitor reward is currently confirmed for this CardUploader link", self.source_html)
         self.assertIn(".carduploader-section", self.source_css)
         self.assertIn(EXPECTED_URLS["CARDUPLOADER_REFERRAL_URL"], self.output_html)
         self.assertIn(EXPECTED_URLS["CARDUPLOADER_STORE_URL"], self.output_html)
@@ -156,7 +156,7 @@ class PublicStorefrontContractTests(unittest.TestCase):
         self.assertIn("Shop CardUploader Store", self.output_html)
         self.assertIn("CardUploader Buylist", self.output_html)
         self.assertIn("Try CardUploader", self.output_html)
-        self.assertIn("Referral link. Putnam Collectibles may earn a commission or account credit", self.output_html)
+        self.assertIn("no specific visitor reward is currently confirmed for this CardUploader link", self.output_html)
 
     def test_misprint_is_presented_as_selling_platform_referral(self):
         self.assertIn('<section class="selling-platform-section wrap" id="misprint"', self.source_html)
@@ -168,6 +168,9 @@ class PublicStorefrontContractTests(unittest.TestCase):
         self.assertIn(EXPECTED_URLS["MISPRINT_REFERRAL_URL"], self.output_html)
         self.assertIn("Selling on Misprint", self.output_html)
         self.assertIn("Try Misprint", self.output_html)
+        self.assertIn("welcome pack worth $10-$200 in store credit", self.source_html)
+        self.assertIn("welcome pack worth $10-$200 in store credit", self.output_html)
+        self.assertIn("after eligible signup and verification", self.output_html)
         self.assertNotIn("Misprint is becoming our main storefront", self.source_html)
 
     def test_sell_and_bulk_routes_share_one_destination(self):
@@ -215,9 +218,9 @@ class PublicStorefrontContractTests(unittest.TestCase):
         self.assertIn("Whatnot Referral Bonuses", self.source_html)
         self.assertIn("New to Whatnot?", self.source_html)
         self.assertIn("Interested in Selling?", self.source_html)
-        self.assertIn("any available new-user promotional credit", self.source_html)
-        self.assertIn("any available new-seller promotional bonus", self.source_html)
-        self.assertIn("credit eligibility are determined by Whatnot and may change", self.source_html)
+        self.assertIn("see any current new-user credit offered by Whatnot during signup", self.source_html)
+        self.assertIn("see any current new-seller bonus offered by Whatnot during application", self.source_html)
+        self.assertIn("Whatnot determines referral credit, bonus eligibility, and current reward amounts", self.source_html)
         self.assertNotRegex(self.source_html, r"\$\d+[^<]*Whatnot")
 
     def test_marketplace_affiliate_disclosure_is_present(self):
@@ -336,7 +339,7 @@ class PublicStorefrontContractTests(unittest.TestCase):
         self.assertIn(EXPECTED_URLS["CARDUPLOADER_STORE_URL"], self.output_carduploader)
         self.assertIn(EXPECTED_URLS["CARDUPLOADER_BUYLIST_URL"], self.output_carduploader)
         self.assertIn(EXPECTED_URLS["CARDUPLOADER_REFERRAL_URL"], self.output_carduploader)
-        self.assertIn("Referral link. Putnam Collectibles may earn a commission or account credit", self.output_carduploader)
+        self.assertIn("no specific visitor reward is currently confirmed for this CardUploader link", self.output_carduploader)
 
     def test_building_business_update_cards_are_hidden_without_deleting_content(self):
         hidden_section = re.search(r'<section class="building wrap" id="about"[^>]*hidden[^>]*>(.*?)</section>', self.source_html, re.S)
