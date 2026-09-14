@@ -16,7 +16,9 @@ EXPECTED_URLS = {
     "TCGPLAYER_STORE_URL": "https://www.tcgplayer.com/sellers/Putnam-Collectibles/747c057d",
     "MANAPOOL_STORE_URL": "https://manapool.com/shop/putnamcollectibles",
     "CARDUPLOADER_STORE_URL": "https://carduploader.com/store/putnamcollectibles",
+    "CARDUPLOADER_BUYLIST_URL": "https://carduploader.com/buylist/putnamcollectibles",
     "CARDUPLOADER_REFERRAL_URL": "https://carduploader.com/signup?ref=LIEA0817",
+    "MISPRINT_REFERRAL_URL": "https://www.misprint.com/why-misprint?ref=putnam_collectibles",
     "WHATNOT_REFERRAL_URL": "https://whatnot.com/invite/putnam_collectibles",
     "WHATNOT_SELLER_REFERRAL_URL": "https://whatnot.com/invite/seller/putnam_collectibles",
     "CONTACT_EMAIL": "Putnam.collects@gmail.com",
@@ -117,11 +119,14 @@ class PublicStorefrontContractTests(unittest.TestCase):
 
     def test_carduploader_storefront_is_primary_public_store(self):
         self.assertIn("{{CARDUPLOADER_STORE_URL}}", self.source_html)
+        self.assertIn("{{CARDUPLOADER_BUYLIST_URL}}", self.source_html)
         self.assertIn("CardUploader Storefront", self.source_html)
         self.assertIn("Preferred storefront", self.source_html)
         self.assertIn("CardUploader is becoming our preferred storefront and inventory hub.", self.source_html)
         self.assertIn("Shop CardUploader Store", self.source_html)
+        self.assertIn("CardUploader Buylist", self.source_html)
         self.assertIn(EXPECTED_URLS["CARDUPLOADER_STORE_URL"], self.output_html)
+        self.assertIn(EXPECTED_URLS["CARDUPLOADER_BUYLIST_URL"], self.output_html)
         self.assertNotIn("Shop on</span><strong>eBay", self.source_html)
         self.assertNotIn("Shop on</span><strong>TCGplayer", self.source_html)
         self.assertNotIn("Shop</span><strong>Manapool", self.source_html)
@@ -136,7 +141,9 @@ class PublicStorefrontContractTests(unittest.TestCase):
         self.assertIn('<section class="carduploader-section wrap" id="carduploader"', self.source_html)
         self.assertIn("{{CARDUPLOADER_REFERRAL_URL}}", self.source_html)
         self.assertIn("{{CARDUPLOADER_STORE_URL}}", self.source_html)
+        self.assertIn("{{CARDUPLOADER_BUYLIST_URL}}", self.source_html)
         self.assertIn("Shop CardUploader Store", self.source_html)
+        self.assertIn("CardUploader Buylist", self.source_html)
         self.assertIn("Try CardUploader", self.source_html)
         self.assertIn("Read why we use CardUploader", self.source_html)
         self.assertIn("Unlimited plan at $9.99/month", self.source_html)
@@ -145,22 +152,38 @@ class PublicStorefrontContractTests(unittest.TestCase):
         self.assertIn(".carduploader-section", self.source_css)
         self.assertIn(EXPECTED_URLS["CARDUPLOADER_REFERRAL_URL"], self.output_html)
         self.assertIn(EXPECTED_URLS["CARDUPLOADER_STORE_URL"], self.output_html)
+        self.assertIn(EXPECTED_URLS["CARDUPLOADER_BUYLIST_URL"], self.output_html)
         self.assertIn("Shop CardUploader Store", self.output_html)
+        self.assertIn("CardUploader Buylist", self.output_html)
         self.assertIn("Try CardUploader", self.output_html)
         self.assertIn("Referral link. Putnam Collectibles may earn a commission or account credit", self.output_html)
+
+    def test_misprint_is_presented_as_selling_platform_referral(self):
+        self.assertIn('<section class="selling-platform-section wrap" id="misprint"', self.source_html)
+        self.assertIn("Selling platform referral", self.source_html)
+        self.assertIn("Selling on Misprint", self.source_html)
+        self.assertIn("{{MISPRINT_REFERRAL_URL}}", self.source_html)
+        self.assertIn("Try Misprint", self.source_html)
+        self.assertIn(".selling-platform-section", self.source_css)
+        self.assertIn(EXPECTED_URLS["MISPRINT_REFERRAL_URL"], self.output_html)
+        self.assertIn("Selling on Misprint", self.output_html)
+        self.assertIn("Try Misprint", self.output_html)
+        self.assertNotIn("Misprint is becoming our main storefront", self.source_html)
 
     def test_sell_and_bulk_routes_share_one_destination(self):
         self.assertIn('new Set(["sell", "bulk", "buylist"])', self.source_js)
         self.assertIn("renderSellCollectionPage", self.source_js)
         self.assertIn("Sell Through CardUploader", self.source_js)
-        self.assertIn("Open CardUploader Storefront", self.source_js)
+        self.assertIn("Open CardUploader Buylist", self.source_js)
+        self.assertIn("CARDUPLOADER_BUYLIST_URL", self.source_js)
         self.assertNotIn('new Set(["buylist", "bulk", "events", "about"])', self.source_js)
         for route_id in ('id="sell"', 'id="bulk"', 'id="buylist"'):
             self.assertIn(route_id, self.source_html)
         sell_section = re.search(r'<section class="sell-section wrap" id="sell"[^>]*>(.*?)</section>', self.source_html, re.S)
         self.assertIsNotNone(sell_section)
         self.assertIn("Sell Through CardUploader", sell_section.group(1))
-        self.assertIn("Open CardUploader Storefront", sell_section.group(1))
+        self.assertIn("Open CardUploader Buylist", sell_section.group(1))
+        self.assertIn("{{CARDUPLOADER_BUYLIST_URL}}", sell_section.group(1))
         self.assertNotIn("Submit Collection Inquiry", sell_section.group(1))
         self.assertNotIn("{{COLLECTION_INQUIRY_URL}}", sell_section.group(1))
 
@@ -299,8 +322,8 @@ class PublicStorefrontContractTests(unittest.TestCase):
     def test_sell_page_is_static_crawlable_and_canonical(self):
         self.assertIn("Sell Through CardUploader", self.output_sell)
         self.assertIn('<link rel="canonical" href="https://cardvector.app/sell/">', self.output_sell)
-        self.assertIn("Open CardUploader Storefront", self.output_sell)
-        self.assertIn(EXPECTED_URLS["CARDUPLOADER_STORE_URL"], self.output_sell)
+        self.assertIn("Open CardUploader Buylist", self.output_sell)
+        self.assertIn(EXPECTED_URLS["CARDUPLOADER_BUYLIST_URL"], self.output_sell)
         self.assertNotIn("Submit Collection Inquiry", self.output_sell)
         self.assertNotIn("tally.so", self.output_sell)
         self.assertIn('"@type":"BreadcrumbList"', self.output_sell)
@@ -311,6 +334,7 @@ class PublicStorefrontContractTests(unittest.TestCase):
         self.assertIn('"@type": "Article"', self.output_carduploader)
         self.assertIn("unlimited card processing", self.output_carduploader)
         self.assertIn(EXPECTED_URLS["CARDUPLOADER_STORE_URL"], self.output_carduploader)
+        self.assertIn(EXPECTED_URLS["CARDUPLOADER_BUYLIST_URL"], self.output_carduploader)
         self.assertIn(EXPECTED_URLS["CARDUPLOADER_REFERRAL_URL"], self.output_carduploader)
         self.assertIn("Referral link. Putnam Collectibles may earn a commission or account credit", self.output_carduploader)
 

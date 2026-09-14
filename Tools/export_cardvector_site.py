@@ -37,7 +37,9 @@ SITE_CONFIG_KEYS = (
     "TCGPLAYER_STORE_URL",
     "MANAPOOL_STORE_URL",
     "CARDUPLOADER_STORE_URL",
+    "CARDUPLOADER_BUYLIST_URL",
     "CARDUPLOADER_REFERRAL_URL",
+    "MISPRINT_REFERRAL_URL",
     "WHATNOT_REFERRAL_URL",
     "WHATNOT_SELLER_REFERRAL_URL",
     "CONTACT_EMAIL",
@@ -473,7 +475,7 @@ def render_market_brief_static_pages(output: Path, posts: list[dict[str, object]
       </div>
       <nav class="brief-internal-links" aria-label="Related Putnam Collectibles pages">
         <a href="/tools/carduploader/">CardUploader workflow</a>
-        <a href="{{{{CARDUPLOADER_STORE_URL}}}}" target="_blank" rel="noopener noreferrer">CardUploader buylist</a>
+        <a href="{{{{CARDUPLOADER_BUYLIST_URL}}}}" target="_blank" rel="noopener noreferrer">CardUploader buylist</a>
         <a href="{{{{CARDUPLOADER_STORE_URL}}}}" target="_blank" rel="noopener noreferrer">Shop Putnam Collectibles on CardUploader</a>
       </nav>
     </section>
@@ -535,7 +537,7 @@ def render_market_brief_static_pages(output: Path, posts: list[dict[str, object]
       <nav class="brief-internal-links" aria-label="Related Putnam Collectibles pages">
         <a href="/market-briefs/">More Pokemon market briefs</a>
         <a href="/tools/carduploader/">CardUploader seller workflow</a>
-        <a href="{{{{CARDUPLOADER_STORE_URL}}}}" target="_blank" rel="noopener noreferrer">CardUploader buylist</a>
+        <a href="{{{{CARDUPLOADER_BUYLIST_URL}}}}" target="_blank" rel="noopener noreferrer">CardUploader buylist</a>
       </nav>
       <aside class="brief-disclosure">
         <strong>Editorial note</strong>
@@ -551,7 +553,7 @@ def render_sell_static_page(output: Path) -> None:
     sell_dir.mkdir(parents=True, exist_ok=True)
     sell_html = render_public_header(
         "Sell Through CardUploader | Putnam Collectibles",
-        "Use the Putnam Collectibles CardUploader storefront and buylist tools for buying and selling workflows.",
+        "Use the Putnam Collectibles CardUploader buylist when you have cards to sell.",
         f"{SITE_URL}/sell/",
         keywords=[
             "CardUploader buylist",
@@ -568,11 +570,11 @@ def render_sell_static_page(output: Path) -> None:
       <article class="qr-card sell-route-card">
         <p class="eyebrow">CardUploader buylist</p>
         <h1 id="sell-page-title">Sell Through CardUploader</h1>
-        <p class="hero-lede">CardUploader storefront tools now handle buying and buylist workflows for Putnam Collectibles.</p>
+        <p class="hero-lede">Use the Putnam Collectibles CardUploader buylist when you have cards to sell.</p>
         <div class="sell-options" aria-label="CardUploader buylist guidance">
           <div>
             <strong>Buylist Workflow</strong>
-            <span>Use the CardUploader storefront when buylist intake is available.</span>
+            <span>Open the Putnam Collectibles buylist on CardUploader.</span>
           </div>
           <div>
             <strong>Direct Questions</strong>
@@ -580,7 +582,7 @@ def render_sell_static_page(output: Path) -> None:
           </div>
         </div>
         <div class="entry-actions sell-route-actions">
-          <a class="button primary button-large" href="{{{{CARDUPLOADER_STORE_URL}}}}" target="_blank" rel="noopener noreferrer" aria-label="Open the Putnam Collectibles CardUploader storefront">Open CardUploader Storefront</a>
+          <a class="button primary button-large" href="{{{{CARDUPLOADER_BUYLIST_URL}}}}" target="_blank" rel="noopener noreferrer" aria-label="Open the Putnam Collectibles CardUploader buylist">Open CardUploader Buylist</a>
           <a class="button secondary button-large" href="{{{{CONTACT_EMAIL_URL}}}}" target="_blank" rel="noopener noreferrer" aria-label="Email Putnam Collectibles directly">Email Putnam Collectibles</a>
           <a class="button secondary" href="/">Return Home</a>
         </div>
