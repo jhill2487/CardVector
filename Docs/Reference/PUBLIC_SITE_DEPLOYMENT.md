@@ -168,9 +168,10 @@ Long-term source fixes should still be made in `CardVector/Docs` and redeployed.
 After deployment:
 
 - `https://cardvector.app/app.js` returns HTTP 200.
-- `app.js` contains `Operator Dashboard`.
+- `app.js` does not expose the retired public dashboard routes.
 - `/etb/ETB-001` and `/location/ETB-001/A` resolve through the 404 fallback.
 - `/capture`, `/mobile`, `/mobile-capture`, `/etb/ETB-001`, and `/location/ETB-001/A` show the retired mobile-capture message and direct operators to CardUploader batches.
+- Former `/operator`, `/registry`, `/batches`, `/listings`, `/repricing`, and `/cart` URLs do not render retired dashboard or checkout functionality.
 - `deployment-manifest.json` contains the source CardVector commit SHA.
 - No service-role key or private file paths are present in static files.
 

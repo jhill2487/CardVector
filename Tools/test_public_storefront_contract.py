@@ -100,14 +100,15 @@ class PublicStorefrontContractTests(unittest.TestCase):
 
         footer = re.search(r'<footer class="footer">(.*?)</footer>', self.source_html, re.S)
         self.assertIsNotNone(footer)
-        self.assertIn('class="footer-admin"', footer.group(1))
-        self.assertIn('href="/operator"', footer.group(1))
+        self.assertNotIn('class="footer-admin"', footer.group(1))
+        self.assertNotIn('href="/operator"', footer.group(1))
         self.assertNotIn('href="/#mobile-capture"', footer.group(1))
 
     def test_hero_avoids_duplicate_static_marketplace_summary(self):
         hero = re.search(r'<section class="hero wrap">(.*?)</section>', self.source_html, re.S)
         self.assertIsNotNone(hero)
         self.assertIn("Shop CardUploader Store", hero.group(1))
+        self.assertIn("Sell Through Buylist", hero.group(1))
         self.assertNotIn("Sell Your Collection", hero.group(1))
         self.assertNotIn('href="/sell/"', hero.group(1))
         self.assertNotIn("hero-panel", hero.group(1))
@@ -122,7 +123,8 @@ class PublicStorefrontContractTests(unittest.TestCase):
         self.assertIn("{{CARDUPLOADER_BUYLIST_URL}}", self.source_html)
         self.assertIn("CardUploader Storefront", self.source_html)
         self.assertIn("Preferred storefront", self.source_html)
-        self.assertIn("CardUploader is becoming our preferred storefront and inventory hub.", self.source_html)
+        self.assertIn("CardUploader is our preferred storefront, buylist, and inventory hub.", self.source_html)
+        self.assertIn("Shop or Sell Through CardUploader", self.source_html)
         self.assertIn("Shop CardUploader Store", self.source_html)
         self.assertIn("CardUploader Buylist", self.source_html)
         self.assertIn(EXPECTED_URLS["CARDUPLOADER_STORE_URL"], self.output_html)
@@ -304,11 +306,11 @@ class PublicStorefrontContractTests(unittest.TestCase):
         self.assertNotIn('href="/shop/"', nav.group(1))
         self.assertNotIn('href="/cart/"', nav.group(1))
         self.assertNotIn("Shop Direct", nav.group(1))
-        self.assertIn("Direct purchase option", self.source_html)
-        self.assertIn("if you see something in our CardUploader storefront", self.source_html)
+        self.assertNotIn("Direct purchase option", self.source_html)
+        self.assertNotIn("buying direct", self.source_html)
         self.assertIn("{{CONTACT_EMAIL}}", self.source_html)
-        self.assertIn("renderRetiredCheckoutPage", self.source_js)
-        self.assertIn("CardVector.app no longer runs a direct cart or payment checkout.", self.source_js)
+        self.assertNotIn("renderRetiredCheckoutPage", self.source_js)
+        self.assertNotIn("CardVector.app no longer runs a direct cart or payment checkout.", self.source_js)
         self.assertNotIn("directStorePublicEnabled", self.source_js)
         self.assertNotIn("renderDirectStorePausedPage", self.source_js)
         self.assertNotIn("directStoreInventoryUrl", self.source_js)
@@ -325,18 +327,29 @@ class PublicStorefrontContractTests(unittest.TestCase):
         self.assertNotIn("marketplace_release_status", self.source_js)
         self.assertNotIn("CHECKOUT_FUNCTION_URL", self.source_js)
         self.assertTrue((self.output / "shop" / "index.html").exists())
-        self.assertTrue((self.output / "cart" / "index.html").exists())
+        self.assertFalse((self.output / "cart" / "index.html").exists())
         self.assertFalse((self.output / "content" / "shop" / "direct-inventory.json").exists())
         self.assertNotIn('<loc>https://cardvector.app/shop/</loc>', self.output_sitemap)
         shop_page = (self.output / "shop" / "index.html").read_text(encoding="utf-8")
-        cart_page = (self.output / "cart" / "index.html").read_text(encoding="utf-8")
         self.assertIn("Shop through CardUploader", shop_page)
-        self.assertIn("CardVector checkout is retired.", cart_page)
         self.assertNotIn("Stripe", shop_page)
-        self.assertNotIn("Stripe", cart_page)
         self.assertIn(EXPECTED_URLS["CARDUPLOADER_STORE_URL"], shop_page)
-        self.assertIn(EXPECTED_URLS["CARDUPLOADER_STORE_URL"], cart_page)
         self.assertIn(EXPECTED_URLS["CONTACT_EMAIL"], shop_page)
+
+    def test_operator_dashboard_routes_are_retired_publicly(self):
+        self.assertNotIn("Operator Dashboard", self.source_html)
+        self.assertNotIn("Operator Dashboard", self.source_js)
+        self.assertNotIn('href="/operator"', self.source_html)
+        self.assertNotIn("<loc>https://cardvector.app/operator", self.output_sitemap)
+        for route in (
+            'route === "operator"',
+            'route === "registry"',
+            'route === "batches"',
+            'route === "listings"',
+            'route === "repricing"',
+        ):
+            self.assertIn(route, self.source_js)
+        self.assertIn('renderRetiredPublicRoutePage("Page Not Available")', self.source_js)
 
     def test_sell_page_is_static_crawlable_and_canonical(self):
         self.assertIn("Sell Through CardUploader", self.output_sell)

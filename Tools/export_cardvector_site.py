@@ -73,26 +73,17 @@ PROHIBITED_SUFFIXES = {
 
 CLIENT_ROUTES = {
     "about",
-    "batch-workflow",
-    "batches",
     "buylist",
     "bulk",
     "contact",
-    "cart",
     "events",
     "etb",
     "location",
     "lot",
     "market",
     "market-briefs",
-    "listings",
-    "listing-reconciliation",
-    "operator",
-    "price-review",
-    "repricing",
     "sell",
     "tools",
-    "registry",
     "shop",
 }
 
@@ -329,7 +320,7 @@ def render_public_header(
   <meta property="og:image" content="{SITE_URL}/assets/putnam-ebay-banner.png">
   <meta name="twitter:card" content="summary_large_image">
   <title>{escape_html(title)}</title>
-  <link rel="stylesheet" href="/style.css?v=20260911-carduploader-storefront">
+  <link rel="stylesheet" href="/style.css?v=20260930-public-home">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -365,7 +356,7 @@ def render_public_footer() -> str:
       </ul>
     </div>
   </footer>
-  <script src="/app.js?v=20260911-carduploader-storefront" defer></script>
+  <script src="/app.js?v=20260930-public-home" defer></script>
 </body>
 </html>
 """
@@ -615,7 +606,7 @@ def render_shop_static_page(output: Path) -> None:
       <article class="qr-card contact-route-card">
         <p class="eyebrow">Putnam Collectibles storefront</p>
         <h1 id="shop-page-title">Shop through CardUploader</h1>
-        <p class="hero-lede">CardVector.app no longer runs a direct cart or payment checkout. Current buying and selling activity is handled through the Putnam Collectibles CardUploader storefront.</p>
+        <p class="hero-lede">Current buying and selling activity is handled through the Putnam Collectibles CardUploader storefront and buylist.</p>
       <aside class="direct-contact-banner direct-contact-banner-route">
         <div>
           <p class="eyebrow">Questions</p>
@@ -632,42 +623,6 @@ def render_shop_static_page(output: Path) -> None:
     </section>
 """ + render_public_footer()
     (shop_dir / "index.html").write_text(shop_html, encoding="utf-8")
-
-
-def render_cart_static_page(output: Path) -> None:
-    cart_dir = output / "cart"
-    cart_dir.mkdir(parents=True, exist_ok=True)
-    cart_html = render_public_header(
-        "CardVector Checkout Retired | Putnam Collectibles",
-        "CardVector.app no longer runs a direct cart. Shop current Putnam Collectibles inventory through CardUploader.",
-        f"{SITE_URL}/cart/",
-        keywords=["Putnam Collectibles CardUploader store", "Pokemon card singles", "MTG singles"],
-    ) + f"""
-    <script type="application/ld+json">{render_json_ld(breadcrumb_json_ld([
-        ("Home", SITE_URL + "/"),
-        ("Checkout Retired", SITE_URL + "/cart/"),
-    ]))}</script>
-    <section class="qr-view wrap" aria-labelledby="cart-page-title">
-      <article class="qr-card contact-route-card">
-        <p class="eyebrow">Putnam Collectibles storefront</p>
-        <h1 id="cart-page-title">CardVector checkout is retired.</h1>
-        <p class="hero-lede">CardVector.app no longer accepts direct cart purchases. Please shop current Putnam Collectibles inventory through the CardUploader storefront.</p>
-      <aside class="direct-contact-banner direct-contact-banner-route">
-        <div>
-          <p class="eyebrow">Questions</p>
-          <h2>See something in one of our stores?</h2>
-          <p>Email <strong>{{{{CONTACT_EMAIL}}}}</strong> if you see something in the CardUploader storefront and want to ask a question before buying.</p>
-        </div>
-        <a class="button primary" href="{{{{CONTACT_EMAIL_URL}}}}" target="_blank" rel="noopener noreferrer">Email Putnam Collectibles</a>
-      </aside>
-        <div class="entry-actions sell-route-actions">
-          <a class="button primary button-large" href="{{{{CARDUPLOADER_STORE_URL}}}}" target="_blank" rel="noopener noreferrer">Shop CardUploader Store</a>
-          <a class="button secondary" href="/">Return Home</a>
-        </div>
-      </article>
-    </section>
-""" + render_public_footer()
-    (cart_dir / "index.html").write_text(cart_html, encoding="utf-8")
 
 
 def render_sitemap(output: Path, posts: list[dict[str, object]]) -> None:
@@ -776,7 +731,6 @@ def write_generated_files(output: Path, commit: str, market_briefs: list[dict[st
             "market-briefs/index.html",
             "market-briefs/<slug>/index.html",
             "shop/index.html",
-            "cart/index.html",
             "sell/index.html",
             "sitemap.xml",
         ],
@@ -856,7 +810,6 @@ def export_site(source: Path, output: Path, commit: str) -> None:
     market_briefs = render_market_brief_index(source, output)
     render_market_brief_static_pages(output, market_briefs)
     render_shop_static_page(output)
-    render_cart_static_page(output)
     render_sell_static_page(output)
     render_sitemap(output, market_briefs)
     render_site_config(output, site_config)
