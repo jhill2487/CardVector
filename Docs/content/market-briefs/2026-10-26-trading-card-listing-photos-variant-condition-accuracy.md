@@ -40,7 +40,7 @@ Trading card identification requires more than a character or card name. A Poké
 
 Pokémon's 30th Celebration expansion includes 30 different Pikachu rare cards with distinct illustrations and artists. A listing titled simply “30th Celebration Pikachu” describes a theme, not one exact card.
 
-Disney Lorcana's Hyperia City introduced Illustrious serialized cards exclusive to Collector Boosters. Buyers of individually numbered collectibles have particular reason to expect the physical copy shown.
+Disney Lorcana has announced its first serialized Illustrious cards for the upcoming Into the Inkdark expansion, planned for spring 2027. These will be exclusive to Collector Boosters. Buyers of individually numbered collectibles have particular reason to expect the physical copy shown.
 
 These examples do not mean sellers should abandon automation. They mean automation needs a verification checkpoint.
 
