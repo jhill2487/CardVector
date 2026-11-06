@@ -16,10 +16,13 @@ for attempt in range(18):
         manifest = json.loads(fetch("/deployment-manifest.json?verify=" + expected))
         home = fetch("/?verify=" + expected)
         account = fetch("/account/?verify=" + expected)
+        partners = fetch("/partners/?verify=" + expected)
         if manifest.get("source_commit") != expected:
             raise ValueError("Live manifest does not match the release commit")
-        if 'id="partners"' not in home or 'href="/account/"' not in home:
+        if 'The right card.' not in home or 'href="/partners/"' not in home or 'href="/account/"' not in home:
             raise ValueError("Live homepage is missing expected sections")
+        if "Misprint" not in partners or "Whatnot" not in partners:
+            raise ValueError("Live resources page incomplete")
         if 'id="auth-form"' not in account:
             raise ValueError("Live account page is missing registration form")
         print("LIVE DEPLOYMENT VERIFIED: " + expected)

@@ -17,6 +17,8 @@ PUBLIC_FILES = (
     "app.js",
     "style.css",
     "partners.css",
+    "brand-site.css",
+    "partners/index.html",
     "account/index.html",
     "account/style.css",
     "account/app.js",
@@ -90,6 +92,7 @@ CLIENT_ROUTES = {
     "tools",
     "shop",
     "account",
+    "partners",
 }
 
 
@@ -331,9 +334,9 @@ def render_public_header(
   <a class="skip-link" href="#main">Skip to content</a>
   <header class="site-header" aria-label="Primary">
     <nav class="nav wrap">
-      <a class="brand" href="/" aria-label="Putnam Collectibles home">
-        <img class="brand-logo" src="/assets/putnam-profile-onepiece.png" alt="" width="42" height="42">
-        <span class="brand-text">Putnam Collectibles</span>
+      <a class="brand" href="/" aria-label="CardVector home">
+        <img class="brand-logo" src="/assets/putnam-profile-onepiece.png" alt="" width="42" height="42" hidden>
+        <span class="brand-text">CardVector</span>
       </a>
       <details class="nav-menu" open>
         <summary aria-label="Open site navigation">Menu</summary>
@@ -353,7 +356,7 @@ def render_public_footer() -> str:
     return """  </main>
   <footer class="footer">
     <div class="wrap footer-inner">
-      <p>&copy; 2026 Putnam Collectibles</p>
+      <p>&copy; 2026 CardVector</p>
       <ul>
         <li><a href="{{CARDUPLOADER_STORE_URL}}" target="_blank" rel="noopener noreferrer">Shop CardUploader</a></li>
         <li><a href="/market-briefs/">Market Briefs</a></li>
@@ -403,7 +406,7 @@ def render_brief_affiliate_panel(post: dict[str, object]) -> str:
         <div class="brief-affiliate-links">
           {''.join(rendered_links)}
         </div>
-        <p class="marketplace-disclosure">Marketplace links may be affiliate links. Putnam Collectibles may earn a commission from qualifying purchases.</p>
+        <p class="marketplace-disclosure">Marketplace links may be affiliate links. CardVector may earn a commission from qualifying purchases.</p>
       </aside>"""
 
 
@@ -427,7 +430,7 @@ def render_market_brief_static_pages(output: Path, posts: list[dict[str, object]
         "@context": "https://schema.org",
         "@type": "ItemList",
         "name": "Pokemon Market Briefs",
-        "description": "Pokemon card market updates and seller strategy notes from Putnam Collectibles.",
+        "description": "Pokemon card market updates and seller strategy notes from CardVector.",
         "itemListElement": [
             {
                 "@type": "ListItem",
@@ -443,7 +446,7 @@ def render_market_brief_static_pages(output: Path, posts: list[dict[str, object]
         ("Pokemon Market Briefs", SITE_URL + "/market-briefs"),
     ]))
     index_html = render_public_header(
-        "Pokemon Market Briefs for Sellers | Putnam Collectibles",
+        "Pokemon Market Briefs for Sellers | CardVector",
         "Pokemon card market briefs for sellers tracking product supply, collector demand, inventory workflows, marketplace behavior, and pricing discipline.",
         f"{SITE_URL}/market-briefs/",
         keywords=["Pokemon market briefs", "Pokemon seller strategy", "Pokemon card supply", "trading card inventory workflow", "CardUploader storefront"],
@@ -469,10 +472,10 @@ def render_market_brief_static_pages(output: Path, posts: list[dict[str, object]
       <div class="brief-grid">
         {''.join(cards)}
       </div>
-      <nav class="brief-internal-links" aria-label="Related Putnam Collectibles pages">
+      <nav class="brief-internal-links" aria-label="Related CardVector pages">
         <a href="/tools/carduploader/">CardUploader workflow</a>
         <a href="{{{{CARDUPLOADER_BUYLIST_URL}}}}" target="_blank" rel="noopener noreferrer">CardUploader buylist</a>
-        <a href="{{{{CARDUPLOADER_STORE_URL}}}}" target="_blank" rel="noopener noreferrer">Shop Putnam Collectibles on CardUploader</a>
+        <a href="{{{{CARDUPLOADER_STORE_URL}}}}" target="_blank" rel="noopener noreferrer">Shop CardVector on CardUploader</a>
       </nav>
     </section>
 """ + render_public_footer()
@@ -495,10 +498,10 @@ def render_market_brief_static_pages(output: Path, posts: list[dict[str, object]
             "dateModified": post.get("date", ""),
             "articleSection": post.get("category", "Pokemon Market Brief"),
             "keywords": keywords,
-            "author": {"@type": "Organization", "name": post.get("author", "Putnam Collectibles")},
+            "author": {"@type": "Organization", "name": post.get("author", "CardVector")},
             "publisher": {
                 "@type": "Organization",
-                "name": "Putnam Collectibles",
+                "name": "CardVector",
                 "url": SITE_URL,
                 "logo": {"@type": "ImageObject", "url": f"{SITE_URL}/assets/putnam-profile-onepiece.png"}
             },
@@ -510,7 +513,7 @@ def render_market_brief_static_pages(output: Path, posts: list[dict[str, object]
             (str(post["title"]), post_url),
         ]))
         post_html = render_public_header(
-            f"{seo_title} | Putnam Collectibles",
+            f"{seo_title} | CardVector",
             description,
             post_url,
             og_type="article",
@@ -530,7 +533,7 @@ def render_market_brief_static_pages(output: Path, posts: list[dict[str, object]
       </aside>
       <div class="brief-post-layout">{sections}</div>
       {render_brief_affiliate_panel(post)}
-      <nav class="brief-internal-links" aria-label="Related Putnam Collectibles pages">
+      <nav class="brief-internal-links" aria-label="Related CardVector pages">
         <a href="/market-briefs/">More Pokemon market briefs</a>
         <a href="/tools/carduploader/">CardUploader seller workflow</a>
         <a href="{{{{CARDUPLOADER_BUYLIST_URL}}}}" target="_blank" rel="noopener noreferrer">CardUploader buylist</a>
@@ -548,14 +551,14 @@ def render_sell_static_page(output: Path) -> None:
     sell_dir = output / "sell"
     sell_dir.mkdir(parents=True, exist_ok=True)
     sell_html = render_public_header(
-        "Sell Through CardUploader | Putnam Collectibles",
-        "Use the Putnam Collectibles CardUploader buylist when you have cards to sell.",
+        "Sell Through CardUploader | CardVector",
+        "Use the CardVector CardUploader buylist when you have cards to sell.",
         f"{SITE_URL}/sell/",
         keywords=[
             "CardUploader buylist",
-            "sell Pokemon cards to Putnam Collectibles",
+            "sell Pokemon cards to CardVector",
             "sell trading cards",
-            "Putnam Collectibles",
+            "CardVector",
         ],
     ) + f"""
     <script type="application/ld+json">{render_json_ld(breadcrumb_json_ld([
@@ -566,20 +569,20 @@ def render_sell_static_page(output: Path) -> None:
       <article class="qr-card sell-route-card">
         <p class="eyebrow">CardUploader buylist</p>
         <h1 id="sell-page-title">Sell Through CardUploader</h1>
-        <p class="hero-lede">Use the Putnam Collectibles CardUploader buylist when you have cards to sell.</p>
+        <p class="hero-lede">Use the CardVector CardUploader buylist when you have cards to sell.</p>
         <div class="sell-options" aria-label="CardUploader buylist guidance">
           <div>
             <strong>Buylist Workflow</strong>
-            <span>Open the Putnam Collectibles buylist on CardUploader.</span>
+            <span>Open the CardVector buylist on CardUploader.</span>
           </div>
           <div>
             <strong>Direct Questions</strong>
-            <span>Email Putnam Collectibles if you have a question before using the storefront.</span>
+            <span>Email CardVector if you have a question before using the storefront.</span>
           </div>
         </div>
         <div class="entry-actions sell-route-actions">
-          <a class="button primary button-large" href="{{{{CARDUPLOADER_BUYLIST_URL}}}}" target="_blank" rel="noopener noreferrer" aria-label="Open the Putnam Collectibles CardUploader buylist">Open CardUploader Buylist</a>
-          <a class="button secondary button-large" href="{{{{CONTACT_EMAIL_URL}}}}" target="_blank" rel="noopener noreferrer" aria-label="Email Putnam Collectibles directly">Email Putnam Collectibles</a>
+          <a class="button primary button-large" href="{{{{CARDUPLOADER_BUYLIST_URL}}}}" target="_blank" rel="noopener noreferrer" aria-label="Open the CardVector CardUploader buylist">Open CardUploader Buylist</a>
+          <a class="button secondary button-large" href="{{{{CONTACT_EMAIL_URL}}}}" target="_blank" rel="noopener noreferrer" aria-label="Email CardVector directly">Email CardVector</a>
           <a class="button secondary" href="/">Return Home</a>
         </div>
       </article>
@@ -592,12 +595,12 @@ def render_shop_static_page(output: Path) -> None:
     shop_dir = output / "shop"
     shop_dir.mkdir(parents=True, exist_ok=True)
     shop_html = render_public_header(
-        "Shop CardUploader Store | Putnam Collectibles",
-        "Shop current Putnam Collectibles inventory through the CardUploader storefront or email with questions.",
+        "Shop CardUploader Store | CardVector",
+        "Shop current CardVector inventory through the CardUploader storefront or email with questions.",
         f"{SITE_URL}/shop/",
         keywords=[
-            "Putnam Collectibles CardUploader store",
-            "Putnam Collectibles cards",
+            "CardVector CardUploader store",
+            "CardVector cards",
             "Pokemon card singles",
             "MTG singles",
             "CardUploader storefront",
@@ -609,16 +612,16 @@ def render_shop_static_page(output: Path) -> None:
     ]))}</script>
     <section class="qr-view wrap" aria-labelledby="shop-page-title">
       <article class="qr-card contact-route-card">
-        <p class="eyebrow">Putnam Collectibles storefront</p>
+        <p class="eyebrow">CardVector storefront</p>
         <h1 id="shop-page-title">Shop through CardUploader</h1>
-        <p class="hero-lede">Current buying and selling activity is handled through the Putnam Collectibles CardUploader storefront and buylist.</p>
+        <p class="hero-lede">Current buying and selling activity is handled through the CardVector CardUploader storefront and buylist.</p>
       <aside class="direct-contact-banner direct-contact-banner-route">
         <div>
           <p class="eyebrow">Questions</p>
           <h2>See something in one of our stores?</h2>
           <p>Email <strong>{{{{CONTACT_EMAIL}}}}</strong> if you see something in the CardUploader storefront and want to ask a question before buying.</p>
         </div>
-        <a class="button primary" href="{{{{CONTACT_EMAIL_URL}}}}" target="_blank" rel="noopener noreferrer">Email Putnam Collectibles</a>
+        <a class="button primary" href="{{{{CONTACT_EMAIL_URL}}}}" target="_blank" rel="noopener noreferrer">Email CardVector</a>
       </aside>
         <div class="entry-actions sell-route-actions">
           <a class="button primary button-large" href="{{{{CARDUPLOADER_STORE_URL}}}}" target="_blank" rel="noopener noreferrer">Shop CardUploader Store</a>
@@ -688,7 +691,7 @@ def render_market_brief_index(source_root: Path, output: Path) -> list[dict[str,
             "title": title,
             "seoTitle": str(metadata.get("seoTitle", "") or title).strip(),
             "date": str(metadata.get("date", "") or "").strip(),
-            "author": str(metadata.get("author", "") or "Putnam Collectibles").strip(),
+            "author": str(metadata.get("author", "") or "CardVector").strip(),
             "category": str(metadata.get("category", "") or "Pokemon Market Brief").strip(),
             "status": str(metadata.get("status", "") or "published").strip(),
             "summary": summary,
@@ -769,7 +772,7 @@ def normalize_public_ref(ref: str) -> str | None:
 
 
 def validate_references(output: Path) -> None:
-    checked = [output / "index.html", output / "404.html", output / "style.css", output / "account/index.html"]
+    checked = [output / "index.html", output / "404.html", output / "style.css", output / "account/index.html", output / "partners/index.html"]
     missing = []
     for path in checked:
         refs = local_refs_from_text(path.read_text(encoding="utf-8-sig"))
@@ -814,8 +817,20 @@ def export_site(source: Path, output: Path, commit: str) -> None:
     render_site_config(output, site_config)
     market_briefs = render_market_brief_index(source, output)
     render_market_brief_static_pages(output, market_briefs)
-    render_shop_static_page(output)
-    render_sell_static_page(output)
+    # Retain legacy routes, without advertising the retired storefront.
+    for route in ("shop", "sell"):
+        target = output / route
+        target.mkdir(parents=True, exist_ok=True)
+        (target / "index.html").write_text(
+            '<!doctype html><html lang="en"><head><meta charset="utf-8">'
+            '<meta name="viewport" content="width=device-width,initial-scale=1">'
+            '<meta name="robots" content="noindex"><title>CardVector</title>'
+            '<link rel="stylesheet" href="/brand-site.css"></head><body>'
+            '<main style="max-width:700px;margin:10vh auto;padding:24px">'
+            '<h1>CardVector</h1><p>Our previous storefront is no longer featured here.</p>'
+            '<a href="/">Explore CardVector</a> &middot; <a href="/partners/">Resources</a>'
+            '</main></body></html>', encoding="utf-8")
+
     render_sitemap(output, market_briefs)
     render_site_config(output, site_config)
     write_generated_files(output, commit, market_briefs)
