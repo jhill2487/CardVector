@@ -35,6 +35,7 @@ PUBLIC_ASSETS = (
     "assets/putnam-ebay-banner.png",
     "assets/cardvector-mark.svg",
     "assets/cardvector-mark-v2.svg",
+    "assets/cardvector-wordmark-20261105.svg",
 )
 
 SITE_CONFIG_FILE = "site-config.json"
