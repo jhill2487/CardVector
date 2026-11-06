@@ -23,6 +23,9 @@ PUBLIC_FILES = (
     "account/index.html",
     "account/style.css",
     "account/app.js",
+    "wanted/index.html",
+    "wanted/style.css",
+    "wanted/search.js",
     "robots.txt",
     "tools/carduploader/index.html",
     "CNAME",
@@ -99,6 +102,7 @@ CLIENT_ROUTES = {
     "shop",
     "account",
     "partners",
+    "wanted",
 }
 
 
