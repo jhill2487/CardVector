@@ -36,6 +36,7 @@ PUBLIC_ASSETS = (
     "assets/cardvector-mark.svg",
     "assets/cardvector-mark-v2.svg",
     "assets/cardvector-wordmark-20261105.svg",
+    "assets/cardvector-logo-traced.svg",
 )
 
 SITE_CONFIG_FILE = "site-config.json"
