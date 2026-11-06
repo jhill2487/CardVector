@@ -106,7 +106,8 @@
         user_id: user.id, source: "tcgdex", ...selectedCard,
         minimum_condition: $("minimum-condition").value,
         max_price_usd: Number($("max-price").value),
-        quantity: Number($("want-quantity").value)
+        quantity: Number($("want-quantity").value),
+        consider_lower_condition: $("consider-lower-condition").checked
       });
       if (error) throw error;
       message.textContent = "Added to your wanted list. View it in your account dashboard.";
