@@ -8,12 +8,32 @@
   const PAGE_SIZE = 24;
   let debounce, controller, requestId = 0, matches = [], visible = 0, selectedController;
   function feedback(text) { status.textContent = text; }
-  function imageUrl(card) { return card.image ? card.image + "/low.webp" : ""; }
+  function imageUrl(card, extension = "webp") {
+    return card.image ? card.image + "/low." + extension : "";
+  }
   function picture(card, eager = false) {
-    const url = imageUrl(card);
-    if (!url) { const span = document.createElement("span"); span.className = "placeholder"; span.textContent = "Image unavailable"; return span; }
-    const img = document.createElement("img"); img.src = url; img.alt = card.name + " card artwork"; img.loading = eager ? "eager" : "lazy"; img.decoding = "async";
-    img.onerror = () => { const placeholder = document.createElement("span"); placeholder.className = "placeholder"; placeholder.textContent = "Image unavailable"; img.replaceWith(placeholder); };
+    const placeholder = () => {
+      const span = document.createElement("span");
+      span.className = "placeholder";
+      span.textContent = "Artwork not available";
+      return span;
+    };
+    if (!card.image) return placeholder();
+    const img = document.createElement("img");
+    img.src = imageUrl(card);
+    img.alt = card.name + " card artwork";
+    img.loading = eager ? "eager" : "lazy";
+    img.decoding = "async";
+    // Some TCGdex cards are published as PNG but not WebP.
+    // Retry once using the official PNG asset before showing a fallback.
+    img.onerror = () => {
+      if (img.dataset.fallbackTried !== "true") {
+        img.dataset.fallbackTried = "true";
+        img.src = imageUrl(card, "png");
+      } else {
+        img.replaceWith(placeholder());
+      }
+    };
     return img;
   }
   function renderNext() {
