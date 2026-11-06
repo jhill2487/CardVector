@@ -8,6 +8,7 @@ on:
       - Docs/**
       - .github/workflows/pages.yml
       - Tools/export_cardvector_site.py
+      - Tools/check_site_export.py
   workflow_dispatch:
 
 permissions:
@@ -38,6 +39,7 @@ jobs:
           python Tools/export_cardvector_site.py --output public-site --source-sha "$GITHUB_SHA"
           test -s public-site/index.html
           test -s public-site/app.js
+          python Tools/check_site_export.py public-site Docs
           echo "Source CardVector commit: $GITHUB_SHA"
 
       - name: Checkout CardVector-site deployment repository
@@ -67,3 +69,11 @@ jobs:
           git add -A
           git commit -m "deploy: publish CardVector site from ${GITHUB_SHA}"
           git push origin main
+
+      - name: Verify published repository content
+        run: |
+          cd cardvector-site
+          git fetch origin main
+          test "$(git rev-parse HEAD)" = "$(git rev-parse origin/main)"
+          python ../Tools/check_site_export.py . ../Docs
+          python -c 'import json,os; d=json.load(open("deployment-manifest.json")); assert d["source_commit"]==os.environ["GITHUB_SHA"], "Deployed commit does not match source commit"'
