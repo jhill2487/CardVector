@@ -30,6 +30,16 @@ def main() -> int:
     data = json.loads(manifest.read_text(encoding="utf-8"))
     if not data.get("source_commit"):
         raise SystemExit("Deployment manifest lacks source commit")
+
+    # Every local static HTML reference must carry the current release version.
+    import re
+    expected_version = data["source_commit"][:12]
+    for page in root.rglob("*.html"):
+        content = page.read_text(encoding="utf-8")
+        for match in re.finditer(r"""\b(?:src|href)=["'](/[^"'?#]+\.(?:css|js|svg|png|jpe?g|webp|gif|ico)(?:\?[^"']*)?)["']""", content, flags=re.I):
+            url = match.group(1)
+            if f"cv={expected_version}" not in url:
+                raise SystemExit(f"Unversioned asset in {page.relative_to(root)}: {url}")
     # Any new top-level static file or route in the public source should be
     # explicitly included in the exporter, rather than silently ignored.
     ignored = {"site-config.json", "README.md", "PROJECT_MANUAL.md", "CHANGELOG.md",

@@ -811,6 +811,30 @@ def validate_prohibited_files(output: Path) -> None:
         raise RuntimeError("Prohibited files or secret references in public artifact:\n" + "\n".join(sorted(set(violations))))
 
 
+
+def version_static_assets(output: Path, commit: str) -> None:
+    """Version local CSS, JS, SVG and image references for every release."""
+    from urllib.parse import urlsplit, urlunsplit, parse_qsl, urlencode
+    version = commit.strip()[:12]
+    if not re.fullmatch(r"[a-zA-Z0-9_-]{7,40}", version):
+        raise ValueError("Deployment requires a valid source commit for asset cache busting.")
+    for page in output.rglob("*.html"):
+        original = page.read_text(encoding="utf-8")
+        def add_version(match: re.Match[str]) -> str:
+            attr, quote, url = match.groups()
+            if not url.startswith("/") or url.startswith("//"):
+                return match.group(0)
+            parts = urlsplit(url)
+            if Path(parts.path).suffix.lower() not in {".css", ".js", ".svg", ".png", ".jpg", ".jpeg", ".webp", ".gif", ".ico"}:
+                return match.group(0)
+            params = [(key, val) for key, val in parse_qsl(parts.query, keep_blank_values=True) if key != "cv"]
+            params.append(("cv", version))
+            updated = urlunsplit(("", "", parts.path, urlencode(params), parts.fragment))
+            return f"{attr}={quote}{updated}{quote}"
+        revised = re.sub(r"""\b(src|href)=(["'])([^"']+)\2""", add_version, original)
+        if revised != original:
+            page.write_text(revised, encoding="utf-8")
+
 def export_site(source: Path, output: Path, commit: str) -> None:
     site_config = load_site_config(source)
     clean_output(output)
@@ -838,6 +862,7 @@ def export_site(source: Path, output: Path, commit: str) -> None:
     render_sitemap(output, market_briefs)
     render_site_config(output, site_config)
     write_generated_files(output, commit, market_briefs)
+    version_static_assets(output, commit)
     validate_references(output)
     validate_prohibited_files(output)
 
