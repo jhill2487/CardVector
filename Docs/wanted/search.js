@@ -40,7 +40,7 @@
       const name = document.createElement("strong"); name.textContent = card.name;
       const setId = card.id.slice(0, card.id.lastIndexOf("-"));
       const info = document.createElement("small");
-      info.textContent = setNames.get(setId) || "Loading set…";
+      info.textContent = setNames.get(setId) || "Set details on selection";
       if (!setNames.size) setLabels.set(info, setId);
       const number = document.createElement("small");
       number.textContent = "Card #" + (card.localId || "—");
