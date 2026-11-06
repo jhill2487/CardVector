@@ -9,7 +9,7 @@ def main() -> int:
     source = Path(sys.argv[2] if len(sys.argv) > 2 else "Docs")
     manifest = root / "deployment-manifest.json"
     required = ("index.html", "404.html", "app.js", "style.css", "account/index.html",
-                "account/app.js", "account/style.css", "partners.css", "brand-site.css", "brand-refresh.css", "partners/index.html", "assets/cardvector-mark.svg")
+                "account/app.js", "account/style.css", "partners.css", "brand-site.css", "brand-refresh.css", "partners/index.html", "assets/cardvector-mark-v2.svg")
     missing = [p for p in required if not (root / p).is_file()]
     if not manifest.is_file():
         missing.append("deployment-manifest.json")
@@ -17,7 +17,7 @@ def main() -> int:
         raise SystemExit("Public site missing required files: " + ", ".join(missing))
     index = (root / "index.html").read_text(encoding="utf-8")
     account = (root / "account/index.html").read_text(encoding="utf-8")
-    for needle in ('href="/account/"', 'CardVector', 'href="/partners/"', 'href="/brand-site.css', 'href="/brand-refresh.css', '/assets/cardvector-mark.svg'):
+    for needle in ('href="/account/"', 'CardVector', 'href="/partners/"', 'href="/brand-site.css', 'href="/brand-refresh.css', '/assets/cardvector-mark-v2.svg'):
         if needle not in index:
             raise SystemExit("Public homepage missing: " + needle)
     if not (root / "partners/index.html").is_file():
