@@ -335,7 +335,7 @@ def render_public_header(
   <header class="site-header" aria-label="Primary">
     <nav class="nav wrap">
       <a class="brand" href="/" aria-label="CardVector home">
-        <img class="brand-logo" src="/assets/putnam-profile-onepiece.png" alt="" width="42" height="42">
+        <img class="brand-logo" src="/assets/putnam-profile-onepiece.png" alt="" width="42" height="42" hidden>
         <span class="brand-text">CardVector</span>
       </a>
       <details class="nav-menu" open>
