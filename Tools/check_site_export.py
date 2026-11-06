@@ -9,7 +9,10 @@ def main() -> int:
     source = Path(sys.argv[2] if len(sys.argv) > 2 else "Docs")
     manifest = root / "deployment-manifest.json"
     required = ("index.html", "404.html", "app.js", "style.css", "account/index.html",
-                "account/app.js", "account/style.css", "partners.css", "brand-site.css", "brand-refresh.css", "partners/index.html", "assets/cardvector-twin-arrow.svg")
+                "account/app.js",
+    "wanted/index.html",
+    "wanted/style.css",
+    "wanted/search.js", "account/style.css", "partners.css", "brand-site.css", "brand-refresh.css", "partners/index.html", "assets/cardvector-twin-arrow.svg")
     missing = [p for p in required if not (root / p).is_file()]
     if not manifest.is_file():
         missing.append("deployment-manifest.json")
