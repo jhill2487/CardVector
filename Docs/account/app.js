@@ -73,7 +73,7 @@
   function showRecovery() {
     recoveryMode = true;
     $("auth-panel").hidden = true;
-    $("account-panel").hidden = true;
+    
     $("recovery-panel").hidden = false;
     message("Choose a new password to secure your CardVector account.");
   }
@@ -84,7 +84,7 @@
     }
     if (data?.user && recoveryMode) showRecovery();
     else if (data?.user) await loadAccount(data.user);
-    else { $("auth-panel").hidden = false; $("account-panel").hidden = true; }
+    else { $("auth-panel").hidden = false;  }
   }
   async function submitAuth(event) {
     event.preventDefault();
