@@ -12,7 +12,7 @@ def main() -> int:
                 "account/app.js",
     "wanted/index.html",
     "wanted/style.css",
-    "wanted/search.js", "dashboard/index.html", "dashboard/app.js", "dashboard/style.css", "settings/index.html", "settings/app.js", "settings/style.css", "status/index.html", "account/style.css", "partners.css", "brand-site.css", "brand-refresh.css", "partners/index.html", "assets/cardvector-twin-arrow.svg")
+    "wanted/search.js", "my-wants/index.html", "my-wants/app.js", "dashboard/index.html", "dashboard/app.js", "dashboard/style.css", "settings/index.html", "settings/app.js", "settings/style.css", "status/index.html", "account/style.css", "partners.css", "brand-site.css", "brand-refresh.css", "partners/index.html", "assets/cardvector-twin-arrow.svg")
     missing = [p for p in required if not (root / p).is_file()]
     if not manifest.is_file():
         missing.append("deployment-manifest.json")
