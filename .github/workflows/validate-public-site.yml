@@ -1,0 +1,24 @@
+name: Validate Public Site Export
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'Docs/**'
+      - 'Tools/export_cardvector_site.py'
+      - 'Tools/check_site_export.py'
+      - '.github/workflows/pages.yml'
+      - '.github/workflows/validate-public-site.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  export-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Export and validate complete public artifact
+        run: |
+          python Tools/export_cardvector_site.py --output public-site --source-sha "$GITHUB_SHA"
+          python Tools/check_site_export.py public-site Docs
