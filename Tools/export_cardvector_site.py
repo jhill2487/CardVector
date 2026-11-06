@@ -17,6 +17,8 @@ PUBLIC_FILES = (
     "app.js",
     "style.css",
     "partners.css",
+    "brand-site.css",
+    "partners/index.html",
     "account/index.html",
     "account/style.css",
     "account/app.js",
@@ -90,6 +92,7 @@ CLIENT_ROUTES = {
     "tools",
     "shop",
     "account",
+    "partners",
 }
 
 
@@ -769,7 +772,7 @@ def normalize_public_ref(ref: str) -> str | None:
 
 
 def validate_references(output: Path) -> None:
-    checked = [output / "index.html", output / "404.html", output / "style.css", output / "account/index.html"]
+    checked = [output / "index.html", output / "404.html", output / "style.css", output / "account/index.html", output / "partners/index.html"]
     missing = []
     for path in checked:
         refs = local_refs_from_text(path.read_text(encoding="utf-8-sig"))
