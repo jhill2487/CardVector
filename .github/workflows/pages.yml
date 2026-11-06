@@ -9,6 +9,7 @@ on:
       - .github/workflows/pages.yml
       - Tools/export_cardvector_site.py
       - Tools/check_site_export.py
+      - Tools/verify_live_site.py
   workflow_dispatch:
 
 permissions:
@@ -77,3 +78,6 @@ jobs:
           test "$(git rev-parse HEAD)" = "$(git rev-parse origin/main)"
           python ../Tools/check_site_export.py . ../Docs
           python -c 'import json,os; d=json.load(open("deployment-manifest.json")); assert d["source_commit"]==os.environ["GITHUB_SHA"], "Deployed commit does not match source commit"'
+
+      - name: Verify cardvector.app is serving this release
+        run: python Tools/verify_live_site.py "$GITHUB_SHA"
