@@ -37,6 +37,13 @@ def main() -> int:
         if p.is_file() and p.suffix.lower() in {".html", ".css", ".js"} and p.name not in ignored:
             if not (root / p.name).is_file():
                 raise SystemExit(f"New top-level public asset omitted from export: {p.name}")
+    # Prevent silently dropping new HTML pages from the public export.
+    for page in source.rglob("index.html"):
+        relative = page.relative_to(source)
+        if any(part in {"Reference", "Reports", "Archive", "content"} for part in relative.parts):
+            continue
+        if not (root / relative).is_file():
+            raise SystemExit(f"Authored public page omitted from export: {relative}")
     print("Public site export verified (collector account, partners, and manifest).")
     return 0
 
