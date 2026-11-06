@@ -18,6 +18,7 @@ PUBLIC_FILES = (
     "style.css",
     "partners.css",
     "brand-site.css",
+    "brand-refresh.css",
     "partners/index.html",
     "account/index.html",
     "account/style.css",
@@ -32,6 +33,7 @@ PUBLIC_ASSETS = (
     "assets/putnam-profile.png",
     "assets/putnam-profile-onepiece.png",
     "assets/putnam-ebay-banner.png",
+    "assets/cardvector-mark.svg",
 )
 
 SITE_CONFIG_FILE = "site-config.json"
