@@ -122,11 +122,40 @@
     section.append(note);
     container.append(section);
   }
+  const FINISHES = {normal:"Non-holo",holo:"Holo",reverse:"Reverse holo",firstEdition:"1st Edition",wPromo:"Promo"};
+  function fillFinishChoices(details) {
+    const preferred = $("preferred-finish"), alternatives = $("alternative-finish-options");
+    const keys = Object.keys(FINISHES).filter(key => details.variants?.[key] === true);
+    // TCGdex does not always identify available finishes. Let collectors
+    // express a preference, but flag these choices for seller verification.
+    const available = keys.length ? keys : Object.keys(FINISHES);
+    preferred.replaceChildren(new Option("Select preferred finish", ""));
+    alternatives.replaceChildren();
+    for (const key of available) {
+      preferred.add(new Option(FINISHES[key], key));
+      const label = document.createElement("label");
+      label.className = "finish-option";
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.value = key;
+      label.append(checkbox, document.createTextNode(" " + FINISHES[key]));
+      alternatives.append(label);
+    }
+    $("finish-notice").textContent = keys.length
+      ? "Choose your preferred finish, then any alternatives you would accept."
+      : "TCGdex does not specify finishes for this card. Confirm the printing with the seller before buying.";
+    preferred.onchange = () => {
+      for (const item of alternatives.querySelectorAll("input")) {
+        item.disabled = item.value === preferred.value;
+        if (item.disabled) item.checked = false;
+      }
+    };
+  }
   async function selectCard(card) {
     if (selectedController) selectedController.abort();
     selectedController = new AbortController();
     const panel = $("selected"), body = $("selected-content");
-    panel.hidden = false; selectedCard = null; body.textContent = "Loading exact card details…";
+    panel.hidden = false; selectedCard = null; $("preferred-finish").replaceChildren(new Option("Loading finishes…", "")); $("alternative-finish-options").replaceChildren(); body.textContent = "Loading exact card details…";
     panel.scrollIntoView({ behavior: "smooth", block: "nearest" });
     try {
       const response = await fetch(API + "/" + encodeURIComponent(card.id), {signal: selectedController.signal});
@@ -143,6 +172,7 @@
       const finishLabel = document.createElement("p");
       finishLabel.textContent = "Available finishes: " + (finishes.length ? finishes.join(", ") : "Not specified by TCGdex");
       text.append(heading, set, number, finishLabel); addMarketReference(text, details); box.append(img, text); body.replaceChildren(box);
+      fillFinishChoices(details);
       selectedCard = { card_id: card.id, card_name: details.name || card.name, set_name: details.set?.name || "Unknown", card_number: details.localId || card.localId || "Unknown", image_url: details.image || card.image || null };
     } catch (error) {
       if (error.name !== "AbortError") body.textContent = "Could not load card details. Select the card again to retry.";
@@ -153,6 +183,9 @@
     const button = $("save-want"), message = $("want-status");
     if (!selectedCard) { message.textContent = "Select a card and wait for its details to load."; return; }
     if (!supabaseClient) { message.textContent = "Account service unavailable. Reload the page."; return; }
+    const preferredFinish = $("preferred-finish").value;
+    if (!preferredFinish) { message.textContent = "Choose your preferred finish."; return; }
+    const acceptedFinishes = [preferredFinish, ...Array.from($("alternative-finish-options").querySelectorAll("input:checked"), element => element.value)];
     button.disabled = true;
     message.textContent = "Saving request…";
     try {
@@ -163,7 +196,9 @@
         minimum_condition: $("minimum-condition").value,
         max_price_usd: Number($("max-price").value),
         quantity: Number($("want-quantity").value),
-        consider_lower_condition: $("consider-lower-condition").checked
+        consider_lower_condition: $("consider-lower-condition").checked,
+        preferred_finish: preferredFinish,
+        accepted_finishes: acceptedFinishes
       });
       if (error) throw error;
       message.textContent = "Added to your wanted list. View it in your account dashboard.";
