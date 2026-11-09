@@ -33,7 +33,7 @@ This is becoming more relevant as marketplaces develop services that store and s
 
 TCGplayer describes its Managed Inventory service as a program in which participating sellers send cards to its Authentication Center for intake, storage, and fulfillment. Its published seller policies cover shipment creation, card inspection, discrepancies, storage, fees, and return requests.
 
-The program is not simply a label-printing service. It changes who physically controls the cards after acceptance. The seller retains a commercial interest in the inventory, while the fulfillment provider handles physical storage and outbound orders under program terms.
+The program changes who physically controls the cards: a provider handles storage and outbound orders under its terms.
 
 TCGplayer's help material also says its older Store Your Products program is not accepting new applications and directs interested sellers toward Managed Inventory. Eligibility and enrollment are subject to the current program rules; sellers should not assume every account can join immediately.
 
@@ -59,9 +59,9 @@ Every physical movement should create a record. That includes moving cards from 
 
 A practical custody chain records the card's identity, condition, finish, quantity, source location, destination, movement date, and person or service responsible.
 
-For higher-value or visually distinctive cards, photographs can support the record. For large quantities of identical inexpensive cards, batch identifiers may be more efficient.
+Photographs or batch identifiers can support the record.
 
-The point is not to document every motion for its own sake. It is to make discrepancies traceable.
+The point is to make discrepancies traceable.
 
 When a card cannot be located, the business should know whether it was last counted at home, packed for shipment, accepted by a third party, or sold.
 
@@ -75,7 +75,7 @@ Those requirements reveal an important principle: a fulfillment center can only 
 
 A scanning tool may help identify products, but it does not eliminate the need to verify language, printing, finish, condition, and quantity. Two cards with the same name may belong to different sets or have different treatments.
 
-For a small seller, the most useful preparation is a deliberate verification stage before a card leaves the building. Correcting a mismatch at the desk is usually simpler than investigating one after shipping.
+Verify cards before they leave the building; correcting mismatches early is simpler.
 
 ## Use inventory states that reflect real events
 
@@ -98,7 +98,7 @@ That distinction is useful even without a fulfillment partner: a package marked 
 
 ## Reconcile the physical and digital counts
 
-A seller should periodically compare inventory records against actual quantities and locations.
+Compare records against actual quantities and locations.
 
 The simplest reconciliation asks four questions: What was expected? What was received? What was accepted? What remains available?
 
@@ -106,7 +106,7 @@ If ten cards were sent to a partner and nine were accepted, the missing or rejec
 
 Likewise, if a return is requested, the inventory should not automatically reappear as available at home. It must first arrive, be inspected, and be matched to the original record.
 
-This process also applies to consignment, grading submissions, show inventory, and cards loaned for photography. Whenever a card leaves the primary storage location, the seller needs a way to reconcile its return or sale.
+The same principle applies to consignment, grading submissions, and card shows.
 
 ## Outsourcing changes the economics of time
 
@@ -118,7 +118,7 @@ The comparison should therefore include more than the postage on an individual o
 
 Consider the time spent preparing submissions, the risk of rejected cards, how quickly inventory becomes available, the ability to retrieve unsold stock, and whether the provider's selling channels match the seller's customer base.
 
-A business with a few hundred carefully photographed singles may benefit from direct control. Another handling large volumes of standardized cards may value fulfillment capacity more.
+Small sellers may value direct control; high-volume sellers may value fulfillment capacity more.
 
 Neither approach is universally superior.
 
@@ -132,7 +132,7 @@ The safest approach is to assign each physical unit or verified batch to a fulfi
 
 When stock moves, remove it from the old location's sellable quantity before adding it to the new one.
 
-A marketplace synchronization tool may automate some updates, but the seller remains responsible for confirming what the tool treats as the source of truth.
+Synchronization tools help, but sellers must confirm the source of truth.
 
 ## Think about the buyer's experience
 
