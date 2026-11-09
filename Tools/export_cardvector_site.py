@@ -30,6 +30,9 @@ PUBLIC_FILES = (
     "wanted/search.js",
     "my-wants/index.html",
     "my-wants/app.js",
+    "marketplace/index.html",
+    "marketplace/style.css",
+    "marketplace/app.js",
     "dashboard/index.html",
     "dashboard/style.css",
     "dashboard/app.js",
@@ -117,6 +120,7 @@ CLIENT_ROUTES = {
     "wanted",
     "my-wants",
     "dashboard",
+    "marketplace",
     "settings",
     "status",
 }
@@ -369,7 +373,7 @@ def render_public_header(
       <details class="nav-menu" open>
         <summary aria-label="Open site navigation">Menu</summary>
         <ul class="nav-links" aria-label="Site navigation">
-          <li><a href="/dashboard/">Dashboard</a></li>
+          <li><a href="/dashboard/">Dashboard</a></li><li><a href="/marketplace/">Marketplace</a></li>
           
           <li><a class="nav-shop nav-cta" href="/wanted/">Find Cards</a></li>
           <li><a href="/market-briefs/">Market Insights</a></li>
@@ -387,7 +391,7 @@ def render_public_footer() -> str:
     <div class="wrap footer-inner">
       <p>&copy; 2026 CardVector</p>
       <ul>
-        <li><a href="/dashboard/">Dashboard</a></li>
+        <li><a href="/dashboard/">Dashboard</a></li><li><a href="/marketplace/">Marketplace</a></li>
         
         <li><a href="/market-briefs/">Market Insights</a></li>
       </ul>
