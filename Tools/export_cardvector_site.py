@@ -19,6 +19,8 @@ PUBLIC_FILES = (
     "partners.css",
     "brand-site.css",
     "brand-refresh.css",
+    "market-theme.css",
+    "ui-polish.css",
     "partners/index.html",
     "account/index.html",
     "account/style.css",
@@ -50,6 +52,7 @@ PUBLIC_ASSETS = (
     "assets/cardvector-wordmark-20261105.svg",
     "assets/cardvector-logo-traced.svg",
     "assets/cardvector-twin-arrow.svg",
+    "assets/favicon.svg",
 )
 
 SITE_CONFIG_FILE = "site-config.json"
@@ -351,23 +354,26 @@ def render_public_header(
   <meta property="og:image" content="{SITE_URL}/assets/putnam-ebay-banner.png">
   <meta name="twitter:card" content="summary_large_image">
   <title>{escape_html(title)}</title>
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
   <link rel="stylesheet" href="/style.css?v=20260930-public-home">
+  <link rel="stylesheet" href="/market-theme.css">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
   <header class="site-header" aria-label="Primary">
     <nav class="nav wrap">
       <a class="brand" href="/" aria-label="CardVector home">
-        <img class="brand-logo" src="/assets/putnam-profile-onepiece.png" alt="" width="42" height="42" hidden>
-        <span class="brand-text">CardVector</span>
+        <img class="brand-logo" src="/assets/cardvector-twin-arrow.svg" alt="CardVector" width="210" height="42">
+
       </a>
       <details class="nav-menu" open>
         <summary aria-label="Open site navigation">Menu</summary>
         <ul class="nav-links" aria-label="Site navigation">
-          <li><a class="nav-shop nav-cta" href="{{{{CARDUPLOADER_STORE_URL}}}}" target="_blank" rel="noopener noreferrer">Shop CardUploader</a></li>
-          <li><a href="/market-briefs/">Market Briefs</a></li>
-          <li><a href="/tools/carduploader/">CardUploader</a></li>
-          <li><a href="/#contact">Contact</a></li>
+          <li><a href="/dashboard/">Dashboard</a></li>
+          <li><a href="/my-wants/">My Wants</a></li>
+          <li><a class="nav-shop nav-cta" href="/wanted/">Find Cards</a></li>
+          <li><a href="/market-briefs/">Market Insights</a></li>
+          <li><a href="/settings/">Settings</a></li>
         </ul>
       </details>
     </nav>
@@ -381,9 +387,9 @@ def render_public_footer() -> str:
     <div class="wrap footer-inner">
       <p>&copy; 2026 CardVector</p>
       <ul>
-        <li><a href="{{CARDUPLOADER_STORE_URL}}" target="_blank" rel="noopener noreferrer">Shop CardUploader</a></li>
-        <li><a href="/market-briefs/">Market Briefs</a></li>
-        <li><a href="/tools/carduploader/">CardUploader</a></li>
+        <li><a href="/dashboard/">Dashboard</a></li>
+        <li><a href="/my-wants/">My Wants</a></li>
+        <li><a href="/market-briefs/">Market Insights</a></li>
       </ul>
     </div>
   </footer>
@@ -472,7 +478,7 @@ def render_market_brief_static_pages(output: Path, posts: list[dict[str, object]
         "Pokemon Market Briefs for Sellers | CardVector",
         "Pokemon card market briefs for sellers tracking product supply, collector demand, inventory workflows, marketplace behavior, and pricing discipline.",
         f"{SITE_URL}/market-briefs/",
-        keywords=["Pokemon market briefs", "Pokemon seller strategy", "Pokemon card supply", "trading card inventory workflow", "CardUploader storefront"],
+        keywords=["Pokemon market briefs", "Pokemon seller strategy", "Pokemon card supply", "trading card inventory workflow", "trading card marketplace"],
     ) + f"""
     <script type="application/ld+json">{item_list_json_ld}</script>
     <script type="application/ld+json">{breadcrumb_index_json_ld}</script>
@@ -480,7 +486,7 @@ def render_market_brief_static_pages(output: Path, posts: list[dict[str, object]
       <div class="blog-hero">
         <p class="eyebrow">Pokemon market updates for sellers</p>
         <h1 id="market-briefs-page-title">Pokemon Market Briefs for Card Sellers</h1>
-        <p>Seller-focused notes on Pokemon product supply, collector demand, CardUploader workflows, marketplace signals, inventory age, and practical pricing discipline.</p>
+        <p>Seller-focused notes on Pokemon product supply, collector demand, marketplace signals, inventory age, and practical pricing discipline.</p>
       </div>
       <div class="brief-seo-summary" aria-label="What Pokemon market briefs cover">
         <article>
