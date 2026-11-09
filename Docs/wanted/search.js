@@ -73,7 +73,7 @@
     const id = ++requestId;
     if (controller) controller.abort();
     const field = mode.value, chosenSet = setFilter.value;
-    if (query.length < 2 && !(field === "set" && chosenSet)) { render([]); results.replaceChildren(); feedback("Enter at least 2 characters, or choose a set."); return; }
+    if (query.length < 2 && !chosenSet) { render([]); results.replaceChildren(); feedback("Enter at least 2 characters, or choose a set."); return; }
     const cacheKey = [field, query, chosenSet].join("|");
     if (cache.has(cacheKey)) { render(cache.get(cacheKey)); feedback("Results ready."); return; }
     controller = new AbortController();
@@ -82,19 +82,25 @@
       const params = new URLSearchParams();
       if (field === "name" && query) params.set("name", query);
       if (field === "illustrator" && query) params.set("illustrator", query);
-      if (chosenSet) params.set("set.id", chosenSet);
+      if (chosenSet) params.set("set", chosenSet);
       // Set-name searches resolve the official set ID before retrieving cards.
       if (field === "set" && !chosenSet) {
         const target = [...setNames.entries()].filter(([,name]) => name.toLowerCase().includes(query.toLowerCase())).map(([id]) => id);
         if (target.length !== 1) { feedback(target.length ? "Select the exact set from the dropdown." : "No matching set. Select a set from the dropdown."); render([]); return; }
-        params.set("set.id", target[0]);
+        params.set("set", target[0]);
       }
-      const response = await fetch(API + "?" + params.toString(), { signal: controller.signal });
+      // The full set endpoint exposes its cards directly; browse by set with no text.
+      const browseSet = Boolean(chosenSet && !query);
+      const endpoint = browseSet
+        ? "https://api.tcgdex.net/v2/en/sets/" + encodeURIComponent(chosenSet)
+        : API + "?" + params.toString();
+      const response = await fetch(endpoint, { signal: controller.signal });
       if (!response.ok) throw new Error("TCGdex returned " + response.status);
       const data = await response.json();
-      if (!Array.isArray(data)) throw new Error("Unexpected search response");
+      const cards = browseSet ? data.cards : data;
+      if (!Array.isArray(cards)) throw new Error("Unexpected search response");
       if (id !== requestId) return;
-      const sorted = rank(data.filter(c => c && typeof c.id === "string" && typeof c.name === "string"), query);
+      const sorted = rank(cards.filter(c => c && typeof c.id === "string" && typeof c.name === "string"), query);
       cache.set(cacheKey, sorted);
       if (cache.size > 30) cache.delete(cache.keys().next().value);
       render(sorted); feedback(sorted.length ? "Select a card to confirm its exact printing." : "No matching cards found.");
@@ -200,7 +206,7 @@
     $("clear-search").hidden = !query;
     clearTimeout(debounce);
     if (controller) controller.abort();
-    if (query.length < 2 && !(mode.value === "set" && setFilter.value)) { ++requestId; results.replaceChildren(); $("result-count").textContent = ""; $("more-results").hidden = true; feedback("Enter at least 2 characters, or select a set."); return; }
+    if (query.length < 2 && !setFilter.value) { ++requestId; results.replaceChildren(); $("result-count").textContent = ""; $("more-results").hidden = true; feedback("Enter at least 2 characters, or select a set."); return; }
     if (cache.has([mode.value,query.toLocaleLowerCase(),setFilter.value].join("|"))) { search(query.toLocaleLowerCase()); return; }
     feedback("Searching…");
     debounce = setTimeout(() => search(query.toLocaleLowerCase()), 220);
