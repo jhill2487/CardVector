@@ -25,6 +25,20 @@ def main() -> int:
             raise SystemExit("Public homepage missing: " + needle)
     if not (root / "partners/index.html").is_file():
         raise SystemExit("Public partner page is missing")
+    # The buyer-demand marketplace must ship with its data loader, styles and
+    # a discoverable homepage link. This guards against partial deployments.
+    for relative in ("marketplace/index.html", "marketplace/app.js", "marketplace/style.css"):
+        if not (root / relative).is_file():
+            raise SystemExit(f"Marketplace export missing: {relative}")
+    market_page = (root / "marketplace/index.html").read_text(encoding="utf-8")
+    market_script = (root / "marketplace/app.js").read_text(encoding="utf-8")
+    if 'href="/marketplace/"' not in index:
+        raise SystemExit("Homepage does not link to the live marketplace")
+    if not all(fragment in market_page for fragment in ('id="market-results"', 'id="total-requests"', 'id="total-copies"', 'id="total-cards"', '/marketplace/app.js')):
+        raise SystemExit("Marketplace page missing required demand/analytics elements")
+    if not all(fragment in market_script for fragment in ('cv_public_wants', 'max_price_usd', 'card_id', 'accepted_finishes')):
+        raise SystemExit("Marketplace app missing public-demand data contract")
+
     if '/account/app.js' not in account:
         raise SystemExit("Public account page missing auth script")
     for relative in ("index.html", "account/index.html"):
@@ -59,7 +73,7 @@ def main() -> int:
             continue
         if not (root / relative).is_file():
             raise SystemExit(f"Authored public page omitted from export: {relative}")
-    print("Public site export verified (collector account, partners, and manifest).")
+    print("Public site export verified (collector account, marketplace demand, partners, and manifest).")
     return 0
 
 if __name__ == "__main__":
