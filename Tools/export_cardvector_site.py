@@ -120,6 +120,7 @@ CLIENT_ROUTES = {
     "wanted",
     "my-wants",
     "dashboard",
+    "marketplace",
     "settings",
     "status",
 }
