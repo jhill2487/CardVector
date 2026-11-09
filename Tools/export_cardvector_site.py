@@ -370,7 +370,7 @@ def render_public_header(
         <summary aria-label="Open site navigation">Menu</summary>
         <ul class="nav-links" aria-label="Site navigation">
           <li><a href="/dashboard/">Dashboard</a></li>
-          <li><a href="/dashboard/#wanted-list">Buying Requests</a></li>
+          
           <li><a class="nav-shop nav-cta" href="/wanted/">Find Cards</a></li>
           <li><a href="/market-briefs/">Market Insights</a></li>
           <li><a href="/settings/">Settings</a></li>
@@ -388,7 +388,7 @@ def render_public_footer() -> str:
       <p>&copy; 2026 CardVector</p>
       <ul>
         <li><a href="/dashboard/">Dashboard</a></li>
-        <li><a href="/dashboard/#wanted-list">Buying Requests</a></li>
+        
         <li><a href="/market-briefs/">Market Insights</a></li>
       </ul>
     </div>
