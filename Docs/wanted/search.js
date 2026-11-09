@@ -36,7 +36,7 @@
     const localId = String(card.localId || "");
     const urls = [];
     const code = LIMITLESS_SETS[setId];
-    if (code && /^\\d{1,3}$/.test(localId)) {
+    if (code && /^[0-9]{1,3}$/.test(localId)) {
       const number = String(Number(localId)).padStart(3, "0");
       urls.push("https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/" + code + "/" + code + "_" + number + "_R_EN.png");
     }
