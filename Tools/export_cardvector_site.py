@@ -20,6 +20,7 @@ PUBLIC_FILES = (
     "brand-site.css",
     "brand-refresh.css",
     "market-theme.css",
+    "ui-polish.css",
     "partners/index.html",
     "account/index.html",
     "account/style.css",
