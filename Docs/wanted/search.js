@@ -25,12 +25,30 @@
   const supabaseClient = window.supabase?.createClient("https://iqdpfgpkagjxzedfxrvn.supabase.co", "sb_publishable_76aiLaAm5Z4Kv67GkuTo-g_Psx5HINH");
   function feedback(text) { status.textContent = text; }
   function imageUrl(card) { return card.image ? card.image + "/low.webp" : ""; }
+  function imageCandidates(card) {
+    const base = card.image || (() => {
+      const cut = card.id?.lastIndexOf("-") ?? -1;
+      if (cut <= 0 || !card.localId) return "";
+      const setId = card.id.slice(0, cut);
+      const seriesId = setId.replace(/[0-9].*$/, "");
+      if (!seriesId || !/^[a-z0-9-]+$/i.test(setId) || !/^[a-z0-9-]+$/i.test(card.localId)) return "";
+      return "https://assets.tcgdex.net/en/" + seriesId + "/" + setId + "/" + encodeURIComponent(card.localId);
+    })();
+    return base ? ["/low.webp", "/low.png", "/high.png", "/high.jpg"].map(ext => base + ext) : [];
+  }
   function picture(card, eager = false) {
-    const url = imageUrl(card);
-    if (!url) { const span = document.createElement("span"); span.className = "placeholder"; span.textContent = "Image unavailable"; return span; }
-    const img = document.createElement("img"); img.src = url; img.alt = card.name + " card artwork"; img.loading = eager ? "eager" : "lazy"; img.decoding = "async";
-    img.onerror = () => { const placeholder = document.createElement("span"); placeholder.className = "placeholder"; placeholder.textContent = "Image unavailable"; img.replaceWith(placeholder); };
+    const urls = imageCandidates(card);
+    const fallback = () => { const span = document.createElement("span"); span.className = "placeholder"; span.textContent = "Image unavailable"; return span; };
+    if (!urls.length) return fallback();
+    const img = document.createElement("img"); let index = 0;
+    img.src = urls[index]; img.alt = card.name + " card artwork"; img.loading = eager ? "eager" : "lazy"; img.decoding = "async";
+    img.onerror = () => { if (++index < urls.length) img.src = urls[index]; else img.replaceWith(fallback()); };
     return img;
+  }
+  function cardNumberCompare(a, b) {
+    const parts = value => { const text = String(value || ""); const match = text.match(/^(\\d+)(.*)$/); return match ? [Number(match[1]), match[2]] : [Number.POSITIVE_INFINITY, text]; };
+    const [an, as] = parts(a.localId), [bn, bs] = parts(b.localId);
+    return an - bn || as.localeCompare(bs, undefined, {numeric:true}) || a.id.localeCompare(b.id);
   }
   function renderNext() {
     const end = Math.min(visible + PAGE_SIZE, matches.length);
@@ -100,7 +118,8 @@
       const cards = browseSet ? data.cards : data;
       if (!Array.isArray(cards)) throw new Error("Unexpected search response");
       if (id !== requestId) return;
-      const sorted = rank(cards.filter(c => c && typeof c.id === "string" && typeof c.name === "string"), query);
+      const validCards = cards.filter(c => c && typeof c.id === "string" && typeof c.name === "string");
+      const sorted = browseSet ? validCards.sort(cardNumberCompare) : rank(validCards, query);
       cache.set(cacheKey, sorted);
       if (cache.size > 30) cache.delete(cache.keys().next().value);
       render(sorted); feedback(sorted.length ? "Select a card to confirm its exact printing." : "No matching cards found.");
