@@ -56,7 +56,7 @@
       },body:JSON.stringify({imageId:result.imageId})});
       if(!response.ok)return null;
       const type=response.headers.get("content-type")||"";
-      if(!/^image\\/(jpeg|png|webp)/.test(type))return null;
+      if(!/^image\/(jpeg|png|webp)/.test(type))return null;
       const blob=await response.blob();
       return URL.createObjectURL(blob);
     })().catch(()=>null);
