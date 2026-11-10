@@ -9,7 +9,7 @@
   function number(s){return String(s??"").split("/")[0].replace(/^0+(?=\d)/,"").toLowerCase().trim();}
   function finish(s){
     const t=normalize(s);
-    if(t==="normal" || t==="unlimited")return "normal";
+    if(t==="normal")return "normal";
     if(t==="holofoil" || t==="holo")return "holo";
     if(t==="reverse holofoil" || t==="reverse holo")return "reverse";
     return null; // Older edition, stamp and special foil variants need separate identity rules.
