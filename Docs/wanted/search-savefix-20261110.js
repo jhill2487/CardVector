@@ -115,7 +115,7 @@
       // Defer until the card is mounted and set metadata is resolved.
       img.removeAttribute("src");
       img.onload=null;
-      Promise.resolve().then(()=>addSecondaryArtwork(card,img,fallback));
+      setTimeout(()=>addSecondaryArtwork(card,img,fallback),0);
     }
     return img;
   }
