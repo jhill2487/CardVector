@@ -126,7 +126,8 @@
     for (const variant of detailed) {
       if (variant?.type === "normal" || variant?.type === "holo" || variant?.type === "reverse") available.add(variant.type);
     }
-    return keys.filter(key => available.has(key));
+    const correction = window.CardVectorFinishCorrections?.forCard(details?.id);
+    return correction || keys.filter(key => available.has(key));
   }
   function populateFinishOptions(keys) {
     const preferred = $("preferred-finish"), fieldset = $("accepted-finish-fieldset"), choices = $("accepted-finish-options");
