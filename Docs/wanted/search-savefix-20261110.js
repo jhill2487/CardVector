@@ -229,6 +229,13 @@
         if (!r.ok) throw Error("No card details");
         return r.json();
       }).then(details => {
+        // Brief search records sometimes omit images; full details may supply them.
+        if(details.image && !task.card.image){
+          task.card.image=details.image;
+          const frame=task.label.parentElement;
+          const placeholder=frame?.querySelector(".placeholder");
+          if(placeholder)placeholder.replaceWith(picture(task.card));
+        }
         const label = variantLabel(details);
         variantCache.set(task.card.id,label);
         if (variantCache.size > 1500) variantCache.delete(variantCache.keys().next().value);
@@ -370,7 +377,7 @@
       const details = await response.json();
       if (!isPhysicalCard(details) || String(details.set?.serie?.id || details.set?.serie || "").toLowerCase() === "tcgp") { body.textContent = "Digital-only cards are not supported."; return; }
       const box = document.createElement("div"); box.className = "selected-detail";
-      const img = picture(details, true);
+      const img = picture({...card,...details,image:details.image||card.image||null}, true);
       const text = document.createElement("div");
       const heading = document.createElement("h3"); heading.textContent = details.name || card.name;
       const set = document.createElement("p"); set.textContent = "Set: " + (details.set?.name || "Unknown");
