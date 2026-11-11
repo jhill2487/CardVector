@@ -305,16 +305,26 @@
       const note = document.createElement("p");
       note.className = "muted";
       note.textContent = "Browse Kaggle artwork independently of TCGdex. Printing identities and finishes must be verified before a wanted request can be saved.";
+      const refineLabel = document.createElement("label");
+      refineLabel.textContent = "Refine Kaggle images by name or set";
+      const refine = document.createElement("input");
+      refine.type = "search";
+      refine.placeholder = "e.g. Libre, promo, Trainer Kit";
+      refine.setAttribute("aria-label", "Refine Kaggle image results");
+      refineLabel.append(refine);
+      const shownCount = document.createElement("p");
+      shownCount.className = "muted";
       const grid = document.createElement("div"); grid.className = "results";
+      let filtered = candidates;
       const more = document.createElement("button");
       more.type = "button";
       more.textContent = "Show more Kaggle images";
       let shown = 0;
       function appendPage() {
-        const end = Math.min(shown + 36, candidates.length);
+        const end = Math.min(shown + 36, filtered.length);
         const fragment = document.createDocumentFragment();
         for (; shown < end; shown++) {
-          const card = candidates[shown];
+          const card = filtered[shown];
           const link = document.createElement("a");
           link.href = card.url; link.target = "_blank"; link.rel = "noopener noreferrer";
           link.className = "card";
@@ -330,10 +340,25 @@
           link.append(img,title,set,number); fragment.append(link);
         }
         grid.append(fragment);
-        more.hidden = shown >= candidates.length;
+        more.hidden = shown >= filtered.length;
+        shownCount.textContent = "Showing " + shown + " of " + filtered.length + " Kaggle images";
       }
       more.addEventListener("click", appendPage);
-      kagglePanel.append(heading,note,grid,more);
+      refine.addEventListener("input", () => {
+        const words = refine.value.toLowerCase().replace(/[^a-z0-9]+/g," ").trim().split(" ").filter(Boolean);
+        filtered = words.length ? candidates.filter(card => {
+          const haystack = [card.filename,card.setSlug,card.name,card.number].join(" ").toLowerCase().replace(/[^a-z0-9]+/g," ");
+          return words.every(word => haystack.includes(word));
+        }) : candidates;
+        shown = 0;
+        grid.replaceChildren();
+        if (filtered.length) appendPage();
+        else {
+          more.hidden = true;
+          shownCount.textContent = "No Kaggle images match this refinement.";
+        }
+      });
+      kagglePanel.append(heading,note,refineLabel,shownCount,grid,more);
       if (!candidates.length) {
         const empty = document.createElement("p");
         empty.textContent = "No matching Kaggle images in this set.";
