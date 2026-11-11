@@ -37,7 +37,8 @@ jobs:
                       mime=response.headers.get("Content-Type","")
                       cache=response.headers.get("Cache-Control","")
                       valid= response.status==200 and mime.startswith("image/") and prefix[:4].hex()=="89504e47" and len(body)>256
-                      print(f"{name} {number}: HTTP {response.status}, MIME {mime}, image_signature={valid}, cache_control={cache}, bytes={len(body)}, dimensions={struct.unpack(\">II\",prefix[16:24]) if valid else None}, sha256={hashlib.sha256(body).hexdigest()[:20]}")
+                      dimensions=struct.unpack(">II",prefix[16:24]) if valid else None
+                      print(f"{name} {number}: HTTP {response.status}, MIME {mime}, image_signature={valid}, cache_control={cache}, bytes={len(body)}, dimensions={dimensions}, sha256={hashlib.sha256(body).hexdigest()[:20]}")
                       if not valid: failures+=1
               except urllib.error.HTTPError as error:
                   print(f"{name} {number}: HTTP {error.code}")
