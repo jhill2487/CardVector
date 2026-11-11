@@ -38,3 +38,15 @@ mapping; finish conflicts or mismatched names require human verification.
 a later version is allowed to update a public manifest or database.
 
 Do not commit any private API keys or unlicensed raw provider exports.
+
+## Import priority
+
+Use `Tools/import_pokewallet_catalog.py` to fetch the authorized set catalog through documented paginated endpoints. **Process recent sets first**: use a verified set release date when present, then an explicit year in the set name. For undated sets, preserve PokéWallet directory order. The importer persists this order in its checkpoint, so a resumed batch does not restart or reshuffle prior progress. This priority applies to **all sets**, not only Mega Evolution Promos. The import does not update live card search or image mappings.
+
+Example (admin-controlled environment with `POKEWALLET_API_KEY`):
+
+```bash
+python Tools/import_pokewallet_catalog.py --state private-pokewallet-checkpoint.json --catalog-output private-pokewallet-cards.json --max-requests 50 --interval-seconds 40
+```
+
+The importer is manually invoked and checkpoints each successful page. It does not create an unattended automation or have permission to publish images. Do not commit credentials or the private catalog to GitHub.
