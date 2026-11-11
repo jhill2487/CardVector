@@ -31,7 +31,8 @@ def api_json(url, method="GET", body=None, headers=None):
     request=urllib.request.Request(url,data=data,method=method,headers=headers or {})
     try:
         with urllib.request.urlopen(request,timeout=35) as response:
-            return json.load(response) if response.status!=204 else None
+            body=response.read()
+            return json.loads(body) if body else None
     except urllib.error.HTTPError as error:
         # Never emit request headers or API keys.
         raise RuntimeError("API request failed: HTTP "+str(error.code)) from None
