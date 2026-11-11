@@ -40,6 +40,12 @@ jobs:
           pikachu_files = sum("pikachu" in r["FileName"].lower() for r in rows)
           assert pikachu_files >= 170, "Pikachu filename coverage unexpectedly dropped: " + str(pikachu_files)
           print("Indexed Pikachu filename candidates:", pikachu_files)
+          # Report likely mappings for known missing search results without changing search.
+          for term in ("mcdonald", "mep", "pikachu", "trainer-kit", "museum"):
+              matches = [r["RelativePath"] for r in rows if term in r["RelativePath"].lower()]
+              print("INDEX SAMPLE", term, "total", len(matches))
+              for hit in matches[:18]: print("  ", hit)
+
           print("R2 catalog verified:", len(rows), "files; CORS:", origin)
           image_url = "https://images.cardvector.app/archive/Pokemon%20TCG/Pokemon%20TCG/151/sv3-5_en_001_std.jpg"
           with urllib.request.urlopen(urllib.request.Request(image_url, headers={"User-Agent": "CardVector-Catalog-Validation/1.0"}), timeout=30) as image:
