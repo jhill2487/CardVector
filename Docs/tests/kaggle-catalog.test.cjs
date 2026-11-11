@@ -101,3 +101,13 @@ test("unified card search no longer accesses a removed Kaggle preview panel",()=
   assert.ok(!ui.includes("kagglePanel"));
   assert.match(ui,/const end = matches\.length;/);
 });
+
+test("parses legacy name-set-code-number artwork without guessing identity",async()=>{
+  const base=api.fromRow(["Pokemon TCG/Pokemon TCG/base-set/pikachu-base-set-bs-58.jpg"]);
+  assert.equal(base.name,"pikachu"); assert.equal(base.number,"58");
+  const older=api.fromRow(["Pokemon TCG/Pokemon TCG/arceus/pikachu-arceus-ar-71.jpg"]);
+  assert.equal(older.name,"pikachu"); assert.equal(older.number,"71");
+  const matched=await api.forCard({id:"base1-58",name:"Pikachu",localId:"58",set:{name:"Base Set"}});
+  // Fixture contains Alakazam only; matching must not invent missing artwork.
+  assert.equal(matched,null);
+});
