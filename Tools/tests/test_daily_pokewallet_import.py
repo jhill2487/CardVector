@@ -24,17 +24,19 @@ class DailyTests(unittest.TestCase):
                     "cards":source[start:start+mod.PAGE_SIZE]}
         def write(checkpoint,rows):
             writes.extend(r["provider_id"] for r in rows)
-        first=mod.step(state,fetch,write,[],cap=750,max_requests=40)
+        first=mod.step(state,fetch,write,[],cap=750,max_requests=40,day="2026-11-11")
         self.assertEqual(first["today"],750)
         self.assertEqual((state["next_set"],state["next_page"],state["next_offset"]),(0,8,50))
         self.assertFalse(state["finished"])
-        second=mod.step(state,fetch,write,[],cap=750,max_requests=40)
+        same_day=mod.step(state,fetch,write,[],cap=750,max_requests=40,day="2026-11-11")
+        self.assertEqual(same_day["today"],0)
+        second=mod.step(state,fetch,write,[],cap=750,max_requests=40,day="2026-11-12")
         self.assertEqual(second["today"],50)
         self.assertTrue(state["finished"])
         self.assertEqual(len(set(writes)),800)
         self.assertEqual(len(writes),800)
         self.assertEqual(state["cards_imported"],800)
-        third=mod.step(state,fetch,write,[],cap=750,max_requests=40)
+        third=mod.step(state,fetch,write,[],cap=750,max_requests=40,day="2026-11-13")
         self.assertEqual(third["today"],0)
 
     def test_sealed_products_do_not_count_against_750(self):
