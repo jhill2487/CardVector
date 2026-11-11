@@ -50,3 +50,31 @@ python Tools/import_pokewallet_catalog.py --state private-pokewallet-checkpoint.
 ```
 
 The importer is manually invoked and checkpoints each successful page. It does not create an unattended automation or have permission to publish images. Do not commit credentials or the private catalog to GitHub.
+
+## Secure Development Dashboard progress (November 2026)
+
+The administrator dashboard at `/status/` reads `public.cv_admin_job_progress`
+from Supabase using the signed-in session. The table has RLS enabled and
+read access is granted **only** when the authenticated JWT email is
+`jhill2487@gmail.com`. Anonymous and other users have no read access.
+No public browser may write progress; only a trusted server-side service-role
+client can upsert the single `pokewallet-kaggle` record.
+
+The importer persists local checkpoints and, when
+`SUPABASE_SERVICE_ROLE_KEY` is configured **only in its trusted runtime**,
+publishes aggregate counts after each successful batch. The API key must never
+be embedded in HTML, frontend JavaScript, or the GitHub repository.
+
+After reconciliation, the trusted operator can publish image counts:
+
+```bash
+python Tools/publish_import_progress.py --state private-pokewallet-checkpoint.json --summary reconciliation/summary.json
+```
+
+Until an authorized import actually runs, the table has no row and the
+dashboard accurately reports **Not started**. Image match/review/missing
+counts are not available until reconciliation finishes.
+
+The `SUPABASE_SERVICE_ROLE_KEY` credential must be provisioned in the
+trusted importing environment separately. GitHub Pages does not run
+the importer and does not receive privileged credentials.
