@@ -56,3 +56,11 @@ test("admin progress reads the authenticated Supabase table",()=>{
  assert.match(html,/data\.sets_complete/);
  assert.match(html,/images_matched/);
 });
+
+test("admin set coverage distinguishes confirmed gaps from unverified unmatched printings",()=>{
+ assert.match(html,/id="set-coverage-list"/);
+ assert.match(html,/client\.from\("cv_admin_set_coverage"\)/);
+ assert.match(html,/confirmed_absent:"Confirmed Kaggle gap"/);
+ assert.match(html,/unmatched_unverified:"Unmatched — verify"/);
+ assert.match(html,/getSetCoverage\(\)/);
+});
