@@ -99,5 +99,5 @@ test("does not select ambiguous finish artwork from multiple matching files",asy
 test("unified card search no longer accesses a removed Kaggle preview panel",()=>{
   const ui=fs.readFileSync(path.resolve(__dirname,"../wanted/search-savefix-20261110.js"),"utf8");
   assert.ok(!ui.includes("kagglePanel"));
-  assert.match(ui,/const end = matches\\.length;/);
+  assert.match(ui,/const end = matches\.length;/);
 });
