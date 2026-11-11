@@ -25,7 +25,7 @@ test("deployment status refresh and separate source and Pages status remain",()=
  assert.match(html,/CardVector\/actions\/runs/);
 });
 test("importer progress stays unknown without verified checkpoint",()=>{
- assert.match(html,/No executed batch or verified importer checkpoint/);
+ assert.match(html,/No importer checkpoint has been published yet/);
  assert.match(html,/id="import-sets">—/);
  assert.match(html,/id="import-matched">—/);
  assert.doesNotMatch(html,/id="import-sets">0/);
@@ -48,4 +48,11 @@ test("Supabase SDK loads synchronously before inline administrator bootstrap",()
  assert.ok(sdk>=0,"missing synchronous SDK script");
  assert.ok(admin>sdk,"admin code must follow loaded SDK");
  assert.doesNotMatch(html,/<script src="https:\/\/cdn.jsdelivr.net\/npm\/@supabase\/supabase-js@2" defer>/);
+});
+
+test("admin progress reads the authenticated Supabase table",()=>{
+ assert.match(html,/client\.from\("cv_admin_job_progress"\)/);
+ assert.match(html,/getImportProgress\(\)/);
+ assert.match(html,/data\.sets_complete/);
+ assert.match(html,/images_matched/);
 });
