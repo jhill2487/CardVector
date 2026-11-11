@@ -120,3 +120,31 @@ require review.
 The first scheduled run can start only after both Actions secrets are
 configured and the daily workflow exists on the default branch. Until then,
 the dashboard correctly shows the import as not started.
+
+## Administrator set-level image coverage
+
+The admin dashboard now queries the read-only `public.cv_admin_set_coverage`
+view, built with `security_invoker=true` so it respects source-table RLS.
+It groups imported card records by **PokéWallet set ID**, counting imported
+records, exact Kaggle matches, ambiguous matches and unmatched records.
+This view derives counts from the existing catalog without changing the
+daily importer or live card search.
+
+`public.cv_admin_set_coverage_reviews` contains deliberate set-level
+coverage determinations. The first administrator-confirmed exception is:
+
+- **Delta Reign** (PokéWallet set ID `24831`): `confirmed_absent` in
+  the Kaggle archive. Alternate licensed sources are **not yet checked**.
+
+This is explicitly distinct from `unmatched_unverified`: a set with zero
+matches may simply have different PokéWallet/Kaggle set folder names or
+filename conventions. Confirmed gaps should be researched by set (for
+example PokéWallet or Limitless artwork) rather than manually reviewing
+each card. Candidate artwork and other unverified mappings are **never
+automatically published** to the live marketplace.
+
+The view and both underlying private tables are read-only for the
+approved authenticated administrator, and no public browser role may
+edit determinations. Changes to confirmed coverage evidence require
+an explicitly reviewed privileged update. Imported-set counts represent
+records processed so far, **not** verified set completion.
