@@ -5,7 +5,7 @@
   const $ = (id) => document.getElementById(id);
   const input = $("card-query"), results = $("results"), status = $("search-status");
   const cache = new Map();
-  const PAGE_SIZE = 24;
+  // Render every returned result; native image lazy-loading limits network usage.
   const setNames = new Map();
   const releaseDates = new Map();
   const setLabels = new Map();
@@ -248,6 +248,19 @@
       : "Only finishes documented for this exact card can be selected.";
   }
   const pendingVariants = [];
+  // Request additional card finish metadata only when a result enters the
+  // viewport, rather than fetching every result at once.
+  const variantObserver = typeof IntersectionObserver === "function"
+    ? new IntersectionObserver(entries => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        variantObserver.unobserve(entry.target);
+        const task = waitingVariants.get(entry.target);
+        waitingVariants.delete(entry.target);
+        if (task) enqueueVariant(task.card, task.label);
+      }
+    }, {rootMargin:"250px"}) : null;
+  const waitingVariants = new Map();
   let activeVariantLoads = 0;
   function variantLabel(details) {
     const info=finishInfo(details);
@@ -316,23 +329,18 @@
       shownCount.className = "muted";
       const grid = document.createElement("div"); grid.className = "results";
       let filtered = candidates;
-      const more = document.createElement("button");
-      more.type = "button";
-      more.textContent = "Show more Kaggle images";
-      let shown = 0;
-      function appendPage() {
-        const end = Math.min(shown + 36, filtered.length);
+      function renderAll() {
+        grid.replaceChildren();
         const fragment = document.createDocumentFragment();
-        for (; shown < end; shown++) {
-          const card = filtered[shown];
+        for (const card of filtered) {
           const link = document.createElement("a");
           link.href = card.url; link.target = "_blank"; link.rel = "noopener noreferrer";
           link.className = "card";
           const img = document.createElement("img");
-          img.src = card.url; img.loading = "lazy";
+          img.src = card.url; img.loading = "lazy"; img.decoding = "async";
           img.alt = (card.name || "Card") + " image preview";
           const title = document.createElement("strong");
-          title.textContent = card.name || ("Filename: " + card.filename.replace(/\.[^.]+$/, "").replace(/[+_-]+/g, " "));
+          title.textContent = card.name || ("Filename: " + card.filename.replace(/\\.[^.]+$/, "").replace(/[+_-]+/g, " "));
           const set = document.createElement("small");
           set.textContent = card.setSlug.replace(/-/g," ");
           const number = document.createElement("small");
@@ -340,37 +348,30 @@
           link.append(img,title,set,number); fragment.append(link);
         }
         grid.append(fragment);
-        more.hidden = shown >= filtered.length;
-        shownCount.textContent = "Showing " + shown + " of " + filtered.length + " Kaggle images";
+        shownCount.textContent = filtered.length + " matching Kaggle images";
+        if (!filtered.length) {
+          const empty = document.createElement("p");
+          empty.textContent = "No matching Kaggle images.";
+          grid.append(empty);
+        }
       }
-      more.addEventListener("click", appendPage);
       refine.addEventListener("input", () => {
         const words = refine.value.toLowerCase().replace(/[^a-z0-9]+/g," ").trim().split(" ").filter(Boolean);
         filtered = words.length ? candidates.filter(card => {
           const haystack = [card.filename,card.setSlug,card.name,card.number].join(" ").toLowerCase().replace(/[^a-z0-9]+/g," ");
           return words.every(word => haystack.includes(word));
         }) : candidates;
-        shown = 0;
-        grid.replaceChildren();
-        if (filtered.length) appendPage();
-        else {
-          more.hidden = true;
-          shownCount.textContent = "No Kaggle images match this refinement.";
-        }
+        renderAll();
       });
-      kagglePanel.append(heading,note,refineLabel,shownCount,grid,more);
-      if (!candidates.length) {
-        const empty = document.createElement("p");
-        empty.textContent = "No matching Kaggle images in this set.";
-        grid.append(empty);
-      } else appendPage();
+      kagglePanel.append(heading,note,refineLabel,shownCount,grid);
+      renderAll();
     } catch (_) {
       // Existing TCGdex results remain usable if the R2 index is unavailable.
       if (searchId === requestId) feedback("Kaggle catalog temporarily unavailable; use existing card search.");
     }
   }
   function renderNext() {
-    const end = Math.min(visible + PAGE_SIZE, matches.length);
+    const end = matches.length;
     const fragment = document.createDocumentFragment();
     const variantLabels = [];
     for (; visible < end; visible++) {
@@ -393,11 +394,20 @@
       variantLabels.push({card,finish});
     }
     results.append(fragment);
-    for (const {card,finish} of variantLabels) enqueueVariant(card,finish);
+    for (const {card,finish} of variantLabels) {
+      if (variantObserver) {
+        waitingVariants.set(finish,{card,label:finish});
+        variantObserver.observe(finish);
+      } else enqueueVariant(card,finish);
+    }
     $("result-count").textContent = matches.length + " matching cards";
-    $("more-results").hidden = visible >= matches.length;
+    $("more-results").hidden = true;
   }
   function render(cards) {
+    if (variantObserver) {
+      for (const element of waitingVariants.keys()) variantObserver.unobserve(element);
+      waitingVariants.clear();
+    }
     matches = cards; visible = 0; results.replaceChildren(); $("result-count").textContent = "";
     if (!cards.length) { const empty = document.createElement("p"); empty.className = "empty"; empty.textContent = "No cards found. Check spelling or try a shorter name."; results.append(empty); return; }
     renderNext();
@@ -636,7 +646,7 @@
     debounce = setTimeout(() => search(query.toLocaleLowerCase()), 220);
   });
   $("clear-search").addEventListener("click", () => { input.value = ""; input.dispatchEvent(new Event("input")); input.focus(); });
-  $("more-results").addEventListener("click", renderNext);
+
   $("change-card").addEventListener("click", () => { $("selected").hidden = true; input.focus(); });
   const initial = new URLSearchParams(location.search).get("q");
   if (initial) { input.value = initial.slice(0, 80); input.dispatchEvent(new Event("input")); }
