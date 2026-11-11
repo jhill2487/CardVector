@@ -48,6 +48,7 @@ PUBLIC_FILES = (
     "settings/app.js",
     "status/index.html",
     "image-review/index.html",
+    "catalog-search-test/index.html",
     "robots.txt",
     "tools/carduploader/index.html",
     "CNAME",
@@ -132,6 +133,7 @@ CLIENT_ROUTES = {
     "settings",
     "status",
     "image-review",
+    "catalog-search-test",
 }
 
 
