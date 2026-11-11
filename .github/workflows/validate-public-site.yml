@@ -18,6 +18,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Test Kaggle catalog parsing and printing separation
+        run: node --test Docs/tests/kaggle-catalog.test.cjs
       - name: Export and validate complete public artifact
         run: |
           python Tools/export_cardvector_site.py --output public-site --source-sha "$GITHUB_SHA"
