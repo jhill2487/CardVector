@@ -41,3 +41,11 @@ test("admin login runs on status page without redirecting to collector dashboard
  const account=fs.readFileSync(path.join(__dirname,"../account/app.js"),"utf8");
  assert.match(account,/destinations\[next\] \|\| "\/dashboard\/"/);
 });
+
+test("Supabase SDK loads synchronously before inline administrator bootstrap",()=>{
+ const sdk=html.indexOf('<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>');
+ const admin=html.indexOf('const adminEmail=');
+ assert.ok(sdk>=0,"missing synchronous SDK script");
+ assert.ok(admin>sdk,"admin code must follow loaded SDK");
+ assert.doesNotMatch(html,/<script src="https:\/\/cdn.jsdelivr.net\/npm\/@supabase\/supabase-js@2" defer>/);
+});
