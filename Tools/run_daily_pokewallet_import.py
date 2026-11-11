@@ -5,8 +5,6 @@ GitHub Actions supplies POKEWALLET_API_KEY and SUPABASE_SERVICE_ROLE_KEY.
 Private catalog and progress live in Supabase, not in GitHub artifacts.
 All writes are idempotent and the cursor is saved after each successful page.
 """
-import csv
-import io
 import json
 import os
 import re
@@ -19,7 +17,6 @@ from import_pokewallet_catalog import order_sets_newest_first, normalize_card
 from pokewallet_set_language import set_language
 
 SUPABASE_URL="https://iqdpfgpkagjxzedfxrvn.supabase.co/rest/v1/"
-CATALOG_URL="https://images.cardvector.app/archive/card-image-index.csv"
 PW_URL="https://api.pokewallet.io"
 JOB="pokewallet-kaggle"
 DAILY_CAP=750
@@ -87,30 +84,7 @@ def normalize_sets(data):
     if not entries:raise RuntimeError("No valid set identifiers")
     return order_sets_newest_first(entries)
 
-def kaggle_index():
-    from reconcile_pokewallet_kaggle import parse_image
-    req=urllib.request.Request(CATALOG_URL,headers={"User-Agent":"CardVector-Importer/1.0"})
-    with urllib.request.urlopen(req,timeout=40) as response:
-        content=response.read(6_000_000)
-    decoded=content.decode("utf-8-sig")
-    images=[parse_image(row) for row in csv.DictReader(io.StringIO(decoded))]
-    if len(images)<20000:raise RuntimeError("Kaggle index incomplete; refusing to mark artwork missing")
-    return images
-
-def classify_cards(records,images):
-    from reconcile_pokewallet_kaggle import reconcile
-    normalized=[{"name":r["card_info"]["name"],"set":r["card_info"]["set_name"],
-                 "number":r["card_info"]["card_number"],"set_id":r["card_info"]["set_id"],
-                 "provider_id":r["id"]} for r in records]
-    matched,review,missing=reconcile(normalized,images,{})
-    statuses={}
-    for section,status in ((matched,"matched"),(review,"needs_review"),(missing,"missing")):
-        for item in section:
-            pid=item["card"]["provider_id"]
-            statuses[pid]=(status,item.get("image_path"))
-    return statuses
-
-def step(state,fetch,write,catalog,cap=DAILY_CAP,max_requests=REQUEST_CAP,day=None):
+def step(state,fetch,write,cap=DAILY_CAP,max_requests=REQUEST_CAP,day=None):
     """Import at most cap physical card records, preserving a mid-page cursor.
 
     fetch(path)->decoded PokéWallet JSON; write(state, cards)->transaction-like
@@ -171,17 +145,14 @@ def step(state,fetch,write,catalog,cap=DAILY_CAP,max_requests=REQUEST_CAP,day=No
             state["next_set"]+=1
             state["next_page"]=1
             state["next_offset"]=0
-        match=classify_cards(rows,catalog) if rows else {}
         catalog_rows=[]
         for card in rows:
             info=card["card_info"]
-            status,image=match.get(card["id"],("missing",None))
             catalog_rows.append({
                 "provider_id":card["id"],"set_id":info["set_id"],
                 "set_name":info["set_name"],"card_name":info["name"],
                 "card_number":info["card_number"],"variants":info["variants"],
-                "image_status":status,"image_path":image})
-            state["image_counts"][status]+=1
+                "image_status":"pending","image_path":None})
         state["cards_imported"]+=len(rows)
         state["daily_imported"]+=len(rows)
         write(state,catalog_rows)
@@ -215,7 +186,8 @@ def main():
         store.upsert("cv_admin_pokewallet_catalog",rows)
         store.save(checkpoint)
         store.publish(checkpoint)
-    # Scope all 661 provider sets before requesting more card pages. The
+    # Provider IDs are retained for authorized image retrieval separately; no Kaggle image matching.
+    # Scope all provider sets before requesting more card pages. The
     # existing provider cursor is kept; Japanese records already imported
     # remain archived, but they are not displayed in English-only coverage.
     store.upsert("cv_admin_set_languages",[
@@ -223,8 +195,7 @@ def main():
          "language":set_language(row)}
         for row in state.get("sets",[])
     ])
-    index=kaggle_index()
-    summary=step(state,fetch,write,index)
+    summary=step(state,fetch,write)
     summary["language_scope"]="English confirmed; unknown and Japanese deferred"
     print(json.dumps(summary,sort_keys=True))
 if __name__=="__main__":
