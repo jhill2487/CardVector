@@ -31,9 +31,13 @@ test("importer progress stays unknown without verified checkpoint",()=>{
  assert.doesNotMatch(html,/id="import-sets">0/);
 });
 
-test("administrator sign-in returns to status and collector sign-in still defaults to dashboard",()=>{
+test("admin login runs on status page without redirecting to collector dashboard",()=>{
+ assert.match(html,/id="admin-login"/);
+ assert.match(html,/id="admin-email"/);
+ assert.match(html,/id="admin-password"/);
+ assert.match(html,/client\.auth\.signInWithPassword/);
+ assert.match(html,/await verifyAdministrator\(\)/);
+ assert.doesNotMatch(html,/href="\/account\/\?next=status"/);
  const account=fs.readFileSync(path.join(__dirname,"../account/app.js"),"utf8");
- assert.match(html,/href="\/account\/\?next=status"/);
- assert.match(account,/status:"\/status\/"/);
  assert.match(account,/destinations\[next\] \|\| "\/dashboard\/"/);
 });
