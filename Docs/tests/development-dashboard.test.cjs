@@ -11,7 +11,9 @@ test("dashboard inline JavaScript parses",()=>{
 });
 test("admin check gates development dashboard",()=>{
  assert.match(html,/getUser\(\)/);
- assert.match(html,/owners\.has\(user\.id\)/);
+ assert.match(html,/adminEmail="jhill2487@gmail.com"/);
+ assert.match(html,/email_confirmed_at/);
+ assert.doesNotMatch(html,/owners\.has/);
  assert.match(html,/id="private"/);
  assert.match(html,/#private\{display:none\}/);
 });
@@ -27,4 +29,11 @@ test("importer progress stays unknown without verified checkpoint",()=>{
  assert.match(html,/id="import-sets">—/);
  assert.match(html,/id="import-matched">—/);
  assert.doesNotMatch(html,/id="import-sets">0/);
+});
+
+test("administrator sign-in returns to status and collector sign-in still defaults to dashboard",()=>{
+ const account=fs.readFileSync(path.join(__dirname,"../account/app.js"),"utf8");
+ assert.match(html,/href="\/account\/\?next=status"/);
+ assert.match(account,/status:"\/status\/"/);
+ assert.match(account,/destinations\[next\] \|\| "\/dashboard\/"/);
 });
