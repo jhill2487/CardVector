@@ -69,6 +69,10 @@ def main() -> int:
     # Prevent silently dropping new HTML pages from the public export.
     for page in source.rglob("index.html"):
         relative = page.relative_to(source)
+        # Diagnostic tools are not part of the public website export. Do not
+        # force their publication merely to satisfy export completeness.
+        if relative.parts[:2] == ("tools", "variant-diagnostic"):
+            continue
         if any(part in {"Reference", "Reports", "Archive", "content"} for part in relative.parts):
             continue
         if not (root / relative).is_file():
