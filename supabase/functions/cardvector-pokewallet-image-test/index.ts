@@ -1,11 +1,9 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
 const SUPABASE_URL=Deno.env.get("SUPABASE_URL") || "";
 const SUPABASE_ANON_KEY=Deno.env.get("SUPABASE_ANON_KEY") || "";
-const allowed=new Map<string,string>([
- ["heracross","pk_82d00c11b3458867cbc585fe20a5f75de34edf3271244713db31ced8ec8f9d3bd94baf2b65bca37b87615a45f58a"],
- ["steelix","pk_90de54fb9cf724d43772b6c2b2c68c5452019ab32015f4fab4c6a264a470fdc563b0263e89680d7bbe0a4141224efa"],
- ["rayquaza","pk_520c7aa5698ed70f1c6b4186f59eaf94e9c2c5c4a54cd80c3e9898493579428bca79862a44270246fcaa957350d6e44b"]
-]);
+// Only IDs already visible in the protected English catalog may be fetched.
+// Never trust an arbitrary client-provided provider ID.
+const providerIdPattern=/^pk_[a-f0-9]{40,128}$/i;
 const cache=new Map<string,{expires:number,data:ArrayBuffer}>();
 const cors={"Access-Control-Allow-Origin":"https://cardvector.app","Access-Control-Allow-Methods":"POST, OPTIONS","Access-Control-Allow-Headers":"authorization,apikey,x-client-info,content-type","Vary":"Origin"};
 const json=(message:string,status:number)=>new Response(JSON.stringify({error:message}),{status,headers:{...cors,"Content-Type":"application/json","Cache-Control":"no-store"}});
@@ -20,11 +18,23 @@ Deno.serve(async req=>{
  if(error||!user)return json("Sign in required",401);
  if(user.email?.toLowerCase()!=="jhill2487@gmail.com"||!user.email_confirmed_at)return json("Administrator only",403);
  const body=await req.json().catch(()=>null);
- const card=typeof body?.card==="string"?body.card:"";
- const providerId=allowed.get(card);
- if(!providerId)return json("Image not enabled for this card",404);
+ const providerId=typeof body?.providerId==="string"?body.providerId.trim():"";
+ if(!providerIdPattern.test(providerId))return json("Invalid catalog ID",400);
+ // Use the caller's JWT for this lookup so the admin-only view and underlying
+ // RLS policies remain the authorization boundary. No service-role queries.
+ const scopedClient=createClient(SUPABASE_URL,SUPABASE_ANON_KEY,{
+  auth:{persistSession:false},
+  global:{headers:{Authorization:authorization}}
+ });
+ const {data:catalogRow,error:catalogError}=await scopedClient
+  .from("cv_admin_pokewallet_english_search")
+  .select("provider_id")
+  .eq("provider_id",providerId)
+  .maybeSingle();
+ if(catalogError)return json("Catalog verification unavailable",503);
+ if(!catalogRow)return json("Card ID not found in English catalog",404);
  const now=Date.now();
- let image=cache.get(card);
+ let image=cache.get(providerId);
  if(!image||image.expires<now){
   const secret=Deno.env.get("POKEWALLET_API_KEY");
   if(!secret)return json("Image service not configured",503);
@@ -40,8 +50,8 @@ Deno.serve(async req=>{
    const width=view.getUint32(16),height=view.getUint32(20);
    if(width<100||width>2000||height<100||height>3000)return json("Invalid image dimensions",502);
    image={data,expires:now+8*60*60*1000};
-   if(cache.size>=3)cache.delete(cache.keys().next().value!);
-   cache.set(card,image);
+   if(cache.size>=24)cache.delete(cache.keys().next().value!);
+   cache.set(providerId,image);
   }catch{return json("Image retrieval failed",502);}
  }
  return new Response(image.data.slice(0),{status:200,headers:{...cors,"Content-Type":"image/png","Cache-Control":"private, max-age=3600","X-Content-Type-Options":"nosniff"}});
