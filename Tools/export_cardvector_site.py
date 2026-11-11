@@ -47,6 +47,7 @@ PUBLIC_FILES = (
     "settings/style.css",
     "settings/app.js",
     "status/index.html",
+    "image-review/index.html",
     "robots.txt",
     "tools/carduploader/index.html",
     "CNAME",
@@ -130,6 +131,7 @@ CLIENT_ROUTES = {
     "marketplace",
     "settings",
     "status",
+    "image-review",
 }
 
 
