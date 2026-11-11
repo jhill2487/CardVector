@@ -1,5 +1,9 @@
 name: Daily PokéWallet catalog import (750 cards)
 on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/daily-pokewallet-import.yml'
   schedule:
     - cron: '17 14 * * *'
 permissions:
