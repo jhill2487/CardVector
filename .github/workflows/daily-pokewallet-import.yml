@@ -1,0 +1,29 @@
+name: Daily PokéWallet catalog import (750 cards)
+on:
+  schedule:
+    - cron: '17 14 * * *'
+permissions:
+  contents: read
+concurrency:
+  group: pokewallet-daily-catalog-import
+  cancel-in-progress: false
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    env:
+      POKEWALLET_API_KEY: ${{ secrets.POKEWALLET_API_KEY }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check private import credentials
+        run: |
+          if [ -z "$POKEWALLET_API_KEY" ] || [ -z "$SUPABASE_SERVICE_ROLE_KEY" ]; then
+            echo "::error::Configure POKEWALLET_API_KEY and SUPABASE_SERVICE_ROLE_KEY repository Actions secrets."
+            exit 1
+          fi
+      - name: Import at most 750 card records (newest sets first)
+        run: python Tools/run_daily_pokewallet_import.py
