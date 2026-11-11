@@ -156,6 +156,11 @@ def main():
         save_atomic(args.state, state)
         # Export only minimal identification metadata, never price history or API secrets.
         save_atomic(args.catalog_output, {"cards": state["cards"]})
+    # Publish only aggregate checkpoints; credentials remain in the trusted
+    # importer environment. The local checkpoint is always saved first.
+    if os.environ.get("SUPABASE_SERVICE_ROLE_KEY"):
+        from publish_import_progress import make_record, publish
+        publish(make_record(state))
     print(json.dumps(summary))
 
 if __name__ == "__main__":
