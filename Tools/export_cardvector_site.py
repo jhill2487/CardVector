@@ -17,6 +17,7 @@ PUBLIC_FILES = (
     "app.js",
     "home-account.js",
     "card-finishes.js",
+    "card-finish-corrections.js",
     "historical-card-images.js",
     "pokewallet.js",
     "kaggle-catalog.js",
