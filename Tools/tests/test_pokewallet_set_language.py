@@ -22,13 +22,17 @@ class EnglishOnlyTests(unittest.TestCase):
   persisted=[]
   def fetch(path):
    paths.append(path)
+   if path=="/sets":
+    return {"data":[{"set_id":"1","name":"SV10: The Glory of Team Rocket","language":"jap","card_count":1},
+                    {"set_id":"2","name":"ME03: Perfect Order","language":"eng","card_count":1}]}
    return {"cards":[{"id":"test_card","card_info":{"name":"Pikachu","card_number":"1","product_type":"card"}}],
-           "set":{"set_id":"2","total_cards":1}}
+           "set":{"set_id":"2","total_cards":1,"language":"eng"}}
   def write(state,rows):
    persisted.extend(rows)
   result=step(state,fetch,write,day="2026-11-12")
   self.assertEqual(result["today"],1)
-  self.assertEqual(len(paths),1)
-  self.assertIn("/sets/2?",paths[0])
+  self.assertEqual(len(paths),2)
+  self.assertEqual(paths[0],"/sets")
+  self.assertIn("/sets/2?",paths[1])
   self.assertEqual(len(persisted),1)
 if __name__=="__main__":unittest.main()
