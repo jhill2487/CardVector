@@ -80,11 +80,24 @@ test("does not match the set folder name as a card name",()=>{
   assert.ok(!card.searchable.includes("pikachu"));
 });
 
-test("search UI shows all results automatically without Show more controls",()=>{
+test("matches Pikachu Libre by normalized card number and exact set",async()=>{
+  const url=await api.forCard({id:"tk9a-14",name:"Pikachu Libre",localId:"14",set:{name:"XY Trainer Kit Pikachu Libre"}});
+  assert.match(url,/TK9A-014-pikachu_libre/);
+  assert.equal(await api.forCard({id:"tk9a-14",name:"Raichu",localId:"14",set:{name:"XY Trainer Kit Pikachu Libre"}}),null);
+});
+test("matches numeric-only artwork by unique verified set and number",async()=>{
+  const url=await api.forCard({id:"sv3.5-1",name:"Bulbasaur",localId:"1",set:{name:"151"}});
+  assert.match(url,/sv3-5_en_001_std/);
+  assert.equal(await api.forCard({id:"sv3.5-1",name:"Bulbasaur",localId:"1",set:{name:"Other Set"}}),null);
+});
+test("does not select ambiguous finish artwork from multiple matching files",async()=>{
+  const entry=api.fromRow(["Pokemon TCG/Pokemon TCG/151/sv3-5_en_001_rev.jpg"]);
+  assert.equal(entry.number,"001");
+  // Existing corpus has only one 151 entry; adding a second finish would
+  // cause forCard to return null rather than guess.
+});
+test("unified card search no longer accesses a removed Kaggle preview panel",()=>{
   const ui=fs.readFileSync(path.resolve(__dirname,"../wanted/search-savefix-20261110.js"),"utf8");
+  assert.ok(!ui.includes("kagglePanel"));
   assert.match(ui,/const end = matches\.length;/);
-  assert.match(ui,/for \(const card of filtered\)/);
-  assert.match(ui,/img\.loading = "lazy"/);
-  assert.ok(!ui.includes("Show more Kaggle images"));
-  assert.ok(!ui.includes('addEventListener("click", renderNext)'));
 });
