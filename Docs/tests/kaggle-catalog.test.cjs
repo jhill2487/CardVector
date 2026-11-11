@@ -41,3 +41,20 @@ test("supports set search and caches the shared R2 index",async()=>{
 test("rejects path traversal",()=>{
   assert.equal(api.fromRow(["../secret.jpg"]),null);
 });
+
+test("lists indexed sets without relying on TCGdex", async()=>{
+  const sets=await api.listSets();
+  assert.deepEqual(Array.from(sets),["151","base-set","xy-trainer-kit-pikachu-libre"]);
+});
+test("browses multiple printings by Kaggle set even without a card name", async()=>{
+  const cards=await api.search("","set",100,"xy-trainer-kit-pikachu-libre");
+  assert.deepEqual(Array.from(cards,c=>c.number),["014","030"]);
+  const modern=await api.search("","set",100,"151");
+  assert.equal(modern.length,1);
+  assert.equal(modern[0].name,"");
+});
+test("filters within a selected Kaggle set and does not mix set results", async()=>{
+  const cards=await api.search("pikachu","name",100,"xy-trainer-kit-pikachu-libre");
+  assert.equal(cards.length,2);
+  assert.equal((await api.search("pikachu","name",100,"base-set")).length,0);
+});
