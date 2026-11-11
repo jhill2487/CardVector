@@ -32,7 +32,7 @@
     const folder = segments[segments.length-2] || "";
     const stem = file.replace(/\.[^.]+$/,"");
     let number = "", name = "";
-    const old = stem.match(/^en_US-[A-Za-z0-9]+-([A-Za-z]*\d+)-(.+)$/i);
+    const old = stem.match(/^en_US-[^/]+?-([A-Za-z]*\d+)-(.+)$/i);
     if (old) { number = old[1]; name = old[2].replace(/[_-]+/g," "); }
     else {
       const modern = stem.match(/^[a-z0-9-]+_en_([a-z0-9]+)_(?:std|rev|holo)$/i);
