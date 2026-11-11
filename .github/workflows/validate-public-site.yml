@@ -20,6 +20,27 @@ jobs:
       - uses: actions/checkout@v4
       - name: Test Kaggle catalog parsing and printing separation
         run: node --test Docs/tests/kaggle-catalog.test.cjs
+      - name: Check public R2 image index and cross-origin access
+        run: |
+          python - <<'PY'
+          import csv, io, urllib.request
+          url = "https://images.cardvector.app/archive/card-image-index.csv"
+          req = urllib.request.Request(url, headers={"Origin": "https://cardvector.app", "User-Agent": "CardVector-Catalog-Validation/1.0"})
+          with urllib.request.urlopen(req, timeout=30) as response:
+              assert response.status == 200, response.status
+              origin = response.headers.get("Access-Control-Allow-Origin", "")
+              assert origin in ("*", "https://cardvector.app"), "R2 CORS header absent: " + repr(origin)
+              rows = list(csv.DictReader(io.StringIO(response.read().decode("utf-8-sig"))))
+          assert len(rows) == 21199, "Expected 21,199 Kaggle image entries, got " + str(len(rows))
+          assert all(r.get("RelativePath") for r in rows)
+          print("R2 catalog verified:", len(rows), "files; CORS:", origin)
+          image_url = "https://images.cardvector.app/archive/Pokemon%20TCG/Pokemon%20TCG/151/sv3-5_en_001_std.jpg"
+          with urllib.request.urlopen(urllib.request.Request(image_url, headers={"User-Agent": "CardVector-Catalog-Validation/1.0"}), timeout=30) as image:
+              assert image.status == 200
+              assert "image/" in image.headers.get("Content-Type", ""), "Image content type missing"
+              assert image.read(3) == b"\\xff\\xd8\\xff", "Image JPEG header mismatch"
+          print("Known 151 image reachable")
+          PY
       - name: Export and validate complete public artifact
         run: |
           python Tools/export_cardvector_site.py --output public-site --source-sha "$GITHUB_SHA"
