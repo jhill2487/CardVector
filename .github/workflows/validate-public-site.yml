@@ -24,6 +24,8 @@ jobs:
           node --check Docs/wanted/search-savefix-20261110.js
       - name: Test Kaggle catalog parsing and printing separation
         run: node --test Docs/tests/kaggle-catalog.test.cjs
+      - name: Verify administrator development dashboard
+        run: node --test Docs/tests/development-dashboard.test.cjs
       - name: Check public R2 image index and cross-origin access
         run: |
           python - <<'PY'
