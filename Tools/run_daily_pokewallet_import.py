@@ -69,6 +69,38 @@ def make_state():
             "cards_imported":0,"daily_date":"","daily_imported":0,"image_counts":{"matched":0,"needs_review":0,"missing":0},
             "finished":False}
 
+def provider_count(value):
+    """Unknown counts remain null rather than becoming false zero coverage."""
+    try:
+        number=int(value)
+        return number if number>=0 else None
+    except (TypeError,ValueError):
+        return None
+
+def provider_language(row):
+    """Use the set directory language when supplied; fall back conservatively."""
+    raw=str(row.get("language") or "").lower().strip()
+    if raw:
+        return {"jpn":"jap","ja":"jap","en":"eng"}.get(raw,raw)
+    return set_language(row)
+
+def enrich_checkpoint_sets(state,data):
+    """Refresh set metadata without changing the durable set/page/offset cursor.
+
+    Do not reorder, add, or remove sets already present in the checkpoint.
+    This is a one-time metadata refresh for legacy checkpoints missing provider fields.
+    """
+    incoming={row["set_id"]:row for row in normalize_sets(data)}
+    if not state["sets"]:
+        state["sets"]=list(incoming.values())
+    else:
+        for old in state["sets"]:
+            fresh=incoming.get(old["set_id"])
+            if fresh:
+                old.update({key:fresh[key] for key in
+                    ("language","card_count","sealed_count","number_count")})
+    state["directory_enriched"]=True
+
 def normalize_sets(data):
     sets=data.get("data")
     if not isinstance(sets,list) or not sets:
@@ -80,7 +112,11 @@ def normalize_sets(data):
         if not row.get("name"):continue
         entries.append({"set_id":str(row["set_id"]),"name":str(row["name"]),
                         "release_date":str(row.get("release_date") or ""),
-                        "source_position":i})
+                        "source_position":i,
+                        "language":provider_language(row),
+                        "card_count":provider_count(row.get("card_count")),
+                        "number_count":provider_count(row.get("number_count")),
+                        "sealed_count":provider_count(row.get("sealed_count"))})
     if not entries:raise RuntimeError("No valid set identifiers")
     return order_sets_newest_first(entries)
 
@@ -101,14 +137,14 @@ def step(state,fetch,write,cap=DAILY_CAP,max_requests=REQUEST_CAP,day=None):
         return {"today":0,"requests":0,"daily_limit_reached":True,"finished":False}
     requests=0
     today=0
-    if not state["sets"]:
+    if not state["sets"] or not state.get("directory_enriched"):
         if requests>=max_requests:return {"today":today,"requests":requests,"finished":False}
-        state["sets"]=normalize_sets(fetch("/sets"))
+        enrich_checkpoint_sets(state,fetch("/sets"))
         requests+=1
         write(state,[])
     while today<allowance and requests<max_requests and state["next_set"]<len(state["sets"]):
         current=state["sets"][state["next_set"]]
-        if set_language(current)!="eng":
+        if provider_language(current)!="eng":
             state["next_set"]+=1
             state["next_page"]=1
             state["next_offset"]=0
@@ -123,6 +159,11 @@ def step(state,fetch,write,cap=DAILY_CAP,max_requests=REQUEST_CAP,day=None):
             raise RuntimeError("Unexpected PokéWallet card page")
         if str(metadata.get("set_id"))!=current["set_id"]:
             raise RuntimeError("PokéWallet set identity changed")
+        # When the set page identifies its language, do not import records
+        # from a conflicting source classification.
+        page_language=str(metadata.get("language") or "").strip().lower()
+        if page_language and provider_language({"language":page_language})!="eng":
+            raise RuntimeError("PokéWallet set language mismatch; checkpoint preserved")
         total=int(metadata.get("total_cards") or 0)
         if not items and (state["next_page"]-1)*PAGE_SIZE<total:
             raise RuntimeError("Unexpected empty PokéWallet page")
@@ -186,17 +227,17 @@ def main():
         store.upsert("cv_admin_pokewallet_catalog",rows)
         store.save(checkpoint)
         store.publish(checkpoint)
-    # Provider IDs are retained for authorized image retrieval separately; no Kaggle image matching.
-    # Scope all provider sets before requesting more card pages. The
-    # existing provider cursor is kept; Japanese records already imported
-    # remain archived, but they are not displayed in English-only coverage.
+    # The directory refresh occurs within step(), preserving the exact
+    # existing set/page/offset checkpoint. Publish provider-supplied language
+    # and expected printing counts for read-only coverage comparisons.
+    summary=step(state,fetch,write)
     store.upsert("cv_admin_set_languages",[
         {"set_id":row["set_id"],"set_name":row["name"],
-         "language":set_language(row)}
+         "language":provider_language(row),
+         "expected_card_count":row.get("card_count")}
         for row in state.get("sets",[])
     ])
-    summary=step(state,fetch,write)
-    summary["language_scope"]="English confirmed; unknown and Japanese deferred"
+    summary["language_scope"]="English sets based on provider metadata; unknown deferred"
     print(json.dumps(summary,sort_keys=True))
 if __name__=="__main__":
     main()
