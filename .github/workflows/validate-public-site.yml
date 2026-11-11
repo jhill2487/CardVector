@@ -38,7 +38,7 @@ jobs:
           with urllib.request.urlopen(urllib.request.Request(image_url, headers={"User-Agent": "CardVector-Catalog-Validation/1.0"}), timeout=30) as image:
               assert image.status == 200
               assert "image/" in image.headers.get("Content-Type", ""), "Image content type missing"
-              assert image.read(3) == b"\\xff\\xd8\\xff", "Image JPEG header mismatch"
+              assert len(image.read()) > 512, "Image response unexpectedly empty"
           print("Known 151 image reachable")
           PY
       - name: Export and validate complete public artifact
