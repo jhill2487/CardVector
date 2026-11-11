@@ -8,6 +8,7 @@ The API key is read only from the POKEWALLET_API_KEY environment variable.
 import argparse
 import json
 import os
+import re
 import time
 import urllib.error
 import urllib.parse
@@ -41,6 +42,24 @@ def request_json(path, secret, timeout=25):
 def initial_state():
     return {"version": 1, "sets": [], "next_set": 0, "next_page": 1, "cards": [],
             "request_count_total": 0, "finished": False}
+
+def order_sets_newest_first(sets):
+    """Prefer supplied ISO release dates, then dated set names, then provider order.
+
+    Unknown-date sets are not assigned speculative release dates. Preserve the
+    provider directory's ordering among these sets. This runs only when the
+    initial directory is loaded; resuming a checkpoint never reshuffles it.
+    """
+    def release_key(item):
+        date = str(item.get("release_date") or "")
+        if re.fullmatch(r"\\d{4}-\\d{2}-\\d{2}", date):
+            return (2, date, -item["source_position"])
+        year = re.search(r"(?<!\\d)(?:19|20)\\d{2}(?!\\d)", item["name"])
+        if year:
+            return (1, year.group(0), -item["source_position"])
+        return (0, "", -item["source_position"])
+    return sorted(sets, key=release_key, reverse=True)
+
 
 def normalize_card(row, set_row):
     if not isinstance(row, dict):
@@ -79,11 +98,14 @@ def run_batch(state, api, save, budget=50, interval=40, sleep=time.sleep):
         sets = payload.get("data")
         if not isinstance(sets, list) or not sets:
             raise RuntimeError("PokéWallet set directory unavailable; checkpoint preserved.")
-        state["sets"] = sorted([
+        state["sets"] = order_sets_newest_first([
             {"set_id": str(s["set_id"]), "name": str(s["name"]),
-             "card_count": int(s.get("card_count") or 0), "sealed_count": int(s.get("sealed_count") or 0)}
-            for s in sets if isinstance(s, dict) and s.get("set_id") is not None and s.get("name")
-        ], key=lambda item: (item["name"].casefold(), item["set_id"]))
+             "card_count": int(s.get("card_count") or 0), "sealed_count": int(s.get("sealed_count") or 0),
+             "release_date": str(s.get("release_date") or s.get("releaseDate") or ""),
+             "source_position": i}
+            for i, s in enumerate(sets)
+            if isinstance(s, dict) and s.get("set_id") is not None and s.get("name")
+        ])
         save(state)
     while calls < budget and state["next_set"] < len(state["sets"]):
         current = state["sets"][state["next_set"]]
