@@ -103,7 +103,7 @@ async function fetchProviderImage(providerId){
   const detail=await response.json().catch(()=>null);
   throw Error(detail?.error||'Image request failed (HTTP '+response.status+')');
  }
- if(!response.headers.get('content-type')?.startsWith('image/png'))throw Error('Unexpected image content type');
+ if(!/^image\/(?:png|jpeg)(?:;|$)/i.test(response.headers.get('content-type')||''))throw Error('Unexpected image content type');
  const blob=await response.blob();
  if(!blob.size)throw Error('Empty image response');
  return blob;
