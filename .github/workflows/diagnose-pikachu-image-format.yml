@@ -1,0 +1,29 @@
+name: Diagnose two PokéWallet Pikachu image responses
+on:
+  push:
+    branches: [diagnose-pikachu-image-format-20261111]
+    paths: ['.github/workflows/diagnose-pikachu-image-format.yml']
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check image headers and magic bytes
+        env:
+          PW_KEY: ${{ secrets.POKEWALLET_API_KEY }}
+        run: |
+          python - <<'PY'
+          import os,urllib.request,urllib.error
+          cases=[
+          ("Pikachu", "pk_74fc54f64c4bfd91adce3be0582eecb700887333640af3dcd8afc665f8acfb8347fa53911693dfaa8ec611d6585ca9"),
+          ("Pikachu and Zekrom GX","pk_cdb124e6668ebc34ff500c8611983b9ee7a9c9e336ea8492e00485ebb94d62cb59f411bd5000a7d97d534f0d4ede75")]
+          for name,id in cases:
+           req=urllib.request.Request("https://api.pokewallet.io/images/"+id+"?size=low",headers={"X-API-Key":os.environ["PW_KEY"]})
+           try:
+            with urllib.request.urlopen(req,timeout=25) as r:
+             b=r.read(1024)
+             print(name,"http",r.status,"mime",r.headers.get("Content-Type"),"size",r.headers.get("Content-Length"),"first16",b[:16].hex(),"sample_len",len(b))
+           except urllib.error.HTTPError as e:
+            print(name,"http",e.code,"mime",e.headers.get("Content-Type"))
+          PY
