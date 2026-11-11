@@ -26,7 +26,7 @@ class EnglishOnlyTests(unittest.TestCase):
            "set":{"set_id":"2","total_cards":1}}
   def write(state,rows):
    persisted.extend(rows)
-  result=step(state,fetch,write,[],day="2026-11-12")
+  result=step(state,fetch,write,day="2026-11-12")
   self.assertEqual(result["today"],1)
   self.assertEqual(len(paths),1)
   self.assertIn("/sets/2?",paths[0])
