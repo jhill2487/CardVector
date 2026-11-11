@@ -17,7 +17,7 @@ jobs:
         shell: bash
         run: |
           python - <<'PY'
-          import os, urllib.request, urllib.error
+          import os, urllib.request, urllib.error, hashlib, struct
           key=os.environ.get("POKEWALLET_API_KEY","")
           if not key:
               raise SystemExit("No PokéWallet key configured")
@@ -32,11 +32,12 @@ jobs:
               request=urllib.request.Request(url,headers={"X-API-Key":key,"User-Agent":"CardVector-Temporary-Image-Probe/1.0"})
               try:
                   with urllib.request.urlopen(request,timeout=30) as response:
-                      prefix=response.read(32)
+                      body=response.read(1_000_000)
+                      prefix=body[:32]
                       mime=response.headers.get("Content-Type","")
                       cache=response.headers.get("Cache-Control","")
-                      valid= response.status==200 and mime.startswith("image/") and (prefix.startswith(b"\\xff\\xd8\\xff") or prefix.startswith(b"\\x89PNG") or prefix.startswith(b"RIFF") or prefix.startswith(b"\\x00\\x00"))
-                      print(f"{name} {number}: HTTP {response.status}, MIME {mime}, image_signature={valid}, cache_control={cache}, first_16_hex={prefix[:16].hex()}")
+                      valid= response.status==200 and mime.startswith("image/") and prefix[:4].hex()=="89504e47" and len(body)>256
+                      print(f"{name} {number}: HTTP {response.status}, MIME {mime}, image_signature={valid}, cache_control={cache}, bytes={len(body)}, dimensions={struct.unpack(\">II\",prefix[16:24]) if valid else None}, sha256={hashlib.sha256(body).hexdigest()[:20]}")
                       if not valid: failures+=1
               except urllib.error.HTTPError as error:
                   print(f"{name} {number}: HTTP {error.code}")
