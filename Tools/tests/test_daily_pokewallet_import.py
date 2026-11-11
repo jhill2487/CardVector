@@ -1,6 +1,8 @@
 import importlib.util
 import unittest
+import sys
 from pathlib import Path
+sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 spec=importlib.util.spec_from_file_location("daily",Path(__file__).resolve().parents[1]/"run_daily_pokewallet_import.py")
 mod=importlib.util.module_from_spec(spec)
 spec.loader.exec_module(mod)
