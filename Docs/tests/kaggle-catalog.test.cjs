@@ -79,3 +79,12 @@ test("does not match the set folder name as a card name",()=>{
   const card=api.fromRow(["Pokemon TCG/Pokemon TCG/pikachu-set/sv3-5_en_001_std.jpg"]);
   assert.ok(!card.searchable.includes("pikachu"));
 });
+
+test("search UI shows all results automatically without Show more controls",()=>{
+  const ui=fs.readFileSync(path.resolve(__dirname,"../wanted/search-savefix-20261110.js"),"utf8");
+  assert.match(ui,/const end = matches\.length;/);
+  assert.match(ui,/for \(const card of filtered\)/);
+  assert.match(ui,/img\.loading = "lazy"/);
+  assert.ok(!ui.includes("Show more Kaggle images"));
+  assert.ok(!ui.includes('addEventListener("click", renderNext)'));
+});
