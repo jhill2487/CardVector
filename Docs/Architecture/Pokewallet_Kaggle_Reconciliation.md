@@ -148,3 +148,36 @@ approved authenticated administrator, and no public browser role may
 edit determinations. Changes to confirmed coverage evidence require
 an explicitly reviewed privileged update. Imported-set counts represent
 records processed so far, **not** verified set completion.
+
+## English-first import policy (November 11, 2026)
+
+CardVector currently focuses exclusively on English-language physical Pokémon
+TCG sets. The importer uses `Tools/pokewallet_set_language.py` to label the
+provider's set directory as `eng`, `jpn`, or `und` (unverified language).
+This is intentionally conservative because the original 661-set PokéWallet
+checkpoint does not include a reliable explicit language flag. Recognized
+English sets continue newest first; Japanese and unverified sets are **deferred**
+and do not consume the 750 English-card daily allowance.
+
+Previously imported non-English records are retained in the private catalog
+for a potential future Japanese phase; no deletion or reimport is needed.
+The administrator's set coverage view now shows only sets explicitly
+classified as English. Set-level exclusions use reviewed set identities and
+conservative naming conventions, not a claim of complete provider metadata.
+Any unknown English set can be added to the reviewed English scope later.
+
+This is a temporary scope restriction, not a permanent exclusion of Japanese
+Pokémon cards. The importer does not change the public search database.
+
+## Supabase storage and headroom audit (November 11, 2026)
+
+CardVector PostgreSQL database measured approximately 24 MB, with ample
+headroom against Supabase Free's published 500 MB database allowance.
+Supabase Storage, however, contains approximately 1.009 billion bytes
+(1,197 objects) exclusively in the legacy `mobile-capture-originals` bucket.
+That is around the Free plan's published 1 GB file-storage allowance.
+Actual billing usage and organization plan must be checked in Supabase's
+billing/usage dashboard; SQL alone cannot confirm overage or invoice charges.
+Do not upload additional image archives to Supabase Storage or remove legacy
+uploads without verifying retention. The Kaggle image archive remains on
+Cloudflare R2, and the importer stores compact metadata in PostgreSQL.

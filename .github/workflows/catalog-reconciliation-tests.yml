@@ -5,6 +5,8 @@ on:
       - 'Tools/reconcile_pokewallet_kaggle.py'
       - 'Tools/import_pokewallet_catalog.py'
       - 'Tools/run_daily_pokewallet_import.py'
+      - 'Tools/pokewallet_set_language.py'
+      - 'Tools/tests/test_pokewallet_set_language.py'
       - 'Tools/tests/test_daily_pokewallet_import.py'
       - '.github/workflows/daily-pokewallet-import.yml'
       - 'Tools/publish_import_progress.py'
@@ -26,3 +28,4 @@ jobs:
       - run: python -m unittest discover -s Tools/tests -p 'test_import_pokewallet_catalog.py' -v
       - run: python -m unittest discover -s Tools/tests -p 'test_publish_import_progress.py' -v
       - run: python -m unittest discover -s Tools/tests -p 'test_daily_pokewallet_import.py' -v
+      - run: python -m unittest discover -s Tools/tests -p 'test_pokewallet_set_language.py' -v

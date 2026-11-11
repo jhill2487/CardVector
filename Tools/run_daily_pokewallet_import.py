@@ -16,6 +16,7 @@ import urllib.parse
 import urllib.request
 from datetime import datetime, timezone
 from import_pokewallet_catalog import order_sets_newest_first, normalize_card
+from pokewallet_set_language import set_language
 
 SUPABASE_URL="https://iqdpfgpkagjxzedfxrvn.supabase.co/rest/v1/"
 CATALOG_URL="https://images.cardvector.app/archive/card-image-index.csv"
@@ -133,6 +134,12 @@ def step(state,fetch,write,catalog,cap=DAILY_CAP,max_requests=REQUEST_CAP,day=No
         write(state,[])
     while today<allowance and requests<max_requests and state["next_set"]<len(state["sets"]):
         current=state["sets"][state["next_set"]]
+        if set_language(current)!="eng":
+            state["next_set"]+=1
+            state["next_page"]=1
+            state["next_offset"]=0
+            write(state,[])
+            continue
         path="/sets/"+urllib.parse.quote(current["set_id"],safe="")+"?page="+str(state["next_page"])+"&limit="+str(PAGE_SIZE)
         payload=fetch(path)
         requests+=1
@@ -208,8 +215,17 @@ def main():
         store.upsert("cv_admin_pokewallet_catalog",rows)
         store.save(checkpoint)
         store.publish(checkpoint)
+    # Scope all 661 provider sets before requesting more card pages. The
+    # existing provider cursor is kept; Japanese records already imported
+    # remain archived, but they are not displayed in English-only coverage.
+    store.upsert("cv_admin_set_languages",[
+        {"set_id":row["set_id"],"set_name":row["name"],
+         "language":set_language(row)}
+        for row in state.get("sets",[])
+    ])
     index=kaggle_index()
     summary=step(state,fetch,write,index)
+    summary["language_scope"]="English confirmed; unknown and Japanese deferred"
     print(json.dumps(summary,sort_keys=True))
 if __name__=="__main__":
     main()
