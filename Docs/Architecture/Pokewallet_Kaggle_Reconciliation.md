@@ -78,3 +78,45 @@ counts are not available until reconciliation finishes.
 The `SUPABASE_SERVICE_ROLE_KEY` credential must be provisioned in the
 trusted importing environment separately. GitHub Pages does not run
 the importer and does not receive privileged credentials.
+
+## Automatic daily importer — 750 card printings per day
+
+GitHub Actions workflow `.github/workflows/daily-pokewallet-import.yml` runs
+automatically every day at **14:17 UTC**. No manual trigger is needed. It imports
+**up to 750 eligible card records per day**, including unique PokéWallet
+printings and excluding sealed products. The first run loads all PokéWallet
+sets and prioritizes the most recent release dates. Older sets follow once
+recent sets are complete. The importer stops after 750 eligible records and
+resumes from the exact set, page and **in-page offset** the next day.
+
+The workflow uses at most 40 PokéWallet API requests per execution, spaced
+at least 45 seconds apart. This respects a conservative share of the free tier's
+100 requests/hour and 1000/day (other usage of the same key still shares quota).
+The schedule may be delayed by GitHub Actions. Rate-limit and API failures stop
+the run rather than silently skipping records; successful page checkpoints are
+preserved for the next run.
+
+The **only setup required before the first run** is adding two GitHub
+repository Actions secrets to `jhill2487/CardVector`:
+
+- `POKEWALLET_API_KEY` — the existing PokéWallet API key used by CardVector
+- `SUPABASE_SERVICE_ROLE_KEY` — server-side Supabase service-role key
+
+Never paste these secrets into chat, source files or GitHub issues.
+The keys go only in Settings → Secrets and variables → Actions.
+The existing Supabase Edge Function's stored PokéWallet key is **not
+automatically available** to GitHub Actions. GitHub Pages never receives
+either secret.
+
+The importer stores resumable state privately in
+`public.cv_admin_pokewallet_import_state` and individual provider IDs in
+`public.cv_admin_pokewallet_catalog` (both RLS-enabled, no anonymous/client
+access), then updates `public.cv_admin_job_progress` for the signed-in admin
+dashboard. Changes are read-only with respect to live catalog search: import
+and tentative image reconciliation do not publish automatic card artwork
+overrides. Exact image matches are candidates only, and ambiguous matches
+require review.
+
+The first scheduled run can start only after both Actions secrets are
+configured and the daily workflow exists on the default branch. Until then,
+the dashboard correctly shows the import as not started.
