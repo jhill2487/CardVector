@@ -17,7 +17,7 @@ class DailyTests(unittest.TestCase):
         writes=[]
         def fetch(path):
             if path=="/sets":
-                return {"data":[{"set_id":"30","name":"Recent","release_date":"12th November, 2026"}]}
+                return {"data":[{"set_id":"30","name":"Delta Reign","release_date":"12th November, 2026"}]}
             page=int(path.split("page=")[1].split("&")[0])
             start=(page-1)*mod.PAGE_SIZE
             return {"set":{"set_id":"30","total_cards":800},
@@ -43,7 +43,7 @@ class DailyTests(unittest.TestCase):
         state=mod.make_state()
         rows=[{"id":"pack","card_info":{"product_type":"sealed"}}]+[card(n) for n in range(1,10)]
         def fetch(path):
-            if path=="/sets":return {"data":[{"set_id":"1","name":"Promo","release_date":"28th March, 2025"}]}
+            if path=="/sets":return {"data":[{"set_id":"1","name":"Chaos Rising","release_date":"28th March, 2025"}]}
             return {"set":{"set_id":"1","total_cards":len(rows)},"cards":rows}
         imported=[]
         result=mod.step(state,fetch,lambda s,rs:imported.extend(rs),[],cap=750,max_requests=10)
@@ -63,7 +63,7 @@ class DailyTests(unittest.TestCase):
         calls=[]
         def fetch(path):
             calls.append(path)
-            if path=="/sets":return {"data":[{"set_id":"1","name":"Set"}]}
+            if path=="/sets":return {"data":[{"set_id":"1","name":"Delta Reign"}]}
             page=int(path.split("page=")[1].split("&")[0])
             return {"set":{"set_id":"1","total_cards":400},"cards":[card(page*100+n) for n in range(100)]}
         first=mod.step(state,fetch,lambda s,rs:None,[],cap=750,max_requests=2)
