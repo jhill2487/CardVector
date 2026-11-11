@@ -18,6 +18,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Check browser JavaScript syntax
+        run: |
+          node --check Docs/kaggle-catalog.js
+          node --check Docs/wanted/search-savefix-20261110.js
       - name: Test Kaggle catalog parsing and printing separation
         run: node --test Docs/tests/kaggle-catalog.test.cjs
       - name: Check public R2 image index and cross-origin access
