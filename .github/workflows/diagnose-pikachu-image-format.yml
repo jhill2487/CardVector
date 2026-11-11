@@ -19,7 +19,7 @@ jobs:
           ("Pikachu", "pk_74fc54f64c4bfd91adce3be0582eecb700887333640af3dcd8afc665f8acfb8347fa53911693dfaa8ec611d6585ca9"),
           ("Pikachu and Zekrom GX","pk_cdb124e6668ebc34ff500c8611983b9ee7a9c9e336ea8492e00485ebb94d62cb59f411bd5000a7d97d534f0d4ede75")]
           for name,id in cases:
-           req=urllib.request.Request("https://api.pokewallet.io/images/"+id+"?size=low",headers={"X-API-Key":os.environ["PW_KEY"]})
+           req=urllib.request.Request("https://api.pokewallet.io/images/"+id+"?size=low",headers={"X-API-Key":os.environ["PW_KEY"],"User-Agent":"CardVector-Temporary-Image-Probe/1.0"})
            try:
             with urllib.request.urlopen(req,timeout=25) as r:
              b=r.read(1024)
