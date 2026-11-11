@@ -58,3 +58,24 @@ test("filters within a selected Kaggle set and does not mix set results", async(
   assert.equal(cards.length,2);
   assert.equal((await api.search("pikachu","name",100,"base-set")).length,0);
 });
+
+test("recognizes Pikachu name tokens in multiple historical filename styles",()=>{
+  const examples=[
+    "30th-Anniversary-Card-List-24-Pikachu.jpg",
+    "pikachu-base-set-bs-58.jpg",
+    "en_US-Promo_BW-BW54-pikachu.jpg",
+    "clc_en_008-pikachu.jpg",
+    "pikachu+14.jpg"
+  ];
+  for(const name of examples){
+    const card=api.fromRow(["Pokemon TCG/Pokemon TCG/promo/"+name]);
+    assert.ok(card, name);
+    assert.ok(card.searchable.includes("pikachu"),name);
+    assert.equal(card.nameVerified,false);
+    assert.equal(card.finishVerified,false);
+  }
+});
+test("does not match the set folder name as a card name",()=>{
+  const card=api.fromRow(["Pokemon TCG/Pokemon TCG/pikachu-set/sv3-5_en_001_std.jpg"]);
+  assert.ok(!card.searchable.includes("pikachu"));
+});

@@ -37,6 +37,9 @@ jobs:
               rows = list(csv.DictReader(io.StringIO(response.read().decode("utf-8-sig"))))
           assert len(rows) == 21199, "Expected 21,199 Kaggle image entries, got " + str(len(rows))
           assert all(r.get("RelativePath") for r in rows)
+          pikachu_files = sum("pikachu" in r["FileName"].lower() for r in rows)
+          assert pikachu_files >= 170, "Pikachu filename coverage unexpectedly dropped: " + str(pikachu_files)
+          print("Indexed Pikachu filename candidates:", pikachu_files)
           print("R2 catalog verified:", len(rows), "files; CORS:", origin)
           image_url = "https://images.cardvector.app/archive/Pokemon%20TCG/Pokemon%20TCG/151/sv3-5_en_001_std.jpg"
           with urllib.request.urlopen(urllib.request.Request(image_url, headers={"User-Agent": "CardVector-Catalog-Validation/1.0"}), timeout=30) as image:
