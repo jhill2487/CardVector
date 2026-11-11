@@ -37,6 +37,16 @@
     else {
       const modern = stem.match(/^[a-z0-9-]+_en_([a-z0-9]+)_(?:std|rev|holo)$/i);
       if (modern) number = modern[1]; // No name inferred from a modern numeric-only filename.
+      else {
+        // Legacy name-set-code-number filenames have no en_US prefix.
+        // Require the filename to repeat its actual folder's set slug.
+        const safeFolder = folder.replace(/[.*+?^$\{\}()|[\]\\]/g, "\\    else {
+      const modern = stem.match(/^[a-z0-9-]+_en_([a-z0-9]+)_(?:std|rev|holo)$/i);
+      if (modern) number = modern[1]; // No name inferred from a modern numeric-only filename.
+    }");
+        const named = safeFolder && stem.match(new RegExp("^(.+)-" + safeFolder + "-(?:[a-z0-9]+-)?([a-z]*\\\\d+)$", "i"));
+        if (named) { name = named[1].replace(/[_-]+/g," "); number = named[2]; }
+      }
     }
     return {
       path: "archive/" + raw,
