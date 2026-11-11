@@ -178,14 +178,14 @@ async function getSetCoverage(){
  try{
   const {data,error}=await client.from("cv_admin_set_coverage")
    .select("set_id,set_name,imported_cards,matched_cards,review_cards,unmatched_cards,coverage_status,alternate_source_status")
-   .order("unmatched_cards",{ascending:false}).limit(40);
+   .order("unmatched_cards",{ascending:false}).limit(1000);
   if(error)throw error;
   list.replaceChildren();
   const rows=data||[];
   const flagged=rows.filter(r=>r.coverage_status==="confirmed_absent");
   badge.textContent=flagged.length?flagged.length+" confirmed set gap"+(flagged.length===1?"":"s"):"Coverage available";
   badge.className="status "+(flagged.length?"working":"good");
-  summary.textContent=rows.length+" imported sets displayed (up to 40, ordered by unmatched count). Reviewed set-level gaps are separated from unmatched cards needing verification.";
+  summary.textContent=rows.length+" imported sets displayed (up to 1,000, ordered by unmatched count). Reviewed set-level gaps are separated from unmatched cards needing verification.";
   if(!rows.length){const li=document.createElement("li");li.textContent="No sets imported yet.";list.append(li);return;}
   const ordered=[...rows].sort((a,b)=>Number(b.coverage_status==="confirmed_absent")-Number(a.coverage_status==="confirmed_absent")||b.unmatched_cards-a.unmatched_cards);
   for(const item of ordered){
