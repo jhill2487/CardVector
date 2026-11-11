@@ -36,7 +36,7 @@ jobs:
                       mime=response.headers.get("Content-Type","")
                       cache=response.headers.get("Cache-Control","")
                       valid= response.status==200 and mime.startswith("image/") and (prefix.startswith(b"\\xff\\xd8\\xff") or prefix.startswith(b"\\x89PNG") or prefix.startswith(b"RIFF") or prefix.startswith(b"\\x00\\x00"))
-                      print(f"{name} {number}: HTTP {response.status}, MIME {mime}, image_signature={valid}, cache_control={cache}")
+                      print(f"{name} {number}: HTTP {response.status}, MIME {mime}, image_signature={valid}, cache_control={cache}, first_16_hex={prefix[:16].hex()}")
                       if not valid: failures+=1
               except urllib.error.HTTPError as error:
                   print(f"{name} {number}: HTTP {error.code}")
