@@ -91,7 +91,7 @@
   };
   const cardNumber = value => {
     const raw=String(value||"").trim().toLowerCase().split("/")[0];
-    return raw.replace(/^0+(?=\\d)/,"");
+    return raw.replace(/^0+(?=\d)/,"");
   };
   async function forCard(card,setName="") {
     const id=String(card?.id||""), cut=id.lastIndexOf("-");
