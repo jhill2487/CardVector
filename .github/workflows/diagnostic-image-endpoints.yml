@@ -1,0 +1,49 @@
+name: One-time PokéWallet three-image endpoint verification
+on:
+  push:
+    branches: [diagnostic-image-endpoints-20261111]
+    paths:
+      - '.github/workflows/diagnostic-image-endpoints.yml'
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      POKEWALLET_API_KEY: ${{ secrets.POKEWALLET_API_KEY }}
+    steps:
+      - name: Probe three exact catalog IDs without saving images
+        shell: bash
+        run: |
+          python - <<'PY'
+          import os, urllib.request, urllib.error
+          key=os.environ.get("POKEWALLET_API_KEY","")
+          if not key:
+              raise SystemExit("No PokéWallet key configured")
+          cases=[
+              ("Heracross","001/103","pk_82d00c11b3458867cbc585fe20a5f75de34edf3271244713db31ced8ec8f9d3bd94baf2b65bca37b87615a45f58a"),
+              ("Steelix","052/103","pk_90de54fb9cf724d43772b6c2b2c68c5452019ab32015f4fab4c6a264a470fdc563b0263e89680d7bbe0a4141224efa"),
+              ("Mega Rayquaza ex","141/103","pk_520c7aa5698ed70f1c6b4186f59eaf94e9c2c5c4a54cd80c3e9898493579428bca79862a44270246fcaa957350d6e44b")
+          ]
+          failures=0
+          for name,number,provider_id in cases:
+              url="https://api.pokewallet.io/images/"+provider_id+"?size=low"
+              request=urllib.request.Request(url,headers={"X-API-Key":key,"User-Agent":"CardVector-Temporary-Image-Probe/1.0"})
+              try:
+                  with urllib.request.urlopen(request,timeout=30) as response:
+                      prefix=response.read(32)
+                      mime=response.headers.get("Content-Type","")
+                      cache=response.headers.get("Cache-Control","")
+                      valid= response.status==200 and mime.startswith("image/") and (prefix.startswith(b"\\xff\\xd8\\xff") or prefix.startswith(b"\\x89PNG") or prefix.startswith(b"RIFF") or prefix.startswith(b"\\x00\\x00"))
+                      print(f"{name} {number}: HTTP {response.status}, MIME {mime}, image_signature={valid}, cache_control={cache}")
+                      if not valid: failures+=1
+              except urllib.error.HTTPError as error:
+                  print(f"{name} {number}: HTTP {error.code}")
+                  failures+=1
+              except Exception as error:
+                  print(f"{name} {number}: {type(error).__name__}")
+                  failures+=1
+          print("VERIFIED",len(cases)-failures,"OF",len(cases))
+          if failures:raise SystemExit(1)
+          PY
