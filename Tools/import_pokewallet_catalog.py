@@ -10,6 +10,7 @@ import json
 import os
 import re
 import time
+from datetime import datetime
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -54,6 +55,12 @@ def order_sets_newest_first(sets):
         date = str(item.get("release_date") or "")
         if re.fullmatch(r"\d{4}-\d{2}-\d{2}", date):
             return (2, date, -item["source_position"])
+        try:
+            cleaned=re.sub(r"(?<=\d)(?:st|nd|rd|th)\b","",date)
+            parsed=datetime.strptime(cleaned,"%d %B, %Y")
+            return (2,parsed.strftime("%Y-%m-%d"),-item["source_position"])
+        except ValueError:
+            pass
         year = re.search(r"(?<!\d)(?:19|20)\d{2}(?!\d)", item["name"])
         if year:
             return (1, year.group(0), -item["source_position"])
