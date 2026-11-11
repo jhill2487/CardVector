@@ -24,19 +24,19 @@ class DailyTests(unittest.TestCase):
                     "cards":source[start:start+mod.PAGE_SIZE]}
         def write(checkpoint,rows):
             writes.extend(r["provider_id"] for r in rows)
-        first=mod.step(state,fetch,write,[],cap=750,max_requests=40,day="2026-11-11")
+        first=mod.step(state,fetch,write,cap=750,max_requests=40,day="2026-11-11")
         self.assertEqual(first["today"],750)
         self.assertEqual((state["next_set"],state["next_page"],state["next_offset"]),(0,8,50))
         self.assertFalse(state["finished"])
-        same_day=mod.step(state,fetch,write,[],cap=750,max_requests=40,day="2026-11-11")
+        same_day=mod.step(state,fetch,write,cap=750,max_requests=40,day="2026-11-11")
         self.assertEqual(same_day["today"],0)
-        second=mod.step(state,fetch,write,[],cap=750,max_requests=40,day="2026-11-12")
+        second=mod.step(state,fetch,write,cap=750,max_requests=40,day="2026-11-12")
         self.assertEqual(second["today"],50)
         self.assertTrue(state["finished"])
         self.assertEqual(len(set(writes)),800)
         self.assertEqual(len(writes),800)
         self.assertEqual(state["cards_imported"],800)
-        third=mod.step(state,fetch,write,[],cap=750,max_requests=40,day="2026-11-13")
+        third=mod.step(state,fetch,write,cap=750,max_requests=40,day="2026-11-13")
         self.assertEqual(third["today"],0)
 
     def test_sealed_products_do_not_count_against_750(self):
@@ -46,10 +46,26 @@ class DailyTests(unittest.TestCase):
             if path=="/sets":return {"data":[{"set_id":"1","name":"Chaos Rising","release_date":"28th March, 2025"}]}
             return {"set":{"set_id":"1","total_cards":len(rows)},"cards":rows}
         imported=[]
-        result=mod.step(state,fetch,lambda s,rs:imported.extend(rs),[],cap=750,max_requests=10)
+        result=mod.step(state,fetch,lambda s,rs:imported.extend(rs),cap=750,max_requests=10)
         self.assertEqual(result["today"],9)
         self.assertTrue(result["finished"])
         self.assertEqual(len(imported),9)
+
+    def test_provider_records_have_variants_without_image_reconciliation(self):
+        state=mod.make_state()
+        example={"id":"pk_heracross","card_info":{"name":"Heracross",
+                 "card_number":"001/103","variants":["Normal","Reverse Holofoil"]}}
+        def fetch(path):
+            if path=="/sets":
+                return {"data":[{"set_id":"24831","name":"Delta Reign"}]}
+            return {"set":{"set_id":"24831","total_cards":1},"cards":[example]}
+        saved=[]
+        mod.step(state,fetch,lambda checkpoint,rows:saved.extend(rows),day="2026-11-11")
+        self.assertEqual(len(saved),1)
+        self.assertEqual(saved[0]["provider_id"],"pk_heracross")
+        self.assertEqual(saved[0]["variants"],["Normal","Reverse Holofoil"])
+        self.assertEqual(saved[0]["image_status"],"pending")
+        self.assertIsNone(saved[0]["image_path"])
 
     def test_human_dates_newest_first(self):
         sets=mod.normalize_sets({"data":[
@@ -66,10 +82,10 @@ class DailyTests(unittest.TestCase):
             if path=="/sets":return {"data":[{"set_id":"1","name":"Delta Reign"}]}
             page=int(path.split("page=")[1].split("&")[0])
             return {"set":{"set_id":"1","total_cards":400},"cards":[card(page*100+n) for n in range(100)]}
-        first=mod.step(state,fetch,lambda s,rs:None,[],cap=750,max_requests=2)
+        first=mod.step(state,fetch,lambda s,rs:None,cap=750,max_requests=2)
         self.assertEqual(first["today"],100)
         self.assertEqual(state["next_page"],2)
-        second=mod.step(state,fetch,lambda s,rs:None,[],cap=750,max_requests=5)
+        second=mod.step(state,fetch,lambda s,rs:None,cap=750,max_requests=5)
         self.assertEqual(second["today"],300)
         self.assertTrue(state["finished"])
         self.assertEqual(state["cards_imported"],400)
