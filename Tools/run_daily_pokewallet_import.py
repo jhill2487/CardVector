@@ -68,7 +68,7 @@ class Store:
 
 def make_state():
     return {"version":2,"sets":[],"next_set":0,"next_page":1,"next_offset":0,
-            "cards_imported":0,"image_counts":{"matched":0,"needs_review":0,"missing":0},
+            "cards_imported":0,"daily_date":"","daily_imported":0,"image_counts":{"matched":0,"needs_review":0,"missing":0},
             "finished":False}
 
 def normalize_sets(data):
@@ -109,7 +109,7 @@ def classify_cards(records,images):
             statuses[pid]=(status,item.get("image_path"))
     return statuses
 
-def step(state,fetch,write,catalog,cap=DAILY_CAP,max_requests=REQUEST_CAP):
+def step(state,fetch,write,catalog,cap=DAILY_CAP,max_requests=REQUEST_CAP,day=None):
     """Import at most cap physical card records, preserving a mid-page cursor.
 
     fetch(path)->decoded PokéWallet JSON; write(state, cards)->transaction-like
@@ -117,6 +117,13 @@ def step(state,fetch,write,catalog,cap=DAILY_CAP,max_requests=REQUEST_CAP):
     because each provider ID is a primary key in Supabase.
     """
     if state.get("finished"):return {"today":0,"requests":0,"finished":True}
+    day=day or datetime.now(timezone.utc).date().isoformat()
+    if state.get("daily_date")!=day:
+        state["daily_date"]=day
+        state["daily_imported"]=0
+    allowance=max(0,min(cap,DAILY_CAP-int(state.get("daily_imported",0))))
+    if not allowance:
+        return {"today":0,"requests":0,"daily_limit_reached":True,"finished":False}
     requests=0
     today=0
     if not state["sets"]:
@@ -124,7 +131,7 @@ def step(state,fetch,write,catalog,cap=DAILY_CAP,max_requests=REQUEST_CAP):
         state["sets"]=normalize_sets(fetch("/sets"))
         requests+=1
         write(state,[])
-    while today<cap and requests<max_requests and state["next_set"]<len(state["sets"]):
+    while today<allowance and requests<max_requests and state["next_set"]<len(state["sets"]):
         current=state["sets"][state["next_set"]]
         path="/sets/"+urllib.parse.quote(current["set_id"],safe="")+"?page="+str(state["next_page"])+"&limit="+str(PAGE_SIZE)
         payload=fetch(path)
@@ -141,7 +148,7 @@ def step(state,fetch,write,catalog,cap=DAILY_CAP,max_requests=REQUEST_CAP):
         offset=int(state.get("next_offset",0))
         if offset>len(items):raise RuntimeError("Resume offset exceeds page length")
         rows=[]
-        while offset<len(items) and today<cap:
+        while offset<len(items) and today<allowance:
             item=items[offset]
             offset+=1
             card=normalize_card(item,current)
@@ -169,11 +176,12 @@ def step(state,fetch,write,catalog,cap=DAILY_CAP,max_requests=REQUEST_CAP):
                 "image_status":status,"image_path":image})
             state["image_counts"][status]+=1
         state["cards_imported"]+=len(rows)
+        state["daily_imported"]+=len(rows)
         write(state,catalog_rows)
     state["finished"]=state["next_set"]>=len(state["sets"]) and bool(state["sets"])
     write(state,[])
     return {"today":today,"requests":requests,"sets_complete":state["next_set"],
-            "sets_total":len(state["sets"]),"cards_imported":state["cards_imported"],
+            "sets_total":len(state["sets"]),"cards_imported":state["cards_imported"],"daily_imported":state["daily_imported"],
             "finished":state["finished"]}
 
 def main():
