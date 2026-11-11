@@ -52,9 +52,9 @@ def order_sets_newest_first(sets):
     """
     def release_key(item):
         date = str(item.get("release_date") or "")
-        if re.fullmatch(r"\\d{4}-\\d{2}-\\d{2}", date):
+        if re.fullmatch(r"\d{4}-\d{2}-\d{2}", date):
             return (2, date, -item["source_position"])
-        year = re.search(r"(?<!\\d)(?:19|20)\\d{2}(?!\\d)", item["name"])
+        year = re.search(r"(?<!\d)(?:19|20)\d{2}(?!\d)", item["name"])
         if year:
             return (1, year.group(0), -item["source_position"])
         return (0, "", -item["source_position"])
