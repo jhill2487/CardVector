@@ -71,6 +71,45 @@ SITE_CONFIG_FILE = "site-config.json"
 MARKET_BRIEF_SOURCE_DIR = Path("content") / "market-briefs"
 MARKET_BRIEF_INDEX_FILE = MARKET_BRIEF_SOURCE_DIR / "index.json"
 SITE_URL = "https://cardvector.app"
+# Preserve the original CardVector GA4 property across every generated release.
+# These public measurement identifiers are not secrets.
+GA4_MEASUREMENT_ID = "G-WQEKL0NGJ3"
+GA4_TRACKING_TAG = f"""<!-- CardVector Google Analytics (managed by site exporter) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id={GA4_MEASUREMENT_ID}"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){{dataLayer.push(arguments);}}
+  gtag('js', new Date());
+  gtag('config', '{GA4_MEASUREMENT_ID}');
+</script>
+"""
+# Internal admin pages are not visitor traffic.
+ANALYTICS_EXCLUDED_PAGES = {"status/index.html", "catalog-search-test/index.html", "image-review/index.html"}
+
+
+def ensure_google_analytics(output: Path) -> None:
+    """Add exactly one existing GA4 tag to all visitor-facing HTML pages."""
+    for page in output.rglob("*.html"):
+        relative = page.relative_to(output).as_posix()
+        original = page.read_text(encoding="utf-8-sig")
+        if relative in ANALYTICS_EXCLUDED_PAGES:
+            continue
+        if not re.search(r"</head\s*>", original, re.IGNORECASE):
+            raise RuntimeError(f"Cannot insert Google Analytics: no </head> in {relative}")
+        # Older generated market-brief pages already contain the original
+        # Google tag. Keep that working tag; reject duplicate installs.
+        if GA4_MEASUREMENT_ID in original:
+            if original.count("googletagmanager.com/gtag/js?id=") != 1 or original.count("gtag('config',") != 1:
+                raise RuntimeError(f"Duplicate or ambiguous Google Analytics tag in {relative}")
+            if original.count(GA4_MEASUREMENT_ID) < 2:
+                raise RuntimeError(f"Incomplete Google Analytics tag in {relative}")
+            continue
+        if "googletagmanager.com/gtag/js" in original or "gtag('config'," in original:
+            raise RuntimeError(f"Different Google Analytics tag found in {relative}; manual review required")
+        updated = re.sub(r"</head\s*>", lambda match: GA4_TRACKING_TAG + match.group(0), original, count=1, flags=re.IGNORECASE)
+        page.write_text(updated, encoding="utf-8")
+
+
 SITE_CONFIG_KEYS = (
     "EBAY_STORE_URL",
     "TCGPLAYER_STORE_URL",
@@ -902,6 +941,7 @@ def export_site(source: Path, output: Path, commit: str) -> None:
     render_sitemap(output, market_briefs)
     render_site_config(output, site_config)
     write_generated_files(output, commit, market_briefs)
+    ensure_google_analytics(output)
     version_static_assets(output, commit)
     validate_references(output)
     validate_prohibited_files(output)
