@@ -48,6 +48,20 @@ def main() -> int:
     if not data.get("source_commit"):
         raise SystemExit("Deployment manifest lacks source commit")
 
+    # Protect the existing GA4 property from silently disappearing on rebuild.
+    # Every visitor-facing exported HTML page must contain one matching tag.
+    measurement_id = "G-WQEKL0NGJ3"
+    admin_pages = {"status/index.html", "catalog-search-test/index.html", "image-review/index.html"}
+    for page in root.rglob("*.html"):
+        relative = page.relative_to(root).as_posix()
+        if relative in admin_pages:
+            continue
+        content = page.read_text(encoding="utf-8")
+        if content.count("googletagmanager.com/gtag/js?id=") != 1 or content.count("gtag('config',") != 1:
+            raise SystemExit(f"Google Analytics tag missing or duplicated in {relative}")
+        if content.count(measurement_id) != 2:
+            raise SystemExit(f"Original Google Analytics measurement ID missing or duplicated in {relative}")
+
     # Every local static HTML reference must carry the current release version.
     import re
     expected_version = data["source_commit"][:12]
