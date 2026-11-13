@@ -163,3 +163,31 @@ Use non-sensitive test images:
 10. Confirm `capture_session.json` is staged under `<USERENVIRONMENT>/Capture/` for `NEW_CAPTURE` or `<USERENVIRONMENT>/Capture/Physical_Inventory_Conversion/` for `PHYSICAL_INVENTORY`.
 11. Confirm the ETB location ID survives in the staged conversion session.
 12. Mark complete only after processing succeeds.
+
+## Developer dashboard GA4 report
+
+The `/status/` dashboard calls `cardvector-analytics` with the signed-in user's
+JWT. This Edge Function owns the GA4 reporting integration and uses Auth's
+verified, confirmed administrator email before reading secrets or cached reports.
+The frontend only renders returned metrics. Google remains the traffic source.
+The function uses `GA4_PROPERTY_ID` and `GA4_SERVICE_ACCOUNT_JSON` Edge Function
+secrets. The service account requires Viewer access to the selected property.
+
+The fixed report covers `7daysAgo` through `yesterday` in the property's time zone.
+It returns `totalUsers`, `newUsers`, `sessions`, and `screenPageViews` directly
+from GA4. First-time visitors do not measure account registrations. Reports are
+cached for five minutes per running isolate, and concurrent refreshes share a
+request. Failed requests produce an unavailable state. Keys and OAuth tokens
+stay server-side. The function uses Web Crypto and the Google REST API with no
+package dependencies.
+
+This subsystem extension uses the existing Supabase Edge Function boundary and
+existing administrator identity. A dedicated function is required because the
+other functions own card-provider integrations and payment operations. Its sole
+web caller is `Docs/status/index.html`. Source and tests remain in the existing
+approved `supabase` and `Docs` roots.
+
+Run `node --test Docs/tests/analytics.test.cjs Docs/tests/development-dashboard.test.cjs`
+and the public export checks. Verify signed-in results against GA4 for the same
+date range. Roll back by reverting the dashboard changes and removing the
+`cardvector-analytics` function. Existing tracking uses the original site exporter.
