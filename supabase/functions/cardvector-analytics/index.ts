@@ -69,7 +69,24 @@ async function loadReport() {
     }),
     signal: AbortSignal.timeout(15000),
   });
-  if (reportResponse.status === 403) throw new Error("Check service account Viewer access and that the Analytics Data API is enabled.");
+  if (reportResponse.status === 403) {
+    const body = await reportResponse.json().catch(() => null);
+    const details = body?.error?.details;
+    const reason = Array.isArray(details)
+      ? details.find(detail => detail?.["@type"] === "type.googleapis.com/google.rpc.ErrorInfo")?.reason
+      : undefined;
+    if (reason === "SERVICE_DISABLED" || reason === "ACCESS_NOT_CONFIGURED") {
+      throw new Error("Enable the Google Analytics Data API in the Google Cloud project that owns the service account.");
+    }
+    if (reason === "ACCESS_TOKEN_SCOPE_INSUFFICIENT") {
+      throw new Error("Google rejected the Analytics read-only scope.");
+    }
+    const message = body?.error?.message;
+    if (typeof message === "string" && /sufficient permissions for this property/i.test(message)) {
+      throw new Error("Google denied access to GA4 property " + propertyId + ". Check the service account's Viewer role under Property access management.");
+    }
+    throw new Error("Google denied the report (403). Check GA4 property Viewer access and the Analytics Data API in the service account's Cloud project.");
+  }
   if (reportResponse.status === 429) throw new Error("Google Analytics quota reached. Try again later.");
   if (!reportResponse.ok) throw new Error("Google Analytics could not return the report. Check the property ID and retry.");
   const report = await reportResponse.json();
