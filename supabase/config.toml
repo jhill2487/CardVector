@@ -1,1 +1,2 @@
-# No Supabase Edge Functions are currently configured for CardVector.app.
+[functions.cardvector-analytics]
+verify_jwt = true

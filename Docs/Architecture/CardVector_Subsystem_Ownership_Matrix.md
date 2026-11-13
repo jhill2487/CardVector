@@ -42,6 +42,7 @@
 | Orders | `orders_fulfillment.py`, UI callbacks | `cardvector.orders` | Required | Existing module wrapper |
 | Shipping | eBay policies in `putnam_os.py`/config | `cardvector.shipping` | Required | Current policy functions delegate |
 | Content | `content_page`, `Putnam_Content` business data | `cardvector.content` if retained | Decision required | None until approved |
+| Website traffic reporting | `supabase/functions/cardvector-analytics/index.ts` with `Docs/status/index.html` presentation | Existing CardVector.app Supabase integration boundary | GA4 read-only report, authorized 2026-11-13 | No adapter |
 | Analytics | performance logs, MI business-intelligence prototype | `cardvector.analytics` | Required after definitions approved | Existing reports remain |
 | Reports | many subsystem-specific writers | Subsystem semantics + `cardvector.reporting` renderers | Required incrementally | Preserve output filenames/formats |
 | Configuration | multiple JSON roots/loaders | `cardvector.infrastructure.configuration` | Required | Legacy config facade |

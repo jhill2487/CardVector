@@ -47,6 +47,18 @@ dt{color:#acbdca}dd{margin:0;overflow-wrap:anywhere}
 <p class="muted">Deployment health, importer coverage and development activity in one place. Live data is labeled separately from planned or unreported work.</p>
 <div class="toolbar"><span id="admin-account" class="muted"></span><div><button id="refresh" type="button">Refresh all status</button> <small id="checked" aria-live="polite">Not checked yet</small></div></div>
 <div class="grid">
+<section class="panel wide" aria-labelledby="analytics-heading">
+<div class="head"><h2 id="analytics-heading">Website traffic</h2><span id="analytics-badge" class="status">Checking</span></div>
+<p id="analytics-summary" class="muted" role="status" aria-live="polite">Loading Google Analytics…</p>
+<div class="stats">
+<div class="metric"><small>Visitors</small><b id="analytics-totalUsers">—</b></div>
+<div class="metric"><small>First-time visitors</small><b id="analytics-newUsers">—</b></div>
+<div class="metric"><small>Sessions</small><b id="analytics-sessions">—</b></div>
+<div class="metric"><small>Page views</small><b id="analytics-screenPageViews">—</b></div>
+</div>
+<p class="note">GA4 · Last 7 complete days · Refreshes at most every 5 minutes. Recent data may still be processing. First-time visitors are measured by Analytics and do not count registered accounts.</p>
+</section>
+
 <section class="panel"><div class="head"><h2>Source site deployment</h2><span id="source-badge" class="status">Checking</span></div>
 <p id="source-summary" class="muted">Checking GitHub Actions…</p>
 <dl><dt>Workflow</dt><dd id="source-workflow">—</dd><dt>Run</dt><dd id="source-run">—</dd><dt>Last update</dt><dd id="source-updated">—</dd><dt>Source commit</dt><dd id="source-sha">—</dd></dl>
@@ -206,10 +218,34 @@ async function getSetCoverage(){
   list.replaceChildren();
  }
 }
+async function getAnalytics(){
+ const badge=$("analytics-badge"),summary=$("analytics-summary");
+ const names=["totalUsers","newUsers","sessions","screenPageViews"];
+ badge.textContent="Loading";badge.className="status working";
+ try{
+  const {data,error}=await client.functions.invoke("cardvector-analytics",{body:{}});
+  if(error){
+   const detail=await error.context?.json?.().catch(()=>null);
+   throw new Error(detail?.error||"Analytics unavailable. Check your administrator session and retry.");
+  }
+  if(!data?.metrics)throw new Error("Analytics returned an incomplete report.");
+  for(const name of names){
+   if(!Number.isFinite(data.metrics[name]))throw new Error("Analytics returned an invalid metric.");
+   $("analytics-"+name).textContent=data.metrics[name].toLocaleString();
+  }
+  badge.textContent=data.empty?"No traffic reported":"Connected";badge.className="status good";
+  summary.textContent=data.period+" · "+data.timeZone+" · Retrieved "+safeDate(data.fetchedAt)+
+   (data.thresholded?". Google applied reporting thresholds.":"");
+ }catch(error){
+  for(const name of names)$("analytics-"+name).textContent="—";
+  badge.textContent="Unavailable";badge.className="status working";
+  summary.textContent=error.message;
+ }
+}
 async function check(){
  if(!ready||active)return;
  active=true;$("refresh").disabled=true;$("refresh").textContent="Refreshing…";
- try{await Promise.allSettled([getDeploy(),getDevelopment(),getImportProgress(),getSetCoverage()]);}
+ try{await Promise.allSettled([getDeploy(),getDevelopment(),getImportProgress(),getSetCoverage(),getAnalytics()]);}
  finally{active=false;$("refresh").disabled=false;$("refresh").textContent="Refresh all status";$("checked").textContent="Checked "+new Date().toLocaleTimeString();}
 }
 async function verifyAdministrator(){
