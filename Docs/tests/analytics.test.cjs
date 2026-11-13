@@ -5,7 +5,7 @@ const vm = require('node:vm');
 const { webcrypto, generateKeyPairSync } = require('node:crypto');
 const source = fs.readFileSync('supabase/functions/cardvector-analytics/index.ts', 'utf8');
 const privateKey = generateKeyPairSync('rsa', { modulusLength: 2048 }).privateKey.export({ type: 'pkcs8', format: 'pem' });
-function setup({ email = 'jhill2487@gmail.com', confirmed = true, reportStatus = 200, empty = false, secret = true } = {}) {
+function setup({ email = 'jhill2487@gmail.com', confirmed = true, reportStatus = 200, reportError = { message: 'PRIVATE UPSTREAM ERROR' }, empty = false, secret = true } = {}) {
   let handler;
   const calls = [];
   const env = { SUPABASE_URL: 'https://example.supabase.co', SUPABASE_ANON_KEY: 'public',
@@ -23,7 +23,7 @@ function setup({ email = 'jhill2487@gmail.com', confirmed = true, reportStatus =
       }
       assert.equal(url, 'https://analyticsdata.googleapis.com/v1beta/properties/546030311:runReport');
       assert.deepEqual(JSON.parse(options.body).dateRanges, [{ startDate: '7daysAgo', endDate: 'yesterday' }]);
-      if (reportStatus !== 200) return Response.json({ error: { message: 'PRIVATE UPSTREAM ERROR' } }, { status: reportStatus });
+      if (reportStatus !== 200) return Response.json({ error: reportError }, { status: reportStatus });
       return Response.json({ metricHeaders: ['totalUsers','newUsers','sessions','screenPageViews'].map(name => ({name})),
         rows: empty ? [] : [{ metricValues: [12,8,20,43].map(value => ({ value: String(value) })) }], metadata: { timeZone: 'America/New_York' } });
     } });
@@ -66,4 +66,16 @@ test('missing secret fails safely', async () => {
 test('concurrent administrator refreshes share one Google report', async () => {
   const s=setup(); await Promise.all([s.request(),s.request(),s.request()]);
   assert.equal(s.calls.filter(c=>c.url.includes(':runReport')).length,1);
+});
+
+test('Google API disablement and property access errors identify the relevant setting', async () => {
+  const disabled = setup({reportStatus:403, reportError:{
+    message:'PRIVATE UPSTREAM ERROR', details:[{'@type':'type.googleapis.com/google.rpc.ErrorInfo',reason:'SERVICE_DISABLED'}],
+  }});
+  const denied = setup({reportStatus:403, reportError:{message:'User does not have sufficient permissions for this property.'}});
+  const disabledBody = await (await disabled.request()).json();
+  const deniedBody = await (await denied.request()).json();
+  assert.match(disabledBody.error,/Enable the Google Analytics Data API in the Google Cloud project/);
+  assert.doesNotMatch(disabledBody.error,/PRIVATE UPSTREAM/);
+  assert.match(deniedBody.error,/GA4 property 546030311.*Viewer role/);
 });
