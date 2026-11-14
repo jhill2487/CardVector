@@ -55,13 +55,37 @@ const r2="https://images.cardvector.app/archive/";
 const referenceDelta="https://carduploader.com/dashboard/card-search?set_name=Delta+Reign";
 const pubKey="sb_publishable_76aiLaAm5Z4Kv67GkuTo-g_Psx5HINH";
 const endpoint="https://iqdpfgpkagjxzedfxrvn.supabase.co";
-let db=null,sets=[],records=[],decisions=new Map(),page=0,hasMore=false,archive=[],archiveError="";
+let db=null,sets=[],records=[],decisions=new Map(),page=0,hasMore=false,archive=[],archiveError="",claims=new Map();
 const normal=v=>String(v||"").toLowerCase().replace(/[^a-z0-9]+/g," ").trim();
 const head=v=>String(v||"").split("/")[0].toLowerCase().trim().replace(/^0+(?=\d)/,"");
+function claimedByDifferentSet(path,setId){
+ const sets=claims.get(String(path||"").replace(/^archive\//,""));
+ return Boolean(sets&&[...sets].some(id=>id!==String(setId)));
+}
+async function loadClaims(){
+ const {data,error}=await db.from("cv_admin_image_reviews")
+  .select("provider_id,candidate_path").eq("review_status","approved")
+  .not("candidate_path","is",null).limit(5000);
+ if(error)throw error;
+ const next=new Map(),rows=data||[];
+ if(rows.length){
+  const ids=rows.map(x=>x.provider_id);
+  const result=await db.from("cv_admin_pokewallet_catalog").select("provider_id,set_id").in("provider_id",ids);
+  if(result.error)throw result.error;
+  const setsById=new Map((result.data||[]).map(x=>[x.provider_id,String(x.set_id)]));
+  for(const review of rows){
+   const id=setsById.get(review.provider_id),path=review.candidate_path;
+   if(!id||!path)continue;
+   if(!next.has(path))next.set(path,new Set());
+   next.get(path).add(id);
+  }
+ }
+ claims=next;
+}
 function candidatesFor(card){
  const n=head(card.card_number),name=normal(card.card_name),set=normal(card.set_name);
  if(!n||!name)return [];
- return archive.filter(r=>head(r.number)===n).map(r=>{
+ return archive.filter(r=>head(r.number)===n&&!claimedByDifferentSet(r.path,card.set_id)).map(r=>{
   const folder=normal(r.setSlug),candidateName=normal(r.name);
   if(candidateName&&candidateName!==name)return null;
   const sameSet=folder===set;
@@ -129,6 +153,7 @@ function detail(card,review){
   button.addEventListener("click",async()=>{
    const path=input.value.trim(),url=candidateUrl(path);
    if(value==="approved"&&(!url||selectedPath!==path||!previewLoaded)){notice("Select a candidate image and wait for its preview before approving.",true);return;}
+   if(value==="approved"&&claimedByDifferentSet(path,card.set_id)){notice("This R2 image is already approved for a different set.",true);return;}
    if(value==="approved"&&!window.confirm("Save this candidate as an approved review only? It will NOT publish to live search."))return;
    for(const child of actions.querySelectorAll("button"))child.disabled=true;
    const session=await db.auth.getUser();
@@ -137,7 +162,7 @@ function detail(card,review){
    const {error}=await db.from("cv_admin_image_reviews").upsert(record,{onConflict:"provider_id"});
    for(const child of actions.querySelectorAll("button"))child.disabled=false;
    if(error){notice("Unable to save review: "+error.message,true);return;}
-   decisions.set(card.provider_id,record);status.textContent=value.replace("_"," ");notice("Saved "+card.card_name+" as "+value.replace("_"," ")+". No live search changes.");render();
+   decisions.set(card.provider_id,record);await loadClaims();status.textContent=value.replace("_"," ");notice("Saved "+card.card_name+" as "+value.replace("_"," ")+". No live search changes.");render();
   });actions.append(button);
  }
  form.append(label,pathWrap,selectedLabel,hint,suggestions,notes,actions);
@@ -191,7 +216,7 @@ async function matchApprovedSet(){
     const [number,denom]=String(c.card_number||"").split("/");
     if(denom!==parts[1]||!/^[0-9]+$/.test(number)||counts.get(head(number))!==1||existing.has(c.provider_id))continue;
     const expected=folder+file[1]+String(Number(number)).padStart(file[2].length,"0")+file[3]+"."+file[4];
-    const images=archive.filter(x=>x.path===expected);
+    const images=archive.filter(x=>x.path===expected&&!claimedByDifferentSet(x.path,c.set_id));
     if(images.length!==1||head(images[0].number)!==head(number))continue;
     if(images[0].name&&normal(images[0].name)!==normal(c.card_name))continue;
     found.push({provider_id:c.provider_id,candidate_path:expected.replace(/^archive\//,"")});
@@ -209,6 +234,7 @@ async function matchApprovedSet(){
    if(result.error)throw result.error;
    saved+=rows.length;
   }
+  await loadClaims();
   $("match-set-note").textContent="Saved "+saved+" approved private set image matches. Catalog publication remains separate.";
   await refresh();
  }catch(error){notice("Set matching failed: "+error.message,true)}
@@ -251,7 +277,7 @@ async function authorized(){
   $("admin-login").hidden=false;return;
  }
  $("access").hidden=true;$("private").style.display="block";
- try{await Promise.all([getSets(),loadArchive()]);await refresh();}catch(e){notice("Unable to load image review: "+e.message,true);}
+ try{await Promise.all([getSets(),loadArchive(),loadClaims()]);await refresh();}catch(e){notice("Unable to load image review: "+e.message,true);}
 }
 async function init(){
  if(!window.supabase?.createClient){$("access-message").textContent="Authentication service unavailable.";return;}
