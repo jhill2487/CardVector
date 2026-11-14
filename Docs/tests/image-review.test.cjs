@@ -128,3 +128,21 @@ test("migration rejects sharing across collector number and set",()=>{
  assert.match(sql,/pg_advisory_xact_lock/);
  assert.match(sql,/drop index if exists public\.cv_admin_image_reviews_unique_approved_path/);
 });
+
+test("first pass matches only unique base artwork and defers pattern printings",()=>{
+ assert.match(page,/function isFinishPrinting\(card\)/);
+ assert.match(page,/Poke Ball Pattern\| Master Ball Pattern\| Energy Symbol Pattern/);
+ assert.match(page,/function baseArtworkCards\(cards\)/);
+ assert.match(page,/const baseCards=baseArtworkCards\(cards\)/);
+ assert.match(page,/for\(const c of baseCards\)/);
+ assert.match(page,/const proposed=baseCards\.filter/);
+ assert.match(page,/First pass: match base artwork/);
+ assert.match(page,/Pattern variants remain unapproved until the second pass/);
+});
+test("Black Bolt mapping uses exact verified set ID and standard image prefix",()=>{
+ const mapping=fs.readFileSync(path.join(__dirname,"../r2-set-mappings.js"),"utf8");
+ assert.match(mapping,/"24325": Object\.freeze/);
+ assert.match(mapping,/pathPrefix:"Pokemon TCG\/Pokemon TCG\/black-bolt\/"/);
+ assert.match(mapping,/code:"zsv10-5"/);
+ assert.match(mapping,/denominator:"086"/);
+});
