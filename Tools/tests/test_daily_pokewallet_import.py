@@ -39,6 +39,35 @@ class DailyTests(unittest.TestCase):
         third=mod.step(state,fetch,write,cap=750,max_requests=40,day="2026-11-13")
         self.assertEqual(third["today"],0)
 
+    def test_manual_topup_only_adds_remaining_250_and_preserves_cursor(self):
+        state=mod.make_state()
+        source=[card(n) for n in range(1,1101)]
+        writes=[]
+        def fetch(path):
+            if path=="/sets":
+                return {"data":[{"set_id":"30","name":"White Flare","language":"eng","release_date":"13th November, 2026"}]}
+            page=int(path.split("page=")[1].split("&")[0])
+            return {"set":{"set_id":"30","total_cards":len(source)},
+                    "cards":source[(page-1)*mod.PAGE_SIZE:page*mod.PAGE_SIZE]}
+        def write(checkpoint,rows):
+            writes.extend(row["provider_id"] for row in rows)
+        first=mod.step(state,fetch,write,cap=750,max_requests=40,day="2026-11-13")
+        self.assertEqual(first["today"],750)
+        self.assertEqual(state["next_offset"],50)
+        topup=mod.step(state,fetch,write,cap=mod.MANUAL_TOPUP_CAP,
+                       daily_ceiling=mod.MANUAL_DAILY_CEILING,day="2026-11-13")
+        self.assertEqual(topup["today"],250)
+        self.assertEqual(state["daily_imported"],1000)
+        self.assertEqual((state["next_page"],state["next_offset"]),(11,0))
+        self.assertEqual(len(set(writes)),1000)
+        repeat=mod.step(state,fetch,write,cap=mod.MANUAL_TOPUP_CAP,
+                        daily_ceiling=mod.MANUAL_DAILY_CEILING,day="2026-11-13")
+        self.assertEqual(repeat["today"],0)
+        self.assertEqual(len(writes),1000)
+        next_day=mod.step(state,fetch,write,cap=750,day="2026-11-14")
+        self.assertEqual(next_day["today"],100)
+        self.assertTrue(state["finished"])
+
     def test_sealed_products_do_not_count_against_750(self):
         state=mod.make_state()
         rows=[{"id":"pack","card_info":{"product_type":"sealed"}}]+[card(n) for n in range(1,10)]
