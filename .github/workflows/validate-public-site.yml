@@ -45,6 +45,18 @@ jobs:
           assert pikachu_files >= 170, "Pikachu filename coverage unexpectedly dropped: " + str(pikachu_files)
           print("Indexed Pikachu filename candidates:", pikachu_files)
           print("R2 catalog verified:", len(rows), "files; CORS:", origin)
+          flare=[r for r in rows if "white-flare" in (r.get("RelativePath") or "").lower()]
+          print("WHITE FLARE INDEX COUNT:",len(flare),"FIRST:",[r.get("RelativePath") for r in flare[:8]],"LAST:",[r.get("RelativePath") for r in flare[-3:]])
+          from urllib.parse import quote
+          from urllib.error import HTTPError,URLError
+          for path in [r["RelativePath"].replace(chr(92),"/") for r in flare[:2]+flare[-2:]]:
+              req=urllib.request.Request("https://images.cardvector.app/archive/"+quote(path,safe="/"),headers={"User-Agent":"CardVector-R2-Identity-Check/1.0"})
+              try:
+                  with urllib.request.urlopen(req,timeout=15) as resp:
+                      print("WHITE FLARE R2:",path,resp.status,resp.headers.get("Content-Type",""),len(resp.read()))
+              except (HTTPError,URLError,TimeoutError) as err:
+                  print("WHITE FLARE R2:",path,"FAILED",str(err)[:120])
+
           image_url = "https://images.cardvector.app/archive/Pokemon%20TCG/Pokemon%20TCG/151/sv3-5_en_001_std.jpg"
           with urllib.request.urlopen(urllib.request.Request(image_url, headers={"User-Agent": "CardVector-Catalog-Validation/1.0"}), timeout=30) as image:
               assert image.status == 200
