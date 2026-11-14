@@ -100,7 +100,7 @@ test("verified ME01 R2 series supplies previews when CSV has no records",()=>{
  assert.match(page,/mapping\.pathPrefix\+mapping\.code\+"_en_"/);
 });
 test("unindexed bulk matching verifies existence before accepting files",()=>{
- assert.match(page,/if\(!candidates\.length&&mapping\?\.pathPrefix\)/);
+ assert.match(page,/if\(mapping\.pathPrefix&&mapping\.code\)/);
  assert.match(page,/img\.onload=\(\)=>finish\(true\)/);
  assert.match(page,/img\.onerror=\(\)=>finish\(false\)/);
  assert.match(page,/Nothing saved yet/);
@@ -134,10 +134,10 @@ test("first pass matches only unique base artwork and defers pattern printings",
  assert.match(page,/Poke Ball Pattern\| Master Ball Pattern\| Energy Symbol Pattern/);
  assert.match(page,/function baseArtworkCards\(cards\)/);
  assert.match(page,/const baseCards=baseArtworkCards\(cards\)/);
- assert.match(page,/for\(const c of baseCards\)/);
- assert.match(page,/const proposed=baseCards\.filter/);
+ assert.match(page,/for\(const card of baseCards\)/);
+ assert.match(page,/const baseCards=baseArtworkCards\(cards\)/);
  assert.match(page,/First pass: match base artwork/);
- assert.match(page,/Pattern variants remain unapproved until the second pass/);
+ assert.match(page,/Finish variants are not included/);
 });
 test("Black Bolt mapping uses exact verified set ID and standard image prefix",()=>{
  const mapping=fs.readFileSync(path.join(__dirname,"../r2-set-mappings.js"),"utf8");
@@ -151,8 +151,20 @@ test("first-pass matching shows mobile progress and bounds failed R2 checks",()=
  assert.match(page,/id="match-progress"/);
  assert.match(page,/role="status" aria-live="polite"/);
  assert.match(page,/button\.textContent="Checking set…"/);
- assert.match(page,/setTimeout\(\(\)=>finish\(false\),7000\)/);
- assert.match(page,/Math\.min\(12,proposed\.length\)/);
- assert.match(page,/No approvals saved yet/);
+ assert.match(page,/setTimeout\(\(\)=>finish\(false\),10000\)/);
+ assert.match(page,/Math\.min\(12,candidates\.length\)/);
+ assert.match(page,/Nothing saved yet/);
  assert.match(page,/button\.textContent=originalLabel/);
+});
+
+test("bulk artwork run offers one confirmation and reports exceptions without touching finish variants",()=>{
+ assert.match(page,/id="match-exceptions"/);
+ assert.match(page,/id="match-exceptions-list"/);
+ assert.match(page,/const report=\(items\)=>/);
+ assert.match(page,/reviewed\.has\(card\.provider_id\)/);
+ assert.match(page,/claimedByDifferentSet\(path,setId,card\.card_number\)/);
+ assert.match(page,/imageExists\(item\.url\)/);
+ assert.match(page,/Approve "\+ok\.length\+" verified base artwork matches/);
+ assert.match(page,/Finish variants remain separate/);
+ assert.match(page,/No new base images to match/);
 });
