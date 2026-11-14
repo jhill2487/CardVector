@@ -54,3 +54,16 @@ test("review approvals synchronize to private catalog with exclusive R2 path own
  assert.match(sql,/after insert or update of review_status, candidate_path/i);
  assert.doesNotMatch(sql,/update public\.cv_wants|update public\.wanted_cards/i);
 });
+
+test("approved artwork renders in original image area without a second preview",()=>{
+ assert.match(page,/const savedImage=review\?\.review_status==="approved"\?review\.candidate_path:card\.image_path/);
+ assert.match(page,/showCardImage\(visual,path,card\.card_name\+" "\+card\.card_number\)/);
+ assert.match(page,/if\(value!=="approved"\)await refresh\(\)/);
+});
+test("mobile admin can enlarge candidate and approved artwork",()=>{
+ assert.match(page,/<dialog id="image-zoom"/);
+ assert.match(page,/openImageZoom\(match\.r\.url/);
+ assert.match(page,/visual\.onclick=\(\)=>openImageZoom/);
+ assert.match(page,/modal\.classList\.toggle\("zoomed"\)/);
+ assert.match(page,/\.zoom-area\{max-height:76dvh;overflow:auto/);
+});
