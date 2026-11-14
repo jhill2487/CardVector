@@ -483,7 +483,7 @@ async function matchApprovedSet(){
   if(learned.ambiguous)throw Error("Conflicting approved image filename series for this set. Resolve the anchors before bulk matching.");
   const indexedAnchor=learned.series;
   if(!mapping)throw Error("Select the correct R2 folder and approve one base image before bulk matching.");
-  if(!mapping.pathPrefix&&!indexedAnchor){
+  if(!mapping.pathPrefix&&!indexedAnchor&&!mapping.code){
    progress("No approved standard-image filename series yet. Approve one correct base image, then retry bulk matching.");
    throw Error("No approved base image establishes an unambiguous filename series for this set.");
   }
