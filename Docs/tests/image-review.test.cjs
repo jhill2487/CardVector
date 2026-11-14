@@ -37,3 +37,20 @@ test("dashboard links to exported admin image review route",()=>{
  assert.match(exporter,/"image-review\/index\.html"/);
  assert.match(exporter,/"image-review"/);
 });
+
+test("approved images are confirmed against the private catalog before showing success",()=>{
+ assert.match(page,/select\("image_status,image_path"\)/);
+ assert.match(page,/verified\?\.image_status!=="matched"/);
+ assert.match(page,/verified\?\.image_path!==path/);
+ assert.match(page,/catalog image did not update/);
+});
+test("review approvals synchronize to private catalog with exclusive R2 path ownership",()=>{
+ const sql=fs.readFileSync(path.join(__dirname,"../../supabase/migrations/20261114011500_sync_approved_catalog_image.sql"),"utf8");
+ assert.match(sql,/create unique index if not exists cv_admin_image_reviews_unique_approved_path/i);
+ assert.match(sql,/security definer/i);
+ assert.match(sql,/set search_path = ''/i);
+ assert.match(sql,/set image_status = 'matched'/i);
+ assert.match(sql,/image_path = new.candidate_path/i);
+ assert.match(sql,/after insert or update of review_status, candidate_path/i);
+ assert.doesNotMatch(sql,/update public\.cv_wants|update public\.wanted_cards/i);
+});
