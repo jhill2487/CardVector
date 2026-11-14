@@ -450,9 +450,9 @@ async function matchApprovedSet(){
   if(!mapping?.pathPrefix){
    for(const decision of reviews){
     if(decision.review_status!=="approved"||!decision.candidate_path)continue;
-    const matched=archive.find(row=>row.path.replace(/^archive\\//,"")===decision.candidate_path
+    const matched=archive.find(row=>row.path.replace(/^archive\//,"")===decision.candidate_path
      &&row.setSlug===mapping?.folder);
-    const match=matched?.filename?.match(/^(.+_en_)([0-9]+)(_std)\\.(jpg|jpeg|png|webp)$/i);
+    const match=matched?.filename?.match(/^(.+_en_)([0-9]+)(_std)\.(jpg|jpeg|png|webp)$/i);
     if(match){
      indexedAnchor={folder:matched.path.slice(0,-matched.filename.length),prefix:match[1],
       pad:match[2].length,suffix:match[3]+"."+match[4]};
@@ -466,7 +466,7 @@ async function matchApprovedSet(){
    if(reviewed.has(card.provider_id))continue; // Never override an earlier decision.
    if(numberCounts.get(card.card_number)!==1){problems.push(label+" — repeated base identity");continue;}
    const [number,denom]=String(card.card_number).split("/");
-   if(!/^\\d+$/.test(number)||!/^\\d+$/.test(denom)){
+   if(!/^\d+$/.test(number)||!/^\d+$/.test(denom)){
     problems.push(label+" — invalid collector number");continue;
    }
    if(mapping.denominator&&denom!==mapping.denominator){
@@ -482,7 +482,7 @@ async function matchApprovedSet(){
      &&head(row.number)===head(card.card_number)
      &&(!row.name||normal(row.name)===normal(card.card_name))
      &&(!mapping.code||window.CardVectorR2SetMappings.validCandidate(setId,row)));
-    if(hits.length===1)path=hits[0].path.replace(/^archive\\//,"");
+    if(hits.length===1)path=hits[0].path.replace(/^archive\//,"");
     else {problems.push(label+" — "+(hits.length?"multiple images; choose manually":"no verified image series"));continue;}
    }
    if(claimedByDifferentSet(path,setId,card.card_number)){
