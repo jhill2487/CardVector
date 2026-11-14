@@ -101,8 +101,8 @@ test("verified ME01 R2 series supplies previews when CSV has no records",()=>{
 });
 test("unindexed bulk matching verifies existence before accepting files",()=>{
  assert.match(page,/if\(!candidates\.length&&mapping\?\.pathPrefix\)/);
- assert.match(page,/img\.onload=\(\)=>resolve\(true\)/);
- assert.match(page,/img\.onerror=\(\)=>resolve\(false\)/);
+ assert.match(page,/img\.onload=\(\)=>finish\(true\)/);
+ assert.match(page,/img\.onerror=\(\)=>finish\(false\)/);
  assert.match(page,/Nothing saved yet/);
  assert.match(page,/await Promise\.all\(Array\.from/);
 });
