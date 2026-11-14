@@ -106,3 +106,25 @@ test("unindexed bulk matching verifies existence before accepting files",()=>{
  assert.match(page,/Nothing saved yet/);
  assert.match(page,/await Promise\.all\(Array\.from/);
 });
+
+test("same-set same-number printings can reuse artwork without merging finish identity",()=>{
+ assert.match(page,/function claimedByDifferentSet\(path,setId,cardNumber\)/);
+ assert.match(page,/ownerSet!==String\(setId\)\|\|\(cardNumber!=null&&ownerNumber!==String\(cardNumber\)\)/);
+ assert.match(page,/select\("provider_id,set_id,card_number"\)/);
+ assert.match(page,/async function shareApprovedArtwork\(\)/);
+ assert.match(page,/const paths=anchors\.get\(card\.card_number\)/);
+ assert.match(page,/if\(!paths\|\|paths\.size!==1\)return \[\]/);
+ assert.match(page,/if\(decisions\.has\(card\.provider_id\)\)return \[\]/);
+ assert.match(page,/individual printing\/finish retained/);
+ assert.match(page,/id="match-shared"/);
+});
+test("migration rejects sharing across collector number and set",()=>{
+ const migrations=fs.readdirSync(path.join(__dirname,"../../supabase/migrations"));
+ const migration=migrations.find(name=>name.includes("allow_same_card_shared_artwork"));
+ assert.ok(migration);
+ const sql=fs.readFileSync(path.join(__dirname,"../../supabase/migrations",migration),"utf8");
+ assert.match(sql,/sibling\.set_id is distinct from target_set/);
+ assert.match(sql,/sibling\.card_number is distinct from target_number/);
+ assert.match(sql,/pg_advisory_xact_lock/);
+ assert.match(sql,/drop index if exists public\.cv_admin_image_reviews_unique_approved_path/);
+});
