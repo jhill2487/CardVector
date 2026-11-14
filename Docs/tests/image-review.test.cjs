@@ -114,7 +114,7 @@ test("same-set same-number printings can reuse artwork without merging finish id
  assert.match(page,/async function shareApprovedArtwork\(\)/);
  assert.match(page,/const paths=anchors\.get\(card\.card_number\)/);
  assert.match(page,/if\(!paths\|\|paths\.size!==1\)return \[\]/);
- assert.match(page,/if\(decisions\.has\(card\.provider_id\)\)return \[\]/);
+ assert.match(page,/if\(decisions\.has\(card\.provider_id\)\|\|requiresDistinctImage\(card\)\)return \[\]/);
  assert.match(page,/individual printing\/finish retained/);
  assert.match(page,/id="match-shared"/);
 });
