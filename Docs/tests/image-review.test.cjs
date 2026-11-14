@@ -80,3 +80,12 @@ test("unmapped sets require a selected indexed R2 folder for first approval",()=
  assert.match(page,/temporaryFolder\?\.setId===String\(setId\)/);
  assert.match(page,/found\.some\(x=>x\.r\.path\.replace/);
 });
+
+test("missing index rows can display an explicitly unverified same-set numbered suggestion",()=>{
+ assert.match(page,/function seriesCandidatesFor\(card,mapping\)/);
+ assert.match(page,/if\(mapping\.temporary\|\|!folderAllowedForSet/);
+ assert.match(page,/owners\.has\(String\(card\.set_id\)\)/);
+ assert.match(page,/return indexed\.length\?indexed:seriesCandidatesFor\(card,mapping\)/);
+ assert.match(page,/Filename inferred from a prior approval/);
+ assert.match(page,/if\(match\.inferred\)thumb\.onerror/);
+});
