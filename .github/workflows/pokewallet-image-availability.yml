@@ -1,0 +1,40 @@
+name: Check missing PokéWallet images (read-only)
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/pokewallet-image-availability.yml'
+  workflow_dispatch:
+    inputs:
+      set_id:
+        description: "PokéWallet set ID (default MEP)"
+        required: false
+        default: "24451"
+      card_names:
+        description: "Exact names separated by semicolons; limit 5"
+        required: false
+        default: "Meganium 001 Staff;Riolu 010 Pokemon Center Exclusive"
+permissions:
+  contents: read
+concurrency:
+  group: pokewallet-image-source-probe
+  cancel-in-progress: false
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      POKEWALLET_API_KEY: ${{ secrets.POKEWALLET_API_KEY }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      CARDVECTOR_DISCOVERY_SET_ID: ${{ inputs.set_id || '24451' }}
+      CARDVECTOR_DISCOVERY_NAMES: ${{ inputs.card_names || 'Meganium 001 Staff;Riolu 010 Pokemon Center Exclusive' }}
+      CARDVECTOR_DISCOVERY_LIMIT: "2"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check probe safety tests
+        run: python -m unittest discover -s Tools/tests -p 'test_probe_pokewallet_images.py'
+      - name: Probe two exact printings without saving images
+        run: python Tools/probe_pokewallet_images.py
