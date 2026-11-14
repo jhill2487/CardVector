@@ -13,6 +13,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 from datetime import datetime, timezone
+from zoneinfo import ZoneInfo
 from import_pokewallet_catalog import order_sets_newest_first, normalize_card
 from pokewallet_set_language import set_language
 
@@ -20,6 +21,8 @@ SUPABASE_URL="https://iqdpfgpkagjxzedfxrvn.supabase.co/rest/v1/"
 PW_URL="https://api.pokewallet.io"
 JOB="pokewallet-kaggle"
 DAILY_CAP=750
+MANUAL_TOPUP_CAP=250
+MANUAL_DAILY_CEILING=1000
 PAGE_SIZE=100
 REQUEST_CAP=40
 INTERVAL_SECONDS=45
@@ -120,7 +123,7 @@ def normalize_sets(data):
     if not entries:raise RuntimeError("No valid set identifiers")
     return order_sets_newest_first(entries)
 
-def step(state,fetch,write,cap=DAILY_CAP,max_requests=REQUEST_CAP,day=None):
+def step(state,fetch,write,cap=DAILY_CAP,max_requests=REQUEST_CAP,day=None,daily_ceiling=DAILY_CAP):
     """Import at most cap physical card records, preserving a mid-page cursor.
 
     fetch(path)->decoded PokéWallet JSON; write(state, cards)->transaction-like
@@ -128,11 +131,11 @@ def step(state,fetch,write,cap=DAILY_CAP,max_requests=REQUEST_CAP,day=None):
     because each provider ID is a primary key in Supabase.
     """
     if state.get("finished"):return {"today":0,"requests":0,"finished":True}
-    day=day or datetime.now(timezone.utc).date().isoformat()
+    day=day or datetime.now(ZoneInfo('America/New_York')).date().isoformat()
     if state.get("daily_date")!=day:
         state["daily_date"]=day
         state["daily_imported"]=0
-    allowance=max(0,min(cap,DAILY_CAP-int(state.get("daily_imported",0))))
+    allowance=max(0,min(cap,daily_ceiling-int(state.get("daily_imported",0))))
     if not allowance:
         return {"today":0,"requests":0,"daily_limit_reached":True,"finished":False}
     requests=0
@@ -230,7 +233,13 @@ def main():
     # The directory refresh occurs within step(), preserving the exact
     # existing set/page/offset checkpoint. Publish provider-supplied language
     # and expected printing counts for read-only coverage comparisons.
-    summary=step(state,fetch,write)
+    mode=os.environ.get('CARDVECTOR_IMPORT_MODE','scheduled')
+    if mode not in ('scheduled','manual_topup'):raise SystemExit('Unsupported import mode')
+    if mode=='manual_topup':
+        summary=step(state,fetch,write,cap=MANUAL_TOPUP_CAP,daily_ceiling=MANUAL_DAILY_CEILING)
+    else:
+        summary=step(state,fetch,write)
+    summary['mode']=mode
     store.upsert("cv_admin_set_languages",[
         {"set_id":row["set_id"],"set_name":row["name"],
          "language":provider_language(row),
