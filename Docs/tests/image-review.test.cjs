@@ -175,7 +175,7 @@ test("large imported sets query review decisions in safe chunks",()=>{
  assert.match(page,/ids\.slice\(i,i\+35\)/);
  assert.match(page,/lookupByProviderIds\("cv_admin_image_reviews"/);
  assert.match(page,/lookupByProviderIds\("cv_admin_pokewallet_catalog"/);
- assert.match(page,/id="build-version">Review build 156/);
+ assert.match(page,/id="build-version">Review build 162/);
  assert.doesNotMatch(page,/\.in\("provider_id",cards\.map/);
 });
 
@@ -206,4 +206,40 @@ test("White Flare verified R2 series activates full-set bulk artwork matcher",()
  assert.match(page,/const mapping=verifiedFolderFor\(setId\)/);
  assert.match(page,/if\(mapping\.pathPrefix&&mapping\.code\)/);
  assert.match(page,/const baseCards=baseArtworkCards\(cards\)/);
+});
+
+test("bulk matching learns numbered art from approved base card in ANY set",()=>{
+ assert.match(page,/function approvedArtworkSeries\(cards,reviews,folder\)/);
+ assert.match(page,/review\.review_status!=="approved"/);
+ assert.match(page,/isFinishPrinting\(card\)/);
+ assert.match(page,/Number\(match\[2\]\)!==Number\(number\)/);
+ assert.match(page,/found\.size===1/);
+ assert.match(page,/const learned=approvedArtworkSeries\(cards,reviews,mapping\?\.folder\|\|""\)/);
+ assert.match(page,/path=indexedAnchor\.folder\+indexedAnchor\.prefix/);
+ assert.match(page,/if\(learned\.ambiguous&&!mapping\?\.pathPrefix\)/);
+ assert.match(page,/if\(!mapping\.pathPrefix&&!indexedAnchor&&!mapping\.code\)/);
+});
+test("approved artwork series is set-safe, resists conflicts and preserves correct folder",()=>{
+ const vm=require("node:vm");
+ const html=page;
+ const block=html.slice(html.indexOf("function approvedArtworkSeries("),html.indexOf("// First-pass artwork approval",html.indexOf("function approvedArtworkSeries(")));
+ const ctx={};
+ vm.runInNewContext("const isFinishPrinting=card=>/(?: Poke Ball Pattern| Master Ball Pattern)$/i.test(card.card_name||'');"+block+"this.get=approvedArtworkSeries;",ctx);
+ const cards=[{provider_id:"p1",card_name:"Ethan's Pinsir",card_number:"001/182"},
+ {provider_id:"p2",card_name:"Yanma",card_number:"002/182"},
+ {provider_id:"p3",card_name:"Yanma Master Ball Pattern",card_number:"002/182"}];
+ const r=[{provider_id:"p1",review_status:"approved",candidate_path:"Pokemon TCG/Pokemon TCG/destined-rivals/sv10_en_001_std.jpg"}];
+ const match=ctx.get(cards,r,"destined-rivals");
+ assert.equal(match.ambiguous,false);
+ assert.equal(match.series.prefix,"sv10_en_");
+ assert.equal(match.series.folder,"Pokemon TCG/Pokemon TCG/destined-rivals/");
+ assert.equal(match.series.pad,3);
+ assert.equal(match.series.folder+match.series.prefix+"002"+match.series.suffix,"Pokemon TCG/Pokemon TCG/destined-rivals/sv10_en_002_std.jpg");
+ assert.equal(ctx.get(cards,r,"other-set").series,null);
+ const wrong=[{...r[0],candidate_path:"Pokemon TCG/Pokemon TCG/destined-rivals/sv10_en_004_std.jpg"}];
+ assert.equal(ctx.get(cards,wrong,"destined-rivals").series,null);
+ const variant=[{provider_id:"p3",review_status:"approved",candidate_path:"Pokemon TCG/Pokemon TCG/destined-rivals/sv10_en_002_std.jpg"}];
+ assert.equal(ctx.get(cards,variant,"destined-rivals").series,null);
+ const mixed=[...r,{provider_id:"p2",review_status:"approved",candidate_path:"Pokemon TCG/Pokemon TCG/destined-rivals/other_en_002_std.jpg"}];
+ assert.equal(ctx.get(cards,mixed,"destined-rivals").ambiguous,true);
 });
