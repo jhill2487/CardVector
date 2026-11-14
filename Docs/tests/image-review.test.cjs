@@ -175,7 +175,7 @@ test("large imported sets query review decisions in safe chunks",()=>{
  assert.match(page,/ids\.slice\(i,i\+35\)/);
  assert.match(page,/lookupByProviderIds\("cv_admin_image_reviews"/);
  assert.match(page,/lookupByProviderIds\("cv_admin_pokewallet_catalog"/);
- assert.match(page,/id="build-version">Review build 163/);
+ assert.match(page,/id="build-version">Review build 164/);
  assert.doesNotMatch(page,/\.in\("provider_id",cards\.map/);
 });
 
@@ -264,4 +264,24 @@ test("resolved set filtering includes missing and review states and handles new 
  assert.equal(check({imported_cards:325,matched_cards:324,unmatched_cards:0,review_cards:1}),true);
  assert.equal(check({imported_cards:326,matched_cards:325,unmatched_cards:0,review_cards:0}),true);
  assert.equal(check({imported_cards:0,matched_cards:0,unmatched_cards:0,review_cards:0}),false);
+});
+
+test("stamped promos cannot inherit standard artwork through either batch operation",()=>{
+ const vm=require("node:vm");
+ const from=page.indexOf("function requiresDistinctImage(");
+ const to=page.indexOf("// Use one approved image",from);
+ assert.ok(from>0&&to>from);
+ const context={};
+ vm.runInNewContext(page.slice(from,to)+"this.requiresDistinctImage=requiresDistinctImage;",context);
+ const distinct=context.requiresDistinctImage;
+ for(const name of ["Ceruledge Prerelease Staff","Meganium 001 Staff","Charcadet 022 Pokemon Center Exclusive","Riolu 010 Pokemon Center Exclusive","Miraidon 082 Pitch Black Stamped","Pikachu 093 Winner","Paradise Resort 092 World Championships 2026 Staff"]){
+  assert.equal(distinct({card_name:name}),true,name);
+ }
+ for(const name of ["Ceruledge Prerelease","Charcadet","Cottonee Cosmos Holo","Pikachu Poke Ball Pattern","Team Rocket's Pikachu"]){
+  assert.equal(distinct({card_name:name}),false,name);
+ }
+ assert.match(page,/if\(decisions\.has\(card\.provider_id\)\|\|requiresDistinctImage\(card\)\)return \[\]/);
+ assert.match(page,/return requiresDistinctImage\(card\)\|\|/);
+ assert.match(page,/function baseArtworkCards\(cards\)/);
+ assert.match(page,/const baseCards=baseArtworkCards\(cards\)/);
 });
