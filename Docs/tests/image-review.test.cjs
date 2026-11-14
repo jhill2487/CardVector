@@ -186,11 +186,24 @@ test("Ascended Heroes verified indexed path uses complete set identity",()=>{
  assert.match(mapping,/code:"me2-5"/);
  assert.match(mapping,/denominator:"217"/);
  assert.match(mapping,/pathPrefix:"ascended-heroes\/ascended-heroes\/"/);
- assert.match(page,/r2-set-mappings\.js\?v=20261113d-ascended/);
+ assert.match(page,/r2-set-mappings\.js\?v=20261113e-white-flare/);
 });
 test("Dusk Ball finishes remain distinct during Ascended Heroes base first pass",()=>{
  assert.match(page,/Quick Ball\| Dusk Ball\| Team Rocket/);
  assert.match(page,/function baseArtworkCards\(cards\)/);
  assert.match(page,/const baseCards=baseArtworkCards\(cards\)/);
  assert.match(page,/async function shareApprovedArtwork\(\)/);
+});
+
+test("White Flare verified R2 series activates full-set bulk artwork matcher",()=>{
+ const mapping=fs.readFileSync(path.join(__dirname,"../r2-set-mappings.js"),"utf8");
+ assert.match(mapping,/"24326": Object\.freeze/);
+ assert.match(mapping,/set:"SV: White Flare"/);
+ assert.match(mapping,/folder:"white-flare"/);
+ assert.match(mapping,/code:"rsv10-5"/);
+ assert.match(mapping,/denominator:"086"/);
+ assert.match(mapping,/pathPrefix:"Pokemon TCG\/Pokemon TCG\/white-flare\/"/);
+ assert.match(page,/const mapping=verifiedFolderFor\(setId\)/);
+ assert.match(page,/if\(mapping\.pathPrefix&&mapping\.code\)/);
+ assert.match(page,/const baseCards=baseArtworkCards\(cards\)/);
 });
