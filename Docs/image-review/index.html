@@ -158,7 +158,7 @@ function configureFolder(setId){
 function mappedSeriesCandidate(card,mapping){
  if(!mapping?.pathPrefix||!mapping.code||!mapping.denominator)return null;
  const [number,total]=String(card.card_number||"").split("/");
- if(!/^\\d+$/.test(number)||total!==mapping.denominator)return null;
+ if(!/^\d+$/.test(number)||total!==mapping.denominator)return null;
  const n=String(Number(number)).padStart(3,"0");
  const path=mapping.pathPrefix+mapping.code+"_en_"+n+"_std.jpg";
  if(claimedByDifferentSet(path,card.set_id))return null;
@@ -404,7 +404,7 @@ async function matchApprovedSet(){
     while(cursor<proposed.length){
      const task=proposed[cursor++];
      const available=await imageExists(task.match.r.url);
-     if(available)ok.push({provider_id:task.card.provider_id,candidate_path:task.match.r.path.replace(/^archive\\//,"")});
+     if(available)ok.push({provider_id:task.card.provider_id,candidate_path:task.match.r.path.replace(/^archive\//,"")});
      checked++;
      if(checked%15===0||checked===proposed.length){
       $("match-set-note").textContent="Verified "+checked+" / "+proposed.length+" R2 image files; "+ok.length+" accessible. Nothing saved yet.";
