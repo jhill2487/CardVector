@@ -175,7 +175,7 @@ test("large imported sets query review decisions in safe chunks",()=>{
  assert.match(page,/ids\.slice\(i,i\+35\)/);
  assert.match(page,/lookupByProviderIds\("cv_admin_image_reviews"/);
  assert.match(page,/lookupByProviderIds\("cv_admin_pokewallet_catalog"/);
- assert.match(page,/id="build-version">Review build 165/);
+ assert.match(page,/id="build-version">Review build 166/);
  assert.doesNotMatch(page,/\.in\("provider_id",cards\.map/);
 });
 
@@ -304,4 +304,15 @@ test("R2 artwork candidate discovery automatically excludes standard images for 
  assert.match(page,/if\(!candidateMatchesPrinting\(card,row\)\)return null/);
  assert.match(page,/if\(requiresDistinctImage\(card\)\)return indexed/);
  assert.match(page,/Source acquisition required; do not substitute the unstamped artwork/);
+});
+
+test("external source queue remains private, unapproved, and printing-specific",()=>{
+ assert.match(page,/cv_admin_external_image_candidates/);
+ assert.match(page,/externalCandidates\.get\(card\.provider_id\)/);
+ assert.match(page,/External source candidates/);
+ assert.match(page,/NOT approved artwork/);
+ assert.match(page,/Search CardUploader for this exact printing/);
+ assert.match(page,/encodeURIComponent\(card\.card_name\+" "\+card\.card_number\)/);
+ assert.match(page,/usage rights:/);
+ assert.doesNotMatch(page,/candidate\.source_image_url\)\s*showCardImage/);
 });
