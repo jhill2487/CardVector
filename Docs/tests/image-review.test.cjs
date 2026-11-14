@@ -175,7 +175,7 @@ test("large imported sets query review decisions in safe chunks",()=>{
  assert.match(page,/ids\.slice\(i,i\+35\)/);
  assert.match(page,/lookupByProviderIds\("cv_admin_image_reviews"/);
  assert.match(page,/lookupByProviderIds\("cv_admin_pokewallet_catalog"/);
- assert.match(page,/id="build-version">Review build 162/);
+ assert.match(page,/id="build-version">Review build 163/);
  assert.doesNotMatch(page,/\.in\("provider_id",cards\.map/);
 });
 
@@ -242,4 +242,26 @@ test("approved artwork series is set-safe, resists conflicts and preserves corre
  assert.equal(ctx.get(cards,variant,"destined-rivals").series,null);
  const mixed=[...r,{provider_id:"p2",review_status:"approved",candidate_path:"Pokemon TCG/Pokemon TCG/destined-rivals/other_en_002_std.jpg"}];
  assert.equal(ctx.get(cards,mixed,"destined-rivals").ambiguous,true);
+});
+
+test("image review selector only shows unresolved imported sets",()=>{
+ assert.match(page,/function hasUnresolvedImages\(s\)/);
+ assert.match(page,/return missing>0\|\|review>0\|\|Math\.max\(0,imported-matched-missing-review\)>0/);
+ assert.match(page,/sets=\(data\|\|\[\]\)\.filter\(hasUnresolvedImages\)/);
+ assert.match(page,/if\(!sets\.length\).*All imported sets have their images matched/);
+ assert.match(page,/async function reloadReviewSets\(\)/);
+ assert.match(page,/await reloadReviewSets\(\)/);
+ assert.match(page,/reloadReviewSets\(\)\.catch/);
+});
+test("resolved set filtering includes missing and review states and handles new pending cards",()=>{
+ const vm=require("node:vm");
+ const code=page.slice(page.indexOf("function hasUnresolvedImages("),page.indexOf("async function getSets()",page.indexOf("function hasUnresolvedImages(")));
+ const ctx={};vm.runInNewContext(code+"this.check=hasUnresolvedImages;",ctx);
+ const check=ctx.check;
+ assert.equal(check({imported_cards:325,matched_cards:325,unmatched_cards:0,review_cards:0}),false);
+ assert.equal(check({imported_cards:325,matched_cards:324,unmatched_cards:0,review_cards:0}),true);
+ assert.equal(check({imported_cards:325,matched_cards:324,unmatched_cards:1,review_cards:0}),true);
+ assert.equal(check({imported_cards:325,matched_cards:324,unmatched_cards:0,review_cards:1}),true);
+ assert.equal(check({imported_cards:326,matched_cards:325,unmatched_cards:0,review_cards:0}),true);
+ assert.equal(check({imported_cards:0,matched_cards:0,unmatched_cards:0,review_cards:0}),false);
 });
