@@ -45,6 +45,21 @@ jobs:
           assert pikachu_files >= 170, "Pikachu filename coverage unexpectedly dropped: " + str(pikachu_files)
           print("Indexed Pikachu filename candidates:", pikachu_files)
           print("R2 catalog verified:", len(rows), "files; CORS:", origin)
+          from urllib.error import HTTPError, URLError
+          mega_rows = [r for r in rows if "mega-evolution/" in r.get("RelativePath","").lower()]
+          print("MEGA DIAGNOSTIC INDEX ROW COUNT:",len(mega_rows))
+          print("MEGA DIAGNOSTIC INDEX FIRST 5:",[r["RelativePath"] for r in mega_rows[:5]])
+          for number in ("001","002","003"):
+              target = f"Pokemon TCG/Pokemon TCG/mega-evolution/me1_en_{number}_std.jpg"
+              candidates = [r["RelativePath"] for r in rows if r.get("RelativePath","").lower().endswith(f"/me1_en_{number}_std.jpg")]
+              print("MEGA DIAGNOSTIC INDEX:", number, candidates[:10])
+              url = "https://images.cardvector.app/archive/" + urllib.parse.quote(target,safe="/")
+              try:
+                  with urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent":"CardVector-Mega-Diagnostic/1.0"}),timeout=30) as img:
+                      print("MEGA DIAGNOSTIC LIVE:", number,img.status,img.headers.get("Content-Type"),len(img.read()))
+              except (HTTPError,URLError) as err:
+                  print("MEGA DIAGNOSTIC LIVE ERROR:",number,repr(err))
+
           image_url = "https://images.cardvector.app/archive/Pokemon%20TCG/Pokemon%20TCG/151/sv3-5_en_001_std.jpg"
           with urllib.request.urlopen(urllib.request.Request(image_url, headers={"User-Agent": "CardVector-Catalog-Validation/1.0"}), timeout=30) as image:
               assert image.status == 200
