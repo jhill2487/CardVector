@@ -101,8 +101,8 @@ test("verified ME01 R2 series supplies previews when CSV has no records",()=>{
 });
 test("unindexed bulk matching verifies existence before accepting files",()=>{
  assert.match(page,/if\(!candidates\.length&&mapping\?\.pathPrefix\)/);
- assert.match(page,/img\.onload=\(\)=>resolve\(true\)/);
- assert.match(page,/img\.onerror=\(\)=>resolve\(false\)/);
+ assert.match(page,/img\.onload=\(\)=>finish\(true\)/);
+ assert.match(page,/img\.onerror=\(\)=>finish\(false\)/);
  assert.match(page,/Nothing saved yet/);
  assert.match(page,/await Promise\.all\(Array\.from/);
 });
@@ -145,4 +145,14 @@ test("Black Bolt mapping uses exact verified set ID and standard image prefix",(
  assert.match(mapping,/pathPrefix:"Pokemon TCG\/Pokemon TCG\/black-bolt\/"/);
  assert.match(mapping,/code:"zsv10-5"/);
  assert.match(mapping,/denominator:"086"/);
+});
+
+test("first-pass matching shows mobile progress and bounds failed R2 checks",()=>{
+ assert.match(page,/id="match-progress"/);
+ assert.match(page,/role="status" aria-live="polite"/);
+ assert.match(page,/button\.textContent="Checking set…"/);
+ assert.match(page,/setTimeout\(\(\)=>finish\(false\),7000\)/);
+ assert.match(page,/Math\.min\(12,proposed\.length\)/);
+ assert.match(page,/No approvals saved yet/);
+ assert.match(page,/button\.textContent=originalLabel/);
 });
