@@ -121,6 +121,16 @@ function currentFolderFor(setId){
  if(temporaryFolder?.setId===String(setId))return {folder:temporaryFolder.folder,code:null,denominator:null,temporary:true};
  return null;
 }
+function folderAllowedForSet(setId,folder){
+ const record=sets.find(x=>String(x.set_id)===String(setId));
+ const name=normal(record?.set_name);
+ const value=normal(folder);
+ // Prevent a regular expansion image from anchoring a separate promo catalog.
+ // Specialized code-only promo folders need an explicit verified registry entry.
+ if(name.includes("promo")&&!value.includes("promo"))return false;
+ if(name.includes("energies")&&!value.includes("energ"))return false;
+ return Boolean(folder);
+}
 function configureFolder(setId){
  const verified=verifiedFolderFor(setId),wrapper=$("folder-setup"),select=$("r2-folder");
  wrapper.hidden=Boolean(verified);
@@ -238,6 +248,7 @@ function detail(card,review){
    if(value==="approved"&&(!url||selectedPath!==path||!previewLoaded)){notice("Select a candidate image and wait for its preview before approving.",true);return;}
    if(value==="approved"&&claimedByDifferentSet(path,card.set_id)){notice("This R2 image is already approved for a different set.",true);return;}
    if(value==="approved"&&!found.some(x=>x.r.path.replace(/^archive\//,"")===path)){notice("Approval requires an indexed candidate from the selected set folder.",true);return;}
+   if(value==="approved"&&!verifiedFolderFor(card.set_id)&&!folderAllowedForSet(card.set_id,temporaryFolder?.folder)){notice("The R2 folder must match this specific set; regular Mega Evolution files cannot approve Mega Evolution Promo cards.",true);return;}
    if(value==="approved"&&!window.confirm("Save this approved image to the private catalog? Public search will not change."))return;
    for(const child of actions.querySelectorAll("button"))child.disabled=true;
    const session=await db.auth.getUser();
@@ -397,7 +408,7 @@ async function init(){
   $("admin-password").value="";await authorized();
  });
  $("set").addEventListener("change",()=>{page=0;configureFolder($("set").value);refresh()});
- $("r2-folder").addEventListener("change",()=>{const folder=$("r2-folder").value;temporaryFolder=folder?{setId:String($("set").value),folder}:null;page=0;refresh();});
+ $("r2-folder").addEventListener("change",()=>{const folder=$("r2-folder").value,setId=String($("set").value);if(folder&&!folderAllowedForSet(setId,folder)){$("r2-folder").value="";temporaryFolder=null;notice("This folder does not match the selected promo/energy set. Use a verified set-specific folder.",true);}else{temporaryFolder=folder?{setId,folder}:null;}page=0;refresh();});
  $("filter").addEventListener("change",()=>{page=0;refresh()});
  $("refresh").addEventListener("click",()=>{page=0;refresh()});
  $("match-set").addEventListener("click",matchApprovedSet);
