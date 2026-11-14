@@ -480,7 +480,7 @@ async function matchApprovedSet(){
   // Prior manual approval establishes set identity and the precise image
   // filename series. This is reusable for every regular or patterned set.
   const learned=approvedArtworkSeries(cards,reviews,mapping?.folder||"");
-  if(learned.ambiguous)throw Error("Conflicting approved image filename series for this set. Resolve the anchors before bulk matching.");
+  if(learned.ambiguous&&!mapping?.pathPrefix)throw Error("Conflicting approved image filename series for this set. Resolve the anchors before bulk matching.");
   const indexedAnchor=learned.series;
   if(!mapping)throw Error("Select the correct R2 folder and approve one base image before bulk matching.");
   if(!mapping.pathPrefix&&!indexedAnchor&&!mapping.code){
