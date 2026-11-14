@@ -21,7 +21,7 @@ test("image review requires approved account and uses RLS-backed tables",()=>{
 });
 test("only saves private reviews and does not publish to search",()=>{
  for(const word of ["approved","rejected","keep_missing","pending_review"])assert.match(page,new RegExp(word));
- assert.match(page,/No live search changes/);
+ assert.match(page,/public search remains unchanged|No public search change|Public search unchanged/i);
  assert.doesNotMatch(page,/service_role|SUPABASE_SERVICE_ROLE_KEY/);
  assert.doesNotMatch(page,/localStorage\.setItem/);
  assert.match(page,/onConflict:"provider_id"/);
