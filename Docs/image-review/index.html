@@ -94,27 +94,30 @@ function detail(card,review){
  }
  const form=element("div");
  const label=element("label",null,"R2 image path (optional until approving)");
+ let selectedPath="",previewLoaded=false;
+ const selectedLabel=element("p","note","No candidate selected. Tap the correct image below.");
  const input=element("input");input.type="text";input.placeholder="set-folder/card-file.jpg";input.value=review?.candidate_path||card.image_path||"";
  input.setAttribute("aria-label","R2 candidate path for "+card.card_name);
+ input.addEventListener("input",()=>{selectedPath="";previewLoaded=false;selectedLabel.textContent="Select an image before approval.";});
  const pathWrap=element("div","candidate");pathWrap.append(input);
  const preview=element("button","secondary","Preview image");preview.type="button";
  preview.addEventListener("click",()=>{
   const url=candidateUrl(input.value.trim());
   if(!url){notice("Enter a valid relative R2 image path before previewing.",true);return;}
-  visual.replaceChildren();const img=document.createElement("img");img.src=url;img.alt="Proposed R2 image (verify visually)";img.onerror=()=>{visual.textContent="Image not found";notice("Candidate image did not load; do not approve.",true);};
+  previewLoaded=false;visual.replaceChildren();const img=document.createElement("img");img.src=url;img.alt="Proposed R2 image (verify visually)";img.onload=()=>{previewLoaded=true;selectedLabel.textContent="Selected image loaded. Verify artwork and set before approving.";};img.onerror=()=>{previewLoaded=false;visual.textContent="Image not found";selectedLabel.textContent="Image failed to load — cannot approve.";notice("Candidate image did not load; do not approve.",true);};
   visual.append(img);notice("Check that the card, set, number, and finish match.");
  });
  pathWrap.append(preview);
  const suggestions=element("div","suggestions");
  const found=candidatesFor(card);
- const hint=element("p","note",archiveError?"R2 index unavailable: "+archiveError:found.length?found.length+" R2 candidate(s). Inspect the image and printing before approval.":"No indexed candidate verified. This does not mean the artwork does not exist.");
+ const hint=element("p","note",archiveError?"R2 index unavailable: "+archiveError:found.length?found.length+" R2 candidate(s). Tap the correct image to select it before approval.":"No indexed candidate verified. This does not mean the artwork does not exist.");
  for(const match of found){
-  const choice=element("button","secondary");choice.type="button";
+  const choice=element("button","secondary");choice.type="button";choice.setAttribute("aria-pressed","false");
   const thumb=document.createElement("img");thumb.loading="lazy";thumb.alt="Candidate card artwork";thumb.src=match.r.url;
   thumb.style.cssText="display:block;width:70px;height:96px;object-fit:contain;margin:auto";
   choice.style.cssText="width:135px;overflow-wrap:anywhere;text-align:center;padding:8px";
   choice.append(thumb,element("small",null,match.evidence),element("small",null,match.r.filename));
-  choice.addEventListener("click",()=>{input.value=match.r.path.replace(/^archive\//,"");preview.click();});
+  choice.addEventListener("click",()=>{for(const other of suggestions.querySelectorAll("button")){other.setAttribute("aria-pressed","false");other.style.border="2px solid transparent";}choice.setAttribute("aria-pressed","true");choice.style.border="3px solid #ffb86c";selectedPath=match.r.path.replace(/^archive\//,"");input.value=selectedPath;selectedLabel.textContent="Selected: "+match.r.filename+" — preview loading.";preview.click();});
   suggestions.append(choice);
  }
  suggestions.style.cssText="display:flex;gap:8px;flex-wrap:wrap;margin:10px 0";
@@ -125,7 +128,7 @@ function detail(card,review){
   const button=element("button",value==="approved"?"":"secondary",title);button.type="button";
   button.addEventListener("click",async()=>{
    const path=input.value.trim(),url=candidateUrl(path);
-   if(value==="approved"&&!url){notice("Approval requires a valid R2 image path.",true);return;}
+   if(value==="approved"&&(!url||selectedPath!==path||!previewLoaded)){notice("Select a candidate image and wait for its preview before approving.",true);return;}
    if(value==="approved"&&!window.confirm("Save this candidate as an approved review only? It will NOT publish to live search."))return;
    for(const child of actions.querySelectorAll("button"))child.disabled=true;
    const session=await db.auth.getUser();
@@ -137,7 +140,7 @@ function detail(card,review){
    decisions.set(card.provider_id,record);status.textContent=value.replace("_"," ");notice("Saved "+card.card_name+" as "+value.replace("_"," ")+". No live search changes.");render();
   });actions.append(button);
  }
- form.append(label,pathWrap,hint,suggestions,notes,actions);
+ form.append(label,pathWrap,selectedLabel,hint,suggestions,notes,actions);
  body.append(form);
  if(card.set_name==="Delta Reign"){
   const p=element("p","note","Delta Reign has a confirmed Kaggle archive gap. ");
