@@ -110,7 +110,7 @@ test("unindexed bulk matching verifies existence before accepting files",()=>{
 test("same-set same-number printings can reuse artwork without merging finish identity",()=>{
  assert.match(page,/function claimedByDifferentSet\(path,setId,cardNumber\)/);
  assert.match(page,/ownerSet!==String\(setId\)\|\|\(cardNumber!=null&&ownerNumber!==String\(cardNumber\)\)/);
- assert.match(page,/select\("provider_id,set_id,card_number"\)/);
+ assert.match(page,/lookupByProviderIds\("cv_admin_pokewallet_catalog","provider_id,set_id,card_number"/);
  assert.match(page,/async function shareApprovedArtwork\(\)/);
  assert.match(page,/const paths=anchors\.get\(card\.card_number\)/);
  assert.match(page,/if\(!paths\|\|paths\.size!==1\)return \[\]/);
