@@ -47,23 +47,16 @@ jobs:
           print("R2 catalog verified:", len(rows), "files; CORS:", origin)
           asc=[r for r in rows if "ascend" in (r.get("RelativePath") or "").lower()]
           print("ASCENDED INDEX ROWS:",len(asc),"SAMPLES:",[r.get("RelativePath") for r in asc[:12]])
-          from urllib.error import HTTPError,URLError
-          from concurrent.futures import ThreadPoolExecutor,as_completed
+          from urllib.error import HTTPError, URLError
           from urllib.parse import quote
-          prefixes=["me2-5","me02-5","me02.5","me2.5","me2pt5","me02pt5","asc","me2","zme2-5"]
-          folders=["ascended-heroes","mega-evolution-ascended-heroes"]
-          base="https://images.cardvector.app/archive/Pokemon TCG/Pokemon TCG/"
-          paths=[f"{folder}/{prefix}_en_001_std.jpg" for folder in folders for prefix in prefixes]
-          def probe(path):
-              req=urllib.request.Request(base+quote(path,safe="/"),headers={"User-Agent":"CardVector-R2-Identity-Check/1.0"})
+          checks=[r["RelativePath"].replace("\\\\","/") for r in asc[:3]+asc[-3:]]
+          for path in checks:
+              req=urllib.request.Request("https://images.cardvector.app/archive/"+quote(path,safe="/"), headers={"User-Agent":"CardVector-R2-Identity-Check/1.0"})
               try:
-                  with urllib.request.urlopen(req,timeout=12) as response:
-                      return path,response.status,response.headers.get("Content-Type","")
-              except HTTPError as err:return path,err.code,""
-              except (URLError,TimeoutError) as err:return path,"connection error",str(err)[:80]
-          with ThreadPoolExecutor(max_workers=9) as pool:
-              for item in pool.map(probe,paths): print("ASCENDED R2:",*item)
-
+                  with urllib.request.urlopen(req,timeout=15) as response:
+                      print("ASCENDED INDEX URL",path,response.status,response.headers.get("Content-Type",""),len(response.read()))
+              except (HTTPError,URLError,TimeoutError) as err:
+                  print("ASCENDED INDEX URL",path,"FAILED",str(err)[:150])
           image_url = "https://images.cardvector.app/archive/Pokemon%20TCG/Pokemon%20TCG/151/sv3-5_en_001_std.jpg"
           with urllib.request.urlopen(urllib.request.Request(image_url, headers={"User-Agent": "CardVector-Catalog-Validation/1.0"}), timeout=30) as image:
               assert image.status == 200
