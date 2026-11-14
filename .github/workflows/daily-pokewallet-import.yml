@@ -1,4 +1,4 @@
-name: Daily PokéWallet catalog import (750 cards)
+name: PokéWallet catalog import (750 scheduled / 250 manual)
 on:
   push:
     branches: [main]
