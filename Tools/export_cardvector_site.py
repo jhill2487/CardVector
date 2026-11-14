@@ -21,6 +21,7 @@ PUBLIC_FILES = (
     "historical-card-images.js",
     "pokewallet.js",
     "kaggle-catalog.js",
+    "r2-set-mappings.js",
     "style.css",
     "partners.css",
     "brand-site.css",
