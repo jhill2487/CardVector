@@ -83,18 +83,28 @@ async function loadClaims(){
  claims=next;
 }
 function candidatesFor(card){
- const n=head(card.card_number),name=normal(card.card_name),set=normal(card.set_name);
- if(!n||!name)return [];
+ const n=head(card.card_number),name=normal(card.card_name);
+ const set=normal(String(card.set_name||"").replace(/^[^:]{2,12}:\s*/,""));
+ if(!n||!name||!set)return [];
+ // Approved image paths establish the authoritative R2 folder for this set.
+ const anchorFolders=new Set();
+ for(const [path,ids] of claims){
+  if(ids.has(String(card.set_id))){
+   const parts=path.split("/");
+   if(parts.length>=2)anchorFolders.add(normal(parts[parts.length-2]));
+  }
+ }
  return archive.filter(r=>head(r.number)===n&&!claimedByDifferentSet(r.path,card.set_id)).map(r=>{
   const folder=normal(r.setSlug),candidateName=normal(r.name);
   if(candidateName&&candidateName!==name)return null;
+  // Never use a matching Pokémon name or card number to bypass set verification.
   const sameSet=folder===set;
-  const shared=set.split(" ").filter(t=>t.length>2&&folder.split(" ").includes(t)).length;
-  const sameName=candidateName===name;
-  if(!sameSet&&!shared&&!sameName)return null;
-  return {r,score:(sameSet?100:0)+shared*15+(sameName?60:0),
-   evidence:sameSet?"Set and number":sameName?"Name and number":"Related set and number"};
- }).filter(Boolean).sort((a,b)=>b.score-a.score).slice(0,8);
+  const anchored=anchorFolders.has(folder);
+  if(anchorFolders.size&&!anchored)return null;
+  if(!sameSet&&!anchored)return null;
+  return {r,score:(anchored?200:0)+(sameSet?100:0),
+    evidence:anchored?"Verified R2 set + number":"Matching set + number"};
+ }).filter(Boolean).sort((a,b)=>b.score-a.score||a.r.path.localeCompare(b.r.path)).slice(0,8);
 }
 const PAGE=30;
 const notice=(text,isError=false)=>{$("notice").textContent=text;$("notice").style.color=isError?"#ffb6bd":"#bdd9c8";};
