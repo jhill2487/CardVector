@@ -45,6 +45,13 @@ jobs:
           assert pikachu_files >= 170, "Pikachu filename coverage unexpectedly dropped: " + str(pikachu_files)
           print("Indexed Pikachu filename candidates:", pikachu_files)
           print("R2 catalog verified:", len(rows), "files; CORS:", origin)
+          bolt=[r for r in rows if "black-bolt/" in r.get("RelativePath","").lower()]
+          print("BOLT DIAGNOSTIC total indexed:",len(bolt))
+          print("BOLT DIAGNOSTIC first:",[r["RelativePath"] for r in bolt[:8]])
+          print("BOLT DIAGNOSTIC standard:",sum("_std." in r.get("FileName","").lower() for r in bolt))
+          print("BOLT DIAGNOSTIC reverse:",sum("_rev." in r.get("FileName","").lower() for r in bolt))
+          print("BOLT DIAGNOSTIC number 002:",[r["RelativePath"] for r in bolt if "_en_002_" in r.get("FileName","").lower()][:10])
+
           image_url = "https://images.cardvector.app/archive/Pokemon%20TCG/Pokemon%20TCG/151/sv3-5_en_001_std.jpg"
           with urllib.request.urlopen(urllib.request.Request(image_url, headers={"User-Agent": "CardVector-Catalog-Validation/1.0"}), timeout=30) as image:
               assert image.status == 200
