@@ -175,7 +175,7 @@ test("large imported sets query review decisions in safe chunks",()=>{
  assert.match(page,/ids\.slice\(i,i\+35\)/);
  assert.match(page,/lookupByProviderIds\("cv_admin_image_reviews"/);
  assert.match(page,/lookupByProviderIds\("cv_admin_pokewallet_catalog"/);
- assert.match(page,/id="build-version">Review build 164/);
+ assert.match(page,/id="build-version">Review build 165/);
  assert.doesNotMatch(page,/\.in\("provider_id",cards\.map/);
 });
 
@@ -284,4 +284,24 @@ test("stamped promos cannot inherit standard artwork through either batch operat
  assert.match(page,/return requiresDistinctImage\(card\)\|\|/);
  assert.match(page,/function baseArtworkCards\(cards\)/);
  assert.match(page,/const baseCards=baseArtworkCards\(cards\)/);
+});
+
+test("R2 artwork candidate discovery automatically excludes standard images for visible stamped variants",()=>{
+ const vm=require("node:vm");
+ const begin=page.indexOf("function requiredStampToken("),end=page.indexOf("function candidatesFor(card)",begin);
+ assert.ok(begin>0&&end>begin);
+ const ctx={};vm.runInNewContext(page.slice(begin,end)+"this.classify=requiredStampToken;this.accept=candidateMatchesPrinting;",ctx);
+ const accept=ctx.accept, mk=(name,path)=>accept({card_name:name},{path,filename:path.split("/").pop()});
+ assert.equal(mk("Meganium 001 Staff","mega-evolution-promos/mebsp_en_001_std.jpg"),false);
+ assert.equal(mk("Meganium 001 Staff","mega-evolution-promos/mebsp_en_001_staff.jpg"),true);
+ assert.equal(mk("Riolu 010 Pokemon Center Exclusive","mega-evolution-promos/mebsp_en_010_std.jpg"),false);
+ assert.equal(mk("Riolu 010 Pokemon Center Exclusive","mega-evolution-promos/riolu_010_pokemon-center.jpg"),true);
+ assert.equal(mk("Pikachu 093 Winner","mega-evolution-promos/mebsp_en_093_std.jpg"),false);
+ assert.equal(mk("Pikachu 093 Winner","mega-evolution-promos/pikachu_093_winner.jpg"),true);
+ assert.equal(mk("Miraidon 082 Pitch Black Stamped","mega-evolution-promos/mebsp_en_082_std.jpg"),false);
+ assert.equal(mk("Miraidon 082 Pitch Black Stamped","mega-evolution-promos/miraidon_082_stamped.jpg"),true);
+ assert.equal(mk("Ceruledge Prerelease","mega-evolution-promos/mebsp_en_014_std.jpg"),true);
+ assert.match(page,/if\(!candidateMatchesPrinting\(card,row\)\)return null/);
+ assert.match(page,/if\(requiresDistinctImage\(card\)\)return indexed/);
+ assert.match(page,/Source acquisition required; do not substitute the unstamped artwork/);
 });
