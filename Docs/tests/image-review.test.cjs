@@ -178,3 +178,19 @@ test("large imported sets query review decisions in safe chunks",()=>{
  assert.match(page,/id="build-version">Review build 156/);
  assert.doesNotMatch(page,/\.in\("provider_id",cards\.map/);
 });
+
+test("Ascended Heroes verified indexed path uses complete set identity",()=>{
+ const mapping=fs.readFileSync(path.join(__dirname,"../r2-set-mappings.js"),"utf8");
+ assert.match(mapping,/"24541": Object\.freeze/);
+ assert.match(mapping,/folder:"ascended-heroes"/);
+ assert.match(mapping,/code:"me2-5"/);
+ assert.match(mapping,/denominator:"217"/);
+ assert.match(mapping,/pathPrefix:"ascended-heroes\/ascended-heroes\/"/);
+ assert.match(page,/r2-set-mappings\.js\?v=20261113d-ascended/);
+});
+test("Dusk Ball finishes remain distinct during Ascended Heroes base first pass",()=>{
+ assert.match(page,/Quick Ball\| Dusk Ball\| Team Rocket/);
+ assert.match(page,/function baseArtworkCards\(cards\)/);
+ assert.match(page,/const baseCards=baseArtworkCards\(cards\)/);
+ assert.match(page,/async function shareApprovedArtwork\(\)/);
+});
