@@ -146,3 +146,13 @@ test("Black Bolt mapping uses exact verified set ID and standard image prefix",(
  assert.match(mapping,/code:"zsv10-5"/);
  assert.match(mapping,/denominator:"086"/);
 });
+
+test("first-pass matching shows mobile progress and bounds failed R2 checks",()=>{
+ assert.match(page,/id="match-progress"/);
+ assert.match(page,/role="status" aria-live="polite"/);
+ assert.match(page,/button\.textContent="Checking set…"/);
+ assert.match(page,/setTimeout\(\(\)=>finish\(false\),7000\)/);
+ assert.match(page,/Math\.min\(12,proposed\.length\)/);
+ assert.match(page,/No approvals saved yet/);
+ assert.match(page,/button\.textContent=originalLabel/);
+});
