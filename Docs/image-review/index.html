@@ -64,7 +64,7 @@ button.secondary{background:#2f4a63;color:#f1f7fc}button:disabled{opacity:.5;cur
 </main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="/kaggle-catalog.js?v=20261113-candidates"></script>
-<script src="/r2-set-mappings.js?v=20261113c"></script>
+<script src="/r2-set-mappings.js?v=20261113d-ascended"></script>
 <script>
 (()=>{"use strict";
 const $=id=>document.getElementById(id);
@@ -408,7 +408,7 @@ async function shareApprovedArtwork(){
 // the first-pass base-artwork match. A card name containing "Ball" or "Team
 // Rocket" earlier in the title is not automatically a finish variant.
 function isFinishPrinting(card){
- return /(?: Poke Ball Pattern| Master Ball Pattern| Energy Symbol Pattern| Poke Ball| Friend Ball| Love Ball| Quick Ball| Team Rocket)$/i.test(String(card.card_name||""));
+ return /(?: Poke Ball Pattern| Master Ball Pattern| Energy Symbol Pattern| Poke Ball| Friend Ball| Love Ball| Quick Ball| Dusk Ball| Team Rocket)$/i.test(String(card.card_name||""));
 }
 function baseArtworkCards(cards){
  const base=cards.filter(card=>!isFinishPrinting(card));
