@@ -152,16 +152,43 @@ function configureFolder(setId){
   "Choose the R2 folder for "+(current?.set_name||"this set")+". Check artwork, number and printing on the first card before approval; this folder is temporary until the first approval.":
   "R2 index has no indexed folders available; cannot establish a first image match.";
 }
+// When the index omits a numbered file, derive one review-only candidate from
+// an already approved standard-finish card in this exact set and R2 folder.
+// It is NOT considered verified until the image loads and the admin selects it.
+function seriesCandidatesFor(card,mapping){
+ if(mapping.temporary||!folderAllowedForSet(card.set_id,mapping.folder))return [];
+ const [number,total]=String(card.card_number||"").split("/");
+ if(!/^\d+$/.test(number)||!/^\d+$/.test(total))return [];
+ if(mapping.denominator&&total!==mapping.denominator)return [];
+ const target=Number(number),out=new Map();
+ for(const [approvedPath,owners] of claims){
+  if(!owners.has(String(card.set_id)))continue;
+  const segments=approvedPath.split("/");
+  if(segments.length<2||segments[segments.length-2]!==mapping.folder)continue;
+  const approvedFile=segments[segments.length-1];
+  const parsed=approvedFile.match(/^([a-z0-9-]+_en_)(\d+)(_std)\.(jpg|jpeg|png|webp)$/i);
+  if(!parsed)continue;
+  if(mapping.code&&!parsed[1].toLowerCase().startsWith(mapping.code.toLowerCase()+"_en_"))continue;
+  const candidate=segments.slice(0,-1).concat(parsed[1]+String(target).padStart(parsed[2].length,"0")+parsed[3]+"."+parsed[4]).join("/");
+  if(candidate===approvedPath||claimedByDifferentSet(candidate,card.set_id))continue;
+  const url=candidateUrl(candidate);
+  if(!url)continue;
+  out.set(candidate,{r:{path:"archive/"+candidate,url,setSlug:mapping.folder,filename:candidate.split("/").pop(),number},score:50,inferred:true,evidence:"Predicted from approved set image · verify artwork"});
+ }
+ // Multiple candidate filename series are ambiguous: require manual review.
+ return out.size===1?[...out.values()]:[];
+}
 function candidatesFor(card){
  const n=head(card.card_number),name=normal(card.card_name),mapping=currentFolderFor(card.set_id);
  if(!n||!name||!mapping)return [];
  if(mapping.denominator&&String(card.card_number||"").split("/")[1]!==mapping.denominator)return [];
- return archive.filter(row=>head(row.number)===n&&!claimedByDifferentSet(row.path,card.set_id)).map(row=>{
+ const indexed=archive.filter(row=>head(row.number)===n&&!claimedByDifferentSet(row.path,card.set_id)).map(row=>{
   if(row.setSlug!==mapping.folder)return null;
   if(mapping.code&&!window.CardVectorR2SetMappings.validCandidate(card.set_id,row))return null;
   if(row.name&&normal(row.name)!==name)return null;
   return {r:row,score:200,evidence:"Verified set folder + card number"};
  }).filter(Boolean).sort((a,b)=>b.score-a.score||a.r.path.localeCompare(b.r.path)).slice(0,8);
+ return indexed.length?indexed:seriesCandidatesFor(card,mapping);
 }
 const PAGE=30;
 const notice=(text,isError=false)=>{$("notice").textContent=text;$("notice").style.color=isError?"#ffb6bd":"#bdd9c8";};
@@ -227,10 +254,11 @@ function detail(card,review){
  pathWrap.append(preview);
  const suggestions=element("div","suggestions");
  const found=candidatesFor(card);
- const hint=element("p","note",archiveError?"R2 index unavailable: "+archiveError:found.length?found.length+" R2 candidate(s). Tap the correct image to select it before approval.":"No indexed candidate verified. This does not mean the artwork does not exist.");
+ const hint=element("p","note",archiveError?"R2 index unavailable: "+archiveError:found.length?found.length+" R2 candidate(s). "+(found.some(x=>x.inferred)?"Filename inferred from a prior approval; inspect the enlarged image carefully.":"Tap the correct image to select it before approval."):"No indexed candidate verified. This does not mean the artwork does not exist.");
  for(const match of found){
   const choice=element("button","secondary");choice.type="button";choice.setAttribute("aria-pressed","false");
   const thumb=document.createElement("img");thumb.loading="lazy";thumb.alt="Candidate card artwork";thumb.src=match.r.url;
+  if(match.inferred)thumb.onerror=()=>{choice.disabled=true;choice.title="Predicted image does not exist or cannot be loaded.";choice.style.opacity=".5";};
   thumb.style.cssText="display:block;width:70px;height:96px;object-fit:contain;margin:auto";
   choice.style.cssText="width:135px;overflow-wrap:anywhere;text-align:center;padding:8px";
   choice.append(thumb,element("small",null,match.evidence),element("small",null,match.r.filename));
@@ -247,7 +275,7 @@ function detail(card,review){
    const path=input.value.trim(),url=candidateUrl(path);
    if(value==="approved"&&(!url||selectedPath!==path||!previewLoaded)){notice("Select a candidate image and wait for its preview before approving.",true);return;}
    if(value==="approved"&&claimedByDifferentSet(path,card.set_id)){notice("This R2 image is already approved for a different set.",true);return;}
-   if(value==="approved"&&!found.some(x=>x.r.path.replace(/^archive\//,"")===path)){notice("Approval requires an indexed candidate from the selected set folder.",true);return;}
+   if(value==="approved"&&!found.some(x=>x.r.path.replace(/^archive\//,"")===path)){notice("Approval requires a candidate from the verified set folder.",true);return;}
    if(value==="approved"&&!verifiedFolderFor(card.set_id)&&!folderAllowedForSet(card.set_id,temporaryFolder?.folder)){notice("The R2 folder must match this specific set; regular Mega Evolution files cannot approve Mega Evolution Promo cards.",true);return;}
    if(value==="approved"&&!window.confirm("Save this approved image to the private catalog? Public search will not change."))return;
    for(const child of actions.querySelectorAll("button"))child.disabled=true;
