@@ -110,7 +110,7 @@ test("unindexed bulk matching verifies existence before accepting files",()=>{
 test("same-set same-number printings can reuse artwork without merging finish identity",()=>{
  assert.match(page,/function claimedByDifferentSet\(path,setId,cardNumber\)/);
  assert.match(page,/ownerSet!==String\(setId\)\|\|\(cardNumber!=null&&ownerNumber!==String\(cardNumber\)\)/);
- assert.match(page,/select\("provider_id,set_id,card_number"\)/);
+ assert.match(page,/lookupByProviderIds\("cv_admin_pokewallet_catalog","provider_id,set_id,card_number"/);
  assert.match(page,/async function shareApprovedArtwork\(\)/);
  assert.match(page,/const paths=anchors\.get\(card\.card_number\)/);
  assert.match(page,/if\(!paths\|\|paths\.size!==1\)return \[\]/);
@@ -167,4 +167,14 @@ test("bulk artwork run offers one confirmation and reports exceptions without to
  assert.match(page,/Approve "\+ok\.length\+" verified base artwork matches/);
  assert.match(page,/Finish variants remain separate/);
  assert.match(page,/No new base images to match/);
+});
+
+test("large imported sets query review decisions in safe chunks",()=>{
+ assert.match(page,/async function lookupByProviderIds\(table,columns,ids\)/);
+ assert.match(page,/i\+=35/);
+ assert.match(page,/ids\.slice\(i,i\+35\)/);
+ assert.match(page,/lookupByProviderIds\("cv_admin_image_reviews"/);
+ assert.match(page,/lookupByProviderIds\("cv_admin_pokewallet_catalog"/);
+ assert.match(page,/id="build-version">Review build 156/);
+ assert.doesNotMatch(page,/\.in\("provider_id",cards\.map/);
 });
