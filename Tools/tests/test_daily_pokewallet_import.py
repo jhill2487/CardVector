@@ -45,7 +45,7 @@ class DailyTests(unittest.TestCase):
         writes=[]
         def fetch(path):
             if path=="/sets":
-                return {"data":[{"set_id":"30","name":"White Flare","release_date":"13th November, 2026"}]}
+                return {"data":[{"set_id":"30","name":"White Flare","language":"eng","release_date":"13th November, 2026"}]}
             page=int(path.split("page=")[1].split("&")[0])
             return {"set":{"set_id":"30","total_cards":len(source)},
                     "cards":source[(page-1)*mod.PAGE_SIZE:page*mod.PAGE_SIZE]}
