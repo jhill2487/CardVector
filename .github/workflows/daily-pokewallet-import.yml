@@ -4,6 +4,7 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/daily-pokewallet-import.yml'
+  workflow_dispatch:
   schedule:
     - cron: '17 14 * * *'
 permissions:
@@ -18,6 +19,7 @@ jobs:
     env:
       POKEWALLET_API_KEY: ${{ secrets.POKEWALLET_API_KEY }}
       SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      CARDVECTOR_IMPORT_MODE: ${{ github.event_name == 'schedule' && 'scheduled' || 'manual_topup' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -32,6 +34,6 @@ jobs:
           else
             echo "ready=true" >> "$GITHUB_OUTPUT"
           fi
-      - name: Import at most 750 card records (newest sets first)
+      - name: Import scheduled 750 or manual top-up 250 records (checkpoint-safe)
         if: steps.credentials.outputs.ready == 'true'
         run: python Tools/run_daily_pokewallet_import.py
