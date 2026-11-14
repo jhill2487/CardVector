@@ -67,3 +67,16 @@ test("mobile admin can enlarge candidate and approved artwork",()=>{
  assert.match(page,/modal\.classList\.toggle\("zoomed"\)/);
  assert.match(page,/\.zoom-area\{max-height:76dvh;overflow:auto/);
 });
+
+test("pending catalog entries can be reviewed and set menu distinguishes pending from missing",()=>{
+ assert.match(page,/<option value="pending">Pending images<\/option>/);
+ assert.match(page,/\["pending","missing","needs_review","matched"\]\.includes\(filter\)/);
+ assert.match(page,/s\.imported_cards-s\.matched_cards-s\.unmatched_cards-s\.review_cards/);
+});
+test("unmapped sets require a selected indexed R2 folder for first approval",()=>{
+ assert.match(page,/id="r2-folder"/);
+ assert.match(page,/configureFolder\(setId\)/);
+ assert.match(page,/mapping=currentFolderFor\(card\.set_id\)/);
+ assert.match(page,/temporaryFolder\?\.setId===String\(setId\)/);
+ assert.match(page,/found\.some\(x=>x\.r\.path\.replace/);
+});
