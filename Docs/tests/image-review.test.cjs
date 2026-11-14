@@ -89,3 +89,20 @@ test("missing index rows can display an explicitly unverified same-set numbered 
  assert.match(page,/Filename inferred from a prior approval/);
  assert.match(page,/if\(match\.inferred\)thumb\.onerror/);
 });
+
+test("verified ME01 R2 series supplies previews when CSV has no records",()=>{
+ const mapping=fs.readFileSync(path.join(__dirname,"../r2-set-mappings.js"),"utf8");
+ assert.match(mapping,/"24380": Object\.freeze/);
+ assert.match(mapping,/pathPrefix:"Pokemon TCG\/Pokemon TCG\/mega-evolution\/"/);
+ assert.match(mapping,/code:"me1"/);
+ assert.match(page,/function mappedSeriesCandidate\(card,mapping\)/);
+ assert.match(page,/if\(mapped\)return \[mapped\]/);
+ assert.match(page,/mapping\.pathPrefix\+mapping\.code\+"_en_"/);
+});
+test("unindexed bulk matching verifies existence before accepting files",()=>{
+ assert.match(page,/if\(!candidates\.length&&mapping\?\.pathPrefix\)/);
+ assert.match(page,/img\.onload=\(\)=>resolve\(true\)/);
+ assert.match(page,/img\.onerror=\(\)=>resolve\(false\)/);
+ assert.match(page,/Nothing saved yet/);
+ assert.match(page,/await Promise\.all\(Array\.from/);
+});
