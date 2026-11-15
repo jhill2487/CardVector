@@ -56,7 +56,7 @@ test("review approvals synchronize to private catalog with exclusive R2 path own
 });
 
 test("approved artwork renders in original image area without a second preview",()=>{
- assert.match(page,/const savedImage=review\?\.review_status==="approved"\?review\.candidate_path:card\.image_path/);
+ assert.match(page,/const savedImage=review\?\.candidate_path\|\|card\.image_path/);
  assert.match(page,/showCardImage\(visual,path,card\.card_name\+" "\+card\.card_number\)/);
  assert.match(page,/if\(value!=="approved"\)await refresh\(\)/);
 });
@@ -100,7 +100,7 @@ test("verified ME01 R2 series supplies previews when CSV has no records",()=>{
  assert.match(page,/mapping\.pathPrefix\+mapping\.code\+"_en_"/);
 });
 test("unindexed bulk matching verifies existence before accepting files",()=>{
- assert.match(page,/if\(mapping\.pathPrefix&&!mapping\.provisional&&mapping\.code\)/);
+ assert.match(page,/if\(mapping\?\.pathPrefix&&!mapping\.provisional&&mapping\.code\)/);
  assert.match(page,/img\.onload=\(\)=>finish\(true\)/);
  assert.match(page,/img\.onerror=\(\)=>finish\(false\)/);
  assert.match(page,/Nothing saved yet/);
@@ -176,7 +176,7 @@ test("large imported sets query review decisions in safe chunks",()=>{
  assert.match(page,/ids\.slice\(i,i\+35\)/);
  assert.match(page,/lookupByProviderIds\("cv_admin_image_reviews"/);
  assert.match(page,/lookupByProviderIds\("cv_admin_pokewallet_catalog"/);
- assert.match(page,/id="build-version">Review build 172/);
+ assert.match(page,/id="build-version">Review build 174/);
  assert.doesNotMatch(page,/\.in\("provider_id",cards\.map/);
 });
 
@@ -205,7 +205,7 @@ test("White Flare verified R2 series activates full-set bulk artwork matcher",()
  assert.match(mapping,/denominator:"086"/);
  assert.match(mapping,/pathPrefix:"Pokemon TCG\/Pokemon TCG\/white-flare\/"/);
  assert.match(page,/const mapping=verifiedFolderFor\(setId\)/);
- assert.match(page,/if\(mapping\.pathPrefix&&!mapping\.provisional&&mapping\.code\)/);
+ assert.match(page,/if\(mapping\?\.pathPrefix&&!mapping\.provisional&&mapping\.code\)/);
  assert.match(page,/const baseCards=baseArtworkCards\(cards\)/);
 });
 
@@ -217,8 +217,8 @@ test("bulk matching learns numbered art from approved base card in ANY set",()=>
  assert.match(page,/found\.size===1/);
  assert.match(page,/const learned=approvedArtworkSeries\(cards,reviews,mapping\?\.folder\|\|""\)/);
  assert.match(page,/path=indexedAnchor\.folder\+indexedAnchor\.prefix/);
- assert.match(page,/if\(learned\.ambiguous&&\(!mapping\?\.pathPrefix\|\|mapping\.provisional\)/);
- assert.match(page,/if\(\(mapping\.provisional&&!indexedAnchor\)\|\|\(!mapping\.pathPrefix&&!indexedAnchor&&!mapping\.code\)\)/);
+ assert.match(page,/if\(learned\.ambiguous&&\(!mapping\?\.pathPrefix\|\|mapping\?\.provisional\)/);
+ assert.match(page,/if\(!uploadedCandidates\.size&&\(\(mapping\?\.provisional&&!indexedAnchor\)\|\|\(!mapping\?\.pathPrefix&&!indexedAnchor&&!mapping\?\.code\)\)\)/);
 });
 test("approved artwork series is set-safe, resists conflicts and preserves correct folder",()=>{
  const vm=require("node:vm");
@@ -399,8 +399,8 @@ test("Journey Together unindexed R2 objects are probed, not silently treated as 
  assert.match(mapping,/code:"sv9"/);
  assert.match(page,/function provisionalR2Candidates\(card,mapping\)/);
  assert.match(page,/mapping\.provisional\?provisionalR2Candidates\(card,mapping\)/);
- assert.match(page,/mapping\.provisional&&!indexedAnchor/);
- assert.match(page,/if\(mapping\.pathPrefix&&!mapping\.provisional&&mapping\.code\)/);
+ assert.match(page,/mapping\?\.provisional&&!indexedAnchor/);
+ assert.match(page,/if\(mapping\?\.pathPrefix&&!mapping\.provisional&&mapping\.code\)/);
  assert.match(page,/Unverified R2 filename probes/);
  assert.match(page,/if\(match\.inferred\)thumb\.onerror=/);
 });
