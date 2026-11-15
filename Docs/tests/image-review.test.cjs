@@ -176,7 +176,7 @@ test("large imported sets query review decisions in safe chunks",()=>{
  assert.match(page,/ids\.slice\(i,i\+35\)/);
  assert.match(page,/lookupByProviderIds\("cv_admin_image_reviews"/);
  assert.match(page,/lookupByProviderIds\("cv_admin_pokewallet_catalog"/);
- assert.match(page,/id="build-version">Review build 171/);
+ assert.match(page,/id="build-version">Review build 172/);
  assert.doesNotMatch(page,/\.in\("provider_id",cards\.map/);
 });
 
@@ -187,7 +187,7 @@ test("Ascended Heroes verified indexed path uses complete set identity",()=>{
  assert.match(mapping,/code:"me2-5"/);
  assert.match(mapping,/denominator:"217"/);
  assert.match(mapping,/pathPrefix:"ascended-heroes\/ascended-heroes\/"/);
- assert.match(page,/r2-set-mappings\.js\?v=20261115-prismatic-foil-guard/);
+ assert.match(page,/r2-set-mappings\.js\?v=20261115-journey-probe/);
 });
 test("Dusk Ball finishes remain distinct during Ascended Heroes base first pass",()=>{
  assert.match(page,/Quick Ball\| Dusk Ball\| Team Rocket/);
@@ -388,4 +388,19 @@ test("shared-artwork names normalize exact collector suffix and apostrophes with
      ctx.key(base("Glaceon ex 026 131 Holiday Calendar","026/131")));
  assert.notEqual(ctx.key(base("Amarys","093/131")),
      ctx.key(base("Amarys 094 131","093/131")));
+});
+
+test("Journey Together unindexed R2 objects are probed, not silently treated as verified",()=>{
+ const mapping=fs.readFileSync(path.join(__dirname,"../r2-set-mappings.js"),"utf8");
+ assert.match(mapping,/"24073": Object.freeze/);
+ assert.match(mapping,/folder:"journey-together"/);
+ assert.match(mapping,/denominator:"159"/);
+ assert.match(mapping,/provisional:true/);
+ assert.match(mapping,/code:"sv9"/);
+ assert.match(page,/function provisionalR2Candidates\(card,mapping\)/);
+ assert.match(page,/mapping\.provisional\?provisionalR2Candidates\(card,mapping\)/);
+ assert.match(page,/mapping\.provisional&&!indexedAnchor/);
+ assert.match(page,/if\(mapping\.pathPrefix&&!mapping\.provisional&&mapping\.code\)/);
+ assert.match(page,/Unverified R2 filename probes/);
+ assert.match(page,/if\(match\.inferred\)thumb\.onerror=/);
 });
