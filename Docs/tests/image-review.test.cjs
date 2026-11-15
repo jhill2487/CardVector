@@ -85,7 +85,7 @@ test("missing index rows can display an explicitly unverified same-set numbered 
  assert.match(page,/function seriesCandidatesFor\(card,mapping\)/);
  assert.match(page,/if\(mapping\.temporary\|\|!folderAllowedForSet/);
  assert.match(page,/identity\.startsWith\(String\(card\.set_id\)/);
- assert.match(page,/return indexed\.length\?indexed:seriesCandidatesFor\(card,mapping\)/);
+ assert.match(page,/return indexed\.length\?indexed:\(mapping\.provisional\?provisionalR2Candidates\(card,mapping\):seriesCandidatesFor\(card,mapping\)\)/);
  assert.match(page,/Filename inferred from a prior approval/);
  assert.match(page,/if\(match\.inferred\)thumb\.onerror/);
 });
@@ -100,7 +100,7 @@ test("verified ME01 R2 series supplies previews when CSV has no records",()=>{
  assert.match(page,/mapping\.pathPrefix\+mapping\.code\+"_en_"/);
 });
 test("unindexed bulk matching verifies existence before accepting files",()=>{
- assert.match(page,/if\(mapping\.pathPrefix&&mapping\.code\)/);
+ assert.match(page,/if\(mapping\.pathPrefix&&!mapping\.provisional&&mapping\.code\)/);
  assert.match(page,/img\.onload=\(\)=>finish\(true\)/);
  assert.match(page,/img\.onerror=\(\)=>finish\(false\)/);
  assert.match(page,/Nothing saved yet/);
@@ -205,7 +205,7 @@ test("White Flare verified R2 series activates full-set bulk artwork matcher",()
  assert.match(mapping,/denominator:"086"/);
  assert.match(mapping,/pathPrefix:"Pokemon TCG\/Pokemon TCG\/white-flare\/"/);
  assert.match(page,/const mapping=verifiedFolderFor\(setId\)/);
- assert.match(page,/if\(mapping\.pathPrefix&&mapping\.code\)/);
+ assert.match(page,/if\(mapping\.pathPrefix&&!mapping\.provisional&&mapping\.code\)/);
  assert.match(page,/const baseCards=baseArtworkCards\(cards\)/);
 });
 
@@ -217,7 +217,7 @@ test("bulk matching learns numbered art from approved base card in ANY set",()=>
  assert.match(page,/found\.size===1/);
  assert.match(page,/const learned=approvedArtworkSeries\(cards,reviews,mapping\?\.folder\|\|""\)/);
  assert.match(page,/path=indexedAnchor\.folder\+indexedAnchor\.prefix/);
- assert.match(page,/if\(learned\.ambiguous&&!mapping\?\.pathPrefix\)/);
+ assert.match(page,/if\(learned\.ambiguous&&\(!mapping\?\.pathPrefix\|\|mapping\.provisional\)/);
  assert.match(page,/if\(!mapping\.pathPrefix&&!indexedAnchor&&!mapping\.code\)/);
 });
 test("approved artwork series is set-safe, resists conflicts and preserves correct folder",()=>{
