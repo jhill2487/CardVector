@@ -49,8 +49,7 @@ def probe_image(provider_id, key, opener=urllib.request.urlopen):
         with opener(req,timeout=25) as response:
             content_type=response.headers.get("Content-Type","").lower().split(";")[0].strip()
             signature=response.read(16)
-            valid=(content_type=="image/jpeg" and signature.startswith(b"\xff\xd8\xff")) or (
-                content_type=="image/webp" and signature[:4]==b"RIFF" and signature[8:12]==b"WEBP")
+            valid=(signature.startswith(b"\xff\xd8\xff") or signature.startswith(b"\x89PNG\r\n\x1a\n") or (signature[:4]==b"RIFF" and signature[8:12]==b"WEBP"))
             return "available_unverified" if response.status==200 and valid else "invalid_image_response"
     except urllib.error.HTTPError as error:
         if error.code in (404,410):return "not_available"
