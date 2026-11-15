@@ -404,3 +404,24 @@ test("Journey Together unindexed R2 objects are probed, not silently treated as 
  assert.match(page,/Unverified R2 filename probes/);
  assert.match(page,/if\(match\.inferred\)thumb\.onerror=/);
 });
+
+test("uploaded PokéWallet first pass checks exact number, denominator, and provider identity",()=>{
+ const start=page.indexOf("function uploadedImageIdentity(");
+ const end=page.indexOf("// First-pass artwork approval is per unique",start);
+ assert.ok(start>=0&&end>start);
+ const ctx={isFinishPrinting:c=>Boolean(c.special)};
+ vm.runInNewContext(page.slice(start,end)+"this.identify=uploadedImageIdentity;this.candidates=uploadedCandidatesForFirstPass;",ctx);
+ const c={provider_id:"pk_efecbc1addf69f85ee98a034c70ca0a90d565a78b88b03051725bea28d798469f631111c97396b1086812f228aba",card_number:"003/103"};
+ const path="pokewallet/delta-reign/003-103_efecbc1addf69f85.png";
+ assert.equal(ctx.identify(c,path).path,path);
+ assert.equal(ctx.identify(c,"pokewallet/delta-reign/004-103_efecbc1addf69f85.png"),null);
+ assert.equal(ctx.identify(c,"pokewallet/delta-reign/003-105_efecbc1addf69f85.png"),null);
+ assert.equal(ctx.identify(c,"pokewallet/delta-reign/003-103_deadbeefdeadbeef.png"),null);
+ const waiting={...c,provider_id:"pk_abcdef1234567890eeee",card_number:"004/103"};
+ const pending="pokewallet/delta-reign/004-103_abcdef1234567890.png";
+ const reviews=[{provider_id:c.provider_id,review_status:"approved",candidate_path:path},
+  {provider_id:waiting.provider_id,review_status:"pending_review",candidate_path:pending}];
+ assert.equal(ctx.candidates([c,waiting],reviews).get(waiting.provider_id),pending);
+ assert.equal(ctx.candidates([c,waiting],[reviews[1]]).size,0);
+ assert.equal(ctx.candidates([c,{...waiting,special:true}],reviews).size,0);
+});
