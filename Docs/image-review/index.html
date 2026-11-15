@@ -218,8 +218,8 @@ function requiredStampToken(card){
 }
 function requiredPatternToken(card){
  const name=String(card.card_name||"");
- if(/ Master Ball Pattern$/i.test(name))return /(?:master[-_ ]?ball|[_-]mb[_-.])/i;
- if(/ Poke Ball Pattern$/i.test(name))return /(?:poke[-_ ]?ball|[_-]pb[_-.])/i;
+ if(/ Master Ball Pattern$/i.test(name))return /(?:master[-_ ]?ball|[_-]mb[-_.])/i;
+ if(/ Poke Ball Pattern$/i.test(name))return /(?:poke[-_ ]?ball|[_-]pb[-_.])/i;
  return null;
 }
 function candidateMatchesPrinting(card,row){
