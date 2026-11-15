@@ -114,7 +114,7 @@ test("same-set same-number printings can reuse artwork without merging finish id
  assert.match(page,/async function shareApprovedArtwork\(\)/);
  assert.match(page,/const paths=anchors\.get\(card\.card_number\)/);
  assert.match(page,/if\(!paths\|\|paths\.size!==1\)return \[\]/);
- assert.match(page,/if\(decisions\.has\(card\.provider_id\)\|\|requiresDistinctImage\(card\)\)return \[\]/);
+ assert.match(page,/if\(decisions\.has\(card\.provider_id\)\|\|isFinishPrinting\(card\)\)return \[\]/);
  assert.match(page,/individual printing\/finish retained/);
  assert.match(page,/id="match-shared"/);
 });
@@ -175,7 +175,7 @@ test("large imported sets query review decisions in safe chunks",()=>{
  assert.match(page,/ids\.slice\(i,i\+35\)/);
  assert.match(page,/lookupByProviderIds\("cv_admin_image_reviews"/);
  assert.match(page,/lookupByProviderIds\("cv_admin_pokewallet_catalog"/);
- assert.match(page,/id="build-version">Review build 167/);
+ assert.match(page,/id="build-version">Review build 168/);
  assert.doesNotMatch(page,/\.in\("provider_id",cards\.map/);
 });
 
@@ -186,7 +186,7 @@ test("Ascended Heroes verified indexed path uses complete set identity",()=>{
  assert.match(mapping,/code:"me2-5"/);
  assert.match(mapping,/denominator:"217"/);
  assert.match(mapping,/pathPrefix:"ascended-heroes\/ascended-heroes\/"/);
- assert.match(page,/r2-set-mappings\.js\?v=20261115-paldean-fates/);
+ assert.match(page,/r2-set-mappings\.js\?v=20261115-prismatic/);
 });
 test("Dusk Ball finishes remain distinct during Ascended Heroes base first pass",()=>{
  assert.match(page,/Quick Ball\| Dusk Ball\| Team Rocket/);
@@ -280,7 +280,7 @@ test("stamped promos cannot inherit standard artwork through either batch operat
  for(const name of ["Ceruledge Prerelease","Charcadet","Cottonee Cosmos Holo","Pikachu Poke Ball Pattern","Team Rocket's Pikachu"]){
   assert.equal(distinct({card_name:name}),false,name);
  }
- assert.match(page,/if\(decisions\.has\(card\.provider_id\)\|\|requiresDistinctImage\(card\)\)return \[\]/);
+ assert.match(page,/if\(decisions\.has\(card\.provider_id\)\|\|isFinishPrinting\(card\)\)return \[\]/);
  assert.match(page,/return requiresDistinctImage\(card\)\|\|/);
  assert.match(page,/function baseArtworkCards\(cards\)/);
  assert.match(page,/const baseCards=baseArtworkCards\(cards\)/);
@@ -327,4 +327,16 @@ test("Paldean Fates uses confirmed 001/002 anchored R2 series for first pass",()
  assert.match(page,/Found "\+approvedAnchors\+" approved image anchors/);
  assert.match(page,/Math\.min\(4,candidates\.length\)/);
  assert.match(page,/if\(await imageExists\(item\.url\)\)ok\.push\(item\)/);
+});
+
+test("Prismatic Evolutions shares approved anchor workflow but keeps ball patterns pending",()=>{
+ const mappings=fs.readFileSync(path.join(__dirname,"../r2-set-mappings.js"),"utf8");
+ assert.match(mappings,/"23821": Object.freeze/);
+ assert.match(mappings,/folder:"prismatic-evolutions"/);
+ assert.match(mappings,/code:"sv8-5"/);
+ assert.match(mappings,/denominator:"131"/);
+ assert.match(page,/function mappingFromApprovedReviews\(cards,reviews\)/);
+ assert.match(page,/verifiedFolderFor\(setId\)\|\|mappingFromApprovedReviews\(cards,reviews\)/);
+ assert.match(page,/if\(decisions\.has\(card\.provider_id\)\|\|isFinishPrinting\(card\)\)return \[\]/);
+ assert.match(page,/Poke Ball Pattern\| Master Ball Pattern/);
 });
