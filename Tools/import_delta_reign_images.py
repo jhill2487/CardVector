@@ -96,14 +96,15 @@ def run(limit=1,delay=5.0):
         raise RuntimeError("R2_ACCOUNT_ID must be the 32-character Cloudflare account ID")
     client=r2_client()
     try:
-        client.head_bucket(Bucket=bucket)
-        print("R2 bucket preflight succeeded")
+        # Object-scoped tokens may lack bucket metadata permissions; test object-list access instead.
+        client.list_objects_v2(Bucket=bucket,Prefix="archive/pokewallet/delta-reign/",MaxKeys=1)
+        print("R2 object-list preflight succeeded")
     except Exception as exc:
         from botocore.exceptions import ClientError
         if isinstance(exc,ClientError):
             status=exc.response.get("ResponseMetadata",{}).get("HTTPStatusCode","unknown")
             code=exc.response.get("Error",{}).get("Code","unknown")
-            raise RuntimeError("R2 bucket preflight failed: HTTP "+str(status)+", code "+str(code)+
+            raise RuntimeError("R2 object-list preflight failed: HTTP "+str(status)+", code "+str(code)+
                 ". Verify exact R2_BUCKET name, R2_ACCOUNT_ID, and R2 S3 API token scope.") from None
         # Expose TLS failure category without logging the endpoint/account or credentials.
         from botocore.exceptions import SSLError, EndpointConnectionError, ConnectTimeoutError
@@ -119,11 +120,11 @@ def run(limit=1,delay=5.0):
                 reason="invalid TLS protocol response"
             else:
                 reason="TLS connection failure"
-            raise RuntimeError("R2 bucket preflight SSL failure: "+reason+
+            raise RuntimeError("R2 object-list preflight SSL failure: "+reason+
                 ". Verify the R2_ACCOUNT_ID is the account owning the bucket and the S3 endpoint is correct.") from None
         if isinstance(exc,(EndpointConnectionError,ConnectTimeoutError)):
-            raise RuntimeError("R2 bucket preflight failed to connect to the S3 endpoint") from None
-        raise RuntimeError("R2 bucket preflight encountered "+type(exc).__name__) from None
+            raise RuntimeError("R2 object-list preflight failed to connect to the S3 endpoint") from None
+        raise RuntimeError("R2 object-list preflight encountered "+type(exc).__name__) from None
     counts={"available":0,"unavailable":0,"rate_limited":0,
             "skipped":0,"uploaded":0,"errors":0}
     attempts=0
