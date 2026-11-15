@@ -175,7 +175,7 @@ test("large imported sets query review decisions in safe chunks",()=>{
  assert.match(page,/ids\.slice\(i,i\+35\)/);
  assert.match(page,/lookupByProviderIds\("cv_admin_image_reviews"/);
  assert.match(page,/lookupByProviderIds\("cv_admin_pokewallet_catalog"/);
- assert.match(page,/id="build-version">Review build 166/);
+ assert.match(page,/id="build-version">Review build 167/);
  assert.doesNotMatch(page,/\.in\("provider_id",cards\.map/);
 });
 
@@ -315,4 +315,16 @@ test("external source queue remains private, unapproved, and printing-specific",
  assert.match(page,/encodeURIComponent\(card\.card_name\+" "\+card\.card_number\)/);
  assert.match(page,/usage rights:/);
  assert.doesNotMatch(page,/candidate\.source_image_url\)\s*showCardImage/);
+});
+
+test("Paldean Fates uses confirmed 001/002 anchored R2 series for first pass",()=>{
+ const mappings=fs.readFileSync(path.join(__dirname,"../r2-set-mappings.js"),"utf8");
+ assert.match(mappings,/"23353": Object.freeze/);
+ assert.match(mappings,/folder:"paldean-fates"/);
+ assert.match(mappings,/code:"sv4-5"/);
+ assert.match(mappings,/denominator:"091"/);
+ assert.match(mappings,/pathPrefix:"Pokemon TCG\/Pokemon TCG\/paldean-fates\/"/);
+ assert.match(page,/Found "\+approvedAnchors\+" approved image anchors/);
+ assert.match(page,/Math\.min\(4,candidates\.length\)/);
+ assert.match(page,/if\(await imageExists\(item\.url\)\)ok\.push\(item\)/);
 });
