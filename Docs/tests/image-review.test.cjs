@@ -280,7 +280,7 @@ test("stamped promos cannot inherit standard artwork through either batch operat
  for(const name of ["Ceruledge Prerelease","Charcadet","Cottonee Cosmos Holo","Pikachu Poke Ball Pattern","Team Rocket's Pikachu"]){
   assert.equal(distinct({card_name:name}),false,name);
  }
- assert.match(page,/if\(decisions\.has\(card\.provider_id\)\|\|requiresDistinctImage\(card\)\)return \[\]/);
+ assert.match(page,/if\(decisions\.has\(card\.provider_id\)\|\|isFinishPrinting\(card\)\)return \[\]/);
  assert.match(page,/return requiresDistinctImage\(card\)\|\|/);
  assert.match(page,/function baseArtworkCards\(cards\)/);
  assert.match(page,/const baseCards=baseArtworkCards\(cards\)/);
