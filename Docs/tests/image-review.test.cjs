@@ -218,7 +218,7 @@ test("bulk matching learns numbered art from approved base card in ANY set",()=>
  assert.match(page,/const learned=approvedArtworkSeries\(cards,reviews,mapping\?\.folder\|\|""\)/);
  assert.match(page,/path=indexedAnchor\.folder\+indexedAnchor\.prefix/);
  assert.match(page,/if\(learned\.ambiguous&&\(!mapping\?\.pathPrefix\|\|mapping\.provisional\)/);
- assert.match(page,/if\(!mapping\.pathPrefix&&!indexedAnchor&&!mapping\.code\)/);
+ assert.match(page,/if\(\(mapping\.provisional&&!indexedAnchor\)\|\|\(!mapping\.pathPrefix&&!indexedAnchor&&!mapping\.code\)\)/);
 });
 test("approved artwork series is set-safe, resists conflicts and preserves correct folder",()=>{
  const vm=require("node:vm");
