@@ -114,7 +114,8 @@ test("same-set same-number printings can reuse artwork without merging finish id
  assert.match(page,/async function shareApprovedArtwork\(\)/);
  assert.match(page,/const paths=anchors\.get\(card\.card_number\)/);
  assert.match(page,/if\(!paths\|\|paths\.size!==1\)return \[\]/);
- assert.match(page,/if\(decisions\.has\(card\.provider_id\)\|\|isFinishPrinting\(card\)\)return \[\]/);
+ assert.match(page,/if\(requiresDistinctImage\(card\)\)continue/);
+ assert.match(page,/if\(isFinishPrinting\(card\)\&\&!pattern\)continue/);
  assert.match(page,/individual printing\/finish retained/);
  assert.match(page,/id="match-shared"/);
 });
@@ -175,7 +176,7 @@ test("large imported sets query review decisions in safe chunks",()=>{
  assert.match(page,/ids\.slice\(i,i\+35\)/);
  assert.match(page,/lookupByProviderIds\("cv_admin_image_reviews"/);
  assert.match(page,/lookupByProviderIds\("cv_admin_pokewallet_catalog"/);
- assert.match(page,/id="build-version">Review build 169/);
+ assert.match(page,/id="build-version">Review build 170/);
  assert.doesNotMatch(page,/\.in\("provider_id",cards\.map/);
 });
 
@@ -280,7 +281,8 @@ test("stamped promos cannot inherit standard artwork through either batch operat
  for(const name of ["Ceruledge Prerelease","Charcadet","Cottonee Cosmos Holo","Pikachu Poke Ball Pattern","Team Rocket's Pikachu"]){
   assert.equal(distinct({card_name:name}),false,name);
  }
- assert.match(page,/if\(decisions\.has\(card\.provider_id\)\|\|isFinishPrinting\(card\)\)return \[\]/);
+ assert.match(page,/if\(requiresDistinctImage\(card\)\)continue/);
+ assert.match(page,/if\(isFinishPrinting\(card\)\&\&!pattern\)continue/);
  assert.match(page,/return requiresDistinctImage\(card\)\|\|/);
  assert.match(page,/function baseArtworkCards\(cards\)/);
  assert.match(page,/const baseCards=baseArtworkCards\(cards\)/);
@@ -337,7 +339,8 @@ test("Prismatic Evolutions shares approved anchor workflow but keeps ball patter
  assert.match(mappings,/denominator:"131"/);
  assert.match(page,/function mappingFromApprovedReviews\(cards,reviews\)/);
  assert.match(page,/verifiedFolderFor\(setId\)\|\|mappingFromApprovedReviews\(cards,reviews\)/);
- assert.match(page,/if\(decisions\.has\(card\.provider_id\)\|\|isFinishPrinting\(card\)\)return \[\]/);
+ assert.match(page,/if\(requiresDistinctImage\(card\)\)continue/);
+ assert.match(page,/if\(isFinishPrinting\(card\)\&\&!pattern\)continue/);
  assert.match(page,/Poke Ball Pattern\| Master Ball Pattern/);
 });
 
@@ -348,4 +351,16 @@ test("patterned printings require pattern-specific image evidence",()=>{
  assert.match(page,/if\(pattern&&!pattern\.test\(source\)\)return false/);
  assert.match(page,/requiresDistinctImage\(card\)\|\|requiredPatternToken\(card\)/);
  assert.match(page,/patternCount=cards\.filter/);
+});
+
+test("pattern printings share representative base artwork without losing identity",()=>{
+ assert.match(page,/function sharedPatternIdentity\(card\)/);
+ assert.match(page,/function sharedArtworkKey\(card\)/);
+ assert.match(page,/if\(isFinishPrinting\(card\)&&!pattern\)continue/);
+ assert.match(page,/Foil effect NOT pictured or verified/);
+ assert.match(page,/Staff and stamped cards are excluded/);
+ assert.match(page,/const baseName=pattern\?/);
+ assert.match(page,/r\?\.review_status!=="approved"/);
+ assert.match(page,/if\(previous\?\.review_status==="approved"\|\|previous\?\.review_status==="rejected"/);
+ assert.match(page,/All finishes remain separate/);
 });
