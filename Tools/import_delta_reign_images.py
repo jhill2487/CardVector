@@ -53,10 +53,16 @@ def rows(headers):
         "order":"card_number.asc","limit":"500"})
     return json.loads(request(DB+"cv_admin_pokewallet_catalog?"+query,headers))
 
-def existing_review(provider_id,headers):
-    query=urllib.parse.urlencode({"provider_id":"eq."+provider_id,
-        "select":"review_status,candidate_path","limit":"1"})
-    return json.loads(request(DB+"cv_admin_image_reviews?"+query,headers))
+def existing_reviews(headers):
+    # One bounded read avoids 141 individual review lookups per scheduled run.
+    query=urllib.parse.urlencode({"select":"provider_id,review_status,candidate_path","limit":"500"})
+    data=json.loads(request(DB+"cv_admin_image_reviews?"+query,headers))
+    return {row["provider_id"]:row for row in data if row.get("provider_id")}
+
+def unprocessed_cards(cards,reviews):
+    return [card for card in cards if
+            card["image_status"]!="matched" and not card["image_path"] and
+            card["provider_id"] not in reviews]
 
 def path_for(card,ext):
     pid=card["provider_id"]
@@ -86,6 +92,14 @@ def run(limit=1,delay=5.0):
     if len(cards)!=141 or any(c["image_status"] not in
         ("pending","missing","needs_review","matched") for c in cards):
         raise RuntimeError("Delta Reign catalog incomplete or unexpectedly changed; no imports made")
+    reviews=existing_reviews(headers)
+    remaining=unprocessed_cards(cards,reviews)
+    print("Delta Reign image staging: "+str(len(cards)-len(remaining))+
+          " existing reviews/matches, "+str(len(remaining))+" not yet staged")
+    if not remaining:
+        print(json.dumps({"set_id":SET_ID,"attempted":0,"remaining":0,
+                          "status":"all catalog records staged or matched; no API requests"}))
+        return
     # Validate the bucket/endpoint before any extra PokéWallet image requests.
     # Report only status codes; never print credential values or bucket names.
     bucket=os.environ["R2_BUCKET"]
@@ -131,17 +145,11 @@ def run(limit=1,delay=5.0):
     quota_remaining=None
     quota_hourly=None
     quota_guard=20  # Leave room for concurrent catalog activity.
-    for card in cards:
+    for card in remaining:
         if attempts>=limit: break
         if attempts>0 and (quota_remaining is None or quota_hourly is None or min(quota_remaining,quota_hourly)<=quota_guard):
             print("Stopping before next request: quota headroom not verified or below safety margin")
             break
-        if card["image_status"]=="matched" or card["image_path"]:
-            counts["skipped"]+=1
-            continue
-        if existing_review(card["provider_id"],headers):
-            counts["skipped"]+=1
-            continue
         pid=card["provider_id"]
         if not VALID_ID.fullmatch(pid):
             counts["errors"]+=1
@@ -205,6 +213,7 @@ def run(limit=1,delay=5.0):
                   " (HTTP "+str(exc.code)+")")
             continue
         counts["uploaded"]+=1
+        reviews[pid]=review
         print("Candidate ready for review: "+card["card_name"]+" "+card["card_number"])
         if quota_remaining is None or quota_hourly is None:
             print("Stopping: PokéWallet did not provide both quota headers; cannot verify safe headroom")
@@ -213,7 +222,10 @@ def run(limit=1,delay=5.0):
         if min(quota_remaining,quota_hourly)<=quota_guard:
             print("Stopping: PokéWallet request headroom is at or below safety margin")
             break
+    still_unstaged=unprocessed_cards(cards,reviews)
     print(json.dumps({"set_id":SET_ID,"attempted":attempts,
+        "remaining_unstaged":len(still_unstaged),
+        "next_card_number":still_unstaged[0]["card_number"] if still_unstaged else None,
         "counts":counts,"writes":"R2 candidate images and pending reviews; no approvals"},sort_keys=True))
     if counts["rate_limited"]:
         print("Stopped because PokéWallet returned HTTP 429")

@@ -2,7 +2,7 @@ import sys
 import unittest
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
-from import_delta_reign_images import image_type,path_for
+from import_delta_reign_images import image_type,path_for,unprocessed_cards
 
 class DeltaReignImageTests(unittest.TestCase):
     def test_png_validation(self):
@@ -19,6 +19,17 @@ class DeltaReignImageTests(unittest.TestCase):
         card={"provider_id":"pk_"+"a"*64,"card_number":"001/103"}
         self.assertEqual(path_for(card,"png"),
                          "pokewallet/delta-reign/001-103_"+"a"*16+".png")
+    def test_resume_skips_staged_and_matched_without_excluding_secret_rares(self):
+        cards=[
+            {"provider_id":"pk_a","card_number":"001/103","image_status":"matched","image_path":"x"},
+            {"provider_id":"pk_b","card_number":"092/103","image_status":"missing","image_path":None},
+            {"provider_id":"pk_c","card_number":"093/103","image_status":"missing","image_path":None},
+            {"provider_id":"pk_d","card_number":"141/103","image_status":"missing","image_path":None}]
+        reviews={"pk_b":{"review_status":"pending_review"}}
+        self.assertEqual([c["card_number"] for c in unprocessed_cards(cards,reviews)],
+                         ["093/103","141/103"])
+        self.assertEqual(unprocessed_cards(cards,{"pk_b":{}, "pk_c":{}, "pk_d":{}}),[])
+
     def test_reject_path_injection(self):
         with self.assertRaises(ValueError):
             path_for({"provider_id":"pk_"+"a"*64,"card_number":"../bad"},"png")
