@@ -7,13 +7,13 @@ on:
   workflow_dispatch:
     inputs:
       set_id:
-        description: "PokéWallet set ID (default MEP)"
+        description: "PokéWallet set ID (default Delta Reign)"
         required: false
-        default: "24451"
+        default: "24831"
       card_names:
         description: "Exact names separated by semicolons; limit 5"
         required: false
-        default: "Meganium 001 Staff;Riolu 010 Pokemon Center Exclusive"
+        default: "Heracross"
 permissions:
   contents: read
 concurrency:
@@ -26,9 +26,9 @@ jobs:
     env:
       POKEWALLET_API_KEY: ${{ secrets.POKEWALLET_API_KEY }}
       SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-      CARDVECTOR_DISCOVERY_SET_ID: ${{ inputs.set_id || '24451' }}
-      CARDVECTOR_DISCOVERY_NAMES: ${{ inputs.card_names || 'Meganium 001 Staff;Riolu 010 Pokemon Center Exclusive' }}
-      CARDVECTOR_DISCOVERY_LIMIT: "2"
+      CARDVECTOR_DISCOVERY_SET_ID: ${{ inputs.set_id || '24831' }}
+      CARDVECTOR_DISCOVERY_NAMES: ${{ inputs.card_names || 'Heracross' }}
+      CARDVECTOR_DISCOVERY_LIMIT: "1"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -36,5 +36,5 @@ jobs:
           python-version: '3.12'
       - name: Check probe safety tests
         run: python -m unittest discover -s Tools/tests -p 'test_probe_pokewallet_images.py'
-      - name: Probe two exact printings without saving images
+      - name: Probe one Delta Reign card image without saving it
         run: python Tools/probe_pokewallet_images.py
