@@ -175,7 +175,7 @@ test("large imported sets query review decisions in safe chunks",()=>{
  assert.match(page,/ids\.slice\(i,i\+35\)/);
  assert.match(page,/lookupByProviderIds\("cv_admin_image_reviews"/);
  assert.match(page,/lookupByProviderIds\("cv_admin_pokewallet_catalog"/);
- assert.match(page,/id="build-version">Review build 168/);
+ assert.match(page,/id="build-version">Review build 169/);
  assert.doesNotMatch(page,/\.in\("provider_id",cards\.map/);
 });
 
@@ -186,7 +186,7 @@ test("Ascended Heroes verified indexed path uses complete set identity",()=>{
  assert.match(mapping,/code:"me2-5"/);
  assert.match(mapping,/denominator:"217"/);
  assert.match(mapping,/pathPrefix:"ascended-heroes\/ascended-heroes\/"/);
- assert.match(page,/r2-set-mappings\.js\?v=20261115-prismatic/);
+ assert.match(page,/r2-set-mappings\.js\?v=20261115-prismatic-foil-guard/);
 });
 test("Dusk Ball finishes remain distinct during Ascended Heroes base first pass",()=>{
  assert.match(page,/Quick Ball\| Dusk Ball\| Team Rocket/);
@@ -339,4 +339,13 @@ test("Prismatic Evolutions shares approved anchor workflow but keeps ball patter
  assert.match(page,/verifiedFolderFor\(setId\)\|\|mappingFromApprovedReviews\(cards,reviews\)/);
  assert.match(page,/if\(decisions\.has\(card\.provider_id\)\|\|isFinishPrinting\(card\)\)return \[\]/);
  assert.match(page,/Poke Ball Pattern\| Master Ball Pattern/);
+});
+
+test("patterned printings require pattern-specific image evidence",()=>{
+ assert.match(page,/function requiredPatternToken\(card\)/);
+ assert.match(page,/Master Ball Pattern/);
+ assert.match(page,/Poke Ball Pattern/);
+ assert.match(page,/if\(pattern&&!pattern\.test\(source\)\)return false/);
+ assert.match(page,/requiresDistinctImage\(card\)\|\|requiredPatternToken\(card\)/);
+ assert.match(page,/patternCount=cards\.filter/);
 });
