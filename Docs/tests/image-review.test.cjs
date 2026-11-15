@@ -152,7 +152,7 @@ test("first-pass matching shows mobile progress and bounds failed R2 checks",()=
  assert.match(page,/role="status" aria-live="polite"/);
  assert.match(page,/button\.textContent="Checking set…"/);
  assert.match(page,/setTimeout\(\(\)=>finish\(false\),10000\)/);
- assert.match(page,/Math\.min\(12,candidates\.length\)/);
+ assert.match(page,/Math\.min\(4,candidates\.length\)/);
  assert.match(page,/Nothing saved yet/);
  assert.match(page,/button\.textContent=originalLabel/);
 });
@@ -175,7 +175,7 @@ test("large imported sets query review decisions in safe chunks",()=>{
  assert.match(page,/ids\.slice\(i,i\+35\)/);
  assert.match(page,/lookupByProviderIds\("cv_admin_image_reviews"/);
  assert.match(page,/lookupByProviderIds\("cv_admin_pokewallet_catalog"/);
- assert.match(page,/id="build-version">Review build 166/);
+ assert.match(page,/id="build-version">Review build 167/);
  assert.doesNotMatch(page,/\.in\("provider_id",cards\.map/);
 });
 
@@ -186,7 +186,7 @@ test("Ascended Heroes verified indexed path uses complete set identity",()=>{
  assert.match(mapping,/code:"me2-5"/);
  assert.match(mapping,/denominator:"217"/);
  assert.match(mapping,/pathPrefix:"ascended-heroes\/ascended-heroes\/"/);
- assert.match(page,/r2-set-mappings\.js\?v=20261113e-white-flare/);
+ assert.match(page,/r2-set-mappings\.js\?v=20261115-paldean-fates/);
 });
 test("Dusk Ball finishes remain distinct during Ascended Heroes base first pass",()=>{
  assert.match(page,/Quick Ball\| Dusk Ball\| Team Rocket/);
@@ -315,4 +315,16 @@ test("external source queue remains private, unapproved, and printing-specific",
  assert.match(page,/encodeURIComponent\(card\.card_name\+" "\+card\.card_number\)/);
  assert.match(page,/usage rights:/);
  assert.doesNotMatch(page,/candidate\.source_image_url\)\s*showCardImage/);
+});
+
+test("Paldean Fates uses confirmed 001/002 anchored R2 series for first pass",()=>{
+ const mappings=fs.readFileSync(path.join(__dirname,"../r2-set-mappings.js"),"utf8");
+ assert.match(mappings,/"23353": Object.freeze/);
+ assert.match(mappings,/folder:"paldean-fates"/);
+ assert.match(mappings,/code:"sv4-5"/);
+ assert.match(mappings,/denominator:"091"/);
+ assert.match(mappings,/pathPrefix:"Pokemon TCG\/Pokemon TCG\/paldean-fates\/"/);
+ assert.match(page,/Found "\+approvedAnchors\+" approved image anchors/);
+ assert.match(page,/Math\.min\(4,candidates\.length\)/);
+ assert.match(page,/if\(await imageExists\(item\.url\)\)ok\.push\(item\)/);
 });
