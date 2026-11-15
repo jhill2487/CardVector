@@ -19,7 +19,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   fetch-images:
-    if: github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[delta-10]')
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[delta-import]')
     runs-on: ubuntu-latest
     timeout-minutes: 40
     env:
@@ -29,7 +29,7 @@ jobs:
       R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
       R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
       R2_BUCKET: ${{ secrets.R2_BUCKET }}
-      IMAGE_LIMIT: ${{ inputs.limit || '10' }}
+      IMAGE_LIMIT: ${{ inputs.limit || '141' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -46,3 +46,29 @@ jobs:
         run: python -m pip install boto3==1.35.99
       - name: Fetch base artwork into R2 pending review only
         run: python Tools/import_delta_reign_images.py --limit "$IMAGE_LIMIT" --delay 5
+      - name: Bulk image review readiness test (read only)
+        if: success()
+        run: |
+          python - <<'PY'
+          import json, os, urllib.parse, urllib.request
+          base="https://iqdpfgpkagjxzedfxrvn.supabase.co/rest/v1/"
+          key=os.environ["SUPABASE_SERVICE_ROLE_KEY"]
+          headers={"apikey":key,"Authorization":"Bearer "+key}
+          url=base+"cv_admin_image_reviews?select=provider_id,candidate_path,review_status&candidate_path=like.pokewallet/delta-reign/*&limit=200"
+          req=urllib.request.Request(url,headers=headers)
+          with urllib.request.urlopen(req,timeout=30) as response:
+              reviews=json.load(response)
+          pending=[r for r in reviews if r["review_status"]=="pending_review"]
+          print("Bulk review readiness: "+str(len(reviews))+" uploaded paths registered; "+str(len(pending))+" awaiting review.")
+          if len(reviews)<11:raise RuntimeError("Expected at least 11 Delta Reign review records")
+          sample=pending[:3]
+          for item in sample:
+              path=item["candidate_path"]
+              image_url="https://images.cardvector.app/archive/"+"/".join(urllib.parse.quote(p,safe="") for p in path.split("/"))
+              with urllib.request.urlopen(urllib.request.Request(image_url,headers={"User-Agent":"CardVector-Image-Check/1.0"}),timeout=25) as result:
+                  size=len(result.read(1_000_001))
+                  kind=result.headers.get("Content-Type","")
+              if not kind.startswith("image/") or size<256 or size>1_000_000:raise RuntimeError("Candidate preview unavailable or invalid")
+              print("Verified candidate preview and review record (image bytes "+str(size)+")")
+          print("Bulk image test passed. No images approved.")
+          PY
