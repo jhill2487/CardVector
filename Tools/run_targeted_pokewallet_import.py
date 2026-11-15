@@ -1,0 +1,106 @@
+#!/usr/bin/env python3
+"""One-set manual PokéWallet import, preserving the daily importer's cursor.
+
+This is intentionally a one-shot, explicitly selected English set. It imports
+at most the remaining daily allowance and never carries unused budget to
+another set. Existing catalog records are not overwritten. Does not match
+or approve any images.
+"""
+import json
+import os
+import time
+import urllib.parse
+from datetime import datetime, timezone
+from zoneinfo import ZoneInfo
+from run_daily_pokewallet_import import (
+    Store, api_json, normalize_card, PW_URL, MANUAL_TOPUP_CAP,
+    MANUAL_DAILY_CEILING, PAGE_SIZE, INTERVAL_SECONDS, provider_language
+)
+
+def build_catalog_rows(pages,set_info):
+    rows=[]
+    ids=set()
+    for items in pages:
+        for item in items:
+            card=normalize_card(item,set_info)
+            if not card or not card.get("id"):
+                raise RuntimeError("Target set contains a record without a usable identity")
+            if card["id"] in ids:
+                raise RuntimeError("Duplicate provider ID in targeted set")
+            ids.add(card["id"])
+            info=card["card_info"]
+            if str(info["set_id"])!=str(set_info["set_id"]):
+                raise RuntimeError("Target card belongs to another set")
+            rows.append({"provider_id":card["id"],"set_id":info["set_id"],
+                "set_name":info["set_name"],"card_name":info["name"],
+                "card_number":info["card_number"],"variants":info["variants"],
+                "image_status":"pending","image_path":None})
+    return rows
+
+def run_targeted(state,store,fetch,now=None,set_id="23353",expected=245):
+    day=now or datetime.now(ZoneInfo("America/New_York")).date().isoformat()
+    if not set_id.isdecimal() or expected>MANUAL_TOPUP_CAP or expected<1:
+        raise RuntimeError("Unsafe targeted set configuration")
+    already=int(state.get("daily_imported",0)) if state.get("daily_date")==day else 0
+    if MANUAL_DAILY_CEILING-already<expected:
+        raise RuntimeError("Not enough daily allowance to finish one set; no import started")
+    match=next((x for x in state.get("sets",[]) if x.get("set_id")==set_id),None)
+    if not match or provider_language(match)!="eng" or match.get("card_count")!=expected:
+        raise RuntimeError("Target set is not an exact English set of the expected size")
+    # Stop rather than overwrite even one already reviewed/matched catalog row.
+    existing=api_json(
+        "https://iqdpfgpkagjxzedfxrvn.supabase.co/rest/v1/cv_admin_pokewallet_catalog?"
+        +urllib.parse.urlencode({"set_id":"eq."+set_id,"select":"provider_id","limit":"1"}),
+        headers=store.headers)
+    if existing:
+        raise RuntimeError("Target set has existing catalog rows: refusing to overwrite any review")
+    pages=[]
+    page=1
+    total=None
+    while True:
+        if page>4:raise RuntimeError("Target exceeded bounded page limit")
+        if page>1:time.sleep(INTERVAL_SECONDS)
+        response=fetch("/sets/"+set_id+"?page="+str(page)+"&limit="+str(PAGE_SIZE))
+        meta=response.get("set") or {}
+        if str(meta.get("set_id"))!=set_id or (
+            meta.get("language") and provider_language({"language":meta["language"]})!="eng"):
+            raise RuntimeError("PokéWallet target set identity or language mismatch")
+        if total is None:total=int(meta.get("total_cards") or 0)
+        if total!=expected:raise RuntimeError("Expected record count differs from provider's total")
+        items=response.get("cards")
+        if not isinstance(items,list) or not items:raise RuntimeError("Missing target page")
+        pages.append(items)
+        if sum(map(len,pages))>=total:break
+        page+=1
+    if sum(map(len,pages))!=expected:
+        raise RuntimeError("Target page counts were incomplete or exceeded expected count")
+    rows=build_catalog_rows(pages,match)
+    if len(rows)!=expected:raise RuntimeError("Normalized set was incomplete")
+    # All source validation completes before writes. Cursor fields stay intact.
+    for i in range(0,len(rows),40):
+        store.upsert("cv_admin_pokewallet_catalog",rows[i:i+40])
+    state["daily_date"]=day
+    state["daily_imported"]=already+len(rows)
+    state["cards_imported"]=int(state.get("cards_imported",0))+len(rows)
+    store.save(state)
+    store.publish(state)
+    return {"mode":"targeted_manual","set_id":set_id,"set_name":match["name"],
+        "imported":len(rows),"expected":expected,"daily_imported":state["daily_imported"],
+        "regular_cursor_unchanged":True,"image_approvals":0}
+
+def main():
+    pw=os.environ.get("POKEWALLET_API_KEY","")
+    key=os.environ.get("SUPABASE_SERVICE_ROLE_KEY","")
+    if not pw or not key:raise SystemExit("Required private importer credentials unavailable")
+    store=Store(key)
+    state=store.get()
+    if not state or state.get("version")!=2:
+        raise SystemExit("Existing importer checkpoint missing or unexpected")
+    def fetch(path):
+        return api_json(PW_URL+path,headers={
+            "X-API-Key":pw,"User-Agent":"CardVector-Targeted-Importer/1.0"})
+    result=run_targeted(state,store,fetch)
+    print(json.dumps(result,sort_keys=True))
+
+if __name__=="__main__":
+    main()

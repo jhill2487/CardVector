@@ -9,6 +9,9 @@ on:
       - 'Tools/check_site_export.py'
       - '.github/workflows/pages.yml'
       - '.github/workflows/validate-public-site.yml'
+      - '.github/workflows/daily-pokewallet-import.yml'
+      - 'Tools/run_targeted_pokewallet_import.py'
+      - 'Tools/tests/test_targeted_pokewallet_import.py'
       - '.github/workflows/pokewallet-image-availability.yml'
       - 'Tools/probe_pokewallet_images.py'
       - 'Tools/tests/test_probe_pokewallet_images.py'
@@ -33,6 +36,8 @@ jobs:
         run: python -m unittest discover -s Tools/tests -p 'test_daily_pokewallet_import.py'
       - name: Test read-only printing-specific image source probe
         run: python -m unittest discover -s Tools/tests -p 'test_probe_pokewallet_images.py'
+      - name: Test targeted one-set manual import safety
+        run: python -m unittest discover -s Tools/tests -p 'test_targeted_pokewallet_import.py'
       - name: Test private image review page and exported route
         run: node --test Docs/tests/image-review.test.cjs
       - name: Check public R2 image index and cross-origin access
