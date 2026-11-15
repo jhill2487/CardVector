@@ -491,6 +491,25 @@ function approvedArtworkSeries(cards,reviews,folder){
  // Conflicting approved series must be resolved manually; no guessing.
  return {series:found.size===1?[...found.values()][0]:null,ambiguous:found.size>1};
 }
+// Learn the exact approved R2 folder from freshly loaded review decisions.
+// Do not rely on a cached claims list or a one-off set mapping.
+function mappingFromApprovedReviews(cards,reviews){
+ const cardsById=new Map(cards.map(card=>[card.provider_id,card]));
+ const folders=new Set();
+ for(const review of reviews){
+  if(review.review_status!=="approved"||!review.candidate_path)continue;
+  const card=cardsById.get(review.provider_id);
+  if(!card||isFinishPrinting(card))continue;
+  const segments=String(review.candidate_path).split("/");
+  const file=segments[segments.length-1]||"";
+  const match=file.match(/^[a-z0-9-]+_en_(\\d+)_std\\.(?:jpg|jpeg|png|webp)$/i);
+  const first=String(card.card_number||"").split("/")[0];
+  const folder=segments[segments.length-2];
+  if(!match||!/^[0-9]+$/.test(first)||Number(match[1])!==Number(first)||!folderAllowedForSet(card.set_id,folder))continue;
+  folders.add(folder);
+ }
+ return folders.size===1?{folder:[...folders][0],code:null,denominator:null}:null;
+}
 // First-pass artwork approval is per unique base card, never per printing.
 // A verified set mapping or an approved standard-image anchor provides a
 // numbered series; each candidate is probed before ONE batch confirmation.
@@ -520,7 +539,7 @@ async function matchApprovedSet(){
   const reviewed=new Map(reviews.map(row=>[row.provider_id,row]));
   const approvedAnchors=reviews.filter(row=>row.review_status==="approved"&&row.candidate_path).length;
   progress("Found "+approvedAnchors+" approved image anchors. Checking the set-specific R2 image series…");
-  const mapping=verifiedFolderFor(setId);
+  const mapping=verifiedFolderFor(setId)||mappingFromApprovedReviews(cards,reviews);
   const problems=[];
   const candidates=[];
   const numberCounts=new Map();
