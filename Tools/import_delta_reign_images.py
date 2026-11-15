@@ -128,6 +128,9 @@ def run(limit=1,delay=5.0):
     counts={"available":0,"unavailable":0,"rate_limited":0,
             "skipped":0,"uploaded":0,"errors":0}
     attempts=0
+    quota_remaining=None
+    quota_hourly=None
+    quota_guard=20  # Leave room for concurrent catalog activity.
     for card in cards:
         if attempts>=limit: break
         if card["image_status"]=="matched" or card["image_path"]:
@@ -147,6 +150,11 @@ def run(limit=1,delay=5.0):
                      "User-Agent":"CardVector-Delta-Images/1.0"})
         try:
             with urllib.request.urlopen(req,timeout=25) as response:
+                # These headers track all API calls, unlike the catalog's daily card count.
+                day=response.headers.get("X-RateLimit-Remaining-Day")
+                hour=response.headers.get("X-RateLimit-Remaining-Hour")
+                quota_remaining=int(day) if day is not None and day.isdecimal() else None
+                quota_hourly=int(hour) if hour is not None and hour.isdecimal() else None
                 data=response.read(1_000_001)
             ext,mime=image_type(data)
             counts["available"]+=1
@@ -191,6 +199,13 @@ def run(limit=1,delay=5.0):
             continue
         counts["uploaded"]+=1
         print("Candidate ready for review: "+card["card_name"]+" "+card["card_number"])
+        if quota_remaining is None or quota_hourly is None:
+            print("Stopping: PokéWallet did not provide both quota headers; cannot verify safe headroom")
+            break
+        print("PokéWallet quota remaining: day="+str(quota_remaining)+", hour="+str(quota_hourly))
+        if min(quota_remaining,quota_hourly)<=quota_guard:
+            print("Stopping: PokéWallet request headroom is at or below safety margin")
+            break
     print(json.dumps({"set_id":SET_ID,"attempted":attempts,
         "counts":counts,"writes":"R2 candidate images and pending reviews; no approvals"},sort_keys=True))
     if counts["rate_limited"]:
