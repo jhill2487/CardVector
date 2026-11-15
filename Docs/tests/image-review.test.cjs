@@ -324,7 +324,7 @@ test("Paldean Fates uses confirmed 001/002 anchored R2 series for first pass",()
  assert.match(mappings,/code:"sv4-5"/);
  assert.match(mappings,/denominator:"091"/);
  assert.match(mappings,/pathPrefix:"Pokemon TCG\/Pokemon TCG\/paldean-fates\/"/);
- assert.match(page,/Found "\+approvedAnchors\+" approved image anchors/);
+ assert.match(page,/Found "\+approvedAnchors\+" approved anchors/);
  assert.match(page,/Math\.min\(4,candidates\.length\)/);
  assert.match(page,/if\(await imageExists\(item\.url\)\)ok\.push\(item\)/);
 });
