@@ -4,6 +4,9 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/delta-reign-image-import.yml'
+  schedule:
+    # Runs after the usual daily PokéWallet reset window; quota guard still applies.
+    - cron: '17 14 * * *'
   workflow_dispatch:
     inputs:
       limit:
@@ -19,7 +22,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   fetch-images:
-    if: github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[delta-import]')
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'schedule' || contains(github.event.head_commit.message, '[delta-import]')
     runs-on: ubuntu-latest
     timeout-minutes: 40
     env:
