@@ -176,7 +176,7 @@ test("large imported sets query review decisions in safe chunks",()=>{
  assert.match(page,/ids\.slice\(i,i\+35\)/);
  assert.match(page,/lookupByProviderIds\("cv_admin_image_reviews"/);
  assert.match(page,/lookupByProviderIds\("cv_admin_pokewallet_catalog"/);
- assert.match(page,/id="build-version">Review build 170/);
+ assert.match(page,/id="build-version">Review build 171/);
  assert.doesNotMatch(page,/\.in\("provider_id",cards\.map/);
 });
 
@@ -363,4 +363,29 @@ test("pattern printings share representative base artwork without losing identit
  assert.match(page,/r\?\.review_status!=="approved"/);
  assert.match(page,/if\(previous\?\.review_status==="approved"\|\|previous\?\.review_status==="rejected"/);
  assert.match(page,/All finishes remain separate/);
+});
+
+test("shared-artwork names normalize exact collector suffix and apostrophes without merging unrelated printings",()=>{
+ const start=page.indexOf("function artworkIdentityName(");
+ const end=page.indexOf("async function shareApprovedArtwork()",start);
+ assert.ok(start>=0&&end>start);
+ const ctx={normal:v=>String(v||"").toLowerCase().replace(/[^a-z0-9]+/g," ").trim()};
+ vm.runInNewContext(page.slice(start,end)+"this.identity=artworkIdentityName; this.key=sharedArtworkKey;",ctx);
+ const base=(name,num)=>({card_name:name,card_number:num});
+ const pairs=[
+  ["Amarys","Amarys 093 131 Poke Ball Pattern","093/131"],
+  ["Black Belt's Training","Black Belts Training 096 131 Poke Ball Pattern","096/131"],
+  ["Janine's Secret Art","Janines Secret Art 112 131 Poke Ball Pattern","112/131"],
+  ["Larry's Skill","Larrys Skill 115 131 Poke Ball Pattern","115/131"],
+  ["Friends in Paldea","Friends in Paldea 109 131 Poke Ball Pattern","109/131"]
+ ];
+ for(const [regular,pattern,number] of pairs){
+  const target=pattern.replace(/ Poke Ball Pattern$/,"");
+  assert.equal(ctx.key(base(regular,number)),
+     String(number)+"|"+ctx.identity(base(target,number),target));
+ }
+ assert.notEqual(ctx.key(base("Glaceon ex","026/131")),
+     ctx.key(base("Glaceon ex 026 131 Holiday Calendar","026/131")));
+ assert.notEqual(ctx.key(base("Amarys","093/131")),
+     ctx.key(base("Amarys 094 131","093/131")));
 });
