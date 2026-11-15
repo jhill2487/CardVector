@@ -1,0 +1,47 @@
+name: Delta Reign PokéWallet image import (review candidates)
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/delta-reign-image-import.yml'
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: "Maximum images to request (1 pilot; up to 141 after verification)"
+        required: true
+        default: "1"
+        type: choice
+        options: ["1", "5", "10", "25", "50", "141"]
+permissions:
+  contents: read
+concurrency:
+  group: delta-reign-image-import
+  cancel-in-progress: false
+jobs:
+  fetch-images:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      POKEWALLET_API_KEY: ${{ secrets.POKEWALLET_API_KEY }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+      R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+      R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+      R2_BUCKET: ${{ secrets.R2_BUCKET }}
+      IMAGE_LIMIT: ${{ inputs.limit || '1' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate image import
+        run: python -m unittest discover -s Tools/tests -p 'test_delta_reign_images.py'
+      - name: Verify credentials (without displaying secret values)
+        run: |
+          for name in POKEWALLET_API_KEY SUPABASE_SERVICE_ROLE_KEY R2_ACCOUNT_ID R2_ACCESS_KEY_ID R2_SECRET_ACCESS_KEY R2_BUCKET; do
+            if [ -z "${!name}" ]; then echo "::error::Missing GitHub Actions secret: $name"; exit 1; fi
+          done
+      - name: Install pinned R2 SDK
+        run: python -m pip install boto3==1.35.99
+      - name: Fetch base artwork into R2 pending review only
+        run: python Tools/import_delta_reign_images.py --limit "$IMAGE_LIMIT" --delay 5
