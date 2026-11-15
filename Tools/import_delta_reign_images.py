@@ -105,6 +105,24 @@ def run(limit=1,delay=5.0):
             code=exc.response.get("Error",{}).get("Code","unknown")
             raise RuntimeError("R2 bucket preflight failed: HTTP "+str(status)+", code "+str(code)+
                 ". Verify exact R2_BUCKET name, R2_ACCOUNT_ID, and R2 S3 API token scope.") from None
+        # Expose TLS failure category without logging the endpoint/account or credentials.
+        from botocore.exceptions import SSLError, EndpointConnectionError, ConnectTimeoutError
+        if isinstance(exc,SSLError):
+            detail=str(exc).lower()
+            if "certificate_verify_failed" in detail or "certificate verify failed" in detail:
+                reason="certificate verification failed"
+            elif "hostname" in detail or "certificate" in detail:
+                reason="TLS hostname or certificate mismatch"
+            elif "eof" in detail or "handshake" in detail:
+                reason="TLS handshake terminated"
+            elif "wrong version number" in detail:
+                reason="invalid TLS protocol response"
+            else:
+                reason="TLS connection failure"
+            raise RuntimeError("R2 bucket preflight SSL failure: "+reason+
+                ". Verify the R2_ACCOUNT_ID is the account owning the bucket and the S3 endpoint is correct.") from None
+        if isinstance(exc,(EndpointConnectionError,ConnectTimeoutError)):
+            raise RuntimeError("R2 bucket preflight failed to connect to the S3 endpoint") from None
         raise RuntimeError("R2 bucket preflight encountered "+type(exc).__name__) from None
     counts={"available":0,"unavailable":0,"rate_limited":0,
             "skipped":0,"uploaded":0,"errors":0}
