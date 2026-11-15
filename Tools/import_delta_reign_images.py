@@ -195,6 +195,8 @@ def run(limit=1,delay=5.0):
         "counts":counts,"writes":"R2 candidate images and pending reviews; no approvals"},sort_keys=True))
     if counts["rate_limited"]:
         print("Stopped because PokéWallet returned HTTP 429")
+    if counts["errors"]:
+        raise RuntimeError("One or more image imports failed; see prior safe error summaries")
 
 if __name__=="__main__":
     parser=argparse.ArgumentParser()
