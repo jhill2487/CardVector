@@ -4,6 +4,7 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/delta-reign-image-import.yml'
+      - 'Tools/import_delta_reign_images.py'
   workflow_dispatch:
     inputs:
       limit:
