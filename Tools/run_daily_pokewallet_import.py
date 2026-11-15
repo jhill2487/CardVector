@@ -55,15 +55,11 @@ class Store:
         self.upsert("cv_admin_pokewallet_import_state",[{"job_key":JOB,"state":state,
                                         "updated_at":datetime.now(timezone.utc).isoformat()}])
     def publish(self,state):
-        totals=state.get("image_counts",{})
         row={"job_key":JOB,
              "status":"import_complete" if state.get("finished") else "importing",
              "sets_total":len(state.get("sets") or []),
              "sets_complete":int(state.get("next_set",0)),
              "cards_imported":int(state.get("cards_imported",0)),
-             "images_matched":int(totals.get("matched",0)),
-             "images_review":int(totals.get("needs_review",0)),
-             "images_missing":int(totals.get("missing",0)),
              "updated_at":datetime.now(timezone.utc).isoformat()}
         self.upsert("cv_admin_job_progress",[row])
 
