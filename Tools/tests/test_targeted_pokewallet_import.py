@@ -35,6 +35,25 @@ class Tests(unittest.TestCase):
         self.assertEqual((state["next_set"],state["next_page"],state["next_offset"]),(31,1,14))
         self.assertEqual(len(store.writes),245)
         self.assertTrue(all(r["image_status"]=="pending" and r["image_path"] is None for r in store.writes))
+    def test_sealed_products_are_fetched_but_not_counted_as_cards(self):
+        state=make_state()
+        state["sets"][0]["sealed_count"]=37
+        store=Store()
+        source=[
+            {"id":f"pk_{n:04d}","card_info":{"name":"Card","card_number":str(n),"product_type":"card"}}
+            for n in range(1,246)
+        ]+[{"id":f"sealed_{n}","card_info":{"product_type":"sealed"}} for n in range(37)]
+        def fetch_with_sealed(path):
+            page=int(path.split("page=")[1].split("&")[0])
+            return {"set":{"set_id":"23353","language":"eng","total_cards":282},
+                "cards":source[(page-1)*100:page*100]}
+        with patch.object(mod,"api_json",return_value=[]), patch.object(mod.time,"sleep"):
+            result=mod.run_targeted(state,store,fetch_with_sealed,now="2026-11-15")
+        self.assertEqual(result["imported"],245)
+        self.assertEqual(len(store.writes),245)
+        self.assertEqual(state["daily_imported"],995)
+        self.assertEqual((state["next_set"],state["next_page"],state["next_offset"]),(31,1,14))
+
     def test_no_245_allowance_stops_without_fetching(self):
         state=make_state();state["daily_imported"]=800;store=Store()
         with self.assertRaisesRegex(RuntimeError,"allowance"):

@@ -41,6 +41,7 @@ jobs:
       - name: Verify single-set import tests
         if: steps.credentials.outputs.ready == 'true' && github.event_name == 'push'
         run: python -m unittest discover -s Tools/tests -p 'test_targeted_pokewallet_import.py'
+      # One-shot retry after correcting the provider total to include sealed products.
       - name: Import Paldean Fates only (up to 245 records, no cursor move)
         if: steps.credentials.outputs.ready == 'true' && github.event_name == 'push'
         run: python Tools/run_import_with_diagnostics.py
