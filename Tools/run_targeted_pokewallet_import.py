@@ -78,8 +78,8 @@ def run_targeted(state,store,fetch,now=None,set_id="23353",expected=245):
         pages.append(items)
         if sum(map(len,pages))>=total:break
         page+=1
-    if sum(map(len,pages))!=expected:
-        raise RuntimeError("Target page counts were incomplete or exceeded expected count")
+    if sum(map(len,pages))!=total:
+        raise RuntimeError("Target provider pages were incomplete or exceeded declared total")
     rows=build_catalog_rows(pages,match)
     if len(rows)!=expected:raise RuntimeError("Normalized set was incomplete")
     # All source validation completes before writes. Cursor fields stay intact.
