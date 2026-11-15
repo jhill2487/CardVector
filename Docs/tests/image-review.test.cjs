@@ -113,7 +113,7 @@ test("same-set same-number printings can reuse artwork without merging finish id
  assert.match(page,/lookupByProviderIds\("cv_admin_pokewallet_catalog","provider_id,set_id,card_number"/);
  assert.match(page,/async function shareApprovedArtwork\(\)/);
  assert.match(page,/const paths=baseAnchors\.get\(key\)/);
- assert.match(page,/if\(!paths\|\|paths\.size!==1\)return \[\]/);
+ assert.match(page,/if\(!paths\|\|paths\.size!==1\)continue/);
  assert.match(page,/if\(requiresDistinctImage\(card\)\)continue/);
  assert.match(page,/if\(isFinishPrinting\(card\)\&\&!pattern\)continue/);
  assert.match(page,/individual printing\/finish retained/);
