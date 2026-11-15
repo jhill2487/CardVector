@@ -152,7 +152,7 @@ test("first-pass matching shows mobile progress and bounds failed R2 checks",()=
  assert.match(page,/role="status" aria-live="polite"/);
  assert.match(page,/button\.textContent="Checking set…"/);
  assert.match(page,/setTimeout\(\(\)=>finish\(false\),10000\)/);
- assert.match(page,/Math\.min\(12,candidates\.length\)/);
+ assert.match(page,/Math\.min\(4,candidates\.length\)/);
  assert.match(page,/Nothing saved yet/);
  assert.match(page,/button\.textContent=originalLabel/);
 });
