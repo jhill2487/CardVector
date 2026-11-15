@@ -23,8 +23,10 @@ def build_catalog_rows(pages,set_info):
     for items in pages:
         for item in items:
             card=normalize_card(item,set_info)
+            if card is None and isinstance(item,dict) and (item.get("card_info") or {}).get("product_type")=="sealed":
+                continue
             if not card or not card.get("id"):
-                raise RuntimeError("Target set contains a record without a usable identity")
+                raise RuntimeError("Target set contains a non-sealed record without a usable identity")
             if card["id"] in ids:
                 raise RuntimeError("Duplicate provider ID in targeted set")
             ids.add(card["id"])
@@ -66,7 +68,11 @@ def run_targeted(state,store,fetch,now=None,set_id="23353",expected=245):
             meta.get("language") and provider_language({"language":meta["language"]})!="eng"):
             raise RuntimeError("PokéWallet target set identity or language mismatch")
         if total is None:total=int(meta.get("total_cards") or 0)
-        if total!=expected:raise RuntimeError("Expected record count differs from provider's total")
+        # PokéWallet total_cards includes sealed products. The catalog importer
+        # excludes sealed items: verify total against card_count + sealed_count.
+        bound=expected+int(match.get("sealed_count") or 0)
+        if total<expected or total>bound:
+            raise RuntimeError(f"Provider total {total} outside safe range {expected}–{bound}")
         items=response.get("cards")
         if not isinstance(items,list) or not items:raise RuntimeError("Missing target page")
         pages.append(items)
