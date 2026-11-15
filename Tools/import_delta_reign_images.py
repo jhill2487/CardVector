@@ -86,7 +86,26 @@ def run(limit=1,delay=5.0):
     if len(cards)!=141 or any(c["image_status"] not in
         ("pending","missing","needs_review","matched") for c in cards):
         raise RuntimeError("Delta Reign catalog incomplete or unexpectedly changed; no imports made")
+    # Validate the bucket/endpoint before any extra PokéWallet image requests.
+    # Report only status codes; never print credential values or bucket names.
+    bucket=os.environ["R2_BUCKET"]
+    if bucket!=bucket.strip() or "/" in bucket or "://" in bucket or not re.fullmatch(r"[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]",bucket):
+        raise RuntimeError("R2_BUCKET must be the exact R2 bucket name (no URL, path or whitespace)")
+    account=os.environ["R2_ACCOUNT_ID"]
+    if account!=account.strip() or not re.fullmatch(r"[a-f0-9]{32}",account,re.I):
+        raise RuntimeError("R2_ACCOUNT_ID must be the 32-character Cloudflare account ID")
     client=r2_client()
+    try:
+        client.head_bucket(Bucket=bucket)
+        print("R2 bucket preflight succeeded")
+    except Exception as exc:
+        from botocore.exceptions import ClientError
+        if isinstance(exc,ClientError):
+            status=exc.response.get("ResponseMetadata",{}).get("HTTPStatusCode","unknown")
+            code=exc.response.get("Error",{}).get("Code","unknown")
+            raise RuntimeError("R2 bucket preflight failed: HTTP "+str(status)+", code "+str(code)+
+                ". Verify exact R2_BUCKET name, R2_ACCOUNT_ID, and R2 S3 API token scope.") from None
+        raise RuntimeError("R2 bucket preflight encountered "+type(exc).__name__) from None
     counts={"available":0,"unavailable":0,"rate_limited":0,
             "skipped":0,"uploaded":0,"errors":0}
     attempts=0
