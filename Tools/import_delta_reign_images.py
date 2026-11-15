@@ -133,6 +133,9 @@ def run(limit=1,delay=5.0):
     quota_guard=20  # Leave room for concurrent catalog activity.
     for card in cards:
         if attempts>=limit: break
+        if attempts>0 and (quota_remaining is None or quota_hourly is None or min(quota_remaining,quota_hourly)<=quota_guard):
+            print("Stopping before next request: quota headroom not verified or below safety margin")
+            break
         if card["image_status"]=="matched" or card["image_path"]:
             counts["skipped"]+=1
             continue
@@ -159,6 +162,10 @@ def run(limit=1,delay=5.0):
             ext,mime=image_type(data)
             counts["available"]+=1
         except urllib.error.HTTPError as exc:
+            day=exc.headers.get("X-RateLimit-Remaining-Day") if exc.headers else None
+            hour=exc.headers.get("X-RateLimit-Remaining-Hour") if exc.headers else None
+            quota_remaining=int(day) if day is not None and day.isdecimal() else None
+            quota_hourly=int(hour) if hour is not None and hour.isdecimal() else None
             if exc.code==429:
                 counts["rate_limited"]+=1
                 break
