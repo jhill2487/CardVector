@@ -85,7 +85,7 @@ test("missing index rows can display an explicitly unverified same-set numbered 
  assert.match(page,/function seriesCandidatesFor\(card,mapping\)/);
  assert.match(page,/if\(mapping\.temporary\|\|!folderAllowedForSet/);
  assert.match(page,/identity\.startsWith\(String\(card\.set_id\)/);
- assert.match(page,/return indexed\.length\?indexed:seriesCandidatesFor\(card,mapping\)/);
+ assert.match(page,/return indexed\.length\?indexed:\(mapping\.provisional\?provisionalR2Candidates\(card,mapping\):seriesCandidatesFor\(card,mapping\)\)/);
  assert.match(page,/Filename inferred from a prior approval/);
  assert.match(page,/if\(match\.inferred\)thumb\.onerror/);
 });
@@ -100,7 +100,7 @@ test("verified ME01 R2 series supplies previews when CSV has no records",()=>{
  assert.match(page,/mapping\.pathPrefix\+mapping\.code\+"_en_"/);
 });
 test("unindexed bulk matching verifies existence before accepting files",()=>{
- assert.match(page,/if\(mapping\.pathPrefix&&mapping\.code\)/);
+ assert.match(page,/if\(mapping\.pathPrefix&&!mapping\.provisional&&mapping\.code\)/);
  assert.match(page,/img\.onload=\(\)=>finish\(true\)/);
  assert.match(page,/img\.onerror=\(\)=>finish\(false\)/);
  assert.match(page,/Nothing saved yet/);
@@ -176,7 +176,7 @@ test("large imported sets query review decisions in safe chunks",()=>{
  assert.match(page,/ids\.slice\(i,i\+35\)/);
  assert.match(page,/lookupByProviderIds\("cv_admin_image_reviews"/);
  assert.match(page,/lookupByProviderIds\("cv_admin_pokewallet_catalog"/);
- assert.match(page,/id="build-version">Review build 171/);
+ assert.match(page,/id="build-version">Review build 172/);
  assert.doesNotMatch(page,/\.in\("provider_id",cards\.map/);
 });
 
@@ -187,7 +187,7 @@ test("Ascended Heroes verified indexed path uses complete set identity",()=>{
  assert.match(mapping,/code:"me2-5"/);
  assert.match(mapping,/denominator:"217"/);
  assert.match(mapping,/pathPrefix:"ascended-heroes\/ascended-heroes\/"/);
- assert.match(page,/r2-set-mappings\.js\?v=20261115-prismatic-foil-guard/);
+ assert.match(page,/r2-set-mappings\.js\?v=20261115-journey-probe/);
 });
 test("Dusk Ball finishes remain distinct during Ascended Heroes base first pass",()=>{
  assert.match(page,/Quick Ball\| Dusk Ball\| Team Rocket/);
@@ -205,7 +205,7 @@ test("White Flare verified R2 series activates full-set bulk artwork matcher",()
  assert.match(mapping,/denominator:"086"/);
  assert.match(mapping,/pathPrefix:"Pokemon TCG\/Pokemon TCG\/white-flare\/"/);
  assert.match(page,/const mapping=verifiedFolderFor\(setId\)/);
- assert.match(page,/if\(mapping\.pathPrefix&&mapping\.code\)/);
+ assert.match(page,/if\(mapping\.pathPrefix&&!mapping\.provisional&&mapping\.code\)/);
  assert.match(page,/const baseCards=baseArtworkCards\(cards\)/);
 });
 
@@ -217,8 +217,8 @@ test("bulk matching learns numbered art from approved base card in ANY set",()=>
  assert.match(page,/found\.size===1/);
  assert.match(page,/const learned=approvedArtworkSeries\(cards,reviews,mapping\?\.folder\|\|""\)/);
  assert.match(page,/path=indexedAnchor\.folder\+indexedAnchor\.prefix/);
- assert.match(page,/if\(learned\.ambiguous&&!mapping\?\.pathPrefix\)/);
- assert.match(page,/if\(!mapping\.pathPrefix&&!indexedAnchor&&!mapping\.code\)/);
+ assert.match(page,/if\(learned\.ambiguous&&\(!mapping\?\.pathPrefix\|\|mapping\.provisional\)/);
+ assert.match(page,/if\(\(mapping\.provisional&&!indexedAnchor\)\|\|\(!mapping\.pathPrefix&&!indexedAnchor&&!mapping\.code\)\)/);
 });
 test("approved artwork series is set-safe, resists conflicts and preserves correct folder",()=>{
  const vm=require("node:vm");
@@ -388,4 +388,19 @@ test("shared-artwork names normalize exact collector suffix and apostrophes with
      ctx.key(base("Glaceon ex 026 131 Holiday Calendar","026/131")));
  assert.notEqual(ctx.key(base("Amarys","093/131")),
      ctx.key(base("Amarys 094 131","093/131")));
+});
+
+test("Journey Together unindexed R2 objects are probed, not silently treated as verified",()=>{
+ const mapping=fs.readFileSync(path.join(__dirname,"../r2-set-mappings.js"),"utf8");
+ assert.match(mapping,/"24073": Object.freeze/);
+ assert.match(mapping,/folder:"journey-together"/);
+ assert.match(mapping,/denominator:"159"/);
+ assert.match(mapping,/provisional:true/);
+ assert.match(mapping,/code:"sv9"/);
+ assert.match(page,/function provisionalR2Candidates\(card,mapping\)/);
+ assert.match(page,/mapping\.provisional\?provisionalR2Candidates\(card,mapping\)/);
+ assert.match(page,/mapping\.provisional&&!indexedAnchor/);
+ assert.match(page,/if\(mapping\.pathPrefix&&!mapping\.provisional&&mapping\.code\)/);
+ assert.match(page,/Unverified R2 filename probes/);
+ assert.match(page,/if\(match\.inferred\)thumb\.onerror=/);
 });
