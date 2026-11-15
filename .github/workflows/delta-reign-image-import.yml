@@ -1,5 +1,9 @@
 name: Delta Reign PokéWallet image import (review candidates)
 on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/delta-reign-image-import.yml'
   workflow_dispatch:
     inputs:
       limit:
@@ -24,7 +28,7 @@ jobs:
       R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
       R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
       R2_BUCKET: ${{ secrets.R2_BUCKET }}
-      IMAGE_LIMIT: ${{ inputs.limit }}
+      IMAGE_LIMIT: ${{ inputs.limit || '1' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
