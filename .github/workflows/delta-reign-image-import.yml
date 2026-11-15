@@ -5,7 +5,7 @@ on:
     paths:
       - '.github/workflows/delta-reign-image-import.yml'
   schedule:
-    # Runs after the usual daily PokéWallet reset window; quota guard still applies.
+    # Daily retry for any remaining images; quota guard prevents overuse.
     - cron: '17 14 * * *'
   workflow_dispatch:
     inputs:
