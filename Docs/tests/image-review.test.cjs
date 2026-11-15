@@ -302,7 +302,7 @@ test("R2 artwork candidate discovery automatically excludes standard images for 
  assert.equal(mk("Miraidon 082 Pitch Black Stamped","mega-evolution-promos/miraidon_082_stamped.jpg"),true);
  assert.equal(mk("Ceruledge Prerelease","mega-evolution-promos/mebsp_en_014_std.jpg"),true);
  assert.match(page,/if\(!candidateMatchesPrinting\(card,row\)\)return null/);
- assert.match(page,/if\(requiresDistinctImage\(card\)\)return indexed/);
+ assert.match(page,/if\(requiresDistinctImage\(card\)\|\|requiredPatternToken\(card\)\)return indexed/);
  assert.match(page,/Source acquisition required; do not substitute the unstamped artwork/);
 });
 
