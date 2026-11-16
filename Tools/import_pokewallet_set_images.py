@@ -72,7 +72,9 @@ def existing_reviews(headers,cards):
 def unprocessed_cards(cards,reviews):
     return [card for card in cards if
             card["image_status"]!="matched" and not card["image_path"] and
-            card["provider_id"] not in reviews]
+            (card["provider_id"] not in reviews or
+             (reviews[card["provider_id"]].get("review_status")=="pending_review" and
+              not reviews[card["provider_id"]].get("candidate_path")))]
 
 def path_for(card,ext):
     pid=card["provider_id"]
@@ -216,14 +218,32 @@ def run(limit=1,delay=5.0,provider_id=None):
             client.put_object(Bucket=os.environ["R2_BUCKET"],Key=object_key,
                 Body=data,ContentType=mime,CacheControl="public, max-age=86400",
                 Metadata={"source":"pokewallet","set-id":SET_ID})
-        # Save for manual review only. Conflict-ignore will not overwrite an approval.
+        # Preserve all prior decisions. Only repair an existing pending review
+        # with no image, or insert a new pending review if none exists.
         review={"provider_id":pid,"candidate_path":path,
             "review_status":"pending_review",
-            "notes":"PokéWallet base artwork candidate. Printing, provider permissions and image identity require administrator verification."}
+            "notes":"PokéWallet exact-printing image candidate. Inspect stamp and card identity before approval."}
         try:
-            request(DB+"cv_admin_image_reviews?on_conflict=provider_id",
-                {**headers,"Prefer":"resolution=ignore-duplicates,return=minimal"},
-                method="POST",payload=[review])
+            old_review=reviews.get(pid)
+            if old_review:
+                if old_review.get("review_status")!="pending_review" or old_review.get("candidate_path"):
+                    raise RuntimeError("Review changed since preflight; refusing overwrite")
+                query=urllib.parse.urlencode({"provider_id":"eq."+pid,
+                    "review_status":"eq.pending_review","candidate_path":"is.null",
+                    "select":"provider_id,candidate_path"})
+                updated=json.loads(request(DB+"cv_admin_image_reviews?"+query,
+                    {**headers,"Prefer":"return=representation"},
+                    method="PATCH",payload={"candidate_path":path}))
+                if len(updated)!=1 or updated[0].get("candidate_path")!=path:
+                    raise RuntimeError("Pending image review changed concurrently; no overwrite")
+            else:
+                query=urllib.parse.urlencode({"on_conflict":"provider_id",
+                    "select":"provider_id,candidate_path"})
+                inserted=json.loads(request(DB+"cv_admin_image_reviews?"+query,
+                    {**headers,"Prefer":"resolution=ignore-duplicates,return=representation"},
+                    method="POST",payload=[review]))
+                if len(inserted)!=1 or inserted[0].get("candidate_path")!=path:
+                    raise RuntimeError("Image review created concurrently; no overwrite")
         except urllib.error.HTTPError as exc:
             counts["errors"]+=1
             print("R2 uploaded, candidate review insert failed for card "+card["card_number"]+
