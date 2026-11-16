@@ -98,7 +98,7 @@ def run_targeted(state,store,fetch,now=None,set_id="23353",expected=245):
                 has_number=bool(info.get("card_number"))
                 key=f"{kind}: name={has_name}, number={has_number}"
                 categories[key]=categories.get(key,0)+1
-                if len(examples)<8:
+                if kind!="sealed" and len(examples)<30:
                     examples.append({"type":kind,"name":str(info.get("clean_name") or info.get("name") or "")[:85],
                                      "number":str(info.get("card_number") or "")[:30]})
         print(json.dumps({"set_id":set_id,"provider_total":total,"expected_cards":expected,
