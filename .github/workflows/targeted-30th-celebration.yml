@@ -1,5 +1,5 @@
 name: Import regular 30th Celebration (one-shot)
-# Identify nine unnumbered card records before any catalog writes
+# Import 161 physical cards; nine code cards and 48 sealed products excluded
 on:
   push:
     branches: [main]
