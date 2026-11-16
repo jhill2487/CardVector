@@ -72,7 +72,7 @@ def existing_reviews(headers,cards):
     ids=[card["provider_id"] for card in cards]
     for i in range(0,len(ids),30):
         chunk=ids[i:i+30]
-        query=urllib.parse.urlencode({"select":"provider_id,review_status,candidate_path",
+        query=urllib.parse.urlencode({"select":"provider_id,review_status,candidate_path,notes",
             "provider_id":"in.("+",".join(chunk)+")","limit":"100"})
         data=json.loads(request(DB+"cv_admin_image_reviews?"+query,headers))
         for row in data:
@@ -80,12 +80,24 @@ def existing_reviews(headers,cards):
                 reviews[row["provider_id"]]=row
     return reviews
 
+def rejected_legacy_stamp(card,review):
+    """A prior archive image was explicitly rejected for a stamped printing.
+    Preserve rejection evidence in notes; only an exact PokéWallet upload may
+    enter pending review. Never replace an approved or matched record.
+    """
+    name=str(card.get("card_name") or "").lower()
+    path=str((review or {}).get("candidate_path") or "")
+    return (bool(re.search(r"(staff|pokemon center exclusive|pokémon center exclusive|stamped)$",name))
+            and (review or {}).get("review_status")=="rejected"
+            and path.startswith("Pokemon TCG/"))
+
 def unprocessed_cards(cards,reviews):
     return [card for card in cards if
             card["image_status"]!="matched" and not card["image_path"] and
             (card["provider_id"] not in reviews or
              (reviews[card["provider_id"]].get("review_status")=="pending_review" and
-              not reviews[card["provider_id"]].get("candidate_path")))]
+              not reviews[card["provider_id"]].get("candidate_path")) or
+             rejected_legacy_stamp(card,reviews[card["provider_id"]]))]
 
 def path_for(card,ext):
     pid=card["provider_id"]
@@ -237,14 +249,21 @@ def run(limit=1,delay=5.0,provider_id=None):
         try:
             old_review=reviews.get(pid)
             if old_review:
-                if old_review.get("review_status")!="pending_review" or old_review.get("candidate_path"):
+                legacy=rejected_legacy_stamp(card,old_review)
+                if not legacy and (old_review.get("review_status")!="pending_review" or old_review.get("candidate_path")):
                     raise RuntimeError("Review changed since preflight; refusing overwrite")
+                original=old_review.get("candidate_path")
                 query=urllib.parse.urlencode({"provider_id":"eq."+pid,
-                    "review_status":"eq.pending_review","candidate_path":"is.null",
-                    "select":"provider_id,candidate_path"})
+                    "review_status":"eq.rejected" if legacy else "eq.pending_review",
+                    "candidate_path":"eq."+original if legacy else "is.null",
+                    "select":"provider_id,candidate_path,review_status"})
+                update={"candidate_path":path}
+                if legacy:
+                    note=(str(old_review.get("notes") or "")+" | Previous rejected R2 image: "+original+"; replacement is PokéWallet exact printing awaiting verification.")[:2000]
+                    update.update({"review_status":"pending_review","notes":note})
                 updated=json.loads(request(DB+"cv_admin_image_reviews?"+query,
                     {**headers,"Prefer":"return=representation"},
-                    method="PATCH",payload={"candidate_path":path}))
+                    method="PATCH",payload=update))
                 if len(updated)!=1 or updated[0].get("candidate_path")!=path:
                     raise RuntimeError("Pending image review changed concurrently; no overwrite")
             else:
