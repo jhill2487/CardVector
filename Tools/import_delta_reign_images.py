@@ -53,11 +53,20 @@ def rows(headers):
         "order":"card_number.asc","limit":"500"})
     return json.loads(request(DB+"cv_admin_pokewallet_catalog?"+query,headers))
 
-def existing_reviews(headers):
-    # One bounded read avoids 141 individual review lookups per scheduled run.
-    query=urllib.parse.urlencode({"select":"provider_id,review_status,candidate_path","limit":"500"})
-    data=json.loads(request(DB+"cv_admin_image_reviews?"+query,headers))
-    return {row["provider_id"]:row for row in data if row.get("provider_id")}
+def existing_reviews(headers,cards):
+    # Review table holds many sets; the first 500 rows do not represent Delta Reign.
+    # Query exactly this set's provider IDs in URL-safe chunks.
+    reviews={}
+    ids=[card["provider_id"] for card in cards]
+    for i in range(0,len(ids),30):
+        chunk=ids[i:i+30]
+        query=urllib.parse.urlencode({"select":"provider_id,review_status,candidate_path",
+            "provider_id":"in.("+",".join(chunk)+")","limit":"100"})
+        data=json.loads(request(DB+"cv_admin_image_reviews?"+query,headers))
+        for row in data:
+            if row.get("provider_id") in chunk:
+                reviews[row["provider_id"]]=row
+    return reviews
 
 def unprocessed_cards(cards,reviews):
     return [card for card in cards if
@@ -92,7 +101,7 @@ def run(limit=1,delay=5.0):
     if len(cards)!=141 or any(c["image_status"] not in
         ("pending","missing","needs_review","matched") for c in cards):
         raise RuntimeError("Delta Reign catalog incomplete or unexpectedly changed; no imports made")
-    reviews=existing_reviews(headers)
+    reviews=existing_reviews(headers,cards)
     remaining=unprocessed_cards(cards,reviews)
     print("Delta Reign image staging: "+str(len(cards)-len(remaining))+
           " existing reviews/matches, "+str(len(remaining))+" not yet staged")
