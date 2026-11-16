@@ -349,7 +349,7 @@ function detail(card,review){
  const body=element("div");
  const heading=element("div","cardname",card.card_name+" — "+card.card_number);
  const state=review?.review_status||card.image_status;
- const status=element("span","tag",({pending_review:"Needs review",keep_missing:"Missing",approved:"Approved",matched:"Matched",rejected:"Rejected",missing:"Missing"})[state]||String(state).replaceAll("_"," "));
+ const status=element("span","tag",({pending_review:"Needs review",keep_missing:"Missing",approved:"Approved",matched:"Matched",rejected:"Awaiting replacement",missing:"Missing"})[state]||String(state).replaceAll("_"," "));
  heading.append(status);
  const meta=element("div","metadata",card.set_name);
  body.append(heading,meta);
@@ -377,9 +377,11 @@ function detail(card,review){
   candidateSection.append(search,element("p","note","Discovery reference only. Do not copy or approve artwork until the exact printing and reuse rights are confirmed."));
  }
  
- const waitingForImport=card.image_status!=="matched"&&!review?.candidate_path;
+ const waitingForImport=card.image_status!=="matched"&&(!review?.candidate_path||review.review_status==="rejected");
  if(waitingForImport)status.textContent="Awaiting image";
- const savedImage=review?.candidate_path||card.image_path;
+ // Never display a rejected archive candidate as though it were verified.
+ const rejectedImage=review?.review_status==="rejected";
+ const savedImage=rejectedImage?card.image_path:(review?.candidate_path||card.image_path);
  if(savedImage)showCardImage(visual,savedImage,card.card_name+" "+card.card_number);
  const form=element("div");
  const label=element("label",null,"R2 image path (optional until approving)");
@@ -388,7 +390,7 @@ function detail(card,review){
  const selectedLabel=element("p","note",uploadedCandidate?"Checking image…":"Choose an image under Image options.");
  selectedLabel.setAttribute("role","status");selectedLabel.setAttribute("aria-live","polite");
  const cardMessage=(message,isError=false)=>{selectedLabel.textContent=message;selectedLabel.style.color=isError?"#ffb6bd":"#bdd9c8";notice(message,isError);};
- const input=element("input");input.type="text";input.placeholder="set-folder/card-file.jpg";input.value=review?.candidate_path||card.image_path||"";
+ const input=element("input");input.type="text";input.placeholder="set-folder/card-file.jpg";input.value=review?.review_status==="rejected"?"":(review?.candidate_path||card.image_path||"");
  input.setAttribute("aria-label","R2 candidate path for "+card.card_name);
  input.addEventListener("input",()=>{selectedPath="";previewLoaded=false;selectedLabel.textContent="Select an image before approval.";});
  const pathWrap=element("div","candidate");pathWrap.append(input);
