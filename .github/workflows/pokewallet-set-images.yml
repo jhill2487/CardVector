@@ -54,6 +54,8 @@ jobs:
           for name in POKEWALLET_API_KEY SUPABASE_SERVICE_ROLE_KEY R2_ACCOUNT_ID R2_ACCESS_KEY_ID R2_SECRET_ACCESS_KEY R2_BUCKET; do
             if [ -z "${!name}" ]; then echo "::error::Missing secret: $name"; exit 1; fi
           done
+      - name: Validate importer syntax
+        run: python -m py_compile Tools/import_pokewallet_set_images.py
       - name: Install pinned R2 SDK
         run: python -m pip install boto3==1.35.99
       - name: Stage missing card images in R2 for review
