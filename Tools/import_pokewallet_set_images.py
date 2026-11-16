@@ -251,7 +251,6 @@ if __name__=="__main__":
     args=parser.parse_args()
     if not re.fullmatch(r"[0-9]{2,8}",args.set_id) or not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*",args.slug):
         parser.error("Set ID and slug must be safe, explicit values")
-    global SET_ID, SET_SLUG
     SET_ID=args.set_id
     SET_SLUG=args.slug
     run(args.limit,args.delay)
