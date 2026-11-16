@@ -73,8 +73,8 @@ button.secondary{background:#2f4a63;color:#f1f7fc}button:disabled{opacity:.5;cur
 <div class="toolbar"><div class="control"><label for="set">English set</label><select id="set"><option value="">Loading sets…</option></select></div>
 <div class="control"><label for="filter">Review status</label><select id="filter"><option value="uploaded">Uploaded R2 candidates</option><option value="pending">Pending images</option><option value="missing">Missing images</option><option value="needs_review">Ambiguous images</option><option value="matched">Existing exact matches</option><option value="resolved">Reviewed decisions</option><option value="all">All imported cards</option></select></div>
 <button id="refresh" type="button" class="secondary">Refresh</button></div>
-<div id="folder-setup" class="panel" hidden><label for="r2-folder">R2 set folder for first review</label><select id="r2-folder"><option value="">Select a folder…</option></select><p class="note" id="folder-help">The correct set folder must be verified before approving its first card. Selecting a folder here does not save or approve anything.</p></div>
-<details class="set-tools"><summary>Bulk matching and CSV tools</summary><div class="actions"><button id="csv-test" type="button" class="secondary">Test R2 CSV artwork mapping</button><p id="csv-test-result" class="note" role="status" aria-live="polite" style="flex-basis:100%;border:1px solid #52667b;border-radius:9px;padding:12px;margin:4px 0 0" hidden>CSV test status will appear here.</p><button id="match-set" type="button" class="secondary">First pass: match base artwork</button><button id="match-shared" type="button" class="secondary">Share base artwork with other finishes</button></div><p id="match-progress" class="note" role="status" aria-live="polite">Ready for artwork matching.</p><details id="match-exceptions" hidden><summary id="match-exceptions-summary">Review exceptions</summary><ol id="match-exceptions-list"></ol></details><p class="note" id="match-set-note">First pass matches base artwork per unique set and card number, leaving Poké Ball, Master Ball and other pattern records pending. Share representative base artwork with ordinary and Poké Ball/Master Ball finishes while preserving distinct printing identities; visible foil patterns remain unverified. Staff and special stamped printings require their own images. Public search is unchanged.</p>
+<div id="folder-setup" class="panel" hidden style="display:none!important"><label for="r2-folder">R2 set folder for first review</label><select id="r2-folder"><option value="">Select a folder…</option></select><p class="note" id="folder-help">The correct set folder must be verified before approving its first card. Selecting a folder here does not save or approve anything.</p></div>
+<details class="set-tools" hidden style="display:none!important"><summary>Retired CSV matching tools</summary><div class="actions"><button id="csv-test" type="button" class="secondary">Test R2 CSV artwork mapping</button><p id="csv-test-result" class="note" role="status" aria-live="polite" style="flex-basis:100%;border:1px solid #52667b;border-radius:9px;padding:12px;margin:4px 0 0" hidden>CSV test status will appear here.</p><button id="match-set" type="button" class="secondary">First pass: match base artwork</button><button id="match-shared" type="button" class="secondary">Share base artwork with other finishes</button></div><p id="match-progress" class="note" role="status" aria-live="polite">Ready for artwork matching.</p><details id="match-exceptions" hidden><summary id="match-exceptions-summary">Review exceptions</summary><ol id="match-exceptions-list"></ol></details><p class="note" id="match-set-note">First pass matches base artwork per unique set and card number, leaving Poké Ball, Master Ball and other pattern records pending. Share representative base artwork with ordinary and Poké Ball/Master Ball finishes while preserving distinct printing identities; visible foil patterns remain unverified. Staff and special stamped printings require their own images. Public search is unchanged.</p>
 </details><p id="set-note" class="note"></p>
 <p id="counts" class="summary" role="status" aria-live="polite">Loading…</p>
 <div id="cards"></div>
@@ -371,6 +371,8 @@ function detail(card,review){
   candidateSection.append(search,element("p","note","Discovery reference only. Do not copy or approve artwork until the exact printing and reuse rights are confirmed."));
  }
  
+ const waitingForImport=card.image_status!=="matched"&&!review?.candidate_path;
+ if(waitingForImport)status.textContent="Awaiting image";
  const savedImage=review?.candidate_path||card.image_path;
  if(savedImage)showCardImage(visual,savedImage,card.card_name+" "+card.card_number);
  const form=element("div");
@@ -471,10 +473,20 @@ function detail(card,review){
   });
   actions.append(confirmed,change);
  }
+ // An unstaged image cannot be approved. Keep old manual options hidden
+ // rather than presenting an actionable approval button with no artwork.
+ if(waitingForImport){
+  actions.replaceChildren();
+  const message=element("p","note","No PokéWallet image staged yet. The importer must retrieve this exact printing before review.");
+  message.style.color="#bdd9c8";
+  actions.append(message);
+  selectedLabel.textContent="Awaiting PokéWallet image import.";
+ }
+ if(alreadyApproved)selectedLabel.textContent="";
  const advanced=element("details","review-advanced");
  const summary=element("summary",null,"Image options, R2 path and notes");
  advanced.append(summary,label,pathWrap,hint,suggestions,notes,candidateSection);
- advanced.open=!uploadedCandidate&&!savedImage;
+ advanced.open=false;
  if(uploadedCandidate)selectedLabel.textContent="R2 candidate ready for review.";
  form.append(selectedLabel,actions,advanced);
  body.append(form);
@@ -908,7 +920,7 @@ async function refresh(){
  if(!setId){$("set-note").textContent="";$("counts").textContent="No unresolved images in imported sets.";render();return;}
  const current=sets.find(s=>s.set_id===setId);
  const verified=verifiedFolderFor(setId);
- $("set-note").textContent=(verified?(verified.provisional?"Unverified R2 filename probes: ":"Verified R2 folder: ")+verified.folder+(verified.code?" · Code: "+verified.code:"")+" · ":"No verified R2 set folder yet · ")+(current.coverage_status==="confirmed_absent"?"Confirmed set-level Kaggle gap. Inspect alternative sources; individual cards still need identity and finish verification.":"Coverage status: "+current.coverage_status.replaceAll("_"," ")+". Unmatched does not necessarily mean absent from Kaggle.");
+ $("set-note").textContent="PokéWallet image review · import missing artwork first, then verify each exact card printing. Existing approvals are preserved.";
  $("counts").textContent="Loading cards…";
  let query=db.from("cv_admin_pokewallet_catalog").select("provider_id,set_id,set_name,card_name,card_number,image_status,image_path").eq("set_id",setId).order("card_number",{ascending:true});
  if(filter==="uploaded"){
