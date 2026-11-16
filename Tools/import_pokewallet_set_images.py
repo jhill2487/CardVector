@@ -18,7 +18,7 @@ SET_SLUG="mega-evolution-energies"
 DB="https://iqdpfgpkagjxzedfxrvn.supabase.co/rest/v1/"
 PW="https://api.pokewallet.io/images/"
 VALID_ID=re.compile(r"^pk_[a-f0-9]{40,128}$",re.I)
-SAFE_NUMBER=re.compile(r"^\d{1,3}(?:/\d{1,3})?$")
+SAFE_NUMBER=re.compile(r"^(?:\d{1,3}(?:/\d{1,3})?|[RGB]/RGB)$",re.I)
 
 def image_type(data):
     if len(data)<256 or len(data)>1_000_000:
