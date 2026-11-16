@@ -23,10 +23,13 @@ def build_catalog_rows(pages,set_info):
     for items in pages:
         for item in items:
             card=normalize_card(item,set_info)
-            if card is None and isinstance(item,dict) and (item.get("card_info") or {}).get("product_type")=="sealed":
+            if card is None:
+                # A set page may include promotional products or incomplete
+                # entries. Never import them as cards; the exact expected
+                # unique card count below is still mandatory.
                 continue
-            if not card or not card.get("id"):
-                raise RuntimeError("Target set contains a non-sealed record without a usable identity")
+            if not card.get("id"):
+                raise RuntimeError("Target card has no provider identity")
             if card["id"] in ids:
                 raise RuntimeError("Duplicate provider ID in targeted set")
             ids.add(card["id"])
