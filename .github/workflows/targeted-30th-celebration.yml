@@ -1,0 +1,32 @@
+name: Import regular 30th Celebration (one-shot)
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/targeted-30th-celebration.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: pokewallet-daily-catalog-import
+  cancel-in-progress: false
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      POKEWALLET_API_KEY: ${{ secrets.POKEWALLET_API_KEY }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      CARDVECTOR_TARGET_SET_ID: '24722'
+      CARDVECTOR_TARGET_CARD_COUNT: '170'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate targeted importer
+        run: |
+          python -m py_compile Tools/run_targeted_pokewallet_import.py
+          python -m unittest discover -s Tools/tests -p 'test_targeted_pokewallet_import.py'
+      - name: Import exact 170-card English set without advancing normal checkpoint
+        run: python Tools/run_targeted_pokewallet_import.py
