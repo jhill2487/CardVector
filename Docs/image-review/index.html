@@ -449,9 +449,10 @@ function detail(card,review){
    }
    await loadClaims();
    status.textContent=value==="approved"?"approved · catalog matched":value.replace("_"," ");
-   // Keep the approved card visible and its image displayed immediately;
-   // the missing-images filter will update on the next explicit refresh.
-   if(value!=="approved")await refresh();
+   // Rebuild the review card from saved Supabase state after every decision.
+   // Approved cards immediately show the completed state (or disappear from
+   // the uploaded-only queue), rather than retaining stale Approve buttons.
+   await refresh();
    notice(value==="approved"?"Approved image saved to private catalog for "+card.card_name+". Find it under Reviewed decisions. Public search unchanged.":"Review decision saved for "+card.card_name+". Public search unchanged.");
   });actions.append(button);
  }
