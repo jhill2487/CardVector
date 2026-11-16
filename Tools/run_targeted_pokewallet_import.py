@@ -84,7 +84,22 @@ def run_targeted(state,store,fetch,now=None,set_id="23353",expected=245):
     if sum(map(len,pages))!=total:
         raise RuntimeError("Target provider pages were incomplete or exceeded declared total")
     rows=build_catalog_rows(pages,match)
-    if len(rows)!=expected:
+    # PokéWallet counts nine digital code cards as cards in the regular
+    # 30th Celebration set. CardVector imports physical cards only.
+    physical_expected=expected
+    if set_id=="24722":
+        excluded_code=[]
+        for items in pages:
+            for item in items:
+                info=item.get("card_info") if isinstance(item,dict) else None
+                if not isinstance(info,dict):continue
+                name=str(info.get("clean_name") or info.get("name") or "")
+                if info.get("product_type")=="card" and not info.get("card_number") and name.startswith("Code Card "):
+                    excluded_code.append(item)
+        if len(excluded_code)!=9:
+            raise RuntimeError("Expected exactly nine unnumbered digital code cards; no catalog writes")
+        physical_expected=expected-9
+    if len(rows)!=physical_expected:
         categories={}
         examples=[]
         for items in pages:
@@ -114,7 +129,7 @@ def run_targeted(state,store,fetch,now=None,set_id="23353",expected=245):
     store.save(state)
     store.publish(state)
     return {"mode":"targeted_manual","set_id":set_id,"set_name":match["name"],
-        "imported":len(rows),"expected":expected,"daily_imported":state["daily_imported"],
+        "imported":len(rows),"expected":physical_expected,"provider_card_count":expected,"daily_imported":state["daily_imported"],
         "regular_cursor_unchanged":True,"image_approvals":0}
 
 def main():
