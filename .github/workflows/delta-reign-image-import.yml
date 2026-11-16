@@ -5,7 +5,7 @@ on:
     paths:
       - '.github/workflows/delta-reign-image-import.yml'
   schedule:
-    # Daily retry for any remaining images; quota guard prevents overuse.
+    # Retry only still-unstaged images; live quota checks preserve headroom.
     - cron: '17 14 * * *'
   workflow_dispatch:
     inputs:
