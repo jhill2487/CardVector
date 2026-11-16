@@ -187,11 +187,24 @@ def run(limit=1,delay=5.0,provider_id=None):
     quota_remaining=None
     quota_hourly=None
     quota_guard=20  # Leave room for concurrent catalog activity.
+    hourly_waits=0
+    probe_after_wait=False
     for card in remaining:
         if attempts>=limit: break
-        if attempts>0 and (quota_remaining is None or quota_hourly is None or min(quota_remaining,quota_hourly)<=quota_guard):
-            print("Stopping before next request: quota headroom not verified or below safety margin")
-            break
+        if attempts>0:
+            if quota_remaining is None or quota_hourly is None or quota_remaining<=quota_guard:
+                print("Stopping before next request: daily quota headroom not verified or below safety margin",flush=True)
+                break
+            if quota_hourly<=quota_guard and not probe_after_wait:
+                if os.getenv("CARDVECTOR_WAIT_HOURLY_RESET")=="1" and hourly_waits<2:
+                    hourly_waits+=1
+                    print("Hourly quota headroom low; pausing inside the same batch before one quota-checked probe",flush=True)
+                    time.sleep(3700)
+                    probe_after_wait=True
+                else:
+                    print("Stopping before next request: hourly quota headroom below safety margin",flush=True)
+                    break
+        probe_after_wait=False
         pid=card["provider_id"]
         if not VALID_ID.fullmatch(pid):
             counts["errors"]+=1
