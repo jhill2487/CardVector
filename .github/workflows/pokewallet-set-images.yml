@@ -1,5 +1,9 @@
 name: PokéWallet card images — newest English sets first
 on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/pokewallet-set-images.yml'
   workflow_dispatch:
     inputs:
       set_id:
@@ -25,6 +29,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   stage:
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[promo-image-pilot]')
     runs-on: ubuntu-latest
     timeout-minutes: 40
     env:
@@ -41,7 +46,7 @@ jobs:
           python-version: "3.12"
       - name: Reject energy sets
         env:
-          SET_ID: ${{ inputs.set_id }}
+          SET_ID: ${{ inputs.set_id || '24451' }}
         run: |
           if [ "$SET_ID" = "24461" ]; then echo "::error::Standalone energy sets are excluded"; exit 1; fi
       - name: Verify required credentials
@@ -53,7 +58,7 @@ jobs:
         run: python -m pip install boto3==1.35.99
       - name: Stage missing card images in R2 for review
         env:
-          SET_ID: ${{ inputs.set_id }}
-          SET_SLUG: ${{ inputs.slug }}
-          IMAGE_LIMIT: ${{ inputs.limit }}
+          SET_ID: ${{ inputs.set_id || '24451' }}
+          SET_SLUG: ${{ inputs.slug || 'mega-evolution-promos' }}
+          IMAGE_LIMIT: ${{ inputs.limit || '1' }}
         run: python Tools/import_pokewallet_set_images.py --set-id "$SET_ID" --slug "$SET_SLUG" --limit "$IMAGE_LIMIT" --delay 5
