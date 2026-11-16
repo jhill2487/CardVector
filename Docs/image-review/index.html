@@ -455,13 +455,23 @@ function detail(card,review){
     cardMessage("Approved image saved and catalog match confirmed.");
     previewLoaded=true;
    }
-   await loadClaims();
-   status.textContent=value==="approved"?"approved · catalog matched":value.replace("_"," ");
-   // Rebuild the review card from saved Supabase state after every decision.
-   // Approved cards immediately show the completed state (or disappear from
-   // the uploaded-only queue), rather than retaining stale Approve buttons.
-   await refresh();
-   notice(value==="approved"?"Approved image saved to private catalog for "+card.card_name+". Find it under Reviewed decisions. Public search unchanged.":"Review decision saved for "+card.card_name+". Public search unchanged.");
+   status.textContent=value==="approved"?"Approved":value.replace("_"," ");
+   // Update only this card after the write is confirmed. Avoid re-fetching
+   // every card, resetting the page, and shifting scroll position.
+   const filter=$("filter").value;
+   const leaveQueue=value==="approved"&&filter!=="all"&&filter!=="matched"&&filter!=="resolved";
+   if(leaveQueue){
+    records=records.filter(item=>item.provider_id!==card.provider_id);
+    box.remove();
+    if(!records.length) $("cards").append(element("p","muted","No more cards on this page. Select Next or Refresh to continue."));
+    const current=sets.find(item=>item.set_id===$("set").value);
+    $("counts").textContent=records.length+" cards remaining on this page · "+(current?.imported_cards||"")+" imported records in this English set.";
+   }else{
+    box.replaceWith(detail(card,record));
+   }
+   notice(value==="approved"?"Approved and saved: "+card.card_name+".":"Review decision saved for "+card.card_name+".");
+   // Keep archive claims current without blocking the next review action.
+   loadClaims().catch(error=>notice("Review saved, but image claims could not refresh: "+error.message,true));
   });actions.append(button);
  }
  // An already-approved catalog image is not an outstanding approval task.
