@@ -33,7 +33,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   stage:
-    if: github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[promo-image-pilot]') || contains(github.event.head_commit.message, '[staff-image-pilot]') || contains(github.event.head_commit.message, '[promo-batch]') || contains(github.event.head_commit.message, '[staff-retry-pilot]') || contains(github.event.head_commit.message, '[numeric-batch]') || contains(github.event.head_commit.message, '[ceruledge-staff]')
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[promo-image-pilot]') || contains(github.event.head_commit.message, '[staff-image-pilot]') || contains(github.event.head_commit.message, '[promo-batch]') || contains(github.event.head_commit.message, '[staff-retry-pilot]') || contains(github.event.head_commit.message, '[numeric-batch]') || contains(github.event.head_commit.message, '[ceruledge-staff]') || contains(github.event.head_commit.message, '[promo-complete]')
     runs-on: ubuntu-latest
     timeout-minutes: 40
     env:
@@ -66,7 +66,7 @@ jobs:
         env:
           SET_ID: ${{ inputs.set_id || '24451' }}
           SET_SLUG: ${{ inputs.slug || 'mega-evolution-promos' }}
-          IMAGE_LIMIT: ${{ contains(github.event.head_commit.message, '[staff-retry-pilot]') && '1' || contains(github.event.head_commit.message, '[ceruledge-staff]') && '1' || contains(github.event.head_commit.message, '[numeric-batch]') && '25' || github.event_name == 'push' && '50' || inputs.limit || '1' }}
+          IMAGE_LIMIT: ${{ contains(github.event.head_commit.message, '[staff-retry-pilot]') && '1' || contains(github.event.head_commit.message, '[ceruledge-staff]') && '1' || contains(github.event.head_commit.message, '[promo-complete]') && '50' || contains(github.event.head_commit.message, '[numeric-batch]') && '25' || github.event_name == 'push' && '50' || inputs.limit || '1' }}
           PILOT_PROVIDER_ID: ${{ contains(github.event.head_commit.message, '[ceruledge-staff]') && 'pk_9804695eb844d1e3093d3a46e3741d243fbb1e22106c5946c5e5a6c14cb7709fb8c2797bb7c928bef62fd8' || contains(github.event.head_commit.message, '[staff-retry-pilot]') && 'pk_8555481125c1e850b19c2a48eaf669c502cc9e4971b07f4fc8af367a95301188692afd848663c3335da1' || contains(github.event.head_commit.message, '[staff-image-pilot]') && 'pk_9247a833a9e3e597706f290d436a1f0251bdf53002189a1f7ef444ec97e7fbfbf1df8f74e155481e24816172' || inputs.provider_id || '' }}
         run: |
           args=(--set-id "$SET_ID" --slug "$SET_SLUG" --limit "$IMAGE_LIMIT" --delay 5)
