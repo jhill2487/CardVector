@@ -66,7 +66,7 @@ jobs:
         env:
           SET_ID: ${{ inputs.set_id || '24451' }}
           SET_SLUG: ${{ inputs.slug || 'mega-evolution-promos' }}
-          IMAGE_LIMIT: ${{ github.event_name == 'push' && '25' || inputs.limit || '1' }}
+          IMAGE_LIMIT: ${{ github.event_name == 'push' && '50' || inputs.limit || '1' }}
           PILOT_PROVIDER_ID: ${{ contains(github.event.head_commit.message, '[staff-image-pilot]') && 'pk_9247a833a9e3e597706f290d436a1f0251bdf53002189a1f7ef444ec97e7fbfbf1df8f74e155481e24816172' || inputs.provider_id || '' }}
         run: |
           args=(--set-id "$SET_ID" --slug "$SET_SLUG" --limit "$IMAGE_LIMIT" --delay 5)
