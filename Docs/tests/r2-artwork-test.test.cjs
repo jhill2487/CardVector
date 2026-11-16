@@ -5,7 +5,7 @@ const vm=require("node:vm");
 const source=fs.readFileSync(__dirname+"/../r2-artwork-test.js","utf8");
 const window={};vm.runInNewContext(source,{window});
 const api=window.CardVectorR2ArtworkTest;
-const row=(number,path,name="")=>({number,filename:path.split("/").pop(),path:"archive/"+path,setSlug:"stellar-crown",name});
+const row=(number,path,name="")=>({number,filename:path.split("/").pop(),path:"archive/"+path,setSlug:path.split("/").slice(-2,-1)[0],name});
 const cards=[
  {provider_id:"a",card_name:"Venusaur ex",card_number:"001/142"},
  {provider_id:"b",card_name:"Venusaur ex Poke Ball Pattern",card_number:"001/142"},
