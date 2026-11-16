@@ -1,4 +1,5 @@
 name: Import regular 30th Celebration (one-shot)
+# Retry excludes non-card products; validates 170 exact unique cards before writes
 on:
   push:
     branches: [main]
