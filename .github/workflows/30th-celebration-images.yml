@@ -1,0 +1,41 @@
+name: 30th Celebration images — two batches (100 + 61)
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/30th-celebration-images.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: pokewallet-set-images
+  cancel-in-progress: false
+jobs:
+  stage-two-batches:
+    runs-on: ubuntu-latest
+    timeout-minutes: 270
+    env:
+      POKEWALLET_API_KEY: ${{ secrets.POKEWALLET_API_KEY }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+      R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+      R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+      R2_BUCKET: ${{ secrets.R2_BUCKET }}
+      CARDVECTOR_WAIT_HOURLY_RESET: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check importer and credentials
+        run: |
+          python -m py_compile Tools/import_pokewallet_set_images.py
+          for name in POKEWALLET_API_KEY SUPABASE_SERVICE_ROLE_KEY R2_ACCOUNT_ID R2_ACCESS_KEY_ID R2_SECRET_ACCESS_KEY R2_BUCKET; do
+            if [ -z "${!name}" ]; then echo "::error::Missing $name"; exit 1; fi
+          done
+      - name: Install pinned R2 SDK
+        run: python -m pip install boto3==1.35.99
+      - name: Batch 1 — up to 100 exact physical card images
+        run: python Tools/import_pokewallet_set_images.py --set-id 24722 --slug 30th-celebration --limit 100 --delay 5
+      - name: Batch 2 — up to 61 remaining physical card images
+        run: python Tools/import_pokewallet_set_images.py --set-id 24722 --slug 30th-celebration --limit 61 --delay 5
