@@ -105,7 +105,9 @@ def main():
     def fetch(path):
         return api_json(PW_URL+path,headers={
             "X-API-Key":pw,"User-Agent":"CardVector-Targeted-Importer/1.0"})
-    result=run_targeted(state,store,fetch)
+    target_id=os.environ.get("CARDVECTOR_TARGET_SET_ID","23353")
+    target_count=int(os.environ.get("CARDVECTOR_TARGET_CARD_COUNT","245"))
+    result=run_targeted(state,store,fetch,set_id=target_id,expected=target_count)
     print(json.dumps(result,sort_keys=True))
 
 if __name__=="__main__":
