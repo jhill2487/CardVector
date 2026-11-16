@@ -453,6 +453,24 @@ function detail(card,review){
    notice(value==="approved"?"Approved image saved to private catalog for "+card.card_name+". Find it under Reviewed decisions. Public search unchanged.":"Review decision saved for "+card.card_name+". Public search unchanged.");
   });actions.append(button);
  }
+ // An already-approved catalog image is not an outstanding approval task.
+ // Make corrections an explicit action to prevent accidental overwrites.
+ const alreadyApproved=review?.review_status==="approved"&&card.image_status==="matched"&&review.candidate_path===card.image_path;
+ if(alreadyApproved){
+  const reviewActions=[...actions.children];
+  actions.replaceChildren();
+  const confirmed=element("p","note","Already approved and matched. No further action needed.");
+  confirmed.style.color="#bdd9c8";
+  const change=element("button","secondary","Change approved image");
+  change.type="button";
+  change.addEventListener("click",()=>{
+   actions.replaceChildren(...reviewActions);
+   preview.click();
+   advanced.open=true;
+   cardMessage("To replace this approved image, inspect the new candidate first. Existing approval remains until you save a change.");
+  });
+  actions.append(confirmed,change);
+ }
  const advanced=element("details","review-advanced");
  const summary=element("summary",null,"Image options, R2 path and notes");
  advanced.append(summary,label,pathWrap,hint,suggestions,notes,candidateSection);
