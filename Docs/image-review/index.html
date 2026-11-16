@@ -342,7 +342,7 @@ function exactPokewalletUpload(card,review,path){
  if(!/^pokewallet\/[a-z0-9]+(?:-[a-z0-9]+)*\//.test(path))return false;
  const id=String(card.provider_id||"").match(/^pk_([a-f0-9]{40,128})$/i);
  const number=String(card.card_number||"");
- if(!id||!/^\d{1,3}(?:\/\d{1,3})?$/.test(number))return false;
+ if(!id||!(/^(?:\d{1,3}(?:\/\d{1,3})?|[RGB]\/RGB)$/i.test(number)))return false;
  const expected=number.replace("/","-")+"_"+id[1].slice(0,16).toLowerCase();
  return path.split("/").pop().toLowerCase().match(/^(.*)\.(jpg|jpeg|png|webp)$/)?.[1]===expected;
 }
