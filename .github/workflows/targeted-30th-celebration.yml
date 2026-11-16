@@ -1,5 +1,5 @@
 name: Import regular 30th Celebration (one-shot)
-# Diagnose provider card records before any catalog writes
+# Identify nine unnumbered card records before any catalog writes
 on:
   push:
     branches: [main]
