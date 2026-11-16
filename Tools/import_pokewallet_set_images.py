@@ -52,7 +52,18 @@ def rows(headers):
     query=urllib.parse.urlencode({"set_id":"eq."+SET_ID,
         "select":"provider_id,card_name,card_number,image_status,image_path",
         "order":"card_number.asc","limit":"1000"})
-    return json.loads(request(DB+"cv_admin_pokewallet_catalog?"+query,headers))
+    cards=json.loads(request(DB+"cv_admin_pokewallet_catalog?"+query,headers))
+    # The API orders text numbers lexically (1, 10, 100, ... 2).
+    # Sort in Python so small numbered cards and their special printings
+    # are imported together, while preserving card identities.
+    def key(card):
+        label=str(card.get("card_number") or "").strip()
+        match=re.fullmatch(r"([A-Za-z]*)([0-9]+)(.*)",label)
+        if match:
+            return (match.group(1).lower(),int(match.group(2)),match.group(3),
+                    str(card.get("card_name") or "").lower(),str(card.get("provider_id") or ""))
+        return (label.lower(),float("inf"),"","","")
+    return sorted(cards,key=key)
 
 def existing_reviews(headers,cards):
     # Review table holds many sets; the first 500 rows do not represent Delta Reign.
