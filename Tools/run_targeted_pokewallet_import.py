@@ -84,7 +84,27 @@ def run_targeted(state,store,fetch,now=None,set_id="23353",expected=245):
     if sum(map(len,pages))!=total:
         raise RuntimeError("Target provider pages were incomplete or exceeded declared total")
     rows=build_catalog_rows(pages,match)
-    if len(rows)!=expected:raise RuntimeError("Normalized set was incomplete")
+    if len(rows)!=expected:
+        categories={}
+        examples=[]
+        for items in pages:
+            for item in items:
+                info=item.get("card_info") if isinstance(item,dict) else None
+                if not isinstance(info,dict): info={}
+                card=normalize_card(item,match)
+                if card: continue
+                kind=str(info.get("product_type") or "<missing type>")
+                has_name=bool(info.get("clean_name") or info.get("name"))
+                has_number=bool(info.get("card_number"))
+                key=f"{kind}: name={has_name}, number={has_number}"
+                categories[key]=categories.get(key,0)+1
+                if len(examples)<8:
+                    examples.append({"type":kind,"name":str(info.get("clean_name") or info.get("name") or "")[:85],
+                                     "number":str(info.get("card_number") or "")[:30]})
+        print(json.dumps({"set_id":set_id,"provider_total":total,"expected_cards":expected,
+                          "normalized_cards":len(rows),"excluded_by_type":categories,
+                          "excluded_examples":examples},sort_keys=True),flush=True)
+        raise RuntimeError("Normalized set was incomplete; no catalog writes")
     # All source validation completes before writes. Cursor fields stay intact.
     for i in range(0,len(rows),40):
         store.upsert("cv_admin_pokewallet_catalog",rows[i:i+40])
