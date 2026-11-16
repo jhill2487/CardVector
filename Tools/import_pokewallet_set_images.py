@@ -90,7 +90,7 @@ def r2_client():
         aws_secret_access_key=os.environ["R2_SECRET_ACCESS_KEY"],
         region_name="auto",config=Config(signature_version="s3v4",retries={"max_attempts":3}))
 
-def run(limit=1,delay=5.0):
+def run(limit=1,delay=5.0,provider_id=None):
     if not 1<=limit<=250: raise ValueError("Limit must be between 1 and 250")
     if not 0<=delay<=120: raise ValueError("Invalid delay")
     for key in ("SUPABASE_SERVICE_ROLE_KEY","POKEWALLET_API_KEY",
@@ -104,6 +104,13 @@ def run(limit=1,delay=5.0):
         raise RuntimeError("Set catalog missing or unexpectedly changed; no imports made")
     reviews=existing_reviews(headers,cards)
     remaining=unprocessed_cards(cards,reviews)
+    if provider_id:
+        selected=[c for c in cards if c["provider_id"]==provider_id]
+        if len(selected)!=1 or "staff" not in selected[0]["card_name"].lower():
+            raise RuntimeError("Selected provider ID is not one staff promo card in this set")
+        if selected[0] not in remaining:
+            raise RuntimeError("Staff promo already has an image or review decision; preserve existing record")
+        remaining=selected
     print("Set "+SET_ID+" image staging: "+str(len(cards)-len(remaining))+
           " existing reviews/matches, "+str(len(remaining))+" not yet staged")
     if not remaining:
@@ -248,9 +255,12 @@ if __name__=="__main__":
     parser.add_argument("--slug",required=True,help="Canonical short R2 folder slug")
     parser.add_argument("--limit",type=int,default=1)
     parser.add_argument("--delay",type=float,default=5.0)
+    parser.add_argument("--provider-id",default=None,help="Optional exact Staff promo ID for a single-image pilot")
     args=parser.parse_args()
     if not re.fullmatch(r"[0-9]{2,8}",args.set_id) or not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*",args.slug):
         parser.error("Set ID and slug must be safe, explicit values")
     SET_ID=args.set_id
     SET_SLUG=args.slug
-    run(args.limit,args.delay)
+    if args.provider_id and not VALID_ID.fullmatch(args.provider_id):
+        parser.error("Invalid provider ID")
+    run(args.limit,args.delay,args.provider_id)
