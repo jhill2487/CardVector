@@ -35,6 +35,9 @@ jobs:
       - name: Checkout CardVector source
         uses: actions/checkout@v4
 
+      - name: Test CSV-first R2 matching
+        run: node --test Docs/tests/r2-artwork-test.test.cjs
+
       - name: Export public static site artifact
         run: |
           python Tools/export_cardvector_site.py --output public-site --source-sha "$GITHUB_SHA"
