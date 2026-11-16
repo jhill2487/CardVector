@@ -324,6 +324,19 @@ function showCardImage(visual,path,label){
  visual.onclick=()=>openImageZoom(url,label);
  visual.onkeydown=event=>{if(event.key==="Enter"||event.key===" "){event.preventDefault();openImageZoom(url,label);}};
 }
+// A staged PokéWallet image is bound to the exact provider printing: the
+// private review row must own the path and its filename must carry the
+// card's collector number and provider-ID fingerprint. This is not an
+// archive/CSV match and does not require a manually verified R2 set folder.
+function exactPokewalletUpload(card,review,path){
+ if(review?.review_status!=="pending_review"||review.candidate_path!==path)return false;
+ if(!/^pokewallet\/[a-z0-9]+(?:-[a-z0-9]+)*\//.test(path))return false;
+ const id=String(card.provider_id||"").match(/^pk_([a-f0-9]{40,128})$/i);
+ const number=String(card.card_number||"");
+ if(!id||!/^\d{1,3}(?:\/\d{1,3})?$/.test(number))return false;
+ const expected=number.replace("/","-")+"_"+id[1].slice(0,16).toLowerCase();
+ return path.split("/").pop().toLowerCase().match(/^(.*)\.(jpg|jpeg|png|webp)$/)?.[1]===expected;
+}
 function detail(card,review){
  const box=element("article","review-card");
  const visual=element("div","image","No image");
@@ -405,7 +418,7 @@ function detail(card,review){
    const path=input.value.trim(),url=candidateUrl(path);
    if(value==="approved"&&(!url||selectedPath!==path||!previewLoaded)){cardMessage("Approval blocked: image not yet previewed successfully. Click Preview image first and verify the artwork.",true);return;}
    if(value==="approved"&&claimedByDifferentSet(path,card.set_id,card.card_number)){cardMessage("Approval blocked: image belongs to another set or collector number.",true);return;}
-   const savedUploaded=uploadedCandidate&&path===review.candidate_path&&card.set_name==="Delta Reign"&&path.startsWith("pokewallet/delta-reign/")&&!requiresDistinctImage(card)&&!requiredPatternToken(card);
+   const savedUploaded=exactPokewalletUpload(card,review,path);
    if(value==="approved"&&!savedUploaded&&!found.some(x=>x.r.path.replace(/^archive\//,"")===path)){cardMessage("Approval blocked: candidate is not registered for this exact printing.",true);return;}
    if(value==="approved"&&!savedUploaded&&!verifiedFolderFor(card.set_id)&&!folderAllowedForSet(card.set_id,temporaryFolder?.folder)){cardMessage("Approval blocked: select the correct set-specific R2 folder.",true);return;}
    if(value==="approved"&&!window.confirm("Save this approved image to the private catalog? Public search will not change."))return;
