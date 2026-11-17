@@ -455,44 +455,71 @@ def render_public_footer() -> str:
 """
 
 
+def render_brief_inline(text: str) -> str:
+    """Escape untrusted Markdown before applying a small, safe inline subset."""
+    safe = escape_html(text)
+    safe = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", safe)
+    safe = re.sub(r"(?<!\*)\*([^*\n]+)\*(?!\*)", r"<em>\1</em>", safe)
+    safe = re.sub(r"(?<!\w)&#x60;(.+?)&#x60;", r"<code>\1</code>", safe)
+    return safe
+
+
 def render_brief_section(section: dict[str, str]) -> str:
-    paragraphs = [
-        f"<p>{escape_html(paragraph.strip())}</p>"
-        for paragraph in re.split(r"\n{2,}", section["body"])
-        if paragraph.strip()
-    ]
+    """Render article markdown without exposing raw HTML."""
+    blocks = []
+    lines = section["body"].splitlines()
+    index = 0
+    while index < len(lines):
+        line = lines[index].strip()
+        if not line:
+            index += 1
+            continue
+        if line.startswith("### "):
+            blocks.append(f"<h3>{render_brief_inline(line[4:])}</h3>")
+            index += 1
+            continue
+        if line.startswith("|") and index + 1 < len(lines) and re.match(r"^\|?[\s:|\-]+\|?$", lines[index + 1].strip()):
+            headers = [cell.strip() for cell in line.strip("|").split("|")]
+            index += 2
+            rows = []
+            while index < len(lines) and lines[index].strip().startswith("|"):
+                cells = [cell.strip() for cell in lines[index].strip().strip("|").split("|")]
+                rows.append("<tr>" + "".join(f"<td>{render_brief_inline(cell)}</td>" for cell in cells) + "</tr>")
+                index += 1
+            blocks.append('<div class="brief-table-scroll"><table><thead><tr>' +
+                          "".join(f"<th>{render_brief_inline(cell)}</th>" for cell in headers) +
+                          "</tr></thead><tbody>" + "".join(rows) + "</tbody></table></div>")
+            continue
+        if re.match(r"^(?:[-*] |\d+\. )", line):
+            ordered = bool(re.match(r"^\d+\. ", line))
+            tag = "ol" if ordered else "ul"
+            items = []
+            while index < len(lines) and re.match(r"^(?:\d+\. |[-*] )", lines[index].strip()):
+                item = re.sub(r"^(?:\d+\. |[-*] )", "", lines[index].strip())
+                items.append(f"<li>{render_brief_inline(item)}</li>")
+                index += 1
+            blocks.append(f"<{tag}>" + "".join(items) + f"</{tag}>")
+            continue
+        paragraph = []
+        while index < len(lines) and lines[index].strip() and not lines[index].strip().startswith("### "):
+            paragraph.append(render_brief_inline(lines[index].strip()))
+            index += 1
+        blocks.append("<p>" + "<br>".join(paragraph) + "</p>")
     return f"""
           <section class="brief-post-section">
             <h2>{escape_html(section["heading"])}</h2>
-            {''.join(paragraphs)}
+            {''.join(blocks)}
           </section>"""
 
 
-def render_brief_affiliate_panel(post: dict[str, object]) -> str:
-    links = post.get("affiliateLinks", [])
-    if not isinstance(links, list) or not links:
-        return ""
-    rendered_links = []
-    for link in links:
-        if not isinstance(link, dict):
-            continue
-        label = str(link.get("label", "") or "").strip()
-        url = str(link.get("url", "") or "").strip()
-        if label and url.startswith("https://"):
-            rendered_links.append(
-                f'<a class="button primary" href="{escape_html(url)}" target="_blank" rel="noopener noreferrer">{escape_html(label)}</a>'
-            )
-    if not rendered_links:
-        return ""
-    return f"""
-      <aside class="brief-affiliate-panel" aria-label="Related affiliate links">
-        <span class="brief-kicker">Shop related picks</span>
-        <h2>Explore current listings</h2>
-        <div class="brief-affiliate-links">
-          {''.join(rendered_links)}
-        </div>
-        <p class="marketplace-disclosure">Marketplace links may be affiliate links. CardVector may earn a commission from qualifying purchases.</p>
-      </aside>"""
+def render_brief_ad_slot(side: str) -> str:
+    return f"""<aside class="brief-ad-rail brief-ad-rail-{side}" aria-label="Advertising placement">
+      <div class="brief-ad-placeholder">
+        <span class="brief-ad-label">Advertisement</span>
+        <p>Your brand here</p>
+        <a href="/contact/">Advertise with CardVector</a>
+      </div>
+    </aside>"""
 
 
 def render_market_brief_static_pages(output: Path, posts: list[dict[str, object]]) -> None:
@@ -606,7 +633,9 @@ def render_market_brief_static_pages(output: Path, posts: list[dict[str, object]
         ) + f"""
     <script type="application/ld+json">{json_ld}</script>
     <script type="application/ld+json">{breadcrumb_post_json_ld}</script>
-    <article class="blog-shell blog-post wrap" aria-labelledby="market-brief-post-title">
+    <div class="brief-page-grid">
+    {render_brief_ad_slot("left")}
+    <article class="blog-shell blog-post" aria-labelledby="market-brief-post-title">
       <a class="operator-inline-link" href="/market-briefs/">Back to Market Briefs</a>
       <p class="eyebrow">{escape_html(post.get("label", "Market Brief"))}</p>
       <h1 id="market-brief-post-title">{escape_html(post["title"])}</h1>
@@ -617,17 +646,10 @@ def render_market_brief_static_pages(output: Path, posts: list[dict[str, object]
         <p>{escape_html(post.get("searchIntent") or "Use this brief to understand the market signals behind Pokemon card price changes before buying, selling, or repricing inventory.")}</p>
       </aside>
       <div class="brief-post-layout">{sections}</div>
-      {render_brief_affiliate_panel(post)}
-      <nav class="brief-internal-links" aria-label="Related CardVector pages">
-        <a href="/market-briefs/">More Pokemon market briefs</a>
-        <a href="/tools/carduploader/">CardUploader seller workflow</a>
-        <a href="{{{{CARDUPLOADER_BUYLIST_URL}}}}" target="_blank" rel="noopener noreferrer">CardUploader buylist</a>
-      </nav>
-      <aside class="brief-disclosure">
-        <strong>Editorial note</strong>
-        <p>Market briefs are informational commentary, not financial advice. Verify current marketplace data before buying, selling, or repricing.</p>
-      </aside>
+
     </article>
+    {render_brief_ad_slot("right")}
+    </div>
 """ + render_public_footer()
         (slug_dir / "index.html").write_text(post_html, encoding="utf-8")
 
