@@ -84,6 +84,17 @@ jobs:
           echo "url=${url}" >> "$GITHUB_OUTPUT"
           echo "Created market brief issue: ${url}"
 
+      - name: Trigger automatic publication
+        if: steps.issue.outputs.url != ''
+        shell: bash
+        run: |
+          issue_number="${{ steps.issue.outputs.url }}"
+          issue_number="${issue_number##*/}"
+          gh workflow run market-brief-draft.yml \
+            --repo "$GITHUB_REPOSITORY" \
+            --ref main \
+            -f issue_number="$issue_number"
+
       - name: Upload generated package artifact
         if: always()
         uses: actions/upload-artifact@v4
