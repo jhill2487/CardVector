@@ -102,10 +102,16 @@ jobs:
             --body "Approved for publication from issue #${{ steps.issue.outputs.number }}."
           echo "merged=true" >> "$GITHUB_OUTPUT"
 
+      - name: Trigger public website deployment
+        if: steps.pr.outputs.merged == 'true'
+        shell: bash
+        run: |
+          gh workflow run pages.yml --repo "$GITHUB_REPOSITORY" --ref main
+
       - name: Comment with publish result
         if: steps.pr.outputs.url != ''
         shell: bash
         run: |
           gh issue comment "${{ steps.issue.outputs.number }}" \
             --repo "$GITHUB_REPOSITORY" \
-            --body "Published market brief automatically through PR: ${{ steps.pr.outputs.url }}. The normal CardVector.app deployment workflow will run from the merge to main."
+            --body "Published market brief automatically through PR: ${{ steps.pr.outputs.url }}. The CardVector.app deployment workflow has been explicitly queued."
