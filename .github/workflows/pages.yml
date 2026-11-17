@@ -11,6 +11,11 @@ on:
       - Tools/check_site_export.py
       - Tools/verify_live_site.py
   workflow_dispatch:
+  workflow_run:
+    workflows:
+      - Publish Market Brief Automatically
+    types:
+      - completed
 
 permissions:
   contents: read
@@ -21,6 +26,7 @@ concurrency:
 
 jobs:
   deploy:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     env:
       CARDVECTOR_SITE_DEPLOY_TOKEN: ${{ secrets.CARDVECTOR_SITE_DEPLOY_TOKEN }}
