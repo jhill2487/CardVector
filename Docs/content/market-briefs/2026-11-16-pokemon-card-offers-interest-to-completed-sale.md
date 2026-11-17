@@ -17,8 +17,8 @@ tags:
   - Buyer Demand
   - Marketplace Economics
   - CardVector
-featuredImagePath: "/assets/putnam-ebay-banner.png"
-featuredImageAlt: "Trading cards reviewed during a buyer and seller negotiation"
+featuredImagePath: "/assets/cardvector-logo-traced.svg"
+featuredImageAlt: "CardVector logo"
 ---
 
 # When a Pokémon Card Offer Is Real: From Buyer Interest to Completed Sale
