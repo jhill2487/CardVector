@@ -414,8 +414,8 @@ def render_public_header(
   <meta name="twitter:card" content="summary_large_image">
   <title>{escape_html(title)}</title>
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
-  <link rel="stylesheet" href="/style.css?v=20260930-public-home">
-  <link rel="stylesheet" href="/market-theme.css">
+  <link rel="stylesheet" href="/style.css?v=20261117-brief-layout-2">
+  <link rel="stylesheet" href="/market-theme.css?v=20261117-brief-layout-2">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -452,7 +452,7 @@ def render_public_footer() -> str:
       </ul>
     </div>
   </footer>
-  <script src="/app.js?v=20260930-public-home" defer></script>
+  <script src="/app.js?v=20261117-brief-layout-2" defer></script>
 </body>
 </html>
 """
