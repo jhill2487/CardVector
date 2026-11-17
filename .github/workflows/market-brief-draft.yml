@@ -3,7 +3,6 @@ name: Publish Market Brief Automatically
 on:
   issues:
     types:
-      - opened
       - labeled
   workflow_dispatch:
     inputs:
@@ -23,7 +22,7 @@ concurrency:
 
 jobs:
   publish-market-brief:
-    if: github.event_name == 'workflow_dispatch' || (github.event.action == 'opened' && contains(github.event.issue.labels.*.name, 'market-brief')) || (github.event.action == 'labeled' && github.event.label.name == 'approved-to-publish')
+    if: github.event_name == 'workflow_dispatch' || (github.event.action == 'labeled' && (github.event.label.name == 'market-brief' || github.event.label.name == 'approved-to-publish'))
     runs-on: ubuntu-latest
     env:
       GH_TOKEN: ${{ github.token }}
@@ -102,16 +101,10 @@ jobs:
             --body "Approved for publication from issue #${{ steps.issue.outputs.number }}."
           echo "merged=true" >> "$GITHUB_OUTPUT"
 
-      - name: Trigger public website deployment
-        if: steps.pr.outputs.merged == 'true'
-        shell: bash
-        run: |
-          gh workflow run pages.yml --repo "$GITHUB_REPOSITORY" --ref main
-
       - name: Comment with publish result
         if: steps.pr.outputs.url != ''
         shell: bash
         run: |
           gh issue comment "${{ steps.issue.outputs.number }}" \
             --repo "$GITHUB_REPOSITORY" \
-            --body "Published market brief automatically through PR: ${{ steps.pr.outputs.url }}. The CardVector.app deployment workflow has been explicitly queued."
+            --body "Published market brief automatically through PR: ${{ steps.pr.outputs.url }}. The deployment workflow will be triggered by successful completion of this publication workflow."
