@@ -310,17 +310,20 @@ def parse_markdown_frontmatter(text: str, path: Path) -> tuple[dict[str, object]
 
 def markdown_sections(body: str) -> list[dict[str, str]]:
     sections: list[dict[str, str]] = []
-    current_heading = "Brief"
+    current_heading = "Introduction"
     current_lines: list[str] = []
     for line in body.splitlines():
+        # The article title is already rendered in the page header.
+        if line.startswith("# ") and current_heading == "Introduction" and not current_lines:
+            continue
         if line.startswith("## "):
-            if current_lines:
+            if any(item.strip() for item in current_lines):
                 sections.append({"heading": current_heading, "body": "\n".join(current_lines).strip()})
             current_heading = line[3:].strip()
             current_lines = []
         else:
             current_lines.append(line)
-    if current_lines:
+    if any(item.strip() for item in current_lines):
         sections.append({"heading": current_heading, "body": "\n".join(current_lines).strip()})
     return [section for section in sections if section["heading"] and section["body"]]
 
@@ -641,10 +644,6 @@ def render_market_brief_static_pages(output: Path, posts: list[dict[str, object]
       <h1 id="market-brief-post-title">{escape_html(post["title"])}</h1>
       <p class="blog-meta">{escape_html(date_label_for_brief(post.get("date", "")))} &middot; {escape_html(post.get("status", "published"))}</p>
       <p class="hero-lede">{escape_html(description)}</p>
-      <aside class="brief-answer-box">
-        <strong>Quick answer</strong>
-        <p>{escape_html(post.get("searchIntent") or "Use this brief to understand the market signals behind Pokemon card price changes before buying, selling, or repricing inventory.")}</p>
-      </aside>
       <div class="brief-post-layout">{sections}</div>
 
     </article>
