@@ -997,18 +997,25 @@ function fullyStagedPokewalletSet(s,stagedCounts){
 }
 async function pokewalletStagedCounts(){
  const staged=[];
- // Paginate rather than trusting the default PostgREST row cap.
+ // Include actual staged PokéWallet uploads AND previously approved exact
+ // artwork matches (including verified older R2 archives).
+ // Do not count R2 guesses, rejected rows or placeholder files.
  for(let offset=0;offset<20000;offset+=1000){
   const {data,error}=await db.from("cv_admin_image_reviews")
    .select("provider_id,candidate_path,review_status")
-   .like("candidate_path","pokewallet/%")
    .in("review_status",["approved","pending_review"])
+   .not("candidate_path","is",null)
    .order("provider_id",{ascending:true}).range(offset,offset+999);
   if(error)throw error;
   staged.push(...(data||[]));
   if(!data||data.length<1000)break;
  }
- const valid=staged.filter(r=>r.candidate_path&&/^pokewallet\/[a-z0-9-]+\/.+\.(?:jpg|jpeg|png|webp)$/i.test(r.candidate_path));
+ const valid=staged.filter(r=>{
+  const path=String(r.candidate_path||"");
+  return /\\.(?:jpg|jpeg|png|webp)$/i.test(path)&&
+   (r.review_status==="approved"||
+    (r.review_status==="pending_review"&&/^pokewallet\\/[a-z0-9-]+\\//i.test(path)));
+ });
  const linked=await lookupByProviderIds("cv_admin_pokewallet_catalog","provider_id,set_id",valid.map(r=>r.provider_id));
  const ids=new Set(valid.map(r=>r.provider_id));
  const bySet=new Map();
