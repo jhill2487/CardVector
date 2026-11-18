@@ -1,9 +1,5 @@
 name: PokéWallet catalog import (750 scheduled / 250 manual)
 on:
-  push:
-    branches: [main]
-    paths:
-      - '.github/workflows/daily-pokewallet-import.yml'
   workflow_dispatch:
   schedule:
     # Import metadata after image staging has first access to the daily API quota.
@@ -22,7 +18,7 @@ jobs:
       POKEWALLET_API_KEY: ${{ secrets.POKEWALLET_API_KEY }}
       SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
       CARDVECTOR_IMPORT_MODE: ${{ github.event_name == 'schedule' && 'scheduled' || 'manual_topup' }}
-      CARDVECTOR_DIAGNOSTIC_MODE: ${{ github.event_name == 'push' && 'targeted_paldean_fates' || github.event_name == 'schedule' && 'daily' || 'manual_topup' }}
+      CARDVECTOR_DIAGNOSTIC_MODE: ${{ github.event_name == 'schedule' && 'daily' || 'manual_topup' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -40,13 +36,6 @@ jobs:
       - name: Validate run-diagnostics wrapper
         if: steps.credentials.outputs.ready == 'true'
         run: python -m unittest discover -s Tools/tests -p 'test_import_diagnostics.py'
-      - name: Verify single-set import tests
-        if: steps.credentials.outputs.ready == 'true' && github.event_name == 'push'
-        run: python -m unittest discover -s Tools/tests -p 'test_targeted_pokewallet_import.py'
-      # One-shot retry after correcting the provider total to include sealed products.
-      - name: Import Paldean Fates only (up to 245 records, no cursor move)
-        if: steps.credentials.outputs.ready == 'true' && github.event_name == 'push'
-        run: python Tools/run_import_with_diagnostics.py
       - name: Import scheduled 750 or manual top-up 250 records (checkpoint-safe)
-        if: steps.credentials.outputs.ready == 'true' && github.event_name != 'push'
+        if: steps.credentials.outputs.ready == 'true'
         run: python Tools/run_import_with_diagnostics.py
