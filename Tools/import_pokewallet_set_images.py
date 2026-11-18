@@ -201,23 +201,23 @@ def run(limit=1,delay=5.0,provider_id=None):
     attempts=0
     quota_remaining=None
     quota_hourly=None
-    quota_guard=20  # Leave room for concurrent catalog activity.
+    quota_guard=0  # No artificial reserve; respect provider's actual hourly/daily limits.
     hourly_waits=0
     probe_after_wait=False
     for card in remaining:
         if attempts>=limit: break
         if attempts>0:
             if quota_remaining is None or quota_hourly is None or quota_remaining<=quota_guard:
-                print("Stopping before next request: daily quota headroom not verified or below safety margin",flush=True)
+                print("Stopping before next request: daily quota exhausted or unverifiable",flush=True)
                 break
             if quota_hourly<=quota_guard and not probe_after_wait:
                 if os.getenv("CARDVECTOR_WAIT_HOURLY_RESET")=="1" and hourly_waits<2:
                     hourly_waits+=1
-                    print("Hourly quota headroom low; pausing inside the same batch before one quota-checked probe",flush=True)
+                    print("Hourly quota exhausted; waiting for reset before one quota-checked probe",flush=True)
                     time.sleep(3700)
                     probe_after_wait=True
                 else:
-                    print("Stopping before next request: hourly quota headroom below safety margin",flush=True)
+                    print("Stopping before next request: hourly quota exhausted",flush=True)
                     break
         probe_after_wait=False
         pid=card["provider_id"]
@@ -317,8 +317,8 @@ def run(limit=1,delay=5.0,provider_id=None):
             print("Stopping: PokéWallet did not provide both quota headers; cannot verify safe headroom")
             break
         print("PokéWallet quota remaining: day="+str(quota_remaining)+", hour="+str(quota_hourly))
-        if min(quota_remaining,quota_hourly)<=quota_guard:
-            print("Stopping: PokéWallet request headroom is at or below safety margin")
+        if quota_remaining<=0:
+            print("Stopping: PokéWallet daily quota exhausted")
             break
     still_unstaged=unprocessed_cards(cards,reviews)
     print(json.dumps({"set_id":SET_ID,"attempted":attempts,
