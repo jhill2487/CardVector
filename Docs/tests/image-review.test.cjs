@@ -245,14 +245,28 @@ test("approved artwork series is set-safe, resists conflicts and preserves corre
  assert.equal(ctx.get(cards,mixed,"destined-rivals").ambiguous,true);
 });
 
-test("image review selector only shows unresolved imported sets",()=>{
+test("image review selector requires complete PokéWallet image staging AND unresolved reviews",()=>{
  assert.match(page,/function hasUnresolvedImages\(s\)/);
  assert.match(page,/return missing>0\|\|review>0\|\|Math\.max\(0,imported-matched-missing-review\)>0/);
- assert.match(page,/sets=\(data\|\|\[\]\)\.filter\(hasUnresolvedImages\)/);
- assert.match(page,/if\(!sets\.length\).*All imported sets have their images matched/);
+ assert.match(page,/async function pokewalletStagedCounts\(\)/);
+ assert.match(page,/\.like\("candidate_path","pokewallet\/%"\)/);
+ assert.match(page,/\.in\("review_status",\["approved","pending_review"\]\)/);
+ assert.match(page,/sets=\(data\|\|\[\]\)\.filter\(s=>fullyStagedPokewalletSet\(s,stagedCounts\)&&hasUnresolvedImages\(s\)\)/);
+ assert.match(page,/No fully staged PokéWallet sets awaiting review/);
  assert.match(page,/async function reloadReviewSets\(\)/);
  assert.match(page,/await reloadReviewSets\(\)/);
  assert.match(page,/reloadReviewSets\(\)\.catch/);
+});
+
+test("set readiness fails unless staged image count equals total imported card records",()=>{
+ const start=page.indexOf("function fullyStagedPokewalletSet(");
+ const end=page.indexOf("async function pokewalletStagedCounts(",start);
+ const ctx={};vm.runInNewContext(page.slice(start,end)+"this.ready=fullyStagedPokewalletSet;",ctx);
+ const ready=ctx.ready;
+ assert.equal(ready({set_id:"a",imported_cards:161},new Map([["a",131]])),false);
+ assert.equal(ready({set_id:"a",imported_cards:161},new Map([["a",161]])),true);
+ assert.equal(ready({set_id:"b",imported_cards:0},new Map([["b",0]])),false);
+ assert.equal(ready({set_id:"c",imported_cards:175},new Map()),false);
 });
 test("resolved set filtering includes missing and review states and handles new pending cards",()=>{
  const vm=require("node:vm");
