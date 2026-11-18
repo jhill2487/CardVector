@@ -249,7 +249,9 @@ test("image review selector requires complete PokéWallet image staging AND unre
  assert.match(page,/function hasUnresolvedImages\(s\)/);
  assert.match(page,/return missing>0\|\|review>0\|\|Math\.max\(0,imported-matched-missing-review\)>0/);
  assert.match(page,/async function pokewalletStagedCounts\(\)/);
- assert.match(page,/\.like\("candidate_path","pokewallet\/%"\)/);
+ assert.match(page,/\.not\("candidate_path","is",null\)/);
+ assert.match(page,/r\.review_status==="approved"/);
+ assert.match(page,/r\.review_status==="pending_review"/);
  assert.match(page,/\.in\("review_status",\["approved","pending_review"\]\)/);
  assert.match(page,/sets=\(data\|\|\[\]\)\.filter\(s=>fullyStagedPokewalletSet\(s,stagedCounts\)&&hasUnresolvedImages\(s\)\)/);
  assert.match(page,/No fully staged PokéWallet sets awaiting review/);
