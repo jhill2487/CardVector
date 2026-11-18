@@ -1012,9 +1012,9 @@ async function pokewalletStagedCounts(){
  }
  const valid=staged.filter(r=>{
   const path=String(r.candidate_path||"");
-  return /\\.(?:jpg|jpeg|png|webp)$/i.test(path)&&
+  return /\.(?:jpg|jpeg|png|webp)$/i.test(path)&&
    (r.review_status==="approved"||
-    (r.review_status==="pending_review"&&/^pokewallet\\/[a-z0-9-]+\\//i.test(path)));
+    (r.review_status==="pending_review"&&/^pokewallet\/[a-z0-9-]+\//i.test(path)));
  });
  const linked=await lookupByProviderIds("cv_admin_pokewallet_catalog","provider_id,set_id",valid.map(r=>r.provider_id));
  const ids=new Set(valid.map(r=>r.provider_id));
