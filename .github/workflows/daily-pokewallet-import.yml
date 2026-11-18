@@ -6,7 +6,9 @@ on:
       - '.github/workflows/daily-pokewallet-import.yml'
   workflow_dispatch:
   schedule:
-    - cron: '17 14 * * *'
+    # Import metadata after image staging has first access to the daily API quota.
+    # Catalog pages fetch up to 100 cards per request; images use one request per card.
+    - cron: '17 20 * * *'
 permissions:
   contents: read
 concurrency:
