@@ -64,3 +64,14 @@ test("admin set coverage distinguishes confirmed gaps from unverified unmatched 
  assert.match(html,/unmatched_unverified:"Unmatched — verify"/);
  assert.match(html,/getSetCoverage\(\)/);
 });
+
+test("registered-account panel uses secure admin RPC and refreshes with dashboard",()=>{
+ for(const id of ["accounts-total","accounts-internal","accounts-external","accounts-new","accounts-badge"]){
+  assert.ok(html.includes('id="'+id+'"'),id);
+ }
+ assert.match(html,/client\.rpc\("cv_admin_registration_counts"\)/);
+ assert.match(html,/getRegisteredAccounts\(\)/);
+ assert.match(html,/getAnalytics\(\),getRegisteredAccounts\(\)/);
+ assert.match(html,/data\.total!==data\.internal\+data\.external/);
+ assert.doesNotMatch(html,/auth\.admin\.listUsers/);
+});
