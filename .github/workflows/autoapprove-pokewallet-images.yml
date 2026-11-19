@@ -4,6 +4,7 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/autoapprove-pokewallet-images.yml'
+      - 'Tools/autoapprove_pokewallet_set.py'
   schedule:
     - cron: '47 20 * * *'
   workflow_dispatch:
