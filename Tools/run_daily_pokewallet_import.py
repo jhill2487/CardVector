@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Quota-efficient daily PokéWallet metadata import (750 cards; ~8 page requests).
+"""Quota-efficient daily PokéWallet metadata import (750 cards; ~4 page requests).
 
 Images always have import priority. Replayed metadata pages never overwrite
 existing catalog artwork or manual/automated approvals.
@@ -26,7 +26,7 @@ JOB="pokewallet-kaggle"
 DAILY_CAP=750
 MANUAL_TOPUP_CAP=250
 MANUAL_DAILY_CEILING=1000
-PAGE_SIZE=100
+PAGE_SIZE=200
 REQUEST_CAP=40
 INTERVAL_SECONDS=45
 
@@ -74,8 +74,27 @@ class Store:
 
 def make_state():
     return {"version":2,"sets":[],"next_set":0,"next_page":1,"next_offset":0,
+            "page_size":PAGE_SIZE,
             "cards_imported":0,"daily_date":"","daily_imported":0,"image_counts":{"matched":0,"needs_review":0,"missing":0},
             "finished":False}
+
+def migrate_page_size(state):
+    """Preserve the exact card offset when increasing metadata cards/page.
+
+    Historical checkpoints use 100-card pages. Convert the absolute position
+    within the current set before issuing another request; never replay a
+    different card page using the old page number.
+    """
+    old=int(state.get("page_size") or 100)
+    if old not in (100,PAGE_SIZE):
+        raise RuntimeError("Unsupported historical metadata page size")
+    if old==PAGE_SIZE:
+        return False
+    absolute=(int(state.get("next_page",1))-1)*old+int(state.get("next_offset",0))
+    state["next_page"]=absolute//PAGE_SIZE+1
+    state["next_offset"]=absolute%PAGE_SIZE
+    state["page_size"]=PAGE_SIZE
+    return True
 
 def provider_count(value):
     """Unknown counts remain null rather than becoming false zero coverage."""
@@ -136,6 +155,9 @@ def step(state,fetch,write,cap=DAILY_CAP,max_requests=REQUEST_CAP,day=None,daily
     because each provider ID is a primary key in Supabase.
     """
     if state.get("finished"):return {"today":0,"requests":0,"finished":True}
+    if migrate_page_size(state):
+        # Checkpoint the migration before any requests or subsequent writes.
+        write(state,[])
     day=day or datetime.now(ZoneInfo('America/New_York')).date().isoformat()
     if state.get("daily_date")!=day:
         state["daily_date"]=day
