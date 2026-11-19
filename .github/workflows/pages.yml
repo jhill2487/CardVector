@@ -41,6 +41,10 @@ jobs:
       - name: Checkout CardVector source
         uses: actions/checkout@v4
 
+      - name: Verify public search JavaScript and approved catalog integration
+        run: |
+          node --check Docs/wanted/search-savefix-20261110.js
+          node --test Docs/tests/public-approved-search.test.cjs
       - name: Test CSV-first R2 matching
         run: node --test Docs/tests/r2-artwork-test.test.cjs
 
