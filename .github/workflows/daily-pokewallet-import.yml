@@ -45,6 +45,7 @@ jobs:
         run: |
           python -m unittest discover -s Tools/tests -p 'test_import_diagnostics.py'
           python -m unittest discover -s Tools/tests -p 'test_daily_pokewallet_import.py'
+          python -m unittest discover -s Tools/tests -p 'test_pokewallet_api_budget.py'
       - name: Spend only remaining daily API quota on 200-card metadata pages
         if: steps.credentials.outputs.ready == 'true' && github.event_name != 'push'
         run: python Tools/run_import_with_diagnostics.py
