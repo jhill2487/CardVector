@@ -14,7 +14,7 @@ on:
 permissions:
   contents: read
 concurrency:
-  group: pokewallet-set-images
+  group: ${{ github.event_name == 'push' && 'pokewallet-metadata-tests' || 'pokewallet-set-images' }}
   cancel-in-progress: false
 jobs:
   import:
