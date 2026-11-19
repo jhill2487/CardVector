@@ -19,6 +19,7 @@ from datetime import datetime, timezone
 from zoneinfo import ZoneInfo
 from import_pokewallet_catalog import order_sets_newest_first, normalize_card
 from pokewallet_set_language import set_language
+import pokewallet_api_budget as quota
 
 SUPABASE_URL="https://iqdpfgpkagjxzedfxrvn.supabase.co/rest/v1/"
 PW_URL="https://api.pokewallet.io"
@@ -28,7 +29,7 @@ MANUAL_TOPUP_CAP=250
 MANUAL_DAILY_CEILING=1000
 PAGE_SIZE=200
 REQUEST_CAP=40
-INTERVAL_SECONDS=45
+INTERVAL_SECONDS=36
 
 def api_json(url, method="GET", body=None, headers=None):
     data=json.dumps(body).encode("utf-8") if body is not None else None
@@ -239,6 +240,11 @@ def main():
     if not pw_key or not db_key:
         raise SystemExit("Required GitHub Actions secrets are not configured")
     store=Store(db_key)
+    allowance=quota.metadata_allowance(store.headers)
+    if allowance==0:
+        print(json.dumps({"status":"images_first","metadata_requests":0,
+                          "reason":"Image allocation has priority or daily quota is exhausted"}))
+        return
     state=store.get() or make_state()
     if state.get("version")!=2:
         raise SystemExit("Unsupported importer checkpoint version")
@@ -248,6 +254,9 @@ def main():
         if count[0]>0:
             remaining=INTERVAL_SECONDS-(time.monotonic()-last[0])
             if remaining>0:time.sleep(remaining)
+        reservation=quota.reserve(store.headers,"metadata")
+        if not reservation["allowed"]:
+            raise RuntimeError("Shared PokéWallet daily quota exhausted before metadata request")
         data=api_json(PW_URL+path,headers={"X-API-Key":pw_key,
                        "User-Agent":"CardVector-Daily-Importer/1.0"})
         last[0]=time.monotonic()
@@ -262,11 +271,12 @@ def main():
     # and expected printing counts for read-only coverage comparisons.
     mode=os.environ.get('CARDVECTOR_IMPORT_MODE','scheduled')
     if mode not in ('scheduled','manual_topup'):raise SystemExit('Unsupported import mode')
-    if mode=='manual_topup':
-        summary=step(state,fetch,write,cap=MANUAL_TOPUP_CAP,daily_ceiling=MANUAL_DAILY_CEILING)
-    else:
-        summary=step(state,fetch,write)
+    # 200 card records per provider request. Spend every remaining allocated
+    # request, not an arbitrary 750-card count, while retaining the cursor.
+    summary=step(state,fetch,write,cap=allowance*PAGE_SIZE,
+                 daily_ceiling=100000,max_requests=allowance)
     summary['mode']=mode
+    summary['metadata_request_allocation']=allowance
     store.upsert("cv_admin_set_languages",[
         {"set_id":row["set_id"],"set_name":row["name"],
          "language":provider_language(row),
