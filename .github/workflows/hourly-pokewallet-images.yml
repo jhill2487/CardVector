@@ -39,6 +39,7 @@ jobs:
         run: |
           python -m py_compile Tools/import_pokewallet_set_images.py Tools/run_hourly_pokewallet_images.py Tools/autoapprove_pokewallet_set.py Tools/pokewallet_api_budget.py
           python -m unittest discover -s Tools/tests -p 'test_hourly_pokewallet_images.py'
+          python -m unittest discover -s Tools/tests -p 'test_pokewallet_api_budget.py'
           for name in POKEWALLET_API_KEY SUPABASE_SERVICE_ROLE_KEY R2_ACCOUNT_ID R2_ACCESS_KEY_ID R2_SECRET_ACCESS_KEY R2_BUCKET; do
             if [ -z "${!name}" ]; then echo "::error::Missing $name"; exit 1; fi
           done
