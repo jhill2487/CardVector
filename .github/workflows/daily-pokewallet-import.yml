@@ -1,5 +1,11 @@
 name: PokéWallet catalog import (750 scheduled / 250 manual)
 on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/daily-pokewallet-import.yml'
+      - 'Tools/run_daily_pokewallet_import.py'
+      - 'Tools/tests/test_daily_pokewallet_import.py'
   workflow_dispatch:
   schedule:
     # Images run every hour; keep metadata to ~4 batched API calls
@@ -39,5 +45,5 @@ jobs:
           python -m unittest discover -s Tools/tests -p 'test_import_diagnostics.py'
           python -m unittest discover -s Tools/tests -p 'test_daily_pokewallet_import.py'
       - name: Import up to 750 card metadata records in 200-card pages (checkpoint-safe)
-        if: steps.credentials.outputs.ready == 'true'
+        if: steps.credentials.outputs.ready == 'true' && github.event_name != 'push'
         run: python Tools/run_import_with_diagnostics.py
