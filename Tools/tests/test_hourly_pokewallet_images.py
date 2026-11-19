@@ -55,6 +55,9 @@ class HourlyImageTests(unittest.TestCase):
              patch.object(hourly,"eligible_sets",return_value=selected),\
              patch.object(hourly.importer,"db_headers",return_value={}),\
              patch.object(hourly.importer,"r2_client",return_value=MagicMock()),\
+             patch.object(hourly.quota,"choose_image_cap",return_value=900),\
+             patch.object(hourly.quota,"current",return_value=None),\
+             patch.object(hourly.quota,"reserve",return_value={"allowed":True}),\
              patch.object(hourly.importer,"run",return_value=result) as do_run,\
              patch.object(hourly.approval,"approve_set") as do_approve:
             hourly.run()
@@ -79,6 +82,9 @@ class HourlyImageTests(unittest.TestCase):
              patch.object(hourly,"eligible_sets",return_value=selected),\
              patch.object(hourly.importer,"db_headers",return_value={}),\
              patch.object(hourly.importer,"r2_client",return_value=MagicMock()),\
+             patch.object(hourly.quota,"choose_image_cap",return_value=900),\
+             patch.object(hourly.quota,"current",return_value=None),\
+             patch.object(hourly.quota,"reserve",return_value={"allowed":True}),\
              patch.object(hourly.importer,"run",side_effect=results) as do_run,\
              patch.object(hourly.approval,"approve_set",return_value=(2,"approved")) as do_approve:
             hourly.run()
