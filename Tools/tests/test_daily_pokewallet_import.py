@@ -121,7 +121,7 @@ class DailyTests(unittest.TestCase):
         state.update({"sets":[{"set_id":"2","name":"Delta Reign"},
                               {"set_id":"1","name":"Unknown Promo Set"}],
                       "next_set":1,"next_page":2,"next_offset":40,
-                      "cards_imported":140})
+                      "page_size":100,"cards_imported":140})
         calls=[]
         rows=[card(n) for n in range(1,201)]
         def fetch(path):
