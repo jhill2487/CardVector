@@ -59,6 +59,17 @@ dt{color:#acbdca}dd{margin:0;overflow-wrap:anywhere}
 <p class="note">GA4 · Last 7 complete days · Refreshes at most every 5 minutes. Recent data may still be processing. First-time visitors are measured by Analytics and do not count registered accounts.</p>
 </section>
 
+<section class="panel wide" aria-labelledby="accounts-heading">
+<div class="head"><h2 id="accounts-heading">Registered accounts</h2><span id="accounts-badge" class="status">Checking</span></div>
+<p id="accounts-summary" class="muted" role="status" aria-live="polite">Loading Supabase registration totals…</p>
+<div class="stats">
+<div class="metric"><small>Total registered accounts</small><b id="accounts-total">—</b></div>
+<div class="metric"><small>Internal accounts</small><b id="accounts-internal">—</b></div>
+<div class="metric"><small>External registrations</small><b id="accounts-external">—</b></div>
+<div class="metric"><small>External signups · last 7 days</small><b id="accounts-new">—</b></div>
+</div>
+<p class="note">Counts come from Supabase Auth, not Google Analytics. Internal accounts include your administrator and testing accounts and are excluded from external signup totals. Data refreshes with the dashboard.</p>
+</section>
 <section class="panel"><div class="head"><h2>Source site deployment</h2><span id="source-badge" class="status">Checking</span></div>
 <p id="source-summary" class="muted">Checking GitHub Actions…</p>
 <dl><dt>Workflow</dt><dd id="source-workflow">—</dd><dt>Run</dt><dd id="source-run">—</dd><dt>Last update</dt><dd id="source-updated">—</dd><dt>Source commit</dt><dd id="source-sha">—</dd></dl>
@@ -234,6 +245,28 @@ async function getSetCoverage(){
   list.replaceChildren();
  }
 }
+async function getRegisteredAccounts(){
+ const badge=$("accounts-badge"),summary=$("accounts-summary");
+ badge.textContent="Loading";badge.className="status working";
+ try{
+  const {data,error}=await client.rpc("cv_admin_registration_counts");
+  if(error)throw error;
+  if(!data||!["total","internal","external","external_7d"].every(k=>Number.isInteger(data[k])&&data[k]>=0))
+   throw new Error("Invalid registration summary");
+  if(data.total!==data.internal+data.external)throw new Error("Registration totals do not reconcile");
+  $("accounts-total").textContent=data.total.toLocaleString();
+  $("accounts-internal").textContent=data.internal.toLocaleString();
+  $("accounts-external").textContent=data.external.toLocaleString();
+  $("accounts-new").textContent=data.external_7d.toLocaleString();
+  badge.textContent="Live";badge.className="status good";
+  summary.textContent="Supabase Auth · Checked "+safeDate(data.checked_at)+
+   " · "+Number(data.external_30d||0).toLocaleString()+" external signup(s) in the last 30 days.";
+ }catch(error){
+  for(const id of ["total","internal","external","new"])$("accounts-"+id).textContent="—";
+  badge.textContent="Unavailable";badge.className="status working";
+  summary.textContent="Cannot read secured account totals. Check your administrator session and refresh.";
+ }
+}
 async function getAnalytics(){
  const badge=$("analytics-badge"),summary=$("analytics-summary");
  const names=["totalUsers","newUsers","sessions","screenPageViews"];
@@ -261,7 +294,7 @@ async function getAnalytics(){
 async function check(){
  if(!ready||active)return;
  active=true;$("refresh").disabled=true;$("refresh").textContent="Refreshing…";
- try{await Promise.allSettled([getDeploy(),getDevelopment(),getImportProgress(),getLiveImageCounts(),getSetCoverage(),getAnalytics()]);}
+ try{await Promise.allSettled([getDeploy(),getDevelopment(),getImportProgress(),getLiveImageCounts(),getSetCoverage(),getAnalytics(),getRegisteredAccounts()]);}
  finally{active=false;$("refresh").disabled=false;$("refresh").textContent="Refresh all status";$("checked").textContent="Checked "+new Date().toLocaleTimeString();}
 }
 async function verifyAdministrator(){
