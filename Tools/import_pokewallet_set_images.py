@@ -142,9 +142,11 @@ def run(limit=1,delay=5.0,provider_id=None):
     print("Set "+SET_ID+" image staging: "+str(len(cards)-len(remaining))+
           " existing reviews/matches, "+str(len(remaining))+" not yet staged")
     if not remaining:
-        print(json.dumps({"set_id":SET_ID,"attempted":0,"remaining":0,
-                          "status":"all catalog records staged or matched; no API requests"}))
-        return
+        summary={"set_id":SET_ID,"attempted":0,"remaining_unstaged":0,
+                 "quota_remaining_day":None,"quota_remaining_hour":None,
+                 "counts":{"uploaded":0},"status":"already-staged"}
+        print(json.dumps(summary,sort_keys=True))
+        return summary
     # Validate the bucket/endpoint before any extra PokéWallet image requests.
     # Report only status codes; never print credential values or bucket names.
     bucket=os.environ["R2_BUCKET"]
@@ -305,14 +307,18 @@ def run(limit=1,delay=5.0,provider_id=None):
             print("Stopping: PokéWallet daily quota exhausted")
             break
     still_unstaged=unprocessed_cards(cards,reviews)
-    print(json.dumps({"set_id":SET_ID,"attempted":attempts,
+    summary={"set_id":SET_ID,"attempted":attempts,
         "remaining_unstaged":len(still_unstaged),
         "next_card_number":still_unstaged[0]["card_number"] if still_unstaged else None,
-        "counts":counts,"writes":"R2 candidate images and pending reviews; no approvals"},sort_keys=True))
+        "quota_remaining_day":quota_remaining,
+        "quota_remaining_hour":quota_hourly,
+        "counts":counts,"writes":"R2 candidate images and pending reviews; no approvals"}
+    print(json.dumps(summary,sort_keys=True))
     if counts["rate_limited"]:
         print("Stopped because PokéWallet returned HTTP 429")
     if counts["errors"]:
         raise RuntimeError("One or more image imports failed; see prior safe error summaries")
+    return summary
 
 if __name__=="__main__":
     parser=argparse.ArgumentParser()
