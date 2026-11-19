@@ -127,7 +127,7 @@ def approve_set(set_id, headers, r2, bucket):
                 "R2 source/set provenance, size and MIME checked; complete set preflight passed.")
         result = importer.request(DB + REVIEW + "?" + query,
             {**headers, "Prefer": "return=representation"},
-            method="PATCH", payload={"review_status":"approved", "notes":note})
+            method="PATCH", payload={"review_status":"approved", "approval_method":"pokewallet_auto", "notes":note})
         updated = json.loads(result)
         if len(updated) != 1 or updated[0].get("review_status") != "approved":
             raise RuntimeError("Review changed during auto-approval; stopped without overwriting")
@@ -136,7 +136,7 @@ def approve_set(set_id, headers, r2, bucket):
     refreshed = importer.existing_reviews(headers, cards)
     if any(refreshed.get(c["provider_id"], {}).get("review_status") != "approved" for c in cards):
         raise RuntimeError("Approval verification failed for set " + set_id)
-    print(json.dumps({"set_id":set_id, "catalog_cards":len(cards), "auto_approved":approved, "status":"approved"}))
+    print(json.dumps({"set_id":set_id, "catalog_cards":len(cards), "auto_approved":approved, "status":"approved", "audit_method":"pokewallet_auto"}))
     return (approved, "approved")
 
 
