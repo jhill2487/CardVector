@@ -27,10 +27,10 @@ def current(headers, day=None):
 
 
 def choose_image_cap(headers, image_ready):
-    """After a metadata-replenishment day, use all 1,000 for images if ready.
+    """After a 900-image day, use 1,000 for images if the queue is stocked.
 
-    Keep allocating 1,000-image days while the complete-metadata queue has
-    at least 1,000 missing images. Otherwise return to 900+metadata.
+    Switch back to 900+metadata when fewer than 1,000 import-ready card
+    images remain; this replenishes the queue for future 1,000-image days.
     """
     today = utc_day()
     previous = (datetime.now(timezone.utc).date() - timedelta(days=1)).isoformat()
@@ -39,7 +39,8 @@ def choose_image_cap(headers, image_ready):
     if today_row:
         return int(today_row["image_cap"])
     if image_ready >= 1000 and last and (
-        int(last.get("metadata_requests") or 0) > 0 or int(last.get("image_cap") or 0) == 1000
+        int(last.get("image_requests") or 0) >= 900
+        or int(last.get("metadata_requests") or 0) > 0
     ):
         return 1000
     return 900
