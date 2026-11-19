@@ -5,6 +5,9 @@ on:
     paths:
       - '.github/workflows/hourly-pokewallet-images.yml'
       - 'Tools/run_hourly_pokewallet_images.py'
+      - 'Tools/import_pokewallet_set_images.py'
+      - 'Tools/autoapprove_pokewallet_set.py'
+      - 'Tools/tests/test_hourly_pokewallet_images.py'
   schedule:
     - cron: '11 * * * *'
   workflow_dispatch:
