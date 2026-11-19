@@ -2,13 +2,13 @@ name: PokéWallet catalog import (750 scheduled / 250 manual)
 on:
   workflow_dispatch:
   schedule:
-    # Import metadata after image staging has first access to the daily API quota.
-    # Catalog pages fetch up to 100 cards per request; images use one request per card.
-    - cron: '17 20 * * *'
+    # Images run every hour; keep metadata to ~4 batched API calls
+    # late in the day, after image ingestion has first access to quota.
+    - cron: '53 23 * * *'
 permissions:
   contents: read
 concurrency:
-  group: pokewallet-daily-catalog-import
+  group: pokewallet-set-images
   cancel-in-progress: false
 jobs:
   import:
@@ -33,9 +33,11 @@ jobs:
           else
             echo "ready=true" >> "$GITHUB_OUTPUT"
           fi
-      - name: Validate run-diagnostics wrapper
+      - name: Verify metadata checkpoint and diagnostic tests
         if: steps.credentials.outputs.ready == 'true'
-        run: python -m unittest discover -s Tools/tests -p 'test_import_diagnostics.py'
-      - name: Import scheduled 750 or manual top-up 250 records (checkpoint-safe)
+        run: |
+          python -m unittest discover -s Tools/tests -p 'test_import_diagnostics.py'
+          python -m unittest discover -s Tools/tests -p 'test_daily_pokewallet_import.py'
+      - name: Import up to 750 card metadata records in 200-card pages (checkpoint-safe)
         if: steps.credentials.outputs.ready == 'true'
         run: python Tools/run_import_with_diagnostics.py
