@@ -6,20 +6,21 @@ on:
       - '.github/workflows/daily-pokewallet-import.yml'
       - 'Tools/run_daily_pokewallet_import.py'
       - 'Tools/tests/test_daily_pokewallet_import.py'
+      - 'Tools/pokewallet_api_budget.py'
   workflow_dispatch:
   schedule:
-    # Images run every hour; keep metadata to ~4 batched API calls
-    # late in the day, after image ingestion has first access to quota.
-    - cron: '53 23 * * *'
+    # Each attempt checks the shared 1,000-call ledger; metadata starts
+    # only after the daily 900-image allocation has been spent.
+    - cron: '41 10-23 * * *'
 permissions:
   contents: read
 concurrency:
-  group: ${{ github.event_name == 'push' && 'pokewallet-metadata-tests' || 'pokewallet-set-images' }}
+  group: pokewallet-metadata
   cancel-in-progress: false
 jobs:
   import:
     runs-on: ubuntu-latest
-    timeout-minutes: 55
+    timeout-minutes: 110
     env:
       POKEWALLET_API_KEY: ${{ secrets.POKEWALLET_API_KEY }}
       SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
@@ -44,6 +45,6 @@ jobs:
         run: |
           python -m unittest discover -s Tools/tests -p 'test_import_diagnostics.py'
           python -m unittest discover -s Tools/tests -p 'test_daily_pokewallet_import.py'
-      - name: Import up to 750 card metadata records in 200-card pages (checkpoint-safe)
+      - name: Spend only remaining daily API quota on 200-card metadata pages
         if: steps.credentials.outputs.ready == 'true' && github.event_name != 'push'
         run: python Tools/run_import_with_diagnostics.py
