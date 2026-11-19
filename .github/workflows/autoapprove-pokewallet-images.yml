@@ -1,0 +1,35 @@
+name: Auto-approve complete PokéWallet image sets
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/autoapprove-pokewallet-images.yml'
+  schedule:
+    - cron: '47 20 * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: cardvector-image-autoapproval
+  cancel-in-progress: false
+jobs:
+  approve:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+      R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+      R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+      R2_BUCKET: ${{ secrets.R2_BUCKET }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Syntax-check universal auto-approval
+        run: python -m py_compile Tools/autoapprove_pokewallet_set.py Tools/import_pokewallet_set_images.py
+      - name: Install pinned R2 client
+        run: python -m pip install boto3==1.35.99
+      - name: Validate and approve fully staged sets
+        run: python Tools/autoapprove_pokewallet_set.py --all
