@@ -26,7 +26,7 @@ class DailyTests(unittest.TestCase):
             writes.extend(r["provider_id"] for r in rows)
         first=mod.step(state,fetch,write,cap=750,max_requests=40,day="2026-11-11")
         self.assertEqual(first["today"],750)
-        self.assertEqual((state["next_set"],state["next_page"],state["next_offset"]),(0,8,50))
+        self.assertEqual((state["next_set"],state["next_page"],state["next_offset"]),(0,4,150))
         self.assertFalse(state["finished"])
         same_day=mod.step(state,fetch,write,cap=750,max_requests=40,day="2026-11-11")
         self.assertEqual(same_day["today"],0)
@@ -53,12 +53,12 @@ class DailyTests(unittest.TestCase):
             writes.extend(row["provider_id"] for row in rows)
         first=mod.step(state,fetch,write,cap=750,max_requests=40,day="2026-11-13")
         self.assertEqual(first["today"],750)
-        self.assertEqual(state["next_offset"],50)
+        self.assertEqual(state["next_offset"],150)
         topup=mod.step(state,fetch,write,cap=mod.MANUAL_TOPUP_CAP,
                        daily_ceiling=mod.MANUAL_DAILY_CEILING,day="2026-11-13")
         self.assertEqual(topup["today"],250)
         self.assertEqual(state["daily_imported"],1000)
-        self.assertEqual((state["next_page"],state["next_offset"]),(11,0))
+        self.assertEqual((state["next_page"],state["next_offset"]),(6,0))
         self.assertEqual(len(set(writes)),1000)
         repeat=mod.step(state,fetch,write,cap=mod.MANUAL_TOPUP_CAP,
                         daily_ceiling=mod.MANUAL_DAILY_CEILING,day="2026-11-13")
@@ -123,7 +123,7 @@ class DailyTests(unittest.TestCase):
                       "next_set":1,"next_page":2,"next_offset":40,
                       "cards_imported":140})
         calls=[]
-        rows=[card(n) for n in range(101,201)]
+        rows=[card(n) for n in range(1,201)]
         def fetch(path):
             calls.append(path)
             if path=="/sets":
@@ -133,7 +133,7 @@ class DailyTests(unittest.TestCase):
                      "card_count":200,"sealed_count":0},
                     {"set_id":"2","name":"Delta Reign","language":"jap",
                      "card_count":25,"sealed_count":0}]}
-            self.assertIn("/sets/1?page=2",path)
+            self.assertIn("/sets/1?page=1",path)
             return {"set":{"set_id":"1","total_cards":200,"language":"eng"},
                     "cards":rows}
         persisted=[]
@@ -148,6 +148,28 @@ class DailyTests(unittest.TestCase):
         self.assertEqual(state["sets"][0]["set_id"],"2")
         self.assertEqual(state["sets"][1]["card_count"],200)
         self.assertTrue(state["directory_enriched"])
+
+    def test_historical_page_size_migration_is_lossless(self):
+        state=mod.make_state()
+        state.update({"sets":[{"set_id":"30","name":"Shrouded Fable","language":"eng"}],
+                      "next_page":2,"next_offset":40,"page_size":100,
+                      "cards_imported":140,"directory_enriched":True})
+        src=[card(n) for n in range(1,251)]
+        saved=[]
+        calls=[]
+        def fetch(path):
+            calls.append(path)
+            page=int(path.split("page=")[1].split("&")[0])
+            self.assertIn("limit=200",path)
+            return {"set":{"set_id":"30","total_cards":len(src),"language":"eng"},
+                    "cards":src[(page-1)*mod.PAGE_SIZE:page*mod.PAGE_SIZE]}
+        summary=mod.step(state,fetch,lambda st,rows:saved.extend(r["provider_id"] for r in rows),
+                         cap=200,max_requests=4,day="2026-11-20")
+        self.assertEqual(summary["today"],110)
+        self.assertEqual(state["page_size"],200)
+        self.assertEqual(calls[0].split("page=")[1].split("&")[0],"1")
+        self.assertEqual(saved,[r["id"] for r in src[140:]])
+        self.assertTrue(state["finished"])
 
     def test_provider_language_rejects_wrong_set_page(self):
         state=mod.make_state()
@@ -170,12 +192,12 @@ class DailyTests(unittest.TestCase):
             calls.append(path)
             if path=="/sets":return {"data":[{"set_id":"1","name":"Delta Reign"}]}
             page=int(path.split("page=")[1].split("&")[0])
-            return {"set":{"set_id":"1","total_cards":400},"cards":[card(page*100+n) for n in range(100)]}
+            return {"set":{"set_id":"1","total_cards":400},"cards":[card((page-1)*mod.PAGE_SIZE+n) for n in range(1,mod.PAGE_SIZE+1)]}
         first=mod.step(state,fetch,lambda s,rs:None,cap=750,max_requests=2)
-        self.assertEqual(first["today"],100)
+        self.assertEqual(first["today"],200)
         self.assertEqual(state["next_page"],2)
         second=mod.step(state,fetch,lambda s,rs:None,cap=750,max_requests=5)
-        self.assertEqual(second["today"],300)
+        self.assertEqual(second["today"],200)
         self.assertTrue(state["finished"])
         self.assertEqual(state["cards_imported"],400)
 
