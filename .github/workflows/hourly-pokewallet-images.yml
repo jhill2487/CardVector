@@ -1,0 +1,44 @@
+name: PokéWallet images — hourly complete-set importer
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/hourly-pokewallet-images.yml'
+      - 'Tools/run_hourly_pokewallet_images.py'
+  schedule:
+    - cron: '11 * * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: pokewallet-set-images
+  cancel-in-progress: false
+jobs:
+  import-images:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    env:
+      POKEWALLET_API_KEY: ${{ secrets.POKEWALLET_API_KEY }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+      R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+      R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+      R2_BUCKET: ${{ secrets.R2_BUCKET }}
+      CARDVECTOR_IMAGE_PRIORITY_SET: '23529'
+      CARDVECTOR_WAIT_HOURLY_RESET: '0'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate universal image importer and credentials
+        run: |
+          python -m py_compile Tools/import_pokewallet_set_images.py Tools/run_hourly_pokewallet_images.py Tools/autoapprove_pokewallet_set.py
+          python -m unittest discover -s Tools/tests -p 'test_hourly_pokewallet_images.py'
+          for name in POKEWALLET_API_KEY SUPABASE_SERVICE_ROLE_KEY R2_ACCOUNT_ID R2_ACCESS_KEY_ID R2_SECRET_ACCESS_KEY R2_BUCKET; do
+            if [ -z "${!name}" ]; then echo "::error::Missing $name"; exit 1; fi
+          done
+      - name: Install pinned R2 SDK
+        run: python -m pip install boto3==1.35.99
+      - name: Spend available quota on missing images, auto-approve completed sets
+        run: python Tools/run_hourly_pokewallet_images.py
