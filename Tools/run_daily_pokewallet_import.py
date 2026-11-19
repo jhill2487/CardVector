@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""Daily automatic PokéWallet card-printing import (750 per scheduled run).
+"""Quota-efficient daily PokéWallet metadata import (750 cards; ~8 page requests).
+
+Images always have import priority. Replayed metadata pages never overwrite
+existing catalog artwork or manual/automated approvals.
 
 GitHub Actions supplies POKEWALLET_API_KEY and SUPABASE_SERVICE_ROLE_KEY.
 Private catalog and progress live in Supabase, not in GitHub artifacts.
@@ -51,6 +54,12 @@ class Store:
         if not rows:return
         headers={**self.headers,"Prefer":"resolution=merge-duplicates,return=minimal"}
         api_json(SUPABASE_URL+table,method="POST",body=rows,headers=headers)
+    def insert_new_cards(self,rows):
+        """Never overwrite reviewed images when the metadata cursor retries a page."""
+        if not rows:return
+        headers={**self.headers,"Prefer":"resolution=ignore-duplicates,return=minimal"}
+        api_json(SUPABASE_URL+"cv_admin_pokewallet_catalog?on_conflict=provider_id",
+                 method="POST",body=rows,headers=headers)
     def save(self,state):
         self.upsert("cv_admin_pokewallet_import_state",[{"job_key":JOB,"state":state,
                                         "updated_at":datetime.now(timezone.utc).isoformat()}])
@@ -223,7 +232,7 @@ def main():
         count[0]+=1
         return data
     def write(checkpoint,rows):
-        store.upsert("cv_admin_pokewallet_catalog",rows)
+        store.insert_new_cards(rows)
         store.save(checkpoint)
         store.publish(checkpoint)
     # The directory refresh occurs within step(), preserving the exact
