@@ -118,7 +118,7 @@ def r2_client():
         aws_secret_access_key=os.environ["R2_SECRET_ACCESS_KEY"],
         region_name="auto",config=Config(signature_version="s3v4",retries={"max_attempts":3}))
 
-def run(limit=1,delay=5.0,provider_id=None):
+def run(limit=1,delay=5.0,provider_id=None,before_request=None):
     if not 1<=limit<=250: raise ValueError("Limit must be between 1 and 250")
     if not 0<=delay<=120: raise ValueError("Invalid delay")
     for key in ("SUPABASE_SERVICE_ROLE_KEY","POKEWALLET_API_KEY",
@@ -189,6 +189,7 @@ def run(limit=1,delay=5.0,provider_id=None):
     counts={"available":0,"unavailable":0,"rate_limited":0,
             "skipped":0,"uploaded":0,"errors":0}
     attempts=0
+    budget_exhausted=False
     quota_remaining=None
     quota_hourly=None
     quota_guard=0  # No artificial reserve; respect provider's actual hourly/daily limits.
@@ -214,6 +215,12 @@ def run(limit=1,delay=5.0,provider_id=None):
         if not VALID_ID.fullmatch(pid):
             counts["errors"]+=1
             continue
+        # Atomically reserve one of today's shared API requests first.
+        # If denied, no external PokéWallet request is made.
+        if before_request is not None and not before_request():
+            budget_exhausted=True
+            print("Daily image request allocation exhausted",flush=True)
+            break
         attempts+=1
         if attempts>1 and delay:time.sleep(delay)
         req=urllib.request.Request(PW+urllib.parse.quote(pid,safe="")+"?size=low",
@@ -312,6 +319,7 @@ def run(limit=1,delay=5.0,provider_id=None):
         "next_card_number":still_unstaged[0]["card_number"] if still_unstaged else None,
         "quota_remaining_day":quota_remaining,
         "quota_remaining_hour":quota_hourly,
+        "budget_exhausted":budget_exhausted,
         "counts":counts,"writes":"R2 candidate images and pending reviews; no approvals"}
     print(json.dumps(summary,sort_keys=True))
     if counts["rate_limited"]:
