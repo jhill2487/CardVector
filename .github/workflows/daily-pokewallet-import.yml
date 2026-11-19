@@ -1,4 +1,4 @@
-name: PokéWallet catalog import (750 scheduled / 250 manual)
+name: PokéWallet metadata — remaining daily API requests
 on:
   push:
     branches: [main]
