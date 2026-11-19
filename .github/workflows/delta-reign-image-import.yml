@@ -4,9 +4,7 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/delta-reign-image-import.yml'
-  schedule:
-    # Retry only still-unstaged images; live quota checks preserve headroom.
-    - cron: '17 14 * * *'
+  # Hourly image jobs now run in hourly-pokewallet-images.yml.
   workflow_dispatch:
     inputs:
       limit:
