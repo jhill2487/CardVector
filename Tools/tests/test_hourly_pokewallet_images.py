@@ -34,7 +34,8 @@ class HourlyImageTests(unittest.TestCase):
         def fake_records(table,fields,headers,order="set_id"):
             return {"cv_admin_set_languages":languages,
                     "cv_admin_pokewallet_catalog":cards,
-                    "cv_admin_image_reviews":reviews}[table]
+                    "cv_admin_image_reviews":reviews,
+                    "cv_admin_image_import_priority":[]}[table]
         with patch.object(hourly,"records",side_effect=fake_records):
             sets=hourly.eligible_sets({})
         self.assertEqual(len(sets),1)
