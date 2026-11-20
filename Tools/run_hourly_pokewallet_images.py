@@ -87,8 +87,10 @@ def eligible_sets(headers):
     # Continue any partially staged set first, then finish the smallest remaining
     # whole set efficiently. Optional administrative priority changes ORDER only.
     preferred = os.environ.get("CARDVECTOR_IMAGE_PRIORITY_SET", "")
+    priority_ids={str(x["set_id"]) for x in
+                  records("cv_admin_image_import_priority","set_id",headers)}
     result.sort(key=lambda s:(
-        0 if preferred and s["set_id"] == preferred else 1,
+        0 if s["set_id"] in priority_ids or (preferred and s["set_id"] == preferred) else 1,
         0 if s["partially_staged"] else 1,
         s["missing"], -s["count"], int(s["set_id"])))
     return result
