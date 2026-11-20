@@ -25,7 +25,8 @@ def norm(s):
 
 def number(s):
     n=str(s or "").lower().strip().split("/")[0]
-    return str(int(n)) if n.isdigit() else n.replace("svp","").lstrip("0") or n
+    n=re.sub(r"^(?:svp|sv)[-_]?","",n)
+    return str(int(n)) if n.isdigit() else n
 
 
 def image_number_name(fname):
@@ -60,9 +61,12 @@ def candidates(set_id,folder):
                  "set_id,language,expected_card_count",{"set_id":"eq."+set_id})
     if len(info)!=1 or info[0]["language"]!="eng" or len(catalog)!=info[0]["expected_card_count"]:
         raise RuntimeError("Metadata not complete or not English; refusing R2 matches")
-    reviews=db_rows("cv_admin_image_reviews",
-                    "provider_id,review_status,candidate_path",{"provider_id":"in.("+",".join(c["provider_id"] for c in catalog)+")"})
-    reviewed={r["provider_id"] for r in reviews}
+    reviewed=set()
+    for start in range(0,len(catalog),20):
+        ids=[c["provider_id"] for c in catalog[start:start+20]]
+        reviews=db_rows("cv_admin_image_reviews","provider_id,review_status,candidate_path",
+                        {"provider_id":"in.("+",".join(ids)+")"})
+        reviewed.update(r["provider_id"] for r in reviews)
     by_number=collections.defaultdict(list)
     for c in catalog:
         by_number[number(c["card_number"])].append(c)
