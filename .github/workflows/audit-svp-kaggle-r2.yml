@@ -1,0 +1,21 @@
+name: Audit existing Kaggle R2 Scarlet Violet promo images
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/audit-svp-kaggle-r2.yml'
+      - 'Tools/audit_svp_kaggle_r2.py'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Inspect R2 Kaggle SVP promo inventory without using PokéWallet quota
+        run: python Tools/audit_svp_kaggle_r2.py
