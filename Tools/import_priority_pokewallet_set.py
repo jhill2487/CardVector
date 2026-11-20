@@ -50,7 +50,7 @@ def run():
         headers=store.headers)
     if len(data)!=1 or data[0]["language"]!="eng" or data[0]["expected_card_count"]!=EXPECTED:
         raise RuntimeError("Target must be an English set with verified provider card count")
-    info=data[0]
+    info={**data[0],"name":data[0]["set_name"]}
     existing=api_json(store_url("cv_admin_pokewallet_catalog",
                       {"set_id":"eq."+SET_ID,"select":"provider_id","limit":"1000"}),
                       headers=store.headers)
