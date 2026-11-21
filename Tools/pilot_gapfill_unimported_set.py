@@ -64,10 +64,57 @@ def exact_pairs(missing,provider):
         result.append((card,pid))
     return result,reasons
 
+
+# Set-directory aliases are explicit, not fuzzy guesses. Other sets require
+# identical normalized names before any PokéWallet metadata request.
+SET_ALIASES={
+    "mep black star promos":"mega evolution promo",
+    "30th classic collection":"30th celebration classic collection",
+}
+def choose_set(missing_all,headers):
+    sets=collections.defaultdict(list)
+    for card in missing_all:
+        sets[card["set_id"]].append(card)
+    imported=records("cv_admin_tcgdex_gap_scanned_sets",
+        "tcgdex_set_id,pokewallet_set_id",headers,order="tcgdex_set_id")
+    cache=records("cv_admin_tcgdex_pokewallet_images",
+        "tcgdex_id,image_status",headers,order="tcgdex_id")
+    pending={row["tcgdex_id"] for row in cache if row["image_status"]=="identified"}
+    for entry in imported:
+        sid=entry["tcgdex_set_id"]
+        if any(card["id"] in pending for card in sets.get(sid,[])):
+            return sid,str(entry["pokewallet_set_id"])
+    done={entry["tcgdex_set_id"] for entry in imported}
+    languages=records("cv_admin_set_languages",
+        "set_id,set_name,language,expected_card_count",headers)
+    provider=collections.defaultdict(list)
+    for info in languages:
+        if info["language"]=="eng":
+            provider[old.norm(info["set_name"])].append(info)
+    ordered=sorted(sets.items(),key=lambda pair:(-len(pair[1]),pair[0]))
+    for sid,cards in ordered:
+        if sid in done:continue
+        name=old.norm(cards[0]["set_name"])
+        key=SET_ALIASES.get(name,name)
+        matches=provider.get(key,[])
+        if len(matches)!=1:continue
+        info=matches[0]
+        size=int(info.get("expected_card_count") or 0)
+        if len(cards)<=size<=200:
+            return sid,str(info["set_id"])
+    return None,None
+
 def run(limit=MAX_IMAGES):
     if not 0<=limit<=30:raise ValueError("Invalid image batch size")
+    global TARGET_TCGDEX_SET,TARGET_PROVIDER_SET
     headers=images.db_headers()
-    missing=[c for c in old.tcgdex_missing_cards() if c["set_id"]==TARGET_TCGDEX_SET]
+    all_missing=old.tcgdex_missing_cards()
+    if os.environ.get("TCGDEX_GAP_AUTO","0")=="1":
+        TARGET_TCGDEX_SET,TARGET_PROVIDER_SET=choose_set(all_missing,headers)
+        if not TARGET_TCGDEX_SET:
+            print("No further safely matched single-page PokéWallet sets eligible for the current gap-fill method",flush=True)
+            return
+    missing=[c for c in all_missing if c["set_id"]==TARGET_TCGDEX_SET]
     if not missing:raise RuntimeError("No missing image cards found in requested TCGdex set")
     known={c["tcgdex_id"]:c for c in records("cv_admin_tcgdex_pokewallet_images",
             "tcgdex_id,provider_id,image_status",headers,order="tcgdex_id")}
@@ -80,7 +127,7 @@ def run(limit=MAX_IMAGES):
         langs=records("cv_admin_set_languages",
                      "set_id,set_name,language,expected_card_count",headers)
         found=[x for x in langs if x["set_id"]==TARGET_PROVIDER_SET and x["language"]=="eng"]
-        if len(found)!=1 or int(found[0]["expected_card_count"])!=len(missing):
+        if len(found)!=1 or not len(missing)<=int(found[0]["expected_card_count"])<=200:
             raise RuntimeError("PokéWallet target set not verified, or not one-to-one with TCGdex set")
         provider=fetch_set(headers,TARGET_PROVIDER_SET)
         pairs,excluded=exact_pairs(missing,provider)
