@@ -14,7 +14,7 @@ test("public search uses approved provider printing IDs before historical fallba
  assert.match(source,/cv_public_catalog_sets/);
  assert.match(source,/cv_public_catalog_search/);
  assert.match(source,/approvedCards\(query,field,chosenSet\)/);
- assert.match(source,/p_set_id:chosenSet\?chosenSet\.slice/);
+ assert.match(source,/p_set_id:providerSetId/);
  assert.match(source,/if\(chosenSet\.startsWith\(PW_SET_PREFIX\)\)/);
  assert.match(source,/removeDuplicateUnverifiedCards\(verified,validExternal\)/);
  assert.match(source,/approvedImageUrl\(row\.image_path\)/);
