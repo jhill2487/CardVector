@@ -33,7 +33,7 @@
       for (const [label,id] of setLabels) label.textContent=label.dataset.cardName+" - "+label.dataset.cardNumber+" - "+(setNames.get(id)||"Pokémon TCG");
     } catch (_) { /* Search continues without set names if unavailable. */ }
   }
-  loadSetNames();
+  const setNamesReady=loadSetNames();
   // Populate the verified-set dropdown even if the external TCGdex list fails.
   // Deferred until after client initialization below.
 
@@ -504,7 +504,7 @@
     return String(value||"").split("/")[0].replace(/^0+(?=\d)/,"").toLowerCase();
   }
   function isSpecialPrinting(name){
-    return /\\b(staff|prerelease|pokemon center|stamped|cosmos|winner|alternate|league|championship)\\b/i.test(String(name||""));
+    return /\b(staff|prerelease|pokemon center|stamped|cosmos|winner|alternate|league|championship)\b/i.test(String(name||""));
   }
   function canonicalPrintingKey(name,set,number){
     return comparableSetName(set)+"|"+localNumber(number)+"|"+String(name||"").toLowerCase().replace(/[^a-z0-9]+/g," ").trim();
@@ -512,7 +512,11 @@
   // Explicit, audited crosswalks. Never infer equivalence from a set prefix.
   const PROVIDER_TCGDEX_SET_IDS=Object.freeze({"22872":"svp"});
   async function externalArtForSet(setId,signal){
-    const tcgdexId=PROVIDER_TCGDEX_SET_IDS[setId];
+    await setNamesReady;
+    const matched=[...setNames.entries()].filter(([id,name])=>
+      !id.startsWith(PW_SET_PREFIX)&&
+      comparableSetName(name)===comparableSetName(approvedSetNames.get(PW_SET_PREFIX+setId)));
+    const tcgdexId=PROVIDER_TCGDEX_SET_IDS[setId]||(matched.length===1?matched[0][0]:null);
     if(!tcgdexId)return [];
     try{
       const response=await fetch("https://api.tcgdex.net/v2/en/sets/"+tcgdexId,{signal});
@@ -522,18 +526,10 @@
     }catch(error){if(error.name==="AbortError")throw error;return [];}
   }
   function attachExactFallbackArtwork(canonical,external){
-    const byKey=new Map(),canonicalNumbers=new Map();
+    const canonicalNumbers=new Map();
     for(const c of canonical){
-      const k=comparableSetName(c.set?.name)+"|"+localNumber(c.localId);
+      const k=c.set?.id+"|"+localNumber(c.localId);
       canonicalNumbers.set(k,(canonicalNumbers.get(k)||0)+1);
-    }
-    for(const e of external){
-      const id=setIdFor(e);
-      const setName=e.set?.name||setNames.get(id);
-      if(!setName||!e.name||!e.localId)continue;
-      const key=canonicalPrintingKey(e.name,setName,e.localId);
-      const candidates=byKey.get(key)||[];
-      candidates.push(e);byKey.set(key,candidates);
     }
     const aliases=new Map([["22872",["scarlet violet black star promos","scarlet violet promos"]]]);
     for(const c of canonical){
@@ -543,7 +539,7 @@
       const num=localNumber(c.localId);
       // No guessed fallback when a number has multiple catalog printings;
       // they may differ by stamp, finish, or other printing attributes.
-      const siblingCount=canonical.filter(x=>x.set?.id===c.set?.id&&localNumber(x.localId)===num).length;
+      const siblingCount=canonicalNumbers.get(c.set?.id+"|"+num)||0;
       if(siblingCount!==1)continue;
       const matching=external.filter(e=>{
         const name=comparableSetName(e.set?.name||setNames.get(setIdFor(e)));
@@ -588,7 +584,11 @@
         const approved=await approvedPromise;
         if(id!==requestId)return;
         if(approved===null)throw Error("Approved catalog temporarily unavailable");
-        const cards=approved.sort(cardNumberCompare);
+        const setId=chosenSet.slice(PW_SET_PREFIX.length);
+        const historical=approved.some(c=>!c._cvArtworkApproved)
+          ?await externalArtForSet(setId,searchController.signal):[];
+        if(id!==requestId)return;
+        const cards=attachExactFallbackArtwork(approved,historical).sort(cardNumberCompare);
         const message=cards.length?cards.length+" cards found.":"No matching cards found.";
         cache.set(cacheKey,{cards,message});
         render(cards);feedback(message);return;
@@ -643,12 +643,12 @@
         datesIncomplete=await resolveReleaseDates(validExternal,searchController.signal,id);
         if(id!==requestId)return;
       }
-      const verified=approved||[];
+      const verified=attachExactFallbackArtwork(approved||[],validExternal);
       const cards=[...verified,...removeDuplicateUnverifiedCards(verified,validExternal)];
       const sorted=browseSet?cards.sort(cardNumberCompare):cards.sort(compareByReleaseDate);
       const message=sorted.length
         ?sorted.length+" cards found"+(datesIncomplete?" · unknown release dates listed last":"")
-        :approved===null?"Approved CardVector catalog unavailable; no external matching cards.":"No matching cards found.";
+        :approved===null?"Search is temporarily unavailable.":"No matching cards found.";
       cache.set(cacheKey,{cards:sorted,message});
       if(cache.size>30)cache.delete(cache.keys().next().value);
       render(sorted);feedback(message);
