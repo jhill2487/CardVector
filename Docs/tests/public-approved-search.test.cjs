@@ -11,13 +11,16 @@ test("public search JavaScript parses",()=>{
  assert.doesNotThrow(()=>new vm.Script(source));
 });
 test("public search uses approved provider printing IDs before historical fallback",()=>{
- assert.match(source,/cv_public_approved_card_sets/);
- assert.match(source,/cv_public_approved_card_search_v2/);
+ assert.match(source,/cv_public_catalog_sets/);
+ assert.match(source,/cv_public_catalog_search/);
  assert.match(source,/approvedCards\(query,field,chosenSet\)/);
  assert.match(source,/p_set_id:chosenSet\?chosenSet\.slice/);
  assert.match(source,/if\(chosenSet\.startsWith\(PW_SET_PREFIX\)\)/);
  assert.match(source,/removeDuplicateUnverifiedCards\(verified,validExternal\)/);
  assert.match(source,/approvedImageUrl\(row\.image_path\)/);
+ assert.match(source,/_cvArtworkApproved:!!image/);
+ assert.match(source,/attachExactFallbackArtwork\(approved,historical\)/);
+ assert.match(source,/attachExactFallbackArtwork\(approved\|\|\[\],validExternal\)/);
  assert.match(source,/isApprovedCard\(card\)/);
 });
 test("verified PokéWallet cards remain selectable and can become wanted requests",()=>{
@@ -44,4 +47,45 @@ test("compact search presents pricing without presenting import diagnostics",()=
  assert.match(source,/noopener noreferrer/);
  assert.match(source,/validatedTcgplayerUrl/);
  assert.doesNotMatch(page,/More card games are coming later/);
+});
+
+test("all imported card identities remain searchable without approved artwork",()=>{
+ assert.match(source,/cv_public_catalog_search/);
+ assert.match(source,/if\(card\._cvArtworkApproved&&card\.image\)/);
+ assert.match(source,/return noArtwork\(\)/);
+ assert.match(source,/externalArtForSet\(setId,searchController\.signal\)/);
+ assert.match(source,/await Promise\.all\(\[catalogSetsReady,setNamesReady\]\)/);
+});
+test("artwork fallback refuses duplicate-number and special stamp mismatches",()=>{
+ const start=source.indexOf("  function comparableSetName(");
+ const end=source.indexOf("  async function search(query)",start);
+ assert.ok(start>=0&&end>start);
+ const setNames=new Map([["svp","Scarlet & Violet Black Star Promos"]]);
+ const approvedSetNames=new Map([["pw:22872","SV: Scarlet & Violet Promo Cards"]]);
+ const ctx={PW_SET_PREFIX:"pw:",setNames,approvedSetNames,
+  setNamesReady:Promise.resolve(),
+  setIdFor:c=>c.set?.id||String(c.id).split("-")[0],
+  isPhysicalCard:()=>true,fetch:async()=>({ok:true,json:async()=>({cards:[]})})};
+ vm.runInNewContext(source.slice(start,end)+
+  "\nthis.testFallback=attachExactFallbackArtwork;this.testDedupe=removeDuplicateUnverifiedCards;this.isSpecial=isSpecialPrinting;",ctx);
+ const pk=(id,name,num)=>({
+   id:"pw:"+id,_cvProviderId:id,_cvApproved:true,_cvArtworkApproved:false,
+   name,localId:num,set:{id:"pw:22872",name:"SV: Scarlet & Violet Promo Cards"},image:null
+ });
+ const external={id:"svp-27",name:"Pikachu",localId:"27",set:{id:"svp",name:"Scarlet & Violet Black Star Promos"},image:"https://example.test/pikachu"};
+ const regular=pk("pk_regular","Pikachu","027");
+ ctx.testFallback([regular],[external]);
+ assert.equal(regular._cvArtworkCard,external);
+ assert.equal(ctx.testDedupe([regular],[external]).length,0);
+ const duplicate=pk("pk_duplicate","Pikachu 027 Prerelease Staff","027");
+ ctx.testFallback([regular,duplicate],[external]);
+ assert.equal(duplicate._cvArtworkCard,undefined);
+ const other=pk("pk_special","Pikachu Pokémon Center","028");
+ const similar={...external,id:"svp-28",localId:"028",name:"Pikachu Pokémon Center"};
+ ctx.testFallback([other],[similar]);
+ assert.equal(other._cvArtworkCard,undefined);
+ const wrong={...external,id:"sv1-27",set:{id:"sv1",name:"Scarlet & Violet Base Set"}};
+ const plain=pk("pk_plain","Pikachu","027");
+ ctx.testFallback([plain],[wrong]);
+ assert.equal(plain._cvArtworkCard,undefined);
 });
