@@ -1,0 +1,38 @@
+name: Fill TCGdex missing images from PokéWallet
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/fill-tcgdex-images-pokewallet.yml'
+  workflow_dispatch:
+  schedule:
+    # Runs after the normal hourly importer; all jobs share atomic quotas.
+    - cron: '23 * * * *'
+permissions:
+  contents: read
+concurrency:
+  group: tcgdex-pokewallet-gapfill
+  cancel-in-progress: false
+jobs:
+  fill:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      POKEWALLET_API_KEY: ${{ secrets.POKEWALLET_API_KEY }}
+      R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+      R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+      R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+      R2_BUCKET: ${{ secrets.R2_BUCKET }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Test importer syntax
+        run: python -m py_compile Tools/fill_tcgdex_gaps_pokewallet.py
+      - run: python -m pip install boto3==1.35.99
+      - name: Identify exact missing TCGdex artwork against available PokéWallet identities
+        run: python Tools/fill_tcgdex_gaps_pokewallet.py --dry-run
+      - name: Upload limited exact-printing gap artwork within atomic quota
+        run: python Tools/fill_tcgdex_gaps_pokewallet.py --limit 15
