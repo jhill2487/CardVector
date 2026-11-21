@@ -14,6 +14,7 @@ import urllib.error
 
 from run_daily_pokewallet_import import Store, api_json, PW_URL, provider_language, normalize_card
 from run_targeted_pokewallet_import import build_catalog_rows
+from pokewallet_market_metadata import market_rows
 import pokewallet_api_budget as budget
 import import_pokewallet_set_images as images
 import autoapprove_pokewallet_set as approval
@@ -91,8 +92,14 @@ def run():
         rows=build_catalog_rows(pages,info)
         if len(rows)!=EXPECTED:
             raise RuntimeError("Expected "+str(EXPECTED)+" physical cards, normalized "+str(len(rows))+"; nothing written")
+        # One API response includes per-printing TCGplayer prices and links.
+        raw_items=[item for page_items in pages for item in page_items]
+        normalized=[normalize_card(item,info) for item in raw_items]
+        pricing=market_rows(raw_items,[item for item in normalized if item is not None])
         for start in range(0,len(rows),40):
             store.insert_new_cards(rows[start:start+40])
+        for start in range(0,len(pricing),40):
+            store.upsert_market(pricing[start:start+40])
         print(json.dumps({"set_id":SET_ID,"metadata_imported":len(rows),
                           "provider_requests":len(pages),
                           "regular_importer_cursor":"unchanged"}),flush=True)
