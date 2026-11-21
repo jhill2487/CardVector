@@ -7,6 +7,9 @@ on:
       - 'Tools/run_daily_pokewallet_import.py'
       - 'Tools/tests/test_daily_pokewallet_import.py'
       - 'Tools/pokewallet_api_budget.py'
+      - 'Tools/pokewallet_market_metadata.py'
+      - 'Tools/refresh_pokewallet_market.py'
+      - 'Tools/tests/test_pokewallet_market_metadata.py'
   workflow_dispatch:
   schedule:
     # Each attempt checks the shared 1,000-call ledger; metadata starts
@@ -46,6 +49,8 @@ jobs:
           python -m unittest discover -s Tools/tests -p 'test_import_diagnostics.py'
           python -m unittest discover -s Tools/tests -p 'test_daily_pokewallet_import.py'
           python -m unittest discover -s Tools/tests -p 'test_pokewallet_api_budget.py'
+          python -m unittest discover -s Tools/tests -p 'test_pokewallet_market_metadata.py'
+          python -m py_compile Tools/refresh_pokewallet_market.py Tools/pokewallet_market_metadata.py
       - name: Spend only remaining daily API quota on 200-card metadata pages
         if: steps.credentials.outputs.ready == 'true' && github.event_name != 'push'
         run: python Tools/run_import_with_diagnostics.py
