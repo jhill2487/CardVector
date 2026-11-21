@@ -20,6 +20,7 @@ from zoneinfo import ZoneInfo
 from import_pokewallet_catalog import order_sets_newest_first, normalize_card
 from pokewallet_set_language import set_language
 import pokewallet_api_budget as quota
+from pokewallet_market_metadata import market_rows
 
 SUPABASE_URL="https://iqdpfgpkagjxzedfxrvn.supabase.co/rest/v1/"
 PW_URL="https://api.pokewallet.io"
@@ -61,6 +62,8 @@ class Store:
         headers={**self.headers,"Prefer":"resolution=ignore-duplicates,return=minimal"}
         api_json(SUPABASE_URL+"cv_admin_pokewallet_catalog?on_conflict=provider_id",
                  method="POST",body=rows,headers=headers)
+    def upsert_market(self,rows):
+        if rows:self.upsert("cv_admin_pokewallet_market",rows)
     def save(self,state):
         self.upsert("cv_admin_pokewallet_import_state",[{"job_key":JOB,"state":state,
                                         "updated_at":datetime.now(timezone.utc).isoformat()}])
@@ -148,7 +151,7 @@ def normalize_sets(data):
     if not entries:raise RuntimeError("No valid set identifiers")
     return order_sets_newest_first(entries)
 
-def step(state,fetch,write,cap=DAILY_CAP,max_requests=REQUEST_CAP,day=None,daily_ceiling=DAILY_CAP):
+def step(state,fetch,write,cap=DAILY_CAP,max_requests=REQUEST_CAP,day=None,daily_ceiling=DAILY_CAP,save_market=None):
     """Import at most cap physical card records, preserving a mid-page cursor.
 
     fetch(path)->decoded PokéWallet JSON; write(state, cards)->transaction-like
@@ -225,6 +228,10 @@ def step(state,fetch,write,cap=DAILY_CAP,max_requests=REQUEST_CAP,day=None,daily
                 "set_name":info["set_name"],"card_name":info["name"],
                 "card_number":info["card_number"],"variants":info["variants"],
                 "image_status":"pending","image_path":None})
+        # Preserve exact-printing price evidence from the same already-funded
+        # set-page request. Never use market data to overwrite image approvals.
+        if save_market is not None:
+            save_market(market_rows(items,rows))
         state["cards_imported"]+=len(rows)
         state["daily_imported"]+=len(rows)
         write(state,catalog_rows)
@@ -274,7 +281,8 @@ def main():
     # 200 card records per provider request. Spend every remaining allocated
     # request, not an arbitrary 750-card count, while retaining the cursor.
     summary=step(state,fetch,write,cap=allowance*PAGE_SIZE,
-                 daily_ceiling=100000,max_requests=allowance)
+                 daily_ceiling=100000,max_requests=allowance,
+                 save_market=store.upsert_market)
     summary['mode']=mode
     summary['metadata_request_allocation']=allowance
     store.upsert("cv_admin_set_languages",[
