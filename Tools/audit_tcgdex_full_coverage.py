@@ -1,13 +1,33 @@
 #!/usr/bin/env python3
 """Read-only complete TCGdex English image coverage audit, independent of CardVector."""
-import urllib.request,json,collections,datetime,time
+import urllib.request,urllib.error,json,collections,datetime,time
 BASE="https://api.tcgdex.net/v2/en"
 def get(path):
-    req=urllib.request.Request(BASE+path,headers={"User-Agent":"CardVector-Independent-TCGdex-Coverage-Audit/1.0","Accept":"application/json"})
-    with urllib.request.urlopen(req,timeout=120) as response:
-        return json.load(response)
-cards=get("/cards")
+    last=None
+    for attempt in range(5):
+        try:
+            req=urllib.request.Request(BASE+path,headers={"User-Agent":"CardVector-TCGdex-Audit/1.0","Accept":"application/json"})
+            with urllib.request.urlopen(req,timeout=45) as response:
+                return json.load(response)
+        except (urllib.error.URLError,TimeoutError) as e:
+            last=e
+            print("Retry "+path+" attempt="+str(attempt+1)+" reason="+str(e)[:90],flush=True)
+            time.sleep(min(12,2**attempt))
+    raise RuntimeError("TCGdex unavailable for "+path+": "+str(last))
 sets=get("/sets")
+cards=[]
+page=1
+size=300
+while page<=150:
+    part=get("/cards?pagination:page="+str(page)+"&pagination:itemsPerPage="+str(size))
+    if not isinstance(part,list):raise RuntimeError("Expected list from card page")
+    if not part:break
+    cards.extend(part)
+    if len(part)<size:break
+    page+=1
+else:
+    raise RuntimeError("Pagination guard reached; dataset potentially incomplete")
+print("Fetched pages="+str(page)+" cards="+str(len(cards)),flush=True)
 pocket=set()
 try:
     series=get("/series/tcgp")
