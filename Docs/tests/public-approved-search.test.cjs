@@ -35,7 +35,7 @@ test("unverified artwork is excluded from the public card source",()=>{
  assert.doesNotMatch(source,/from\("cv_admin_pokewallet_catalog"\)/);
  assert.doesNotMatch(source,/POKEWALLET_API_KEY/);
  assert.doesNotMatch(page,/id="wanted-build"|Search build:/);
- assert.match(page,/search-savefix-20261110\.js\?v=20261120market1/);
+ assert.match(page,/search-savefix-20261110\.js\?v=20261120catalog2/);
 });
 
 test("compact search presents pricing without presenting import diagnostics",()=>{
