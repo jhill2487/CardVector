@@ -1,10 +1,5 @@
 name: Priority English set metadata and images
 on:
-  push:
-    branches: [main]
-    paths:
-      - '.github/workflows/priority-pokewallet-set.yml'
-      - 'Tools/import_priority_pokewallet_set.py'
   workflow_dispatch:
 permissions:
   contents: read
