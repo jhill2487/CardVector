@@ -18,7 +18,7 @@ SET_SLUG="mega-evolution-energies"
 DB="https://iqdpfgpkagjxzedfxrvn.supabase.co/rest/v1/"
 PW="https://api.pokewallet.io/images/"
 VALID_ID=re.compile(r"^pk_[a-f0-9]{40,128}$",re.I)
-SAFE_NUMBER=re.compile(r"^(?:\d{1,3}(?:/\d{1,3})?|[RGB]/RGB)$",re.I)
+SAFE_NUMBER=re.compile(r"^[A-Z0-9]+(?:[ /-][A-Z0-9]+)*$",re.I)
 
 def image_type(data):
     if len(data)<256 or len(data)>1_000_000:
@@ -105,9 +105,13 @@ def unprocessed_cards(cards,reviews):
 def path_for(card,ext):
     pid=card["provider_id"]
     number=card["card_number"]
-    if not VALID_ID.fullmatch(pid) or not SAFE_NUMBER.fullmatch(number):
+    if (not VALID_ID.fullmatch(pid) or not isinstance(number,str)
+            or not 1<=len(number)<=40 or not SAFE_NUMBER.fullmatch(number)):
         raise ValueError("Unexpected card identity")
-    return "pokewallet/"+SET_SLUG+"/"+number.replace("/","-")+"_"+pid[3:19]+"."+ext
+    # Pokémon promo numbers may be 'SVP 175', 'SVP193', or 'TG01/TG30'.
+    # Preserve the original number in the catalog; normalize only the R2 key.
+    safe_number=re.sub(r"[ /-]+","-",number).lower()
+    return "pokewallet/"+SET_SLUG+"/"+safe_number+"_"+pid[3:19]+"."+ext
 
 def r2_client():
     import boto3
