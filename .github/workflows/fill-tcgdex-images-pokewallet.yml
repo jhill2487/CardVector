@@ -29,10 +29,10 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Test importer syntax
-        run: python -m py_compile Tools/fill_tcgdex_gaps_pokewallet.py
+      - name: Validate exact-printing safeguards
+        run: |
+          python -m py_compile Tools/fill_tcgdex_gaps_pokewallet.py
+          python -m unittest discover -s Tools/tests -p 'test_fill_tcgdex_gaps_pokewallet.py'
       - run: python -m pip install boto3==1.35.99
-      - name: Identify exact missing TCGdex artwork against available PokéWallet identities
-        run: python Tools/fill_tcgdex_gaps_pokewallet.py --dry-run
       - name: Upload limited exact-printing gap artwork within atomic quota
         run: python Tools/fill_tcgdex_gaps_pokewallet.py --limit 15
