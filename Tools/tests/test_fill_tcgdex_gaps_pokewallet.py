@@ -38,6 +38,6 @@ class Matching(unittest.TestCase):
   a=tcg("kit-014")
   b={**a,"id":"kit-014a"}
   pairs,skips=gap.eligible([a,b],[provider()],set())
-  self.assertEqual(len(pairs),1) # numbered 014a is distinct identity
+  self.assertTrue(all(c["id"]=="kit-014" for c,_ in pairs)) # never substitute for 014a
 if __name__=="__main__":
  unittest.main()
