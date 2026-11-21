@@ -27,16 +27,10 @@ def records(table,fields,headers,conditions=None):
 
 def run(store,pw_key,max_requests=5):
     if max_requests<=0:return {"requests":0,"updated":0}
-    languages=records("cv_admin_set_languages",
-                      "set_id,set_name,language",store.headers,
-                      {"language":"eq.eng"})
-    imported=records("cv_admin_pokewallet_catalog",
-                     "set_id",store.headers,
-                     {"select":"set_id","order":"set_id.asc"})
-    # PostgREST caps lists at 1000. Get actual imported sets from a
-    # distinct set table instead of fetching thousands of catalog rows.
-    sets=sorted((s for s in languages if s["set_id"] in
-                {r["set_id"] for r in imported}),key=lambda x:int(x["set_id"]))
+    # Complete English sets only, without materializing the full catalog.
+    sets=sorted(records("cv_admin_pokewallet_imported_sets",
+                        "set_id,set_name",store.headers),
+                key=lambda x:int(x["set_id"]))
     if not sets:return {"requests":0,"updated":0}
     checkpoint=records("cv_admin_pokewallet_market_refresh_state",
                        "job_key,next_set_id,next_page",store.headers,
