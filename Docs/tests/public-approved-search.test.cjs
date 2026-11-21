@@ -12,7 +12,7 @@ test("public search JavaScript parses",()=>{
 });
 test("public search uses approved provider printing IDs before historical fallback",()=>{
  assert.match(source,/cv_public_approved_card_sets/);
- assert.match(source,/cv_public_approved_card_search/);
+ assert.match(source,/cv_public_approved_card_search_v2/);
  assert.match(source,/approvedCards\(query,field,chosenSet\)/);
  assert.match(source,/p_set_id:chosenSet\?chosenSet\.slice/);
  assert.match(source,/if\(chosenSet\.startsWith\(PW_SET_PREFIX\)\)/);
@@ -31,6 +31,17 @@ test("unverified artwork is excluded from the public card source",()=>{
  assert.doesNotMatch(source,/from\("cv_admin_image_reviews"\)/);
  assert.doesNotMatch(source,/from\("cv_admin_pokewallet_catalog"\)/);
  assert.doesNotMatch(source,/POKEWALLET_API_KEY/);
- assert.match(page,/verified-cardvector-20261119/);
- assert.match(page,/search-savefix-20261110\.js\?v=20261119approved1/);
+ assert.doesNotMatch(page,/id="wanted-build"|Search build:/);
+ assert.match(page,/search-savefix-20261110\.js\?v=20261120market1/);
+});
+
+test("compact search presents pricing without presenting import diagnostics",()=>{
+ assert.match(source,/marketLine\(card\)/);
+ assert.match(source,/marketPrices:Array\.isArray\(row\.tcgplayer_prices\)/);
+ assert.match(source,/appendTcgplayerMarket\(details,card\)/);
+ assert.match(source,/View exact product on TCGplayer/);
+ assert.match(source,/Price updated /);
+ assert.match(source,/noopener noreferrer/);
+ assert.match(source,/validatedTcgplayerUrl/);
+ assert.doesNotMatch(page,/More card games are coming later/);
 });
