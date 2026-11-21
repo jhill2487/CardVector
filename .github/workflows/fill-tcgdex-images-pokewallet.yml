@@ -5,6 +5,7 @@ on:
     paths:
       - '.github/workflows/fill-tcgdex-images-pokewallet.yml'
       - 'Tools/pilot_gapfill_unimported_set.py'
+      - 'Tools/tests/test_fill_tcgdex_gaps_pokewallet.py'
   workflow_dispatch:
   schedule:
     # Runs after the normal hourly importer; all jobs share atomic quotas.
