@@ -21,6 +21,26 @@ class HourlyImageTests(unittest.TestCase):
         self.assertEqual(hourly.slug_for("SV07: Stellar Crown"), "stellar-crown")
         self.assertEqual(hourly.slug_for("Trading Card Game Classic"), "trading-card-game-classic")
 
+    def test_promo_and_alphanumeric_card_numbers_have_safe_unique_r2_keys(self):
+        importer=hourly.importer
+        pid="pk_"+"a"*64
+        old_slug=importer.SET_SLUG
+        try:
+            importer.SET_SLUG="scarlet-violet-promo-cards"
+            for raw,slug in [
+                ("SVP 175","svp-175"),("SVP 176","svp-176"),
+                ("SVP 200","svp-200"),("SVP193","svp193"),
+                ("TG01/TG30","tg01-tg30"),("15/102","15-102"),
+            ]:
+                path=importer.path_for({"provider_id":pid,"card_number":raw},"jpg")
+                self.assertIn("/"+slug+"_",path)
+                self.assertTrue(path.endswith(".jpg"))
+            for raw in ("../secret","foo?bar","a\\\\b","SVP:175","", "S"*41):
+                with self.assertRaises(ValueError):
+                    importer.path_for({"provider_id":pid,"card_number":raw},"jpg")
+        finally:
+            importer.SET_SLUG=old_slug
+
     def test_uses_only_complete_english_metadata_and_preserves_approvals(self):
         cards = [card(1,"23529"),card(2,"23529"),card(3,"23529","matched","Pokemon TCG/other/3.jpg"),
                  card(4,"44444"), card(5,"88888")]
