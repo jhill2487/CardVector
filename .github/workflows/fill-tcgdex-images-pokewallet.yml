@@ -4,6 +4,7 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/fill-tcgdex-images-pokewallet.yml'
+      - 'Tools/pilot_gapfill_unimported_set.py'
   workflow_dispatch:
   schedule:
     # Runs after the normal hourly importer; all jobs share atomic quotas.
@@ -31,8 +32,8 @@ jobs:
           python-version: '3.12'
       - name: Validate exact-printing safeguards
         run: |
-          python -m py_compile Tools/fill_tcgdex_gaps_pokewallet.py
+          python -m py_compile Tools/fill_tcgdex_gaps_pokewallet.py Tools/pilot_gapfill_unimported_set.py
           python -m unittest discover -s Tools/tests -p 'test_fill_tcgdex_gaps_pokewallet.py'
       - run: python -m pip install boto3==1.35.99
       - name: Upload limited exact-printing gap artwork within atomic quota
-        run: python Tools/fill_tcgdex_gaps_pokewallet.py --limit 15
+        run: python Tools/pilot_gapfill_unimported_set.py
