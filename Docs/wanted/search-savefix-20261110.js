@@ -134,9 +134,19 @@
   }
   async function approvedCards(query,field,chosenSet){
     if(!supabaseClient||field==="illustrator"||(query.length<2&&!chosenSet))return [];
-    if(chosenSet&&!chosenSet.startsWith(PW_SET_PREFIX))return [];
+    let providerSetId=chosenSet?chosenSet.startsWith(PW_SET_PREFIX)
+      ?chosenSet.slice(PW_SET_PREFIX.length):null:null;
+    if(chosenSet&&!providerSetId){
+      await Promise.all([catalogSetsReady,setNamesReady]);
+      const sourceName=comparableSetName(setNames.get(chosenSet));
+      const candidates=[...approvedSetNames.entries()].filter(([id,name])=>
+        comparableSetName(name)===sourceName||
+        (chosenSet==="svp"&&id===PW_SET_PREFIX+"22872"));
+      if(candidates.length!==1)return [];
+      providerSetId=candidates[0][0].slice(PW_SET_PREFIX.length);
+    }
     const {data,error}=await supabaseClient.rpc("cv_public_catalog_search",{
-      p_query:query,p_mode:field,p_set_id:chosenSet?chosenSet.slice(PW_SET_PREFIX.length):null,p_limit:1000
+      p_query:query,p_mode:field,p_set_id:providerSetId,p_limit:1000
     });
     if(error)throw error;
     return (data||[]).flatMap(row=>{
@@ -155,7 +165,7 @@
     });
   }
 
-  loadApprovedSets().catch(()=>{ /* External TCGdex search stays available. */ });
+  const catalogSetsReady=loadApprovedSets().catch(()=>{ /* TCGdex remains available. */ });
   // Explicit crosswalk: TCGdex set IDs -> Limitless English set codes.
   // Never infer a set code from the card name; wrong artwork is worse than none.
   const LIMITLESS_SETS = Object.freeze({
@@ -504,7 +514,8 @@
     return String(value||"").split("/")[0].replace(/^0+(?=\d)/,"").toLowerCase();
   }
   function isSpecialPrinting(name){
-    return /\b(staff|prerelease|pokemon center|stamped|cosmos|winner|alternate|league|championship)\b/i.test(String(name||""));
+    const cleaned=String(name||"").normalize("NFKD").replace(/[\u0300-\u036f]/g,"");
+    return /\b(staff|prerelease|pokemon center|stamped|cosmos|winner|alternate|league|championship|first edition|1st edition)\b/i.test(cleaned);
   }
   function canonicalPrintingKey(name,set,number){
     return comparableSetName(set)+"|"+localNumber(number)+"|"+String(name||"").toLowerCase().replace(/[^a-z0-9]+/g," ").trim();
@@ -551,7 +562,13 @@
     return canonical;
   }
   function removeDuplicateUnverifiedCards(approved,external){
-    const approvedKeys=new Set(approved.map(c=>comparableSetName(c.set?.name)+"|"+localNumber(c.localId)));
+    const approvedKeys=new Set(approved.flatMap(c=>{
+      const original=comparableSetName(c.set?.name)+"|"+localNumber(c.localId);
+      return c.set?.id===PW_SET_PREFIX+"22872"
+        ?[original,"scarlet violet black star promos|"+localNumber(c.localId),
+           "scarlet violet promos|"+localNumber(c.localId)]
+        :[original];
+    }));
     return external.filter(c=>{
       const setId=setIdFor(c);
       const setName=c.set?.name||setNames.get(setId);
