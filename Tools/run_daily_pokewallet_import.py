@@ -63,7 +63,11 @@ class Store:
         api_json(SUPABASE_URL+"cv_admin_pokewallet_catalog?on_conflict=provider_id",
                  method="POST",body=rows,headers=headers)
     def upsert_market(self,rows):
-        if rows:self.upsert("cv_admin_pokewallet_market",rows)
+        if rows:
+            checked_at=datetime.now(timezone.utc).isoformat()
+            self.upsert("cv_admin_pokewallet_market",[
+                {**r,"fetched_at":checked_at} for r in rows
+            ])
     def save(self,state):
         self.upsert("cv_admin_pokewallet_import_state",[{"job_key":JOB,"state":state,
                                         "updated_at":datetime.now(timezone.utc).isoformat()}])
@@ -280,9 +284,16 @@ def main():
     if mode not in ('scheduled','manual_topup'):raise SystemExit('Unsupported import mode')
     # 200 card records per provider request. Spend every remaining allocated
     # request, not an arbitrary 750-card count, while retaining the cursor.
+    # Reserve a small fraction of the metadata request budget to keep
+    # existing exact-printing TCGplayer prices reasonably up to date.
+    # Image priority and the daily 1000-request ceiling remain unchanged.
+    market_allowance=min(5,max(1,allowance//10))
     summary=step(state,fetch,write,cap=allowance*PAGE_SIZE,
-                 daily_ceiling=100000,max_requests=allowance,
+                 daily_ceiling=100000,max_requests=max(0,allowance-market_allowance),
                  save_market=store.upsert_market)
+    from refresh_pokewallet_market import run as refresh_market
+    summary['market_refresh']=refresh_market(
+        store,pw_key,max_requests=min(market_allowance,allowance-summary.get("requests",0)))
     summary['mode']=mode
     summary['metadata_request_allocation']=allowance
     store.upsert("cv_admin_set_languages",[
