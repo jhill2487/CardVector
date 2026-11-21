@@ -1,0 +1,20 @@
+name: Independent TCGdex English image coverage audit
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/audit-tcgdex-full-coverage.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Count every English TCGdex card and image field
+        run: python Tools/audit_tcgdex_full_coverage.py
