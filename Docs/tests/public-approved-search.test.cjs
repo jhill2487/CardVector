@@ -104,3 +104,27 @@ test("market reference stays inline and never claims verified NM pricing",()=>{
  assert.match(source,/Use "\+marketUSD\.format\(price\)/);
  assert.match(source,/appendTcgplayerSearchLink\(text/);
 });
+
+test("duplicate PokéWallet product IDs do not duplicate the same exact printing",()=>{
+ const start=source.indexOf("  function deduplicateIdenticalPrintings(");
+ const end=source.indexOf("  const catalogSetsReady=",start);
+ assert.ok(start>=0&&end>start);
+ const ctx={};
+ vm.runInNewContext(source.slice(start,end)+";this.dedupe=deduplicateIdenticalPrintings;",ctx);
+ const card=(id,name,variants=["Holofoil"])=>({
+   id:"pw:"+id,_cvProviderId:id,_cvArtworkApproved:false,
+   name,localId:"063/086",set:{id:"pw:24325"},variants,
+ });
+ const items=[
+   card("pk_a","Klinklang Master Ball Pattern"),
+   card("pk_b","Klinklang Master Ball Pattern"),
+   card("pk_c","Klinklang Poke Ball Pattern"),
+   card("pk_d","Klinklang"),
+   card("pk_e","Klinklang",["Reverse Holofoil"])
+ ];
+ const merged=ctx.dedupe(items);
+ assert.equal(merged.length,4);
+ assert.equal(merged.filter(c=>c.name==="Klinklang Master Ball Pattern").length,1);
+ assert.equal(merged.filter(c=>c.name==="Klinklang Poke Ball Pattern").length,1);
+ assert.equal(merged.filter(c=>c.name==="Klinklang").length,2);
+});
