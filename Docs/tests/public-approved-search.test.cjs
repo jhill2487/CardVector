@@ -19,8 +19,8 @@ test("public search uses approved provider printing IDs before historical fallba
  assert.match(source,/removeDuplicateUnverifiedCards\(verified,validExternal\)/);
  assert.match(source,/approvedImageUrl\(row\.image_path\)/);
  assert.match(source,/_cvArtworkApproved:!!image/);
- assert.match(source,/attachExactFallbackArtwork\(approved,historical\)/);
- assert.match(source,/attachExactFallbackArtwork\(approved\|\|\[\],validExternal\)/);
+ assert.match(source,/attachExactFallbackArtwork\(deduplicateIdenticalPrintings\(approved\),historical\)/);
+ assert.match(source,/attachExactFallbackArtwork\(deduplicateIdenticalPrintings\(approved\|\|\[\]\),validExternal\)/);
  assert.match(source,/isApprovedCard\(card\)/);
 });
 test("verified PokéWallet cards remain selectable and can become wanted requests",()=>{
