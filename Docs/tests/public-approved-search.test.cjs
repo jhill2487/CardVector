@@ -35,7 +35,7 @@ test("unverified artwork is excluded from the public card source",()=>{
  assert.doesNotMatch(source,/from\("cv_admin_pokewallet_catalog"\)/);
  assert.doesNotMatch(source,/POKEWALLET_API_KEY/);
  assert.doesNotMatch(page,/id="wanted-build"|Search build:/);
- assert.match(page,/search-savefix-20261110\.js\?v=20261123inline1/);
+ assert.match(page,/search-savefix-20261110\.js\?v=20261123batch1/);
 });
 
 test("compact search presents pricing without presenting import diagnostics",()=>{
@@ -127,4 +127,21 @@ test("duplicate PokéWallet product IDs do not duplicate the same exact printing
  assert.equal(merged.filter(c=>c.name==="Klinklang Master Ball Pattern").length,1);
  assert.equal(merged.filter(c=>c.name==="Klinklang Poke Ball Pattern").length,1);
  assert.equal(merged.filter(c=>c.name==="Klinklang").length,2);
+});
+
+test("set-filtered bulk wanted requests preserve every card's exact identity and finish",()=>{
+ assert.match(page,/id="batch-panel"/);
+ assert.match(page,/id="batch-items"/);
+ assert.match(page,/id="batch-submit"/);
+ assert.match(page,/id="batch-hint"/);
+ assert.match(source,/function batchIsActive\(\)\{return Boolean\(setFilter\.value\);\}/);
+ assert.match(source,/function batchSelectCard\(card,checked\)/);
+ assert.match(source,/function submitBatch\(\)/);
+ assert.match(source,/finishKeys\.includes\(finish\)/);
+ assert.match(source,/source:isApprovedCard\(card\)\?"pokewallet":"tcgdex"/);
+ assert.match(source,/card_id:isApprovedCard\(card\)\?card\._cvProviderId:card\.id/);
+ assert.match(source,/accepted_finishes:\[finish\]/);
+ assert.match(source,/insert\(requests\.map\(request=>\(\{\.\.\.request,user_id:user\.id\}\)\)\)/);
+ assert.match(source,/batchCards\.clear\(\)/);
+ assert.match(source,/batchCards\.size>=99/);
 });
