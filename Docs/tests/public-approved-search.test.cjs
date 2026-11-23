@@ -77,6 +77,12 @@ test("artwork fallback refuses duplicate-number and special stamp mismatches",()
  ctx.testFallback([regular],[external]);
  assert.equal(regular._cvArtworkCard,external);
  assert.equal(ctx.testDedupe([regular],[external]).length,0);
+ // Two matching providers show only one card tile; genuinely distinct printings remain.
+ const unrelated={...external,id:"svp-28",localId:"028"};
+ assert.equal(ctx.testDedupe([regular],[external,unrelated]).length,1);
+ const special={...external,id:"svp-27-staff",name:"Pikachu Staff"};
+ assert.equal(ctx.testDedupe([regular],[special]).length,1);
+
  const duplicate=pk("pk_duplicate","Pikachu 027 Prerelease Staff","027");
  ctx.testFallback([regular,duplicate],[external]);
  assert.equal(duplicate._cvArtworkCard,undefined);
@@ -88,4 +94,13 @@ test("artwork fallback refuses duplicate-number and special stamp mismatches",()
  const plain=pk("pk_plain","Pikachu","027");
  ctx.testFallback([plain],[wrong]);
  assert.equal(plain._cvArtworkCard,undefined);
+});
+
+test("market reference stays inline and never claims verified NM pricing",()=>{
+ assert.match(page,/id="inline-market-guide"/);
+ assert.match(source,/function showInlinePricing\(card\)/);
+ assert.match(source,/function tcgdexPriceRows\(details\)/);
+ assert.match(source,/Not a verified NM-only price/);
+ assert.match(source,/Use "\+marketUSD\.format\(price\)/);
+ assert.match(source,/appendTcgplayerSearchLink\(text/);
 });
